@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.matrimony'
+version = '0.0.1-SNAPSHOT'
+description = 'elitenxt-matrimony-backend'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // These are added automatically from your selections:
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // MANUALLY ADD THESE for production:
+
+    // 1. JWT Authentication
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // 2. Email Service (for user verification, OTP, matches)
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // 3. File Upload & Storage (for profile pictures)
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
+    // 4. Caching (for better performance)
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+    // 5. Testing (for production quality)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
