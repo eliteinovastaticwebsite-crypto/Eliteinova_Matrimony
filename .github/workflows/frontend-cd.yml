@@ -30,8 +30,14 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Enable required APIs
+        run: |
+          gcloud services enable containerregistry.googleapis.com
+          gcloud services enable run.googleapis.com
+          gcloud services enable cloudbuild.googleapis.com
+
       - name: Configure Docker for GCR
-        run: gcloud auth configure-docker
+        run: gcloud auth configure-docker gcr.io
 
       - name: Get Backend URL
         id: backend-url
@@ -67,8 +73,21 @@ jobs:
 
       - name: Push Frontend image to GCR
         run: |
-          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
-          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+          # Ensure we're authenticated
+          gcloud auth configure-docker gcr.io --quiet
+          
+          # Push with retry logic
+          echo "Pushing image: gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA || {
+            echo "First push attempt failed, retrying..."
+            sleep 5
+            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          }
+          
+          echo "Pushing latest tag: gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest || {
+            echo "Latest tag push failed, but continuing with SHA tag..."
+          }
 
       - name: Deploy Frontend to Cloud Run
         run: |
