@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID || 'eliteinova' }}
   REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
   SERVICE_NAME: matrimony-frontend
+  ARTIFACT_REGISTRY_REPO: matrimony-repo
 
 jobs:
   deploy:
@@ -30,8 +31,24 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker for GCR
-        run: gcloud auth configure-docker gcr.io --quiet
+      - name: Create Artifact Registry repository if not exists
+        run: |
+          # Check if repository exists, create if not
+          if ! gcloud artifacts repositories describe $ARTIFACT_REGISTRY_REPO \
+            --location=$REGION \
+            --project=$PROJECT_ID 2>/dev/null; then
+            echo "Creating Artifact Registry repository..."
+            gcloud artifacts repositories create $ARTIFACT_REGISTRY_REPO \
+              --repository-format=docker \
+              --location=$REGION \
+              --description="Docker repository for matrimony app" \
+              --project=$PROJECT_ID || echo "Repository may already exist or creation failed"
+          else
+            echo "Artifact Registry repository already exists"
+          fi
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
 
       - name: Get Backend URL
         id: backend-url
@@ -58,35 +75,27 @@ jobs:
 
       - name: Build Frontend Docker image
         run: |
+          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
           docker build \
             --build-arg VITE_API_URL=${{ steps.backend-url.outputs.url }} \
-            -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+            -t $IMAGE_URI:$GITHUB_SHA \
             -f Dockerfile .
-          docker tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
-            gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+          docker tag $IMAGE_URI:$GITHUB_SHA $IMAGE_URI:latest
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-      - name: Push Frontend image to GCR
+      - name: Push Frontend image to Artifact Registry
         run: |
-          # Ensure we're authenticated
-          gcloud auth configure-docker gcr.io --quiet
-          
-          # Push with retry logic
-          echo "Pushing image: gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
-          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA || {
-            echo "First push attempt failed, retrying..."
-            sleep 5
-            docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
-          }
-          
-          echo "Pushing latest tag: gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
-          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest || {
-            echo "Latest tag push failed, but continuing with SHA tag..."
-          }
+          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
+          echo "Pushing image: $IMAGE_URI:$GITHUB_SHA"
+          docker push $IMAGE_URI:$GITHUB_SHA
+          echo "Pushing latest tag: $IMAGE_URI:latest"
+          docker push $IMAGE_URI:latest
 
       - name: Deploy Frontend to Cloud Run
         run: |
+          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME:$GITHUB_SHA"
           gcloud run deploy $SERVICE_NAME \
-            --image gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+            --image $IMAGE_URI \
             --region $REGION \
             --platform managed \
             --allow-unauthenticated \
