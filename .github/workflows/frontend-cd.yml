@@ -30,14 +30,8 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Enable required APIs
-        run: |
-          gcloud services enable containerregistry.googleapis.com
-          gcloud services enable run.googleapis.com
-          gcloud services enable cloudbuild.googleapis.com
-
       - name: Configure Docker for GCR
-        run: gcloud auth configure-docker gcr.io
+        run: gcloud auth configure-docker gcr.io --quiet
 
       - name: Get Backend URL
         id: backend-url
