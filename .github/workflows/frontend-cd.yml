@@ -67,19 +67,33 @@ jobs:
 
       - name: Create Artifact Registry repository if not exists
         run: |
-          # Check if repository exists, create if not
-          if ! gcloud artifacts repositories describe $ARTIFACT_REGISTRY_REPO \
+          # Check if repository exists
+          if gcloud artifacts repositories describe $ARTIFACT_REGISTRY_REPO \
             --location=$REGION \
             --project=$PROJECT_ID 2>/dev/null; then
-            echo "Creating Artifact Registry repository..."
+            echo "✅ Artifact Registry repository already exists: $ARTIFACT_REGISTRY_REPO"
+          else
+            echo "Creating Artifact Registry repository: $ARTIFACT_REGISTRY_REPO"
             gcloud artifacts repositories create $ARTIFACT_REGISTRY_REPO \
               --repository-format=docker \
               --location=$REGION \
               --description="Docker repository for matrimony app" \
-              --project=$PROJECT_ID || echo "Repository may already exist or creation failed"
-          else
-            echo "Artifact Registry repository already exists"
+              --project=$PROJECT_ID || {
+              echo "❌ Failed to create repository. Checking if it exists with different name..."
+              gcloud artifacts repositories list --location=$REGION --project=$PROJECT_ID
+              exit 1
+            }
+            echo "✅ Repository created successfully"
           fi
+          
+          # Verify repository is accessible
+          echo "Verifying repository access..."
+          gcloud artifacts repositories describe $ARTIFACT_REGISTRY_REPO \
+            --location=$REGION \
+            --project=$PROJECT_ID --format="value(name)" || {
+            echo "❌ Cannot access repository!"
+            exit 1
+          }
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
@@ -121,13 +135,46 @@ jobs:
         run: |
           IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
           echo "Pushing image: $IMAGE_URI:$GITHUB_SHA"
-          docker push $IMAGE_URI:$GITHUB_SHA
+          docker push $IMAGE_URI:$GITHUB_SHA || {
+            echo "❌ Failed to push image with SHA tag"
+            exit 1
+          }
+          echo "✅ Image pushed successfully: $IMAGE_URI:$GITHUB_SHA"
+          
           echo "Pushing latest tag: $IMAGE_URI:latest"
-          docker push $IMAGE_URI:latest
+          docker push $IMAGE_URI:latest || {
+            echo "⚠️ Failed to push latest tag, but continuing with SHA tag..."
+          }
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Verify image exists in Artifact Registry
+        run: |
+          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
+          echo "Verifying image exists: $IMAGE_URI:$GITHUB_SHA"
+          gcloud artifacts docker images describe $IMAGE_URI:$GITHUB_SHA \
+            --project=$PROJECT_ID || {
+            echo "❌ Image not found in Artifact Registry!"
+            exit 1
+          }
+          echo "✅ Image verified in Artifact Registry"
 
       - name: Deploy Frontend to Cloud Run
         run: |
           IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME:$GITHUB_SHA"
+          echo "Deploying to Cloud Run..."
+          echo "Image: $IMAGE_URI"
+          echo "Service: $SERVICE_NAME"
+          echo "Region: $REGION"
+          echo "Project: $PROJECT_ID"
+          
+          # Check if service already exists
+          if gcloud run services describe $SERVICE_NAME --region $REGION --project=$PROJECT_ID 2>/dev/null; then
+            echo "Service already exists, updating..."
+          else
+            echo "Creating new service..."
+          fi
+          
+          # Deploy with explicit project
           gcloud run deploy $SERVICE_NAME \
             --image $IMAGE_URI \
             --region $REGION \
@@ -137,7 +184,30 @@ jobs:
             --memory 256Mi \
             --cpu 1 \
             --min-instances 0 \
-            --max-instances 10
+            --max-instances 10 \
+            --project=$PROJECT_ID \
+            --quiet || {
+            echo "❌ Deployment failed!"
+            echo ""
+            echo "Troubleshooting:"
+            echo "1. Check if image exists:"
+            gcloud artifacts docker images list $REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME --limit=5 || echo "  Cannot list images"
+            echo ""
+            echo "2. Check service account permissions:"
+            gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --filter="bindings.members:*run-service-account*" --format="table(bindings.role)" || echo "  Cannot check permissions"
+            echo ""
+            echo "3. Try listing existing services:"
+            gcloud run services list --region $REGION --project=$PROJECT_ID || echo "  Cannot list services"
+            exit 1
+          }
+          
+          echo "✅ Deployment successful!"
+          
+          # Verify deployment
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --project=$PROJECT_ID --format='value(status.url)' 2>/dev/null)
+          if [ -n "$SERVICE_URL" ]; then
+            echo "Service URL: $SERVICE_URL"
+          fi
 
       - name: Get Frontend URL
         id: frontend-url
