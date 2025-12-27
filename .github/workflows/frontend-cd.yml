@@ -9,7 +9,8 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID || 'eliteinova' }}
   REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
   SERVICE_NAME: matrimony-frontend
-  ARTIFACT_REGISTRY_REPO: ${{ secrets.ARTIFACT_REGISTRY_REPO || 'cloud-run-source-deploy' }}
+  ARTIFACT_REGISTRY_REPO: ${{ secrets.ARTIFACT_REGISTRY_REPO || 'matrimony-frontend' }}
+  ARTIFACT_REGISTRY_LOCATION: ${{ secrets.ARTIFACT_REGISTRY_LOCATION || 'us' }}
 
 jobs:
   deploy:
@@ -68,32 +69,25 @@ jobs:
       - name: Verify Artifact Registry repository
         run: |
           echo "Checking Artifact Registry repository: $ARTIFACT_REGISTRY_REPO"
+          echo "Repository location: $ARTIFACT_REGISTRY_LOCATION"
           
           # Verify repository exists and is accessible
           if gcloud artifacts repositories describe $ARTIFACT_REGISTRY_REPO \
-            --location=$REGION \
+            --location=$ARTIFACT_REGISTRY_LOCATION \
             --project=$PROJECT_ID 2>/dev/null; then
             echo "✅ Repository exists and is accessible: $ARTIFACT_REGISTRY_REPO"
           else
-            echo "❌ Repository '$ARTIFACT_REGISTRY_REPO' not found or not accessible!"
+            echo "❌ Repository '$ARTIFACT_REGISTRY_REPO' not found in location '$ARTIFACT_REGISTRY_LOCATION'!"
             echo ""
             echo "Listing available repositories:"
-            gcloud artifacts repositories list --location=$REGION --project=$PROJECT_ID --format="table(name,format,location)" || echo "Cannot list repositories"
+            gcloud artifacts repositories list --project=$PROJECT_ID --format="table(name,format,location)" || echo "Cannot list repositories"
             echo ""
-            echo "Please either:"
-            echo "1. Create the repository manually in Cloud Shell:"
-            echo "   gcloud artifacts repositories create $ARTIFACT_REGISTRY_REPO \\"
-            echo "     --repository-format=docker \\"
-            echo "     --location=$REGION \\"
-            echo "     --project=$PROJECT_ID"
-            echo ""
-            echo "2. Or set ARTIFACT_REGISTRY_REPO secret in GitHub to use existing repository"
-            echo "   (e.g., 'cloud-run-source-deploy')"
+            echo "Please check the repository name and location."
             exit 1
           fi
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+        run: gcloud auth configure-docker $ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev --quiet
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -137,7 +131,7 @@ jobs:
           echo "Backend URL: ${{ steps.backend-url.outputs.url }}"
           echo "Git SHA: $GITHUB_SHA"
           
-          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
+          IMAGE_URI="$ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
           echo "Image URI: $IMAGE_URI"
           
           # Verify Dockerfile exists
@@ -168,7 +162,7 @@ jobs:
 
       - name: Push Frontend image to Artifact Registry
         run: |
-          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
+          IMAGE_URI="$ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
           echo "Pushing image: $IMAGE_URI:$GITHUB_SHA"
           docker push $IMAGE_URI:$GITHUB_SHA || {
             echo "❌ Failed to push image with SHA tag"
@@ -184,7 +178,7 @@ jobs:
 
       - name: Verify image exists in Artifact Registry
         run: |
-          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
+          IMAGE_URI="$ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME"
           echo "Verifying image exists: $IMAGE_URI:$GITHUB_SHA"
           gcloud artifacts docker images describe $IMAGE_URI:$GITHUB_SHA \
             --project=$PROJECT_ID || {
@@ -195,7 +189,7 @@ jobs:
 
       - name: Deploy Frontend to Cloud Run
         run: |
-          IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME:$GITHUB_SHA"
+          IMAGE_URI="$ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME:$GITHUB_SHA"
           echo "Deploying to Cloud Run..."
           echo "Image: $IMAGE_URI"
           echo "Service: $SERVICE_NAME"
@@ -226,7 +220,7 @@ jobs:
             echo ""
             echo "Troubleshooting:"
             echo "1. Check if image exists:"
-            gcloud artifacts docker images list $REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME --limit=5 || echo "  Cannot list images"
+            gcloud artifacts docker images list $ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$SERVICE_NAME --limit=5 || echo "  Cannot list images"
             echo ""
             echo "2. Check service account permissions:"
             gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --filter="bindings.members:*run-service-account*" --format="table(bindings.role)" || echo "  Cannot check permissions"
