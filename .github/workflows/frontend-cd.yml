@@ -31,16 +31,39 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Verify project and set default
+      - name: Verify project and service account
         run: |
           gcloud config set project $PROJECT_ID
           echo "Current project: $(gcloud config get-value project)"
-          echo "Project number: $(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')"
-          # Verify project exists and is accessible
-          gcloud projects describe $PROJECT_ID || {
-            echo "❌ Error: Project $PROJECT_ID not found or not accessible"
+          
+          # Get project details
+          PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)' 2>/dev/null)
+          PROJECT_STATE=$(gcloud projects describe $PROJECT_ID --format='value(lifecycleState)' 2>/dev/null)
+          
+          if [ -z "$PROJECT_NUMBER" ]; then
+            echo "❌ ERROR: Project $PROJECT_ID not found!"
+            echo "Please verify the project ID is correct."
             exit 1
-          }
+          fi
+          
+          if [ "$PROJECT_STATE" != "ACTIVE" ]; then
+            echo "❌ ERROR: Project $PROJECT_ID is not ACTIVE (State: $PROJECT_STATE)"
+            exit 1
+          fi
+          
+          echo "✅ Project verified: $PROJECT_ID (Number: $PROJECT_NUMBER, State: $PROJECT_STATE)"
+          
+          # Verify service account is in the correct project
+          SA_EMAIL=$(gcloud auth list --filter=status:ACTIVE --format="value(account)" 2>/dev/null | head -n1)
+          if [ -n "$SA_EMAIL" ]; then
+            echo "Service account in use: $SA_EMAIL"
+            # Check if it's from the correct project
+            if [[ "$SA_EMAIL" != *"@${PROJECT_ID}.iam.gserviceaccount.com" ]] && [[ "$SA_EMAIL" != *"@${PROJECT_ID}.appspot.com" ]]; then
+              echo "⚠️  WARNING: Service account may be from a different project!"
+              echo "Expected: *@${PROJECT_ID}.iam.gserviceaccount.com"
+              echo "Found: $SA_EMAIL"
+            fi
+          fi
 
       - name: Create Artifact Registry repository if not exists
         run: |
