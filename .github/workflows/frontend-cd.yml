@@ -1,4 +1,4 @@
-name: Frontend CD - Deploy to GCP
+name: Frontend CD - Deploy to Cloud Run
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allow manual trigger
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID || 'eliteinova' }}
   REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
   SERVICE_NAME: matrimony-frontend
 
@@ -39,6 +39,8 @@ jobs:
           # Try to get backend URL from secret, or fetch from Cloud Run
           if [ -n "${{ secrets.BACKEND_URL }}" ]; then
             BACKEND_URL="${{ secrets.BACKEND_URL }}"
+          elif [ -n "${{ secrets.VITE_API_URL }}" ]; then
+            BACKEND_URL="${{ secrets.VITE_API_URL }}"
           else
             # Try to get from Cloud Run service
             BACKEND_URL=$(gcloud run services describe matrimony-backend \
@@ -47,8 +49,8 @@ jobs:
           fi
           
           if [ -z "$BACKEND_URL" ]; then
-            echo "⚠️ Backend URL not found. Using default or secret value."
-            BACKEND_URL="${{ secrets.VITE_API_URL || 'http://localhost:8080' }}"
+            echo "⚠️ Backend URL not found. Using default."
+            BACKEND_URL="https://matrimony-backend-xxxxx-uc.a.run.app"
           fi
           
           echo "url=$BACKEND_URL" >> $GITHUB_OUTPUT
