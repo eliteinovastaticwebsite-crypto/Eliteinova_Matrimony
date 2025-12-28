@@ -12,27 +12,9 @@ import {
 
 // Mock data - Updated with only the 5 specified categories (no pricing)
 const mockServices = [
-  // 1. Free & Premium Membership Plans
+  // 1. Premium Membership Plans
   {
     id: 1,
-    name: "Free Membership",
-    description:
-      "Start your journey with our free basic membership - create profile, browse matches, and send limited interests.",
-    duration: "Lifetime Access",
-    category: "membership",
-    featured: true,
-    popular: true,
-    icon: HeartOutlineIcon,
-    features: [
-      "Basic Profile Creation",
-      "Limited Match Browsing",
-      "5 Interests per Month",
-      "Community Access"
-    ],
-    badge: "Most Popular"
-  },
-  {
-    id: 2,
     name: "Premium Membership",
     description:
       "Unlock advanced features with premium membership for faster and better matchmaking results.",
@@ -183,17 +165,6 @@ class MockServiceService {
     };
   }
 
-  // New method to get free services
-  async getFreeServices() {
-    await delay(400);
-    const freeServices = mockServices.filter(service => service.name.includes("Free"));
-    
-    return {
-      success: true,
-      services: freeServices,
-      total: freeServices.length
-    };
-  }
 }
 
 export const mockServiceService = new MockServiceService();

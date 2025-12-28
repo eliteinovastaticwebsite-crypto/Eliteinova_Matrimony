@@ -6,8 +6,8 @@ const FullFAQPage = () => {
   const toggleFAQ = (index) => setOpenIndex(openIndex === index ? null : index);
 
   const faqs = [
-    { question: "How do I register on the matrimony website?", answer: "You can register by clicking the “Register Free” or “Create Profile” button and filling in your details such as name, age, gender, religion, mother tongue, education, profession, and contact information." },
-    { question: "Is registration free?", answer: "Yes, registration is usually free. However, some premium features (like viewing contact details or sending messages) may require a paid membership." },
+    { question: "How do I register on the matrimony website?", answer: "You can register by clicking the "Register" or "Create Profile" button and filling in your details such as name, age, gender, religion, mother tongue, education, profession, and contact information." },
+    { question: "What features are available after registration?", answer: "After registration, you can create your profile, browse matches, and access basic features. Premium features (like viewing contact details or sending unlimited messages) are available with paid membership plans." },
     { question: "Can I create a profile for someone else (like my son, daughter, or sibling)?", answer: "Yes, many matrimony sites allow you to create a profile on behalf of a family member or friend." },
     { question: "What information do I need to create a profile?", answer: "Basic details (personal info, education, occupation), family background, lifestyle preferences, and partner preferences." },
     { question: "Can I edit my profile after registration?", answer: "Yes, you can log in anytime to update or modify your information and upload new photos." },

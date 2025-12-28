@@ -23,7 +23,7 @@ export const mockPlanService = {
           "Profile Verification Available",
           "Mobile App Access"
         ],
-        buttonText: "Start Free"
+        buttonText: "Get Started"
       },
       {
         id: 2,
@@ -133,7 +133,7 @@ export const mockPlanService = {
             "Profile Verification Available",
             "Mobile App Access"
           ],
-          buttonText: "Start Free"
+          buttonText: "Get Started"
         },
         {
           id: 2,

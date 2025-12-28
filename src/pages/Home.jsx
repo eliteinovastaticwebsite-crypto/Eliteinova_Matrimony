@@ -331,7 +331,7 @@ export default function Home({ onOpenAuthModal }) {
                       </div>
                     ) : (
                       <>
-                        <span>Start Free Today</span>
+                        <span>Register Now</span>
                         <span className="text-xl transform group-hover:scale-110 transition-transform">
                           🎯
                         </span>
@@ -372,7 +372,7 @@ export default function Home({ onOpenAuthModal }) {
                   "100% Verified Profiles",
                   "Secure & Private",
                   "24/7 Support",
-                  "Free Registration",
+                  "Register Now",
                 ].map((feature, index) => (
                   <div key={index} className="flex items-center space-x-1">
                     <span className="text-green-500">✓</span>
@@ -658,7 +658,7 @@ export default function Home({ onOpenAuthModal }) {
                   Create Your Profile
                 </button>
                 <div className="text-xs text-gray-500">
-                  Free registration • Verified profiles • Secure platform
+                  Verified profiles • Secure platform
                 </div>
               </div>
             </div>
@@ -680,7 +680,7 @@ export default function Home({ onOpenAuthModal }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Free & Premium Membership Plans */}
+            {/* Premium Membership Plans */}
             <div className="group bg-white rounded-2xl border border-red-500/20 p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
               <div className="flex items-center space-x-4 mb-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
@@ -691,7 +691,7 @@ export default function Home({ onOpenAuthModal }) {
                     Membership Plans
                   </div>
                   <div className="text-red-500 font-semibold">
-                    Free & Premium Options
+                    Premium Membership Options
                   </div>
                 </div>
               </div>
@@ -702,7 +702,7 @@ export default function Home({ onOpenAuthModal }) {
                 </div>
                 <div className="space-y-3">
                   {[
-                    "Free basic profile creation",
+                    "Complete profile creation",
                     "Premium advanced features",
                     "Unlimited matches",
                     "Priority customer support",
@@ -952,7 +952,7 @@ export default function Home({ onOpenAuthModal }) {
               onClick={handleRegisterFromCard}
               className="bg-gradient-to-r from-red-600 to-red-500 text-white px-12 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105"
             >
-              Register Free Now
+              Register Now
             </button>
           ) : (
             <button

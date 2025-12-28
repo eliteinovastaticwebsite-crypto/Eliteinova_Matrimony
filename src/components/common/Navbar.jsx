@@ -390,7 +390,7 @@ const isStaffOffice = isOfficeTokenPresent();
                   onClick={handleRegisterClick}
                   className="px-8 py-3 rounded-full font-bold transition-all duration-300 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-red-900 hover:scale-105 shadow-lg hover:shadow-xl"
                 >
-                  Register Free
+                  Register
                 </button>
 
                 <button

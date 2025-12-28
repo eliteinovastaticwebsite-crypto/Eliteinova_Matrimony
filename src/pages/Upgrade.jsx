@@ -48,7 +48,7 @@ const getFallbackPlans = () => [
       "Profile Verification Available",
       "Mobile App Access"
     ],
-    buttonText: "Start Free"
+    buttonText: "Get Started"
   },
   {
     id: 2,
@@ -303,7 +303,7 @@ export default function Upgrade({ onOpenAuthModal }) {
                         plan.popular ? 'text-yellow-600' : 
                         plan.name === 'Silver' ? 'text-gray-600' : 'text-purple-600'
                       }`}>
-                        {plan.price === "0" || plan.price === 0 ? "Free" : `₹${plan.price}`}
+                        {`₹${plan.price}`}
                       </span>
                       <span className="text-gray-500 text-lg">/{plan.duration}</span>
                     </div>
