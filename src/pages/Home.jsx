@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/auth/LoginCard";
 import CategoryNav from "../components/common/CategoryNav";
 import { useAuth } from "../context/AuthContext"; 
-import ProfileService from "../services/profileService";
+import ProfileService from "../services/ProfileService";
 import AuthModal from "../components/auth/AuthModal";
 import FAQSection from "../components/common/FAQSection";
 import Banner from "../components/common/Banner";

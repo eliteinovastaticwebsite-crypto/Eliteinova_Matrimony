@@ -1,6 +1,6 @@
 // src/components/profiles/ProfilesList.jsx
 import React, { useState, useEffect } from "react";
-import profileService from "../../services/profileService"; // REAL SERVICE
+import profileService from "../../services/ProfileService"; // REAL SERVICE
 import ProfileCard from "./ProfileCard";
 import ProfileFilters from "../profiles/FilterSidebar";
 import { useAuth } from "../../context/AuthContext"; // REAL AUTH CONTEXT
