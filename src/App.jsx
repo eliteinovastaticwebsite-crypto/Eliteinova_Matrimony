@@ -284,7 +284,7 @@ function AppContent() {
           
           <Route path="/bride-profile/:id" element={<DetailedProfilePage />} />
           <Route path="/groom-profile/:id" element={<DetailedProfilePage />} />
-          <Route path="/faqs" element={<FullFAQPage />} />
+          <Route path="/faqs" element={<FullFAQPage onOpenRegister={openRegisterModal} />} />
 
           <Route path="/notifications/:id" element={<NotificationDetails />} />
 
@@ -354,6 +354,8 @@ function AppContent() {
           <FloatingActions
             whatsappNumber="+917845554882"
             phoneNumber="+917845554882"
+            onRegister={openRegisterModal}
+            isAuthenticated={isAuthenticated}
           />
           <ChatWidget />
         </>
