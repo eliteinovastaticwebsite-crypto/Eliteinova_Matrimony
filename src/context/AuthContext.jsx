@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AuthService from '../services/authService';
-import ProfileService from '../services/ProfileService';
+import ProfileService from '../services/profileService';
 import api from '../api/axiosUser'; // Remove testBackendConnection import
 
 const AuthContext = createContext();
@@ -250,7 +250,7 @@ const uploadPendingFiles = async (userId, token) => {
       }
 
       console.log('📝 Creating profile for user:', user.id);
-      const result = await profileService.updateProfile(profileData);
+      const result = await ProfileService.updateProfile(profileData);
       
       // Update local user data
       if (result.user) {
@@ -288,7 +288,7 @@ const uploadPendingFiles = async (userId, token) => {
       }
 
       console.log('📝 Updating profile for user:', user.id);
-      const result = await profileService.updateProfile(profileData);
+      const result = await ProfileService.updateProfile(profileData);
       
       // Update local user data
       if (result.user) {
@@ -326,7 +326,7 @@ const uploadPendingFiles = async (userId, token) => {
       }
 
       console.log('📋 Getting profile for user:', user.id);
-      const result = await profileService.getMyProfile();
+      const result = await ProfileService.getMyProfile();
       
       return {
         success: true,

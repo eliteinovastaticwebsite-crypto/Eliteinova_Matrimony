@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/auth/LoginCard";
 import CategoryNav from "../components/common/CategoryNav";
 import { useAuth } from "../context/AuthContext"; 
-import ProfileService from "../services/ProfileService";
+import ProfileService from "../services/profileService";
 import AuthModal from "../components/auth/AuthModal";
 import FAQSection from "../components/common/FAQSection";
 import Banner from "../components/common/Banner";
@@ -70,9 +70,9 @@ export default function Home({ onOpenAuthModal }) {
         communityStats: true,
       }));
 
-      // ✅ FIXED: Use real profileService instead of mock
+      // ✅ FIXED: Use real ProfileService instead of mock
       // Load featured profiles from real backend
-      const featuredResult = await profileService.getAllProfiles(0, 6); // Get first 6 profiles
+      const featuredResult = await ProfileService.getAllProfiles(0, 6); // Get first 6 profiles
       if (featuredResult && featuredResult.content) {
         setFeaturedProfiles(featuredResult.content.slice(0, 3)); // Show first 3 as featured
       } else {

@@ -2,7 +2,6 @@
 const getApiBaseUrl = () => {
   // Check for environment variable first
   if (import.meta.env.VITE_API_URL) {
-    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
     return import.meta.env.VITE_API_URL;
   }
   
@@ -11,8 +10,8 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8080';
   }
   
-  // Production fallback - Cloud Run backend URL
-  return 'https://matrimony-backend-22341588900.us-central1.run.app';
+  // Production fallback - should be set via environment variable
+  return window.location.origin;
 };
 
 export const API_BASE_URL = getApiBaseUrl();
