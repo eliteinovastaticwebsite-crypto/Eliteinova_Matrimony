@@ -62,7 +62,7 @@ export default function PrivacyPolicy() {
 
         <h2 className="text-2xl font-bold text-red-800 mt-10 mb-3">5. Membership Plans</h2>
         <p className="mb-6">
-          Free membership allows basic profile access. Premium membership provides advanced features such as
+          Basic membership allows profile access. Premium membership provides advanced features such as
           chat access, contact view, and interest requests. All payments for premium plans are non-refundable,
           except in case of technical issues verified by our team. Membership validity and benefits will be
           clearly mentioned in the plan details.

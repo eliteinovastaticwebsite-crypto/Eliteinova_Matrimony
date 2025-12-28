@@ -7,11 +7,15 @@ import { PhoneIcon } from "@heroicons/react/24/solid";
  *  - phoneNumber: string (tel link)
  *  - playStoreUrl: string (link to Play store)
  *  - appStoreUrl: string (link to App Store)
+ *  - onRegister: function (callback to open register modal)
+ *  - isAuthenticated: boolean (whether user is logged in)
  */
 
 export default function FloatingActions({
   whatsappNumber = "+91 7845554882",
   phoneNumber = "+91 7845554882",
+  onRegister,
+  isAuthenticated = false,
 //   playStoreUrl = "#",
 //   appStoreUrl = "#",
 }) {
@@ -51,6 +55,18 @@ export default function FloatingActions({
           <path d="M3.6 2.3L17 11.99 3.6 21.7c-.8.5-1.6-.1-1.6-.9V3.2c0-.8.8-1.4 1.6-1zM20.1 6.1c.6-.4.6-1.4 0-1.8l-3.1-2.1-5.8 6 5.8 6 3.1-2.1c.6-.4.6-1.4 0-1.8L15 12l5.1-5.9z" />
         </svg>
       </a> */}
+
+      {/* Register Button - Above WhatsApp */}
+      {onRegister && !isAuthenticated && (
+        <button
+          onClick={onRegister}
+          aria-label="Register"
+          className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 font-bold text-xs"
+          title="Register Now"
+        >
+          Register
+        </button>
+      )}
 
       {/* WhatsApp */}
       <a

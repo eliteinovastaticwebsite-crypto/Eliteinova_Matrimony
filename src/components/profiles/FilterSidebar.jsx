@@ -255,6 +255,125 @@ const casteData = {
   },
 };
 
+// 📙 Subcaste data - Common subcastes for each caste
+const subCasteData = {
+  Hindu: {
+    "Brahmin - Iyer": ["Iyer", "Iyer Vadama", "Iyer Brahacharanam", "Iyer Vathima", "Others"],
+    "Brahmin - Iyengar": ["Iyengar Thenkalai", "Iyengar Vadakalai", "Others"],
+    "Chettiar": ["Nagarathar", "Chettiar", "Others"],
+    "Naidu": ["Naidu", "Balija Naidu", "Kapu Naidu", "Telaga Naidu", "Others"],
+    "Reddy": ["Reddy", "Kapu Reddy", "Telaga Reddy", "Others"],
+    "Mudaliar": ["Mudaliar", "Saiva Vellalar", "Others"],
+    "Pillai": ["Pillai", "Saiva Pillai", "Others"],
+    "Vellalar": ["Vellalar", "Kongu Vellalar", "Isai Vellalar", "Others"],
+    "Vanniyar": ["Vanniyar", "Vanniyakula Kshatriya", "Padayachi", "Others"],
+    "Gounder": ["Gounder", "Kongu Vellalar Gounder", "Others"],
+    "Nadar": ["Nadar", "Shanar", "Others"],
+    "Thevar": ["Thevar", "Mukkulathor", "Others"],
+    "Yadava": ["Yadava", "Idaiyar", "Others"],
+    "Naicker": ["Naicker", "Naidu Naicker", "Others"],
+    "Kallar": ["Kallar", "Devendra Kula Vellalar", "Others"],
+    "Agamudayar": ["Agamudayar", "Agamudaiyar", "Others"],
+    "Maravar": ["Maravar", "Mukkulathor", "Others"],
+    "Isai Vellalar": ["Isai Vellalar", "Others"],
+    "Udayar": ["Udayar", "Others"],
+    "Vanniyakula Kshatriya": ["Vanniyakula Kshatriya", "Vanniyar", "Others"],
+    "Paraiyar": ["Paraiyar", "Adi Dravidar", "Others"],
+    "Pallar (Devendrakula Velalar)": ["Pallar", "Devendrakula Vellalar", "Others"],
+    "Arunthathiyar": ["Arunthathiyar", "Chakkiliyar", "Others"],
+    "Chakkiliyar": ["Chakkiliyar", "Arunthathiyar", "Others"],
+    "Sambavar": ["Sambavar", "Others"],
+    "Sunni": ["Sunni", "Hanafi", "Shafi", "Others"],
+    "Shia": ["Shia", "Twelver", "Ismaili", "Others"],
+    "Roman Catholic": ["Roman Catholic", "Latin Catholic", "Syro-Malabar", "Others"],
+    "Syrian Catholic": ["Syrian Catholic", "Syro-Malankara", "Others"],
+    "CSI": ["CSI", "Church of South India", "Others"],
+    "Marthoma": ["Marthoma", "Marthoma Syrian", "Others"],
+    "Others": ["Others"],
+  },
+  Muslim: {
+    "Sunni": ["Sunni", "Hanafi", "Shafi", "Maliki", "Hanbali", "Others"],
+    "Shia": ["Shia", "Twelver", "Ismaili", "Others"],
+    "Pathan": ["Pathan", "Pashtun", "Others"],
+    "Memon": ["Memon", "Kutchi Memon", "Others"],
+    "Dawoodi Bohra": ["Dawoodi Bohra", "Bohra", "Others"],
+    "Labbai": ["Labbai", "Rowther", "Others"],
+    "Rowther": ["Rowther", "Labbai", "Others"],
+    "Marakkayar": ["Marakkayar", "Others"],
+    "Ansari": ["Ansari", "Others"],
+    "Others": ["Others"],
+  },
+  Christian: {
+    "Roman Catholic": ["Roman Catholic", "Latin Catholic", "Syro-Malabar", "Syro-Malankara", "Others"],
+    "Syrian Catholic": ["Syrian Catholic", "Syro-Malankara", "Others"],
+    "CSI": ["CSI", "Church of South India", "Others"],
+    "Marthoma": ["Marthoma", "Marthoma Syrian", "Others"],
+    "Pentecostal": ["Pentecostal", "Assemblies of God", "Others"],
+    "Protestant": ["Protestant", "Lutheran", "Others"],
+    "Evangelical": ["Evangelical", "Others"],
+    "Dalit Christian": ["Dalit Christian", "Adi Dravidar Christian", "Others"],
+    "Adi Dravidar Christian": ["Adi Dravidar Christian", "Dalit Christian", "Others"],
+    "Others": ["Others"],
+  },
+};
+
+// 📘 Indian Regions mapping (states grouped by regions)
+const regionMapping = {
+  "North": [
+    "Jammu and Kashmir", "Himachal Pradesh", "Punjab", "Haryana", 
+    "Uttarakhand", "Delhi", "Chandigarh", "Ladakh"
+  ],
+  "South": [
+    "Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh", 
+    "Telangana", "Puducherry", "Lakshadweep", "Andaman and Nicobar Islands"
+  ],
+  "East": [
+    "West Bengal", "Odisha", "Bihar", "Jharkhand", 
+    "Sikkim", "Assam", "Tripura", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Arunachal Pradesh"
+  ],
+  "West": [
+    "Maharashtra", "Gujarat", "Goa", "Dadra and Nagar Haveli and Daman and Diu"
+  ],
+  "Central": [
+    "Madhya Pradesh", "Chhattisgarh", "Uttar Pradesh", "Rajasthan"
+  ]
+};
+
+// Helper function to get states by region
+const getStatesByRegion = (region) => {
+  return regionMapping[region] || [];
+};
+
+// Helper function to get all unique castes across all religions
+const getAllCastes = () => {
+  const allCastes = new Set();
+  Object.values(casteData).forEach(religionData => {
+    Object.values(religionData).forEach(casteList => {
+      casteList.forEach(caste => {
+        if (caste !== "Others") {
+          allCastes.add(caste);
+        }
+      });
+    });
+  });
+  return Array.from(allCastes).sort();
+};
+
+// Helper function to get all unique subcastes across all religions
+const getAllSubCastes = () => {
+  const allSubCastes = new Set();
+  Object.values(subCasteData).forEach(religionData => {
+    Object.values(religionData).forEach(subCasteList => {
+      subCasteList.forEach(subCaste => {
+        if (subCaste !== "Others") {
+          allSubCastes.add(subCaste);
+        }
+      });
+    });
+  });
+  return Array.from(allSubCastes).sort();
+};
+
 const professionOptions = [
   { value: "", label: "Select Occupation" },
   { value: "Software Engineer", label: "Software Engineer" },
@@ -314,6 +433,9 @@ export default function FilterSidebar({
       dosham: "",
       maritalStatus: "",
 
+      // Profile Information
+      region: "",
+
       // Professional Details
       education: "",
       profession: "",
@@ -332,7 +454,13 @@ export default function FilterSidebar({
   // Determine available options based on selected religion/category
   const availableCategories = religionCategories[filters.religion] || [];
   const availableCastes = casteData[filters.religion]?.[filters.category] || [];
+  const availableSubCastes = subCasteData[filters.religion]?.[filters.caste] || [];
   const districtOptions = districtsByState[filters.state] || [];
+  
+  // Filter states by region if region is selected
+  const availableStates = filters.region 
+    ? indianStates.filter(state => getStatesByRegion(filters.region).includes(state))
+    : indianStates;
 
   return (
     <aside
@@ -406,53 +534,60 @@ export default function FilterSidebar({
             theme={currentTheme}
           />
 
+          {/* Category Filter (BC, OBC, MBC, SC, ST, etc.) */}
           {filters.religion && (
-            <>
-              <CustomSelect
-                value={filters.category || ""}
-                onChange={(e) => {
-                  const newFilters = { ...filters, category: e.target.value };
-                  delete newFilters.caste;
-                  delete newFilters.subCaste;
-                  onFilterChange(newFilters);
-                }}
-                options={[
-                  { value: "", label: "Select Category" },
-                  ...availableCategories.map((c) => ({ value: c, label: c })),
-                ]}
-                theme={currentTheme}
-              />
+            <CustomSelect
+              value={filters.category || ""}
+              onChange={(e) => {
+                const newFilters = { ...filters, category: e.target.value };
+                delete newFilters.caste;
+                delete newFilters.subCaste;
+                onFilterChange(newFilters);
+              }}
+              options={[
+                { value: "", label: "Select Category (BC/OBC/MBC/SC/ST)" },
+                ...availableCategories.map((c) => ({ value: c, label: c })),
+              ]}
+              theme={currentTheme}
+            />
+          )}
 
-              {filters.category && (
-                <CustomSelect
-                  value={filters.caste || ""}
-                  onChange={(e) => {
-                    const newFilters = { ...filters, caste: e.target.value };
-                    delete newFilters.subCaste;
-                    onFilterChange(newFilters);
-                  }}
-                  options={[
-                    { value: "", label: `Select ${filters.category} Caste` },
-                    ...(
-                      casteData[filters.religion]?.[filters.category] || []
-                    ).map((c) => ({
-                      value: c,
-                      label: c,
-                    })),
-                  ]}
-                  theme={currentTheme}
-                />
-              )}
+          {/* Caste Filter */}
+          {filters.religion && filters.category && (
+            <CustomSelect
+              value={filters.caste || ""}
+              onChange={(e) => {
+                const newFilters = { ...filters, caste: e.target.value };
+                delete newFilters.subCaste;
+                onFilterChange(newFilters);
+              }}
+              options={[
+                { value: "", label: `Select Caste (${filters.category})` },
+                ...(
+                  casteData[filters.religion]?.[filters.category] || []
+                ).map((c) => ({
+                  value: c,
+                  label: c,
+                })),
+              ]}
+              theme={currentTheme}
+            />
+          )}
 
-              {filters.caste && (
-                <Input
-                  placeholder="Subcaste (Optional)"
-                  value={filters.subCaste || ""}
-                  onChange={(e) => handleChange("subCaste", e.target.value)}
-                  theme={currentTheme}
-                />
-              )}
-            </>
+          {/* Subcaste Filter */}
+          {filters.religion && filters.category && filters.caste && (
+            <CustomSelect
+              value={filters.subCaste || ""}
+              onChange={(e) => handleChange("subCaste", e.target.value)}
+              options={[
+                { value: "", label: "Select Subcaste (Optional)" },
+                ...availableSubCastes.map((sc) => ({
+                  value: sc,
+                  label: sc,
+                })),
+              ]}
+              theme={currentTheme}
+            />
           )}
 
           <CustomSelect
@@ -476,6 +611,66 @@ export default function FilterSidebar({
               { value: "Divorced", label: "Divorced" },
               { value: "Widowed", label: "Widowed" },
               { value: "Separated", label: "Separated" },
+            ]}
+            theme={currentTheme}
+          />
+        </FilterBox>
+
+        {/* PROFILE INFORMATION */}
+        <FilterBox title="Profile Information" theme={currentTheme}>
+          {/* Region Filter */}
+          <CustomSelect
+            value={filters.region || ""}
+            onChange={(e) => {
+              const newFilters = { ...filters, region: e.target.value };
+              // If region is selected, optionally filter states by region
+              // If region is cleared, don't clear state
+              onFilterChange(newFilters);
+            }}
+            options={[
+              { value: "", label: "Select Region" },
+              { value: "North", label: "North" },
+              { value: "South", label: "South" },
+              { value: "East", label: "East" },
+              { value: "West", label: "West" },
+              { value: "Central", label: "Central" },
+            ]}
+            theme={currentTheme}
+          />
+
+          {/* Caste Filter - Standalone */}
+          <CustomSelect
+            value={filters.caste || ""}
+            onChange={(e) => {
+              const newFilters = { ...filters, caste: e.target.value };
+              // Clear subCaste when caste changes
+              if (e.target.value === "") {
+                delete newFilters.subCaste;
+              } else {
+                delete newFilters.subCaste;
+              }
+              onFilterChange(newFilters);
+            }}
+            options={[
+              { value: "", label: "Select Caste" },
+              ...getAllCastes().map((c) => ({
+                value: c,
+                label: c,
+              })),
+            ]}
+            theme={currentTheme}
+          />
+
+          {/* Sub Caste Filter - Standalone */}
+          <CustomSelect
+            value={filters.subCaste || ""}
+            onChange={(e) => handleChange("subCaste", e.target.value)}
+            options={[
+              { value: "", label: "Select Sub Caste" },
+              ...getAllSubCastes().map((sc) => ({
+                value: sc,
+                label: sc,
+              })),
             ]}
             theme={currentTheme}
           />
@@ -569,8 +764,8 @@ export default function FilterSidebar({
                 onFilterChange(newFilters);
               }}
               options={[
-                { value: "", label: "Select State" },
-                ...indianStates.map((s) => ({ value: s, label: s })),
+                { value: "", label: filters.region ? `Select State (${filters.region})` : "Select State" },
+                ...availableStates.map((s) => ({ value: s, label: s })),
               ]}
               theme={currentTheme}
             />

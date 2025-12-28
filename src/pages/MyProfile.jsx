@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import profileService from "../services/profileService";
+import profileService from "../services/ProfileService";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { buildImageUrl } from "../config/api";

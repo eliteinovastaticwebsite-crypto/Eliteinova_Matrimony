@@ -1,6 +1,6 @@
 // src/components/profiles/ProfileCard.jsx - FIXED IMAGE URL PROCESSING
 import React, { useState, useEffect, useCallback } from "react";
-import profileService from "../../services/profileService";
+import profileService from "../../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { buildImageUrl, buildApiUrl } from "../../config/api";
 

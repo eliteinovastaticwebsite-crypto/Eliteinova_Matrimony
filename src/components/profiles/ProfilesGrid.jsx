@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ProfileCard from "./ProfileCard";
-import profileService from "../../services/profileService"; 
+import profileService from "../../services/ProfileService"; 
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; 
 

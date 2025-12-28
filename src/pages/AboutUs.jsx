@@ -340,7 +340,7 @@ const AboutUs = () => {
               onClick={() => handleOpenAuthModal("register")}
               className="px-8 py-4 bg-white text-red-600 font-bold rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:scale-105"
             >
-              Start Free Registration
+              Register Now
             </button>
             <button
               onClick={handleContactClick}

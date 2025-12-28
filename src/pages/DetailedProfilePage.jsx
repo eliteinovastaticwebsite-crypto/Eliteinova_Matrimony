@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import profileService from "../services/profileService";
+import profileService from "../services/ProfileService";
 import {
   ArrowLeft,
   Heart,

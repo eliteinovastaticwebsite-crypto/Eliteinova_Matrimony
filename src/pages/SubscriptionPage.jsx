@@ -113,9 +113,9 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
       id: 1,
       name: "Silver",
       description: "Essential features to start your journey",
-      price: "0",
-      originalPrice: "0",
-      duration: "Forever",
+      price: "299",
+      originalPrice: "299",
+      duration: "1 month",
       features: [
         "Create Complete Profile",
         "Browse Limited Profiles Daily",
@@ -125,7 +125,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
         "Profile Verification Available",
         "Mobile App Access",
       ],
-      buttonText: "Start Free",
+      buttonText: "Get Started",
     },
     {
       id: 2,
@@ -656,7 +656,6 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
 
   const styles = getPlanStyles();
   const finalPrice = calculateFinalPrice();
-  const isFreePlan = plan.price === "0" || plan.price === 0;
 
   // Get text color classes
   const getTextColor = () => {
@@ -792,7 +791,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                 {/* Pricing */}
                 <div className="flex items-baseline space-x-2 mb-4">
                   <span className={`text-4xl font-bold ${getTextColor()}`}>
-                    {isFreePlan ? "Free" : `₹${finalPrice.toLocaleString()}`}
+                    {`₹${finalPrice.toLocaleString()}`}
                   </span>
                   <span className="text-gray-500 text-lg">
                     /{plan.duration}
@@ -868,8 +867,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
             </h3>
 
             {/* Coupon Section */}
-            {!isFreePlan && (
-              <div className="mb-6">
+            <div className="mb-6">
                 {!showCouponInput ? (
                   <button
                     onClick={() => setShowCouponInput(true)}
@@ -999,8 +997,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
             </div>
 
             {/* Payment Summary */}
-            {!isFreePlan && (
-              <div className="bg-gray-50 rounded-xl p-4 mb-6">
+            <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Plan Price:</span>
                   <span className="font-semibold">₹{plan.price}</span>
@@ -1027,7 +1024,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
             {/* CTA Button */}
             <button
               onClick={handlePayment}
-              disabled={processing || (!isFreePlan && !agreedToTerms)}
+              disabled={processing || !agreedToTerms}
               className={`w-full py-4 bg-gradient-to-r ${
                 getCTAButtonStyles().gradient
               } ${getCTAButtonStyles().hoverGradient} ${
@@ -1043,9 +1040,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                 <span className="flex items-center justify-center space-x-2">
                   <LockClosedIcon className="w-4 h-4" />
                   <span>
-                    {isFreePlan
-                      ? "Activate Free Plan"
-                      : `Pay ₹${finalPrice.toLocaleString()} Now`}
+                    {`Pay ₹${finalPrice.toLocaleString()} Now`}
                   </span>
                   <BoltIcon className="w-4 h-4" />
                 </span>

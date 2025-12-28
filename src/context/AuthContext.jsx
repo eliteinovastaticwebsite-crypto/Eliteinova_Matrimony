@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AuthService from '../services/authService';
-import profileService from '../services/profileService';
+import ProfileService from '../services/ProfileService';
 import api from '../api/axiosUser'; // Remove testBackendConnection import
 
 const AuthContext = createContext();

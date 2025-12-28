@@ -45,6 +45,16 @@ const isStaffOffice = isOfficeTokenPresent();
 
   const { user, isAuthenticated, logout, isAdmin } = useAuth();
 
+  // Check if we're on the FAQ page - more explicit check
+  const isFAQPage = location.pathname === "/faqs" || 
+                     location.pathname === "/faqs/" ||
+                     location.pathname.startsWith("/faqs");
+  
+  // Debug log (remove in production)
+  useEffect(() => {
+    console.log("Current pathname:", location.pathname, "isFAQPage:", isFAQPage);
+  }, [location.pathname, isFAQPage]);
+
   // Pages that need h-10 spacer
   const shortSpacerPages = [
     "/",
@@ -382,15 +392,9 @@ const isStaffOffice = isOfficeTokenPresent();
                 {/* Auth Buttons */}
                 <button
                   onClick={handleLoginClick}
-                  className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Login
-                </button>
-                <button
-                  onClick={handleRegisterClick}
-                  className="px-8 py-3 rounded-full font-bold transition-all duration-300 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-red-900 hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  Register Free
                 </button>
 
                 <button
@@ -602,18 +606,12 @@ const isStaffOffice = isOfficeTokenPresent();
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-4 grid-cols-1">
                     <button
                       onClick={handleLoginClick}
-                      className="px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg"
+                      className="px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg"
                     >
                       Login
-                    </button>
-                    <button
-                      onClick={handleRegisterClick}
-                      className="px-4 py-4 rounded-2xl font-bold transition-all duration-300 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-red-900"
-                    >
-                      Register
                     </button>
                   </div>
 
