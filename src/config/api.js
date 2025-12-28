@@ -11,8 +11,8 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8080';
   }
   
-  // Production fallback - should be set via environment variable
-  return window.location.origin;
+  // Production fallback - Cloud Run backend URL
+  return 'https://matrimony-backend-22341588900.us-central1.run.app';
 };
 
 export const API_BASE_URL = getApiBaseUrl();
