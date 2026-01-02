@@ -109,7 +109,7 @@ jobs:
             fi
           fi
 
-      - name: Verify Artifact Registry repository
+      - name: Verify or Create Artifact Registry repository
         run: |
           echo "Checking Artifact Registry repository: $ARTIFACT_REGISTRY_REPO"
           echo "Repository location: $ARTIFACT_REGISTRY_LOCATION"
@@ -120,13 +120,30 @@ jobs:
             --project=$PROJECT_ID 2>/dev/null; then
             echo "✅ Repository exists and is accessible: $ARTIFACT_REGISTRY_REPO"
           else
-            echo "❌ Repository '$ARTIFACT_REGISTRY_REPO' not found in location '$ARTIFACT_REGISTRY_LOCATION'!"
+            echo "⚠️  Repository '$ARTIFACT_REGISTRY_REPO' not found in location '$ARTIFACT_REGISTRY_LOCATION'!"
             echo ""
-            echo "Listing available repositories:"
-            gcloud artifacts repositories list --project=$PROJECT_ID --format="table(name,format,location)" || echo "Cannot list repositories"
-            echo ""
-            echo "Please check the repository name and location."
-            exit 1
+            echo "Attempting to create repository..."
+            
+            # Try to create the repository
+            if gcloud artifacts repositories create $ARTIFACT_REGISTRY_REPO \
+              --repository-format=docker \
+              --location=$ARTIFACT_REGISTRY_LOCATION \
+              --project=$PROJECT_ID \
+              --description="Docker repository for matrimony frontend" 2>/dev/null; then
+              echo "✅ Repository created successfully: $ARTIFACT_REGISTRY_REPO"
+            else
+              echo "❌ Failed to create repository automatically!"
+              echo ""
+              echo "Please create it manually using:"
+              echo "gcloud artifacts repositories create $ARTIFACT_REGISTRY_REPO \\"
+              echo "  --repository-format=docker \\"
+              echo "  --location=$ARTIFACT_REGISTRY_LOCATION \\"
+              echo "  --project=$PROJECT_ID"
+              echo ""
+              echo "Or check available repositories:"
+              gcloud artifacts repositories list --project=$PROJECT_ID --format="table(name,format,location)" || echo "Cannot list repositories"
+              exit 1
+            fi
           fi
 
       - name: Configure Docker for Artifact Registry
