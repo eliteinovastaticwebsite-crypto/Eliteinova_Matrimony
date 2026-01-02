@@ -31,7 +31,6 @@ This guide covers deploying the Eliteinova Matrimony frontend to production usin
 1. **Google Cloud Project**: `eliteinova`
 2. **Firebase Project**: Linked to your GCP project
 3. **GitHub Secrets**: Configured (see below)
-
 ---
 
 ## 🔧 Setup Instructions
