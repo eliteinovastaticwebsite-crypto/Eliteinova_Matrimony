@@ -65,8 +65,21 @@ export default function MainLayout({ children, onLogin, onRegister }) {
     verifiedProfiles: 890
   };
 
+  // Check if current path should use theme background (profiles, dashboard, etc.)
+  // These pages handle their own background, so we don't add one here
+  const themePaths = ["/profiles", "/dashboard", "/matches", "/messages"];
+  const shouldUseTheme = themePaths.includes(location.pathname);
+  
+  // For theme pages, render children directly without layout wrapper
+  if (shouldUseTheme) {
+    return <>{children}</>;
+  }
+  
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div 
+      className="min-h-screen"
+      style={{ backgroundColor: '#F9FAFB' }}
+    >
       <div className="max-w-7xl mx-auto">
         <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-6 py-8 px-0 sm:px-0">
           

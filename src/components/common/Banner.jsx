@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "../ui/Button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -92,15 +92,16 @@ const { isAuthenticated } = useAuth();
   return (
     <section className="relative w-full min-h-[320px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[580px] overflow-hidden group flex items-center">
       
-      {/* 🔙 Back Button */}
-<div className="absolute top-10 left-6 z-40">
+      {/* 🔙 Back Button - Positioned below navbar */}
+<div className="absolute top-24 md:top-28 left-4 md:left-6 z-40">
   <Button
     variant=""
     size="sm"
     onClick={handleBackClick}
     className="flex items-center gap-2 bg-gray/40 text-white border border-white/30 backdrop-blur-md hover:bg-black/60 transition-all"
   >
-    ← {isAuthenticated ? "Back to Profile" : "Back to Home"}
+    <ArrowLeftIcon className="w-5 h-5" />
+    <span className="hidden md:inline">{isAuthenticated ? "Back to Profile" : "Back to Home"}</span>
   </Button>
 </div>
 

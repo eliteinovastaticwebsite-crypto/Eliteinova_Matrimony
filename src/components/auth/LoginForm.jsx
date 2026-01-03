@@ -39,8 +39,8 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
   };
 
   return (
-    <div className={`${isInModal ? "" : "flex items-center justify-center bg-gradient-to-br from-blue-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8"}`}>
-      <div className={`${isInModal ? "w-full" : "bg-gray-800/50 backdrop-blur-lg shadow-xl rounded-2xl w-full max-w-md p-8 mx-auto border border-gray-700"}`}>
+    <div className={`${isInModal ? "w-full h-full flex flex-col" : "flex items-center justify-center bg-gradient-to-br from-blue-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8"}`}>
+      <div className={`${isInModal ? "w-full h-full flex flex-col px-6 py-4" : "bg-gray-800/50 backdrop-blur-lg shadow-xl rounded-2xl w-full max-w-md p-8 mx-auto border border-gray-700"}`}>
         
         {!isInModal && (
           <div className="text-center mb-6">
@@ -51,7 +51,7 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={`space-y-4 ${isInModal ? "flex-1 flex flex-col" : ""}`}>
           <div>
             <label htmlFor="email" className={`block text-sm font-medium ${isInModal ? "text-gray-700" : "text-gray-300"}`}>
               Email Address
@@ -100,10 +100,25 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
             </div>
           )}
 
-          <Button type="submit" variant="primary" fullWidth disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </Button>
+          <div className={isInModal ? "mt-auto pt-4" : ""}>
+            <Button type="submit" variant="primary" fullWidth disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </div>
         </form>
+
+        {isInModal && onRegister && (
+          <div className="flex justify-center items-center mt-4 pt-4 border-t border-gray-200 text-sm">
+            <span className="text-gray-600">Don't have an account? </span>
+            <button
+              type="button"
+              className="text-red-600 hover:text-red-700 font-medium transition-colors ml-1"
+              onClick={onRegister}
+            >
+              Sign Up
+            </button>
+          </div>
+        )}
 
         {!isInModal && (
           <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-700 text-sm text-gray-300">

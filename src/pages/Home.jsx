@@ -229,6 +229,42 @@ export default function Home({ onOpenAuthModal }) {
         onOpenAuthModal={handleRegisterFromCard}
       />
 
+      {/* Pongal Offer Banner - Prominent Display */}
+      {!isAuthenticated && (
+        <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-6 px-4 relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+          <div className="container mx-auto relative z-10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="text-center md:text-left">
+                <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
+                  🎉 Pongal Special Offer! 🎉
+                </h3>
+                <p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
+                  Free Registration for Pongal offer - All Membership Plans FREE!
+                </p>
+                <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
+                  <span className="text-white/90 line-through text-sm md:text-base">Silver ₹299</span>
+                  <span className="text-white font-bold">|</span>
+                  <span className="text-white/90 line-through text-sm md:text-base">Gold ₹499</span>
+                  <span className="text-white font-bold">|</span>
+                  <span className="text-white/90 line-through text-sm md:text-base">Diamond ₹749</span>
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm md:text-base ml-2">
+                    NOW FREE! ✨
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleRegisterFromCard}
+                className="bg-white text-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center space-x-2 whitespace-nowrap"
+              >
+                <span>Register Now</span>
+                <span className="text-2xl">👉</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Category Navigation at the top */}
       <CategoryNav onSelect={handleCategorySelect} />
 
@@ -316,13 +352,26 @@ export default function Home({ onOpenAuthModal }) {
                 </div> */}
               </div>
 
+              {/* Pongal Offer Badge */}
+              {!isAuthenticated && (
+                <div className="mb-4 inline-block bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl p-3 shadow-lg relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+                  <div className="relative z-10 flex items-center space-x-2">
+                    <span className="text-white font-bold text-sm md:text-base animate-bounce">🎉</span>
+                    <span className="text-white font-semibold text-sm md:text-base">
+                      Pongal Offer: <span className="font-bold">FREE Registration!</span>
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Quick Action Buttons */}
               {!isAuthenticated ? (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleRegisterFromCard}
                     disabled={isLoading}
-                    className="bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
                   >
                     {isLoading ? (
                       <div className="flex items-center space-x-2">
@@ -331,10 +380,13 @@ export default function Home({ onOpenAuthModal }) {
                       </div>
                     ) : (
                       <>
-                        <span>Register Now</span>
+                        <span>Register Now - FREE!</span>
                         <span className="text-xl transform group-hover:scale-110 transition-transform">
                           🎯
                         </span>
+                        <div className="absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-bold rounded-bl-lg">
+                          FREE
+                        </div>
                       </>
                     )}
                   </button>
@@ -948,12 +1000,39 @@ export default function Home({ onOpenAuthModal }) {
             Join millions in finding their perfect life partner
           </p>
           {!isAuthenticated ? (
-            <button
-              onClick={handleRegisterFromCard}
-              className="bg-gradient-to-r from-red-600 to-red-500 text-white px-12 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              Register Now
-            </button>
+            <div className="space-y-6">
+              {/* Pongal Offer Banner */}
+              <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-6 shadow-2xl relative overflow-hidden max-w-2xl mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+                <div className="relative z-10 text-center">
+                  <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
+                    🎉 Pongal Special Offer! 🎉
+                  </h3>
+                  <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
+                    Free Registration for Pongal offer
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
+                    <span className="text-white/90 line-through">Silver ₹299</span>
+                    <span className="text-white font-bold">|</span>
+                    <span className="text-white/90 line-through">Gold ₹499</span>
+                    <span className="text-white font-bold">|</span>
+                    <span className="text-white/90 line-through">Diamond ₹749</span>
+                    <span className="bg-green-500 text-white px-4 py-2 rounded-full font-bold">
+                      ALL FREE NOW! ✨
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleRegisterFromCard}
+                className="bg-gradient-to-r from-red-600 to-red-500 text-white px-12 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 relative"
+              >
+                Register Now - Claim Your FREE Membership
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                  FREE
+                </span>
+              </button>
+            </div>
           ) : (
             <button
               onClick={handleViewAllProfiles}

@@ -296,16 +296,31 @@ export default function Upgrade({ onOpenAuthModal }) {
                     {plan.description}
                   </p>
 
+                  {/* Pongal Offer Banner */}
+                  <div className="mb-6 p-3 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+                    <div className="relative z-10 text-center">
+                      <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
+                        🎉 Pongal Special Offer! 🎉
+                      </h3>
+                      <p className="text-white font-semibold text-xs md:text-sm drop-shadow-lg">
+                        Free Registration for Pongal offer
+                      </p>
+                    </div>
+                  </div>
+
                   {/* Pricing */}
                   <div className="text-center mb-8">
-                    <div className="flex items-baseline justify-center space-x-2">
-                      <span className={`text-4xl font-bold ${
-                        plan.popular ? 'text-yellow-600' : 
-                        plan.name === 'Silver' ? 'text-gray-600' : 'text-purple-600'
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <span className={`text-2xl font-bold line-through ${
+                        plan.popular ? 'text-gray-400' : 
+                        plan.name === 'Silver' ? 'text-gray-400' : 'text-gray-400'
                       }`}>
-                        {`₹${plan.price}`}
+                        {`₹${plan.price}/Per 12 Months`}
                       </span>
-                      <span className="text-gray-500 text-lg">/{plan.duration}</span>
+                      <span className="text-green-600 text-3xl font-bold">
+                        FREE
+                      </span>
                     </div>
                     {plan.savings && (
                       <p className="text-green-600 text-sm font-semibold mt-2">

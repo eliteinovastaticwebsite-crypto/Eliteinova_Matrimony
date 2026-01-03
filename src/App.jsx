@@ -15,6 +15,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
 import "./index.css";
 import { AuthProvider, useAuth } from "./context/AuthContext"; // ✅ CHANGED: Real AuthContext
+import { ThemeProvider } from "./context/ThemeContext";
 import MyProfile from "./pages/MyProfile";
 import Dashboard from "./components/common/Dashboard";
 import Matches from "./components/common/Matches";
@@ -28,14 +29,28 @@ import Notifications from "./components/common/Notifications";
 import NotificationDetails from "./pages/NotificationDetails";
 import AdminLogin from "./pages/AdminLogin";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
+import PaymentProtectedRoute from "./components/common/PaymentProtectedRoute";
 import OfficeLogin from "./pages/OfficeLogin";
-import PaymentPage from "./pages/PaymentPage";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import RegistrationCompletion from "./pages/RegistrationCompletion";
 
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const { user, login, register, logout, isAuthenticated, loading } = useAuth(); // ✅ CHANGED: Real auth context
   const navigate = useNavigate();
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showLogin || showRegister) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showLogin, showRegister]);
 
   const openRegisterModal = () => {
     setShowLogin(false);
@@ -128,97 +143,42 @@ function AppContent() {
             }
           />
           
-          {/* Protected Routes */}
+          {/* Protected Routes - Require Payment */}
           <Route
             path="/profiles"
             element={
-              isAuthenticated ? (
+              <PaymentProtectedRoute>
                 <MainLayout>
                   <ProfilesList onOpenRegister={openRegisterModal} onOpenLogin={openLoginModal}/>
                 </MainLayout>
-              ) : (
-                <div className="flex justify-center items-center min-h-screen">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">
-                      Authentication Required
-                    </h2>
-                    <p className="text-gray-600 mb-4">Please log in to view profiles</p>
-                    <button
-                      onClick={openLoginModal}
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors mr-2"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={openRegisterModal}
-                      className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      Register
-                    </button>
-                  </div>
-                </div>
-              )
+              </PaymentProtectedRoute>
             }
           />
           
           <Route 
             path="/dashboard" 
             element={
-              isAuthenticated ? <Dashboard /> : (
-                <div className="flex justify-center items-center min-h-screen">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">Please Login</h2>
-                    <button
-                      onClick={openLoginModal}
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Login to Continue
-                    </button>
-                  </div>
-                </div>
-              )
+              <PaymentProtectedRoute>
+                <Dashboard />
+              </PaymentProtectedRoute>
             } 
           />
           
           <Route 
             path="/matches" 
             element={
-              isAuthenticated ? <Matches /> : (
-                <div className="flex justify-center items-center min-h-screen">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">Please Login</h2>
-                    <button
-                      onClick={openLoginModal}
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Login to View Matches
-                    </button>
-                  </div>
-                </div>
-              )
+              <PaymentProtectedRoute>
+                <Matches />
+              </PaymentProtectedRoute>
             } 
           />
           
           <Route 
             path="/messages" 
             element={
-              isAuthenticated ? <Messages /> : (
-                <div className="flex justify-center items-center min-h-screen">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">Please Login</h2>
-                    <button
-                      onClick={openLoginModal}
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Login to View Messages
-                    </button>
-                  </div>
-                </div>
-              )
+              <PaymentProtectedRoute>
+                <Messages />
+              </PaymentProtectedRoute>
             } 
           />
           
@@ -265,20 +225,9 @@ function AppContent() {
           <Route 
             path="/notifications" 
             element={
-              isAuthenticated ? <Notifications /> : (
-                <div className="flex justify-center items-center min-h-screen">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🔒</div>
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">Please Login</h2>
-                    <button
-                      onClick={openLoginModal}
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      Login to View Notifications
-                    </button>
-                  </div>
-                </div>
-              )
+              <PaymentProtectedRoute>
+                <Notifications />
+              </PaymentProtectedRoute>
             }             
           />
           
@@ -289,11 +238,24 @@ function AppContent() {
           <Route path="/notifications/:id" element={<NotificationDetails />} />
 
           <Route 
-            path="/payment" 
+            path="/registration-completion" 
             element={
               isAuthenticated ? (
                 <MainLayout>
-                  <PaymentPage />
+                  <RegistrationCompletion />
+                </MainLayout>
+              ) : (
+                <Navigate to="/" />
+              )
+            } 
+          />
+
+          <Route 
+            path="/payment-success" 
+            element={
+              isAuthenticated ? (
+                <MainLayout>
+                  <PaymentSuccess />
                 </MainLayout>
               ) : (
                 <Navigate to="/" />
@@ -355,6 +317,7 @@ function AppContent() {
             whatsappNumber="+917845554882"
             phoneNumber="+917845554882"
             onRegister={openRegisterModal}
+            onLogin={openLoginModal}
             isAuthenticated={isAuthenticated}
           />
           <ChatWidget />
@@ -363,41 +326,104 @@ function AppContent() {
 
       {/* Auth Modals - Show for all routes */}
       {showLogin && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn">
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform scale-100 transition-all duration-300">
-            <button
-              onClick={() => setShowLogin(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl bg-gray-200 hover:bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn p-4 overflow-hidden"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowLogin(false);
+            }
+          }}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
+          <div 
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[95vh] transform scale-100 transition-all duration-300 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-t-2xl p-5 text-white shrink-0">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold">Welcome Back</h2>
+                  <p className="text-red-100 mt-1">Sign in to your account</p>
+                </div>
+                <button
+                  onClick={() => setShowLogin(false)}
+                  className="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-all duration-200 ml-4 shrink-0"
+                  aria-label="Close modal"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable Content */}
+            <div 
+              className="flex-1 overflow-y-auto min-h-0 overscroll-contain"
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-            <LoginForm
-              onLoginSuccess={handleLoginSuccess} // ✅ CHANGED: Use onLoginSuccess
-              onRegister={() => {
-                setShowLogin(false);
-                setShowRegister(true);
-              }}
-            />
+              <LoginForm
+                onLoginSuccess={handleLoginSuccess}
+                onRegister={() => {
+                  setShowLogin(false);
+                  setShowRegister(true);
+                }}
+                isInModal={true}
+              />
+            </div>
           </div>
         </div>
       )}
 
       {showRegister && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn">
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform scale-100 transition-all duration-300">
-            <button
-              onClick={() => setShowRegister(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl bg-gray-200 hover:bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn p-4 overflow-hidden"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowRegister(false);
+            }
+          }}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
+          <div 
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[95vh] transform scale-100 transition-all duration-300 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-t-2xl p-5 text-white shrink-0">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold">Create Your Account</h2>
+                  <p className="text-red-100 mt-1">Join our matrimony service</p>
+                </div>
+                <button
+                  onClick={() => setShowRegister(false)}
+                  className="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-all duration-200 ml-4 shrink-0"
+                  aria-label="Close modal"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable Content */}
+            <div 
+              className="flex-1 overflow-y-auto min-h-0 overscroll-contain"
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-            <RegisterForm
-              onRegisterSuccess={handleRegisterSuccess} // ✅ CHANGED: Use onRegisterSuccess
-              onSwitchToLogin={() => {
-                setShowRegister(false);
-                setShowLogin(true);
-              }}
-            />
+              <RegisterForm
+                onRegisterSuccess={handleRegisterSuccess}
+                onSwitchToLogin={() => {
+                  setShowRegister(false);
+                  setShowLogin(true);
+                }}
+                onClose={() => setShowRegister(false)}
+                isInModal={true}
+              />
+            </div>
           </div>
         </div>
       )}
@@ -409,7 +435,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider> {/* ✅ CHANGED: Use real AuthProvider */}
-      <AppContent />
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

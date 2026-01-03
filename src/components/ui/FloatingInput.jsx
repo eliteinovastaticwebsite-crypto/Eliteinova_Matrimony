@@ -16,10 +16,13 @@ const FloatingInput = ({
   disabled = false,
   children,
   className = "",
+  placeholder,
+  onFocus: propsOnFocus,
+  onBlur: propsOnBlur,
   ...props
 }) => {
   const baseClasses =
-    "block px-3 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none focus:outline-none focus:ring-0 peer transition-colors duration-200";
+    "block px-3 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none focus:outline-none focus:ring-0 peer transition-colors duration-200 placeholder:opacity-0 focus:placeholder:opacity-100";
   const normalClasses = `${baseClasses} ${
     error
       ? "border-red-500 focus:border-red-600"
@@ -28,6 +31,9 @@ const FloatingInput = ({
   const disabledClasses = `${baseClasses} border-gray-200 bg-gray-100 cursor-not-allowed text-gray-500`;
 
   const inputClasses = disabled ? disabledClasses : normalClasses;
+  
+  // Determine if input has a value
+  const hasValue = value && value.toString().trim() !== "";
 
   return (
     <div className={`relative z-0 ${className}`}>
@@ -67,9 +73,12 @@ const FloatingInput = ({
           name={name}
           value={value}
           onChange={onChange}
+          onFocus={propsOnFocus}
+          onBlur={propsOnBlur}
           required={required}
           disabled={disabled}
           rows={4}
+          placeholder={placeholder}
           className={`${inputClasses} resize-none`}
           {...props}
         />
@@ -80,8 +89,11 @@ const FloatingInput = ({
           name={name}
           value={value}
           onChange={onChange}
+          onFocus={propsOnFocus}
+          onBlur={propsOnBlur}
           required={required}
           disabled={disabled}
+          placeholder={placeholder}
           className={inputClasses}
           {...props}
         />
@@ -89,10 +101,14 @@ const FloatingInput = ({
 
       <label
         htmlFor={name}
-        className={`absolute text-sm duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 
+        className={`absolute text-sm transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 
+        opacity-100
         peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-        peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 
+        peer-placeholder-shown:top-1/2 
+        peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:opacity-0 left-1 
         transition-all duration-200 ${
+          hasValue ? "!opacity-100" : ""
+        } ${
           error
             ? "text-red-500 peer-focus:text-red-600"
             : "text-gray-500 peer-focus:text-red-600"

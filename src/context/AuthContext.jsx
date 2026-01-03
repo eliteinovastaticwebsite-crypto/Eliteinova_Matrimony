@@ -31,6 +31,10 @@ export const AuthProvider = ({ children }) => {
         try {
           const userData = JSON.parse(storedUser);
           
+          // Debug: Log membership field from localStorage
+          console.log('🔍 AuthContext: User data from localStorage:', userData);
+          console.log('🔍 AuthContext: Membership from localStorage:', userData.membership || userData.membershipType);
+          
           // Verify token is still valid
           try {
             await AuthService.verifyToken(storedToken);
@@ -42,6 +46,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             
             console.log('✅ Auto-login successful:', userData.name);
+            console.log('✅ Membership from localStorage:', userData.membership || userData.membershipType || 'NOT FOUND');
           } catch (verifyError) {
             // If it's a 403 error, still allow login (backend might not have verify endpoint)
             if (verifyError.message?.includes('403') || verifyError.response?.status === 403) {
@@ -54,6 +59,7 @@ export const AuthProvider = ({ children }) => {
               setIsAuthenticated(true);
               
               console.log('✅ Auto-login successful (with 403):', userData.name);
+              console.log('✅ Membership from localStorage (403):', userData.membership || userData.membershipType || 'NOT FOUND');
             } else {
               console.warn('❌ Token verification failed, clearing storage:', verifyError);
               logout();
@@ -98,6 +104,12 @@ export const AuthProvider = ({ children }) => {
       
       // Update state
       const userData = result.user;
+      
+      // Debug: Log membership field
+      console.log('🔍 AuthContext: Login response user data:', userData);
+      console.log('🔍 AuthContext: Membership field:', userData.membership || userData.membershipType);
+      console.log('🔍 AuthContext: Full user object keys:', Object.keys(userData));
+      
       setUser(userData);
       setIsAuthenticated(true);
       
@@ -105,6 +117,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('authToken', result.token);
 
       console.log('✅ User logged in:', userData.name);
+      console.log('✅ User membership stored:', userData.membership || userData.membershipType || 'NOT FOUND');
       
       // ✅ CORRECT: Return success based on actual backend response
       return {
@@ -370,6 +383,32 @@ const uploadPendingFiles = async (userId, token) => {
     }
   };
 
+  // Sync authentication state from localStorage
+  const syncAuthFromStorage = () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('authToken');
+      
+      if (storedUser && storedToken) {
+        const userData = JSON.parse(storedUser);
+        
+        // Set auth header
+        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        
+        // Update state
+        setUser(userData);
+        setIsAuthenticated(true);
+        
+        console.log('✅ Auth state synced from storage:', userData.name);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('❌ Error syncing auth from storage:', error);
+      return false;
+    }
+  };
+
   // Get user initials for avatars
   const getUserInitials = (name = user?.name) => {
     if (!name) return 'U';
@@ -398,6 +437,7 @@ const uploadPendingFiles = async (userId, token) => {
     register, // Only single registration method
     logout,
     refreshUser,
+    syncAuthFromStorage, // Sync auth state from localStorage
 
     // Profile methods
     updateProfile,

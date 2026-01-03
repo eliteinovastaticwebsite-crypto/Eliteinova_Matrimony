@@ -1096,6 +1096,23 @@ const removePhoto = async (index) => {
 
               {/* Enhanced Profile Badges */}
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                {/* Membership Type Badge */}
+                {user?.membership && (
+                  <span className={`px-4 py-2 rounded-full font-semibold shadow-sm ${
+                    user.membership === 'DIAMOND' 
+                      ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800'
+                      : user.membership === 'GOLD'
+                      ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800'
+                      : user.membership === 'SILVER'
+                      ? 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800'
+                      : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    <span className="mr-2">
+                      {user.membership === 'DIAMOND' ? '💎' : user.membership === 'GOLD' ? '🥇' : '🥈'}
+                    </span>
+                    {user.membership} Member
+                  </span>
+                )}
                 <span className="bg-red-100 text-red-800 px-4 py-2 rounded-full font-semibold shadow-sm">
                   <span className="mr-2">👤</span>
                   {profile.gender || "Not specified"},{" "}

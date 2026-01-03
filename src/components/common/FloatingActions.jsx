@@ -8,6 +8,7 @@ import { PhoneIcon } from "@heroicons/react/24/solid";
  *  - playStoreUrl: string (link to Play store)
  *  - appStoreUrl: string (link to App Store)
  *  - onRegister: function (callback to open register modal)
+ *  - onLogin: function (callback to open login modal)
  *  - isAuthenticated: boolean (whether user is logged in)
  */
 
@@ -15,6 +16,7 @@ export default function FloatingActions({
   whatsappNumber = "+91 7845554882",
   phoneNumber = "+91 7845554882",
   onRegister,
+  onLogin,
   isAuthenticated = false,
 //   playStoreUrl = "#",
 //   appStoreUrl = "#",
@@ -56,15 +58,39 @@ export default function FloatingActions({
         </svg>
       </a> */}
 
-      {/* Register Button - Above WhatsApp */}
+      {/* Register Button - Above Login */}
       {onRegister && !isAuthenticated && (
         <button
-          onClick={onRegister}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onRegister();
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
           aria-label="Register"
-          className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 font-bold text-xs"
+          className="px-4 py-3 rounded-full shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-105 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 font-bold text-sm whitespace-nowrap"
           title="Register Now"
         >
-          Register
+          <span>💖</span>
+          <span>Register Now</span>
+        </button>
+      )}
+
+      {/* Login Button - Below Register */}
+      {onLogin && !isAuthenticated && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onLogin();
+          }}
+          onMouseDown={(e) => e.stopPropagation()}
+          aria-label="Login"
+          className="px-4 py-3 rounded-full shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-105 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-bold text-sm whitespace-nowrap"
+          title="Login Now"
+        >
+          <span>🔐</span>
+          <span>Login Now</span>
         </button>
       )}
 

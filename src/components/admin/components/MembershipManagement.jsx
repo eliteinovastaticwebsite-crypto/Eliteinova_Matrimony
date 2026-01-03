@@ -109,7 +109,7 @@ function MembershipManagement() {
         "Basic Profile Creation",
         "Limited Message Access",
       ],
-      defaultPrice: 999,
+      defaultPrice: 299,
     },
     GOLD: {
       name: "GOLD",
@@ -125,7 +125,7 @@ function MembershipManagement() {
         "Advanced Search Filters",
         "Profile Analytics",
       ],
-      defaultPrice: 1999,
+      defaultPrice: 499,
       popular: true,
     },
     DIAMOND: {
@@ -144,7 +144,7 @@ function MembershipManagement() {
         "Match Guarantee",
         "Personalized Matchmaking",
       ],
-      defaultPrice: 2999,
+      defaultPrice: 749,
     },
   };
 

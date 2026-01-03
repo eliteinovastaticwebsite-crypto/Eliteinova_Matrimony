@@ -1,5 +1,6 @@
 // src/components/auth/RegisterForm.jsx (UPDATED VERSION)
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Stepper from "../ui/Stepper";
 import StepperController from "../ui/StepperControl";
 import FloatingInput from "../ui/FloatingInput";
@@ -12,7 +13,8 @@ export default function RegisterForm({
   onSwitch,
   onClose,
 }) {
-  const { register } = useAuth(); // MOVED TO TOP LEVEL
+  const { register, syncAuthFromStorage } = useAuth(); // MOVED TO TOP LEVEL
+  const navigate = useNavigate();
   const inModal = isInModal || !!onRegisterSuccess || !!onSwitch || !!onClose;
 
   const [step, setStep] = useState(1);
@@ -40,8 +42,8 @@ export default function RegisterForm({
     religion: "Hindu",
     motherTongue: "",
     willingOtherCaste: false,
-    caste: "MBC",
-    subcaste: "Vanniyar",
+    community: "",
+    caste: "",
     dosham: "No",
 
     // Step 4: Family Background
@@ -114,33 +116,121 @@ const districtsByState = {
   ],
 };
 
-// ------------ Religion & Caste ------------
-const religionCategories = {
-  Hindu: ["OBC", "BC", "MBC", "SC", "ST", "Others"],
-  Muslim: ["General", "BC", "Others"],
-  Christian: ["OC", "BC", "SC", "Others"],
-};
+// ------------ Tamil Nadu Government Community Categories ------------
+// Community categories as per Tamil Nadu Government official classification
+const communityCategories = [
+  { value: "SC", label: "SC - Scheduled Castes" },
+  { value: "ST", label: "ST - Scheduled Tribes" },
+  { value: "BC", label: "BC - Backward Classes" },
+  { value: "MBC", label: "MBC - Most Backward Classes" },
+  { value: "BCM", label: "BCM - Backward Class Muslims" },
+  { value: "DNC", label: "DNC - Denotified Communities" },
+  { value: "GENERAL", label: "General / Others" },
+];
 
-const casteData = {
-  Hindu: {
-    OBC: ["Brahmin - Iyer", "Brahmin - Iyengar", "Chettiar", "Naidu", "Reddy", "Mudaliar", "Pillai", "Vellalar", "Others"],
-    MBC: ["Vanniyar", "Kongu Vellalar", "Gounder", "Nadar", "Thevar", "Yadava", "Naicker", "Kallar", "Agamudayar", "Maravar", "Others"],
-    BC: ["Isai Vellalar", "Udayar", "Vanniyakula Kshatriya", "Ambalakarar", "Servai", "Vannar", "Kuravar", "Thottia Naicker", "Others"],
-    SC: ["Paraiyar", "Pallar (Devendrakula Velalar)", "Arunthathiyar", "Chakkiliyar", "Sambavar", "Others"],
-    ST: ["Irula", "Kurumba", "Kattunayakan", "Toda", "Malayali", "Others"],
-    Others: ["Others"],
-  },
-  Muslim: {
-    General: ["Sunni", "Shia", "Pathan", "Memon", "Dawoodi Bohra", "Others"],
-    BC: ["Labbai", "Rowther", "Marakkayar", "Ansari", "Others"],
-    Others: ["Others"],
-  },
-  Christian: {
-    OC: ["Roman Catholic", "Syrian Catholic", "CSI", "Marthoma", "Others"],
-    BC: ["Pentecostal", "Protestant", "Evangelical", "Others"],
-    SC: ["Dalit Christian", "Adi Dravidar Christian", "Others"],
-    Others: ["Others"],
-  },
+// Caste/Subcaste data for each community category (Official Tamil Nadu Government Lists)
+const communityCasteData = {
+  SC: [
+    "Adi Dravida",
+    "Adi Andhra",
+    "Arunthathiyar",
+    "Ayyanavar",
+    "Baira",
+    "Bandi",
+    "Chakkiliyan",
+    "Chandala",
+    "Cheruman",
+    "Devendrakula Velalar",
+    "Kadaiyan",
+    "Kalladi",
+    "Khojhal",
+    "Madari",
+    "Pallan",
+    "Paraiyar",
+    "Samban",
+    "Thoti",
+    "Others",
+  ],
+  ST: [
+    "Adiyan",
+    "Aranadan",
+    "Eravallan",
+    "Irular",
+    "Kadar",
+    "Kattunayakan",
+    "Kurumans",
+    "Malai Vedan",
+    "Malasar",
+    "Muthuvan",
+    "Paniyan",
+    "Toda",
+    "Kota",
+    "Others",
+  ],
+  BC: [
+    "Agamudayar (including Thozhu / Thuluva Vellala)",
+    "Archakarai Vellala",
+    "Aryavathi",
+    "Badagar",
+    "Billava",
+    "Bondil",
+    "Boyar",
+    "Chettiar (various sub-sects)",
+    "Devangar",
+    "Mudaliar",
+    "Naidu",
+    "Nadar",
+    "Sengunthar",
+    "Vellalar",
+    "Viswakarma (Goldsmith, Carpenter, etc.)",
+    "Yadava",
+    "Arya Vysya",
+    "Others",
+  ],
+  MBC: [
+    "Ambalakarar",
+    "Bestha / Siviar",
+    "Boyar / Oddar",
+    "Dasari",
+    "Jogi / Jambuvanodai",
+    "Kallar",
+    "Kurumba / Kurumba Gounder",
+    "Maravar",
+    "Mutharaiyar",
+    "Piramalai Kallar",
+    "Vannar",
+    "Vanniyar",
+    "Andipandaram",
+    "Kuravar",
+    "Others",
+  ],
+  BCM: [
+    "Ansar",
+    "Dekkani Muslims",
+    "Labbai (including Rowthar, Marakayar)",
+    "Labbai",
+    "Rowther",
+    "Marakayar",
+    "Mapilla",
+    "Sheik",
+    "Syed",
+    "Others",
+  ],
+  DNC: [
+    "Attur Kilnad Koravars",
+    "Appanad Koravars",
+    "Dommars",
+    "Donga Boya",
+    "Narikuravar",
+    "Others",
+  ],
+  GENERAL: [
+    "Brahmin (Iyer, Iyengar)",
+    "Jain",
+    "Sikh",
+    "Christian (Forward communities not in BC list)",
+    "Others",
+  ],
 };
 
 // ------------ Profession Options ------------
@@ -275,18 +365,49 @@ const professionOptions = [
       case 1:
         if (!form.name?.trim()) errors.name = "Full name is required";
         if (!form.mobile?.trim()) errors.mobile = "Mobile number is required";
-        if (!form.password) errors.password = "Password is required";
+        if (!form.password || form.password.trim() === "") errors.password = "Password is required";
+        if (form.password && form.password.length < 6) errors.password = "Password must be at least 6 characters";
         if (form.password !== form.confirmPassword)
           errors.confirmPassword = "Passwords do not match";
         break;
       case 2:
-        // if (!form.dob) errors.dob = "Date of birth required";
         if (!form.email?.trim()) errors.email = "Email required";
+        
+        // Age validation: must be 18 or above (validate both DOB and calculated age)
+        if (form.dob) {
+          const calculatedAge = calculateAge(form.dob);
+          if (calculatedAge < 18) {
+            errors.dob = "You must be at least 18 years old to register";
+            errors.age = "Age must be 18 or above";
+          }
+        } else if (form.age) {
+          const ageNum = parseInt(form.age);
+          if (isNaN(ageNum) || ageNum < 18) {
+            errors.age = "Age must be 18 or above";
+          }
+        }
+        
+        // Preferred min age validation: must be 18 or above
+        if (form.partnerAgeMin) {
+          const minAgeNum = parseInt(form.partnerAgeMin);
+          if (isNaN(minAgeNum) || minAgeNum < 18) {
+            errors.partnerAgeMin = "Preferred minimum age must be 18 or above";
+          }
+        }
+        
+        // Preferred max age validation: must be greater than or equal to min age (if both provided)
+        if (form.partnerAgeMax && form.partnerAgeMin) {
+          const maxAgeNum = parseInt(form.partnerAgeMax);
+          const minAgeNum = parseInt(form.partnerAgeMin);
+          if (!isNaN(maxAgeNum) && !isNaN(minAgeNum) && maxAgeNum < minAgeNum) {
+            errors.partnerAgeMax = "Maximum age must be greater than or equal to minimum age";
+          }
+        }
         break;
       case 3:
         if (!form.religion) errors.religion = "Religion required";
+        if (!form.community) errors.community = "Community category required";
         if (!form.caste) errors.caste = "Caste required";
-        if (!form.subcaste) errors.subcaste = "Subcaste required";
         break;
       case 4:
         if (!form.maritalStatus)
@@ -333,6 +454,14 @@ const professionOptions = [
         return;
     }
 
+    // Final validation - ensure password is present before submission
+    if (!form.password || form.password.trim() === "") {
+        setError("Password is required. Please go back to step 1 and enter your password.");
+        setValidationErrors({ password: "Password is required" });
+        setStep(1);
+        return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -348,14 +477,15 @@ const professionOptions = [
             name: form.name.trim(),
             email: form.email.trim().toLowerCase(),
             mobile: form.mobile.replace(/\D/g, ""), 
-            password: form.password,
+            password: (form.password || "").trim(),
             gender: form.gender.toUpperCase(),
             maritalStatus: convertMaritalStatus(form.maritalStatus),
             age: parseInt(form.age) || calculateAge(form.dob),
             dob: form.dob,
             religion: form.religion,
+            community: form.community,
             caste: form.caste,
-            subCaste: form.subcaste,
+            subCaste: form.caste, // Keep subCaste for backward compatibility
             willingOtherCaste: form.willingOtherCaste,
             dosham: form.dosham,
             education: form.education,
@@ -382,12 +512,18 @@ const professionOptions = [
 
         // ✅ ADD DEBUG LOGS HERE (BEFORE sending)
         console.log("📤 DEBUG - Data being sent to backend:");
+        console.log("   Password:", userData.password ? "***" + userData.password.substring(userData.password.length - 2) : "MISSING!");
+        console.log("   Password length:", userData.password?.length || 0);
         console.log("   Mobile:", userData.mobile);
         console.log("   Specialization:", userData.specialization);
         console.log("   MinAge:", userData.minAge);
         console.log("   MaxAge:", userData.maxAge);
         console.log("   Form specialization value:", form.specialization);
-        console.log("   Full userData:", userData);
+        
+        // Validate password before sending
+        if (!userData.password || userData.password.trim() === "") {
+            throw new Error("Password is required");
+        }
 
         // Add user data as JSON blob
         formData.append(
@@ -459,19 +595,45 @@ const professionOptions = [
         if (result.token) {
             console.log("✅ Registration complete with file uploads:", result);
 
-            // Store token for immediate login
+            // Store token for immediate login (use same key as AuthContext expects)
             if (result.token) {
-                localStorage.setItem("token", result.token);
+                localStorage.setItem("authToken", result.token); // Changed from "token" to "authToken" to match AuthContext
                 localStorage.setItem("user", JSON.stringify(result.user));
+                
+                // Set API authorization header
+                const api = await import('../../config/api');
+                const axiosInstance = (await import('../../api/axiosUser')).default;
+                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${result.token}`;
             }
 
-            // Redirect to payment page with membership type
+            // ✅ CRITICAL FIX: Sync AuthContext state from localStorage
+            // This ensures isAuthenticated is set to true before navigation
+            syncAuthFromStorage();
+
+            // Get membership type and redirect to registration completion page
             const membershipType = form.membershipType || "SILVER";
-            window.location.href = `/payment?membershipType=${membershipType}`;
             
+            console.log("✅ Registration successful! Redirecting to registration completion page...");
+            console.log("   Membership Type:", membershipType);
+            console.log("   Token stored:", !!result.token);
+            
+            // Close modal if opened from modal (but don't wait for it)
+            if (onClose) {
+                onClose();
+            }
+            
+            // Call onRegisterSuccess callback if provided (for any cleanup)
             if (onRegisterSuccess) {
                 onRegisterSuccess(result);
             }
+            
+            // Always redirect to registration completion page after successful registration
+            // Use a small timeout to ensure state updates propagate
+            setTimeout(() => {
+                const completionUrl = `/registration-completion?membershipType=${membershipType}`;
+                console.log("🚀 Navigating to:", completionUrl);
+                navigate(completionUrl, { replace: true });
+            }, 100);
         } else {
             throw new Error(
                 result.error || result.message || "Registration failed"
@@ -642,7 +804,43 @@ const professionOptions = [
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className={`space-y-4 ${inModal ? 'flex-1 overflow-y-auto min-h-0 px-6' : ''}`}>
+      {/* Scrollable form content wrapper - enables scrolling for all steps */}
+      <div 
+        className={`register-form-scrollable ${inModal ? 'flex-1 overflow-y-auto min-h-0 px-6' : 'max-h-[70vh] overflow-y-auto pr-2'} scroll-smooth`}
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 #f1f5f9'
+        }}
+        onWheel={(e) => {
+          // Prevent scroll from propagating to background when scrolling inside form
+          const element = e.currentTarget;
+          const { scrollTop, scrollHeight, clientHeight } = element;
+          const isAtTop = scrollTop === 0;
+          const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+          
+          // Only prevent propagation if we're not at the boundaries
+          // This allows natural scroll behavior at the edges
+          if (!isAtTop && !isAtBottom) {
+            e.stopPropagation();
+          } else if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+            // At boundary and trying to scroll further - prevent background scroll
+            e.stopPropagation();
+          }
+        }}
+        onTouchMove={(e) => {
+          // Prevent touch scroll from propagating to background
+          const element = e.currentTarget;
+          const { scrollTop, scrollHeight, clientHeight } = element;
+          const isAtTop = scrollTop === 0;
+          const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+          
+          // Only prevent if not at boundaries
+          if (!isAtTop && !isAtBottom) {
+            e.stopPropagation();
+          }
+        }}
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
         {/* Step 1: Registration */}
         {step === 1 && (
           <div className="space-y-4 ">
@@ -838,13 +1036,17 @@ const professionOptions = [
         value={form.religion ? { value: form.religion, label: form.religion } : null}
         onChange={(e) => {
           handleChange({ target: { name: "religion", value: e.value } });
+          handleChange({ target: { name: "community", value: "" } });
           handleChange({ target: { name: "caste", value: "" } });
-          handleChange({ target: { name: "subcaste", value: "" } });
         }}
-        options={Object.keys(religionCategories).map((r) => ({
-          value: r,
-          label: r,
-        }))}
+        options={[
+          { value: "Hindu", label: "Hindu" },
+          { value: "Muslim", label: "Muslim" },
+          { value: "Christian", label: "Christian" },
+          { value: "Sikh", label: "Sikh" },
+          { value: "Jain", label: "Jain" },
+          { value: "Other", label: "Other" },
+        ]}
         placeholder="Select Religion"
       />
       {validationErrors.religion && (
@@ -861,55 +1063,47 @@ const professionOptions = [
         onChange={handleCheckbox}
         className="text-red-600 focus:ring-red-500"
       />
-      <label className="text-gray-700">Willing to marry from other caste?</label>
+      <label className="text-gray-700">Willing to marry from other community/caste?</label>
     </div>
 
-    {/* ⭐ Caste Category Select */}
+    {/* ⭐ Community Category Select (Tamil Nadu Government Categories) */}
     <div>
-      <label className="block mb-1 font-medium">Caste/Community</label>
+      <label className="block mb-1 font-medium">Community Category *</label>
       <Select
-        value={form.caste ? { value: form.caste, label: form.caste } : null}
+        value={form.community ? { value: form.community, label: communityCategories.find(c => c.value === form.community)?.label || form.community } : null}
         onChange={(e) => {
-          handleChange({ target: { name: "caste", value: e.value } });
-          handleChange({ target: { name: "subcaste", value: "" } });
+          handleChange({ target: { name: "community", value: e.value } });
+          handleChange({ target: { name: "caste", value: "" } });
         }}
-        isDisabled={!form.religion}
-        options={
-          form.religion
-            ? religionCategories[form.religion].map((cat) => ({
-                value: cat,
-                label: cat,
-              }))
-            : []
-        }
-        placeholder="Select Caste Category"
+        options={communityCategories}
+        placeholder="Select Community Category"
       />
-      {validationErrors.caste && (
-        <p className="text-red-500 text-sm">{validationErrors.caste}</p>
+      {validationErrors.community && (
+        <p className="text-red-500 text-sm">{validationErrors.community}</p>
       )}
     </div>
 
-    {/* ⭐ Subcaste Select */}
+    {/* ⭐ Caste/Subcaste Select */}
     <div>
-      <label className="block mb-1 font-medium">Subcaste</label>
+      <label className="block mb-1 font-medium">Caste/Subcaste *</label>
       <Select
-        value={form.subcaste ? { value: form.subcaste, label: form.subcaste } : null}
+        value={form.caste ? { value: form.caste, label: form.caste } : null}
         onChange={(e) =>
-          handleChange({ target: { name: "subcaste", value: e.value } })
+          handleChange({ target: { name: "caste", value: e.value } })
         }
-        isDisabled={!form.caste}
+        isDisabled={!form.community}
         options={
-          form.religion && form.caste
-            ? casteData[form.religion][form.caste].map((sub) => ({
-                value: sub,
-                label: sub,
+          form.community && communityCasteData[form.community]
+            ? communityCasteData[form.community].map((caste) => ({
+                value: caste,
+                label: caste,
               }))
             : []
         }
-        placeholder="Select Subcaste"
+        placeholder={form.community ? "Select Caste/Subcaste" : "Select Community Category First"}
       />
-      {validationErrors.subcaste && (
-        <p className="text-red-500 text-sm">{validationErrors.subcaste}</p>
+      {validationErrors.caste && (
+        <p className="text-red-500 text-sm">{validationErrors.caste}</p>
       )}
     </div>
 
@@ -999,9 +1193,9 @@ const professionOptions = [
               placeholder="Select or enter height"
             />
             <datalist id="heights">
-              {Array.from({ length: 31 }, (_, i) => 4 + i * 0.1).map((h) => (
-                <option key={h.toFixed(1)} value={h.toFixed(1)} />
-              ))}
+              {Array.from({ length: 31 }, (_, i) => 4 + i * 0.1).map((h) => {
+                return <option key={h.toFixed(1)} value={h.toFixed(1)} />;
+              })}
             </datalist>
 
             <FloatingInput
@@ -1537,53 +1731,88 @@ const professionOptions = [
 
             {/* Membership Type - Last field in Step 6 */}
             <div>
-              <label className="block mb-1 font-medium">Membership Type</label>
-              <Select
-                value={form.membershipType ? { value: form.membershipType, label: form.membershipType } : null}
-                onChange={(e) =>
-                  handleChange({ target: { name: "membershipType", value: e.value } })
-                }
-                options={[
-                  { value: "SILVER", label: "Silver" },
-                  { value: "GOLD", label: "Gold" },
-                  { value: "DIAMOND", label: "Diamond" },
-                ]}
-                placeholder="Select Membership Type"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Membership Type *
+              </label>
+              
+              {/* Pongal Offer Banner */}
+              <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+                <div className="relative z-10 text-center">
+                  <h3 className="text-white font-bold text-lg md:text-xl mb-1 animate-bounce">
+                    🎉 Pongal Special Offer! 🎉
+                  </h3>
+                  <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
+                    Free Registration for Pongal offer
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-3">
+                {[
+                  { value: "SILVER", label: "Silver", price: "₹299/Per 12 Months" },
+                  { value: "GOLD", label: "Gold", price: "₹499/Per 12 Months" },
+                  { value: "DIAMOND", label: "Diamond", price: "₹749/Per 12 Months" },
+                ].map((membership) => (
+                  <label
+                    key={membership.value}
+                    className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <input
+                      type="radio"
+                      name="membershipType"
+                      value={membership.value}
+                      checked={form.membershipType === membership.value}
+                      onChange={handleChange}
+                      className="text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-gray-700 font-medium flex-1">{membership.label}</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-gray-400 line-through text-sm">{membership.price}</span>
+                      <span className="text-green-600 font-bold text-base">FREE</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
               {validationErrors.membershipType && (
-                <p className="text-red-500 text-sm">{validationErrors.membershipType}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {validationErrors.membershipType}
+                </p>
               )}
             </div>
           </div>
         )}
 
-        <div className={inModal ? 'shrink-0 mt-4 px-6 pb-6' : ''}>
-          <StepperController
-            currentStep={step}
-            totalSteps={steps.length}
-            onNext={nextStep}
-            onPrev={prevStep}
-            onSubmit={handleSubmit}
-            loading={loading}
-            validationErrors={validationErrors}
-          />
-        </div>
+        </form>
+      </div>
 
-        {step === 1 && onSwitch && (
-          <div className={`text-center pt-4 border-t border-gray-200 ${inModal ? 'px-6 pb-6 shrink-0' : ''}`}>
-            <p className="text-gray-600 text-sm">
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={onSwitch}
-                className="text-red-600 hover:text-red-700 font-medium underline transition-colors"
-              >
-                Sign In
-              </button>
-            </p>
-          </div>
-        )}
-      </form>
+      {/* Form controls - always visible at bottom */}
+      <div className={inModal ? 'shrink-0 mt-4 px-6 pb-6' : 'mt-4'}>
+        <StepperController
+          currentStep={step}
+          totalSteps={steps.length}
+          onNext={nextStep}
+          onPrev={prevStep}
+          onSubmit={handleSubmit}
+          loading={loading}
+          validationErrors={validationErrors}
+        />
+      </div>
+
+      {step === 1 && onSwitch && (
+        <div className={`text-center pt-4 border-t border-gray-200 ${inModal ? 'px-6 pb-6 shrink-0' : ''}`}>
+          <p className="text-gray-600 text-sm">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={onSwitch}
+              className="text-red-600 hover:text-red-700 font-medium underline transition-colors"
+            >
+              Sign In
+            </button>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

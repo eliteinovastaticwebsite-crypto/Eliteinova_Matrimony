@@ -184,137 +184,120 @@ const districtsByState = {
   // Add more states/districts as you need
 };
 
-// 📗 Religion-wise caste categories (unchanged)
-const religionCategories = {
-  Hindu: ["OBC", "BC", "MBC", "SC", "ST", "Others"],
-  Muslim: ["General", "BC", "Others"],
-  Christian: ["OC", "BC", "SC", "Others"],
-};
+// 📗 Tamil Nadu Government Community Categories (Official Classification)
+const communityCategories = [
+  { value: "SC", label: "SC - Scheduled Castes" },
+  { value: "ST", label: "ST - Scheduled Tribes" },
+  { value: "BC", label: "BC - Backward Classes" },
+  { value: "MBC", label: "MBC - Most Backward Classes" },
+  { value: "BCM", label: "BCM - Backward Class Muslims" },
+  { value: "DNC", label: "DNC - Denotified Communities" },
+  { value: "GENERAL", label: "General / Others" },
+];
 
-// 📙 Caste data (unchanged from your expanded list)
-const casteData = {
-  Hindu: {
-    OBC: [
-      "Brahmin - Iyer",
-      "Brahmin - Iyengar",
-      "Chettiar",
-      "Naidu",
-      "Reddy",
-      "Mudaliar",
-      "Pillai",
-      "Vellalar",
-      "Others",
-    ],
-    BC: [
-      "Isai Vellalar",
-      "Udayar",
-      "Vanniyakula Kshatriya",
-      "Ambalakarar",
-      "Servai",
-      "Vannar",
-      "Kuravar",
-      "Thottia Naicker",
-      "Others",
-    ],
-    MBC: [
-      "Vanniyar",
-      "Kongu Vellalar",
-      "Gounder",
-      "Nadar",
-      "Thevar",
-      "Yadava",
-      "Naicker",
-      "Kallar",
-      "Agamudayar",
-      "Maravar",
-      "Others",
-    ],
-    SC: [
-      "Paraiyar",
-      "Pallar (Devendrakula Velalar)",
-      "Arunthathiyar",
-      "Chakkiliyar",
-      "Sambavar",
-      "Others",
-    ],
-    ST: ["Irula", "Kurumba", "Kattunayakan", "Toda", "Malayali", "Others"],
-    Others: ["Others"],
-  },
-
-  Muslim: {
-    General: ["Sunni", "Shia", "Pathan", "Memon", "Dawoodi Bohra", "Others"],
-    BC: ["Labbai", "Rowther", "Marakkayar", "Ansari", "Others"],
-    Others: ["Others"],
-  },
-
-  Christian: {
-    OC: ["Roman Catholic", "Syrian Catholic", "CSI", "Marthoma", "Others"],
-    BC: ["Pentecostal", "Protestant", "Evangelical", "Others"],
-    SC: ["Dalit Christian", "Adi Dravidar Christian", "Others"],
-    Others: ["Others"],
-  },
-};
-
-// 📙 Subcaste data - Common subcastes for each caste
-const subCasteData = {
-  Hindu: {
-    "Brahmin - Iyer": ["Iyer", "Iyer Vadama", "Iyer Brahacharanam", "Iyer Vathima", "Others"],
-    "Brahmin - Iyengar": ["Iyengar Thenkalai", "Iyengar Vadakalai", "Others"],
-    "Chettiar": ["Nagarathar", "Chettiar", "Others"],
-    "Naidu": ["Naidu", "Balija Naidu", "Kapu Naidu", "Telaga Naidu", "Others"],
-    "Reddy": ["Reddy", "Kapu Reddy", "Telaga Reddy", "Others"],
-    "Mudaliar": ["Mudaliar", "Saiva Vellalar", "Others"],
-    "Pillai": ["Pillai", "Saiva Pillai", "Others"],
-    "Vellalar": ["Vellalar", "Kongu Vellalar", "Isai Vellalar", "Others"],
-    "Vanniyar": ["Vanniyar", "Vanniyakula Kshatriya", "Padayachi", "Others"],
-    "Gounder": ["Gounder", "Kongu Vellalar Gounder", "Others"],
-    "Nadar": ["Nadar", "Shanar", "Others"],
-    "Thevar": ["Thevar", "Mukkulathor", "Others"],
-    "Yadava": ["Yadava", "Idaiyar", "Others"],
-    "Naicker": ["Naicker", "Naidu Naicker", "Others"],
-    "Kallar": ["Kallar", "Devendra Kula Vellalar", "Others"],
-    "Agamudayar": ["Agamudayar", "Agamudaiyar", "Others"],
-    "Maravar": ["Maravar", "Mukkulathor", "Others"],
-    "Isai Vellalar": ["Isai Vellalar", "Others"],
-    "Udayar": ["Udayar", "Others"],
-    "Vanniyakula Kshatriya": ["Vanniyakula Kshatriya", "Vanniyar", "Others"],
-    "Paraiyar": ["Paraiyar", "Adi Dravidar", "Others"],
-    "Pallar (Devendrakula Velalar)": ["Pallar", "Devendrakula Vellalar", "Others"],
-    "Arunthathiyar": ["Arunthathiyar", "Chakkiliyar", "Others"],
-    "Chakkiliyar": ["Chakkiliyar", "Arunthathiyar", "Others"],
-    "Sambavar": ["Sambavar", "Others"],
-    "Sunni": ["Sunni", "Hanafi", "Shafi", "Others"],
-    "Shia": ["Shia", "Twelver", "Ismaili", "Others"],
-    "Roman Catholic": ["Roman Catholic", "Latin Catholic", "Syro-Malabar", "Others"],
-    "Syrian Catholic": ["Syrian Catholic", "Syro-Malankara", "Others"],
-    "CSI": ["CSI", "Church of South India", "Others"],
-    "Marthoma": ["Marthoma", "Marthoma Syrian", "Others"],
-    "Others": ["Others"],
-  },
-  Muslim: {
-    "Sunni": ["Sunni", "Hanafi", "Shafi", "Maliki", "Hanbali", "Others"],
-    "Shia": ["Shia", "Twelver", "Ismaili", "Others"],
-    "Pathan": ["Pathan", "Pashtun", "Others"],
-    "Memon": ["Memon", "Kutchi Memon", "Others"],
-    "Dawoodi Bohra": ["Dawoodi Bohra", "Bohra", "Others"],
-    "Labbai": ["Labbai", "Rowther", "Others"],
-    "Rowther": ["Rowther", "Labbai", "Others"],
-    "Marakkayar": ["Marakkayar", "Others"],
-    "Ansari": ["Ansari", "Others"],
-    "Others": ["Others"],
-  },
-  Christian: {
-    "Roman Catholic": ["Roman Catholic", "Latin Catholic", "Syro-Malabar", "Syro-Malankara", "Others"],
-    "Syrian Catholic": ["Syrian Catholic", "Syro-Malankara", "Others"],
-    "CSI": ["CSI", "Church of South India", "Others"],
-    "Marthoma": ["Marthoma", "Marthoma Syrian", "Others"],
-    "Pentecostal": ["Pentecostal", "Assemblies of God", "Others"],
-    "Protestant": ["Protestant", "Lutheran", "Others"],
-    "Evangelical": ["Evangelical", "Others"],
-    "Dalit Christian": ["Dalit Christian", "Adi Dravidar Christian", "Others"],
-    "Adi Dravidar Christian": ["Adi Dravidar Christian", "Dalit Christian", "Others"],
-    "Others": ["Others"],
-  },
+// 📙 Caste/Subcaste data for each community category (Official Tamil Nadu Government Lists)
+const communityCasteData = {
+  SC: [
+    "Adi Dravida",
+    "Adi Andhra",
+    "Arunthathiyar",
+    "Ayyanavar",
+    "Baira",
+    "Bandi",
+    "Chakkiliyan",
+    "Chandala",
+    "Cheruman",
+    "Devendrakula Velalar",
+    "Kadaiyan",
+    "Kalladi",
+    "Khojhal",
+    "Madari",
+    "Pallan",
+    "Paraiyar",
+    "Samban",
+    "Thoti",
+    "Others",
+  ],
+  ST: [
+    "Adiyan",
+    "Aranadan",
+    "Eravallan",
+    "Irular",
+    "Kadar",
+    "Kattunayakan",
+    "Kurumans",
+    "Malai Vedan",
+    "Malasar",
+    "Muthuvan",
+    "Paniyan",
+    "Toda",
+    "Kota",
+    "Others",
+  ],
+  BC: [
+    "Agamudayar (including Thozhu / Thuluva Vellala)",
+    "Archakarai Vellala",
+    "Aryavathi",
+    "Badagar",
+    "Billava",
+    "Bondil",
+    "Boyar",
+    "Chettiar (various sub-sects)",
+    "Devangar",
+    "Mudaliar",
+    "Naidu",
+    "Nadar",
+    "Sengunthar",
+    "Vellalar",
+    "Viswakarma (Goldsmith, Carpenter, etc.)",
+    "Yadava",
+    "Arya Vysya",
+    "Others",
+  ],
+  MBC: [
+    "Ambalakarar",
+    "Bestha / Siviar",
+    "Boyar / Oddar",
+    "Dasari",
+    "Jogi / Jambuvanodai",
+    "Kallar",
+    "Kurumba / Kurumba Gounder",
+    "Maravar",
+    "Mutharaiyar",
+    "Piramalai Kallar",
+    "Vannar",
+    "Vanniyar",
+    "Andipandaram",
+    "Kuravar",
+    "Others",
+  ],
+  BCM: [
+    "Ansar",
+    "Dekkani Muslims",
+    "Labbai (including Rowthar, Marakayar)",
+    "Labbai",
+    "Rowther",
+    "Marakayar",
+    "Mapilla",
+    "Sheik",
+    "Syed",
+    "Others",
+  ],
+  DNC: [
+    "Attur Kilnad Koravars",
+    "Appanad Koravars",
+    "Dommars",
+    "Donga Boya",
+    "Narikuravar",
+    "Others",
+  ],
+  GENERAL: [
+    "Brahmin (Iyer, Iyengar)",
+    "Jain",
+    "Sikh",
+    "Christian (Forward communities not in BC list)",
+    "Others",
+  ],
 };
 
 // 📘 Indian Regions mapping (states grouped by regions)
@@ -344,34 +327,17 @@ const getStatesByRegion = (region) => {
   return regionMapping[region] || [];
 };
 
-// Helper function to get all unique castes across all religions
+// Helper function to get all unique castes across all community categories
 const getAllCastes = () => {
   const allCastes = new Set();
-  Object.values(casteData).forEach(religionData => {
-    Object.values(religionData).forEach(casteList => {
-      casteList.forEach(caste => {
-        if (caste !== "Others") {
-          allCastes.add(caste);
-        }
-      });
+  Object.values(communityCasteData).forEach(casteList => {
+    casteList.forEach(caste => {
+      if (caste !== "Others") {
+        allCastes.add(caste);
+      }
     });
   });
   return Array.from(allCastes).sort();
-};
-
-// Helper function to get all unique subcastes across all religions
-const getAllSubCastes = () => {
-  const allSubCastes = new Set();
-  Object.values(subCasteData).forEach(religionData => {
-    Object.values(religionData).forEach(subCasteList => {
-      subCasteList.forEach(subCaste => {
-        if (subCaste !== "Others") {
-          allSubCastes.add(subCaste);
-        }
-      });
-    });
-  });
-  return Array.from(allSubCastes).sort();
 };
 
 const professionOptions = [
@@ -427,7 +393,7 @@ export default function FilterSidebar({
       minAge: "",
       maxAge: "",
       religion: "",
-      category: "",
+      community: "",
       caste: "",
       subCaste: "",
       dosham: "",
@@ -451,10 +417,8 @@ export default function FilterSidebar({
     });
   };
 
-  // Determine available options based on selected religion/category
-  const availableCategories = religionCategories[filters.religion] || [];
-  const availableCastes = casteData[filters.religion]?.[filters.category] || [];
-  const availableSubCastes = subCasteData[filters.religion]?.[filters.caste] || [];
+  // Determine available options based on selected community
+  const availableCastes = filters.community ? (communityCasteData[filters.community] || []) : [];
   const districtOptions = districtsByState[filters.state] || [];
   
   // Filter states by region if region is selected
@@ -520,9 +484,7 @@ export default function FilterSidebar({
             value={filters.religion || ""}
             onChange={(e) => {
               const newFilters = { ...filters, religion: e.target.value };
-              delete newFilters.category;
-              delete newFilters.caste;
-              delete newFilters.subCaste;
+              // Don't clear community/caste when religion changes
               onFilterChange(newFilters);
             }}
             options={[
@@ -530,60 +492,47 @@ export default function FilterSidebar({
               { value: "Hindu", label: "Hindu" },
               { value: "Muslim", label: "Muslim" },
               { value: "Christian", label: "Christian" },
+              { value: "Sikh", label: "Sikh" },
+              { value: "Jain", label: "Jain" },
+              { value: "Other", label: "Other" },
             ]}
             theme={currentTheme}
           />
 
-          {/* Category Filter (BC, OBC, MBC, SC, ST, etc.) */}
-          {filters.religion && (
-            <CustomSelect
-              value={filters.category || ""}
-              onChange={(e) => {
-                const newFilters = { ...filters, category: e.target.value };
-                delete newFilters.caste;
-                delete newFilters.subCaste;
-                onFilterChange(newFilters);
-              }}
-              options={[
-                { value: "", label: "Select Category (BC/OBC/MBC/SC/ST)" },
-                ...availableCategories.map((c) => ({ value: c, label: c })),
-              ]}
-              theme={currentTheme}
-            />
-          )}
+          {/* Community Category Filter (Tamil Nadu Government Categories) */}
+          <CustomSelect
+            value={filters.community || ""}
+            onChange={(e) => {
+              const newFilters = { ...filters, community: e.target.value };
+              delete newFilters.caste;
+              delete newFilters.subCaste;
+              onFilterChange(newFilters);
+            }}
+            options={[
+              { value: "", label: "Select Community Category" },
+              ...communityCategories.map((c) => ({
+                value: c.value,
+                label: c.label,
+              })),
+            ]}
+            theme={currentTheme}
+          />
 
-          {/* Caste Filter */}
-          {filters.religion && filters.category && (
+          {/* Caste/Subcaste Filter */}
+          {filters.community && (
             <CustomSelect
               value={filters.caste || ""}
               onChange={(e) => {
                 const newFilters = { ...filters, caste: e.target.value };
-                delete newFilters.subCaste;
+                // Set subCaste same as caste for backward compatibility
+                newFilters.subCaste = e.target.value;
                 onFilterChange(newFilters);
               }}
               options={[
-                { value: "", label: `Select Caste (${filters.category})` },
-                ...(
-                  casteData[filters.religion]?.[filters.category] || []
-                ).map((c) => ({
+                { value: "", label: "Select Caste/Subcaste" },
+                ...availableCastes.map((c) => ({
                   value: c,
                   label: c,
-                })),
-              ]}
-              theme={currentTheme}
-            />
-          )}
-
-          {/* Subcaste Filter */}
-          {filters.religion && filters.category && filters.caste && (
-            <CustomSelect
-              value={filters.subCaste || ""}
-              onChange={(e) => handleChange("subCaste", e.target.value)}
-              options={[
-                { value: "", label: "Select Subcaste (Optional)" },
-                ...availableSubCastes.map((sc) => ({
-                  value: sc,
-                  label: sc,
                 })),
               ]}
               theme={currentTheme}
@@ -638,38 +587,20 @@ export default function FilterSidebar({
             theme={currentTheme}
           />
 
-          {/* Caste Filter - Standalone */}
+          {/* Caste Filter - Standalone (All Castes) */}
           <CustomSelect
             value={filters.caste || ""}
             onChange={(e) => {
               const newFilters = { ...filters, caste: e.target.value };
-              // Clear subCaste when caste changes
-              if (e.target.value === "") {
-                delete newFilters.subCaste;
-              } else {
-                delete newFilters.subCaste;
-              }
+              // Set subCaste same as caste for backward compatibility
+              newFilters.subCaste = e.target.value;
               onFilterChange(newFilters);
             }}
             options={[
-              { value: "", label: "Select Caste" },
+              { value: "", label: "Select Caste/Subcaste" },
               ...getAllCastes().map((c) => ({
                 value: c,
                 label: c,
-              })),
-            ]}
-            theme={currentTheme}
-          />
-
-          {/* Sub Caste Filter - Standalone */}
-          <CustomSelect
-            value={filters.subCaste || ""}
-            onChange={(e) => handleChange("subCaste", e.target.value)}
-            options={[
-              { value: "", label: "Select Sub Caste" },
-              ...getAllSubCastes().map((sc) => ({
-                value: sc,
-                label: sc,
               })),
             ]}
             theme={currentTheme}

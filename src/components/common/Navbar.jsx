@@ -171,11 +171,12 @@ const isStaffOffice = isOfficeTokenPresent();
             </div>
             <Link
               to="/"
-              className="text-2xl tracking-tight bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent group-hover:scale- transition-transform duration-300"
+              className="text-xl tracking-tight bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent group-hover:scale- transition-transform duration-300"
             >
-              <span className="font-pacifico text-4xl">Elite</span>
-              <span className="font-pacifico text-2xl">inova</span> <br />{" "}
-              Matrimony
+              <span className="font-pacifico text-3xl">Elite</span>
+              <span className="font-pacifico text-xl">inova</span>{" "}
+              <span className="font-pacifico text-xl">Matrimony</span> <br />{" "}
+              <span className="text-1.5xl">Eliteinova Tech Pvt Ltd</span>
             </Link>
           </div>
 
@@ -533,7 +534,11 @@ const isStaffOffice = isOfficeTokenPresent();
                       {user?.name || "User"}
                     </p>
                     <p className="text-sm text-yellow-100">
-                      {isAdmin() ? "Administrator" : "Premium Member"}
+                      {isAdmin() 
+                        ? "Administrator" 
+                        : user?.membership 
+                          ? `${user.membership} Member`
+                          : "Premium Member"}
                     </p>
                   </div>
                 </div>
@@ -601,7 +606,7 @@ const isStaffOffice = isOfficeTokenPresent();
                 <div className="space-y-4">
                   <div className="text-center p-4 rounded-2xl bg-white/10 text-yellow-100">
                     <HeartIcon className="w-8 h-8 mx-auto mb-2 text-red-400" />
-                    <p className="text-sm opacity-80">
+                    <p className="text-sm opacity-100">
                       Start your journey today
                     </p>
                   </div>

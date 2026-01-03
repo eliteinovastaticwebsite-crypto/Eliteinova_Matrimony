@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { BellIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
+import { BellIcon, CheckIcon, XMarkIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import notificationService from '../../services/notificationService';
 import { useAuth } from '../../context/AuthContext';
 
@@ -11,6 +12,7 @@ const Notifications = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const fetchNotifications = async () => {
   if (!isAuthenticated) return;
@@ -475,6 +477,18 @@ const deleteNotification = async (id) => {
             </div>
           </div>
         )}
+
+        {/* Back to Profile Button */}
+        <div className="mb-4">
+          <button
+            onClick={() => navigate('/profiles')}
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+            aria-label="Back to Profile"
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+            <span className="hidden md:inline">Back to Profile</span>
+          </button>
+        </div>
 
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">

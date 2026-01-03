@@ -59,7 +59,7 @@ const FullFAQPage = ({ onOpenRegister }) => {
             aria-label="Go back to previous page"
           >
             <ArrowLeftIcon className="w-5 h-5" />
-            <span>Back to Home</span>
+            <span className="hidden md:inline">Back to Home</span>
           </button>
 
           <button

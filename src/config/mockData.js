@@ -9,19 +9,19 @@ export const mockPlans = [
   {
     id: 1,
     name: "Basic",
-    price: "₹499 / month",
+    price: "₹399/Per 12 Months",
     features: "View Profiles,Send Interests,Limited Chats"
   },
   {
     id: 2,
     name: "Premium",
-    price: "₹999 / month",
+    price: "₹499/Per 12 Months",
     features: "View Profiles,Unlimited Chats,Priority Support"
   },
   {
     id: 3,
     name: "Elite",
-    price: "₹1999 / month",
+    price: "₹749/Per 12 Months",
     features: "View Profiles,Unlimited Chats,Priority Support,Highlighted Profile"
   }
 ];

@@ -1,5 +1,7 @@
 // src/pages/SubscriptionPage.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
   CheckBadgeIcon,
   StarIcon,
@@ -22,6 +24,7 @@ import {
   EyeIcon,
 } from "@heroicons/react/24/solid";
 import { mockPlanService as planService } from "../services/mockPlanService";
+import api from "../api/axiosUser";
 
 // Payment methods data
 const paymentMethods = [
@@ -61,6 +64,8 @@ const securityFeatures = [
 ];
 
 export default function SubscriptionPage({ planId, onClose, onSuccess }) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedPayment, setSelectedPayment] = useState("credit_card");
@@ -299,43 +304,141 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
     }
   };
 
-  const handlePayment = async () => {
+  // Map plan name to membership type for backend
+  const getMembershipType = (planName) => {
+    const name = planName?.toUpperCase() || "";
+    if (name.includes("SILVER")) return "SILVER";
+    if (name.includes("GOLD")) return "GOLD";
+    if (name.includes("DIAMOND")) return "DIAMOND";
+    return "SILVER"; // Default
+  };
+
+  // Razorpay payment handler
+  const handleRazorpayPayment = async () => {
+    if (!window.Razorpay) {
+      setFormErrors({ payment: "Razorpay SDK not loaded. Please refresh the page." });
+      return;
+    }
+
     if (!validateForm()) return;
 
     setProcessing(true);
-    setPaymentStatus("processing");
+    setFormErrors({});
+    setPaymentStatus(null);
 
     try {
-      // Simulate payment processing with actual payment service integration
-      const paymentResponse = await planService.processPayment(plan.id, {
-        method: selectedPayment,
-        amount: calculateFinalPrice(),
-        ...(selectedPayment === "credit_card" && { cardDetails }),
-        ...(selectedPayment === "upi" && { upiId }),
+      const membershipType = getMembershipType(plan?.name);
+      
+      // Step 1: Create Razorpay Order via Backend
+      const orderResponse = await api.post("/api/payments/razorpay/create-order", {
+        membershipType: membershipType,
       });
 
-      if (paymentResponse.success) {
-        setPaymentStatus("success");
-
-        // Simulate plan activation
-        const activationResponse = await planService.selectPlan(plan.id);
-
-        if (activationResponse.success) {
-          setTimeout(() => {
-            if (onSuccess) onSuccess(plan);
-          }, 2000);
-        }
-      } else {
-        setPaymentStatus("failed");
-        setFormErrors({ payment: paymentResponse.error });
+      if (!orderResponse.data.success) {
+        setFormErrors({ payment: orderResponse.data.message || "Failed to create order" });
+        setProcessing(false);
+        return;
       }
+
+      const orderData = orderResponse.data.data;
+      const options = {
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Eliteinova Matrimony",
+        description: `${plan?.name} Membership Payment`,
+        order_id: orderData.orderId,
+        method: {
+          upi: true,
+          card: true,
+          netbanking: selectedPayment === "netbanking",
+          wallet: selectedPayment === "wallet",
+        },
+        notes: {
+          membershipType: membershipType,
+          planName: plan?.name,
+        },
+        handler: async function (response) {
+          // Razorpay handler is ONLY called when payment is successful
+          // But we still verify with backend to ensure payment is captured
+          setProcessing(true);
+          
+          try {
+            // Step 2: Verify payment with backend (checks signature AND payment status from Razorpay)
+            const verifyResponse = await api.post("/api/payments/razorpay/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyResponse.data.success) {
+              setPaymentStatus("success");
+              
+              // Download receipt (using payment ID as transaction ID)
+              try {
+                const receiptResponse = await api.get(
+                  `/api/payments/receipt/${response.razorpay_payment_id}`,
+                  { responseType: "blob" }
+                );
+                const url = window.URL.createObjectURL(new Blob([receiptResponse.data]));
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", `receipt_${response.razorpay_payment_id}.txt`);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+              } catch (receiptError) {
+                console.warn("Could not download receipt:", receiptError);
+              }
+
+              // Call success callback and redirect
+              setTimeout(() => {
+                if (onSuccess) onSuccess(plan);
+                navigate(`/payment-success?transactionId=${response.razorpay_payment_id}`);
+              }, 1500);
+            } else {
+              setPaymentStatus("failed");
+              setFormErrors({
+                payment: verifyResponse.data.message || "Payment verification failed. Please contact support.",
+              });
+              setProcessing(false);
+            }
+          } catch (verifyError) {
+            console.error("Payment verification error:", verifyError);
+            setPaymentStatus("failed");
+            setFormErrors({
+              payment: verifyError.response?.data?.message || "Payment verification failed. Please contact support.",
+            });
+            setProcessing(false);
+          }
+        },
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.mobile || "",
+        },
+        theme: {
+          color: "#DC2626", // Red color matching your theme
+        },
+        modal: {
+          ondismiss: function () {
+            // User closed the modal without completing payment
+            setProcessing(false);
+            setPaymentStatus(null);
+            setFormErrors({});
+          },
+        },
+      };
+
+      // Step 3: Open Razorpay Checkout
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     } catch (error) {
       console.error("Payment error:", error);
       setPaymentStatus("failed");
       setFormErrors({
-        payment: "Payment processing failed. Please try again.",
+        payment: error.response?.data?.message || "Payment processing failed. Please try again.",
       });
-    } finally {
       setProcessing(false);
     }
   };
@@ -788,20 +891,27 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                   </div>
                 </div>
 
-                {/* Pricing */}
-                <div className="flex items-baseline space-x-2 mb-4">
-                  <span className={`text-4xl font-bold ${getTextColor()}`}>
-                    {`₹${finalPrice.toLocaleString()}`}
-                  </span>
-                  <span className="text-gray-500 text-lg">
-                    /{plan.duration}
-                  </span>
+                {/* Pongal Offer Banner */}
+                <div className="mb-4 p-3 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+                  <div className="relative z-10 text-center">
+                    <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
+                      🎉 Pongal Special Offer! 🎉
+                    </h3>
+                    <p className="text-white font-semibold text-xs md:text-sm drop-shadow-lg">
+                      Free Registration for Pongal offer
+                    </p>
+                  </div>
+                </div>
 
-                  {plan.originalPrice && plan.originalPrice !== "0" && (
-                    <span className="text-lg text-gray-400 line-through ml-2">
-                      ₹{plan.originalPrice}
-                    </span>
-                  )}
+                {/* Pricing */}
+                <div className="flex flex-col items-start space-y-2 mb-4">
+                  <span className={`text-2xl font-bold line-through text-gray-400`}>
+                    {`₹${plan.price.replace(/,/g, "")}/Per 12 Months`}
+                  </span>
+                  <span className={`text-4xl font-bold text-green-600`}>
+                    FREE
+                  </span>
                 </div>
 
                 {plan.savings && (
@@ -904,8 +1014,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                     )}
                   </div>
                 )}
-              </div>
-            )}
+            </div>
 
             {/* Payment Methods */}
             <div className="mb-6">
@@ -1000,31 +1109,28 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
             <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Plan Price:</span>
-                  <span className="font-semibold">₹{plan.price}</span>
+                  <span className="font-semibold line-through text-gray-400">₹{plan.price}/Per 12 Months</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Discount:</span>
-                    <span className="text-green-600 font-semibold">
-                      -₹{discount.toLocaleString()}
-                    </span>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-green-700 font-semibold">Pongal Offer:</span>
+                    <span className="text-green-600 font-bold text-lg">FREE</span>
                   </div>
-                )}
+                </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                   <span className="font-semibold text-gray-900">
                     Total Amount:
                   </span>
-                  <span className="text-xl font-bold text-purple-600">
-                    ₹{finalPrice.toLocaleString()}
+                  <span className="text-xl font-bold text-green-600">
+                    FREE
                   </span>
                 </div>
-              </div>
-            )}
+            </div>
 
             {/* CTA Button */}
             <button
-              onClick={handlePayment}
-              disabled={processing || !agreedToTerms}
+              onClick={handleRazorpayPayment}
+              disabled={processing || !agreedToTerms || paymentStatus === "success"}
               className={`w-full py-4 bg-gradient-to-r ${
                 getCTAButtonStyles().gradient
               } ${getCTAButtonStyles().hoverGradient} ${
@@ -1036,11 +1142,16 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Processing Payment...</span>
                 </div>
+              ) : paymentStatus === "success" ? (
+                <span className="flex items-center justify-center space-x-2">
+                  <CheckCircleIcon className="w-4 h-4" />
+                  <span>Payment Successful!</span>
+                </span>
               ) : (
                 <span className="flex items-center justify-center space-x-2">
-                  <LockClosedIcon className="w-4 h-4" />
+                  <CheckCircleIcon className="w-4 h-4" />
                   <span>
-                    {`Pay ₹${finalPrice.toLocaleString()} Now`}
+                    Complete Free Registration
                   </span>
                   <BoltIcon className="w-4 h-4" />
                 </span>

@@ -58,14 +58,13 @@ const handleLoginSuccess = async ({ email, password }) => {
     console.log("Register Modal Received Success:", registrationResult);
     
     // User is already registered and auto-logged in by AuthContext
-    // Just close the modal and redirect
+    // Close the modal - payment redirect is handled in RegisterForm
     if (onClose) {
       onClose();
     }
     
-    // Redirect to profiles page
-    navigate("/profiles");
-    
+    // The RegisterForm component will handle redirecting to payment page
+    // So we don't need to navigate here
     console.log('✅ User registered and auto-logged in:', registrationResult.user?.name);
   };
 

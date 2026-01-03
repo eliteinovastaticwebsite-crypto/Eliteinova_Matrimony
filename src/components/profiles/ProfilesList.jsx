@@ -4,8 +4,10 @@ import profileService from "../../services/profileService"; // REAL SERVICE
 import ProfileCard from "./ProfileCard";
 import ProfileFilters from "../profiles/FilterSidebar";
 import { useAuth } from "../../context/AuthContext"; // REAL AUTH CONTEXT
+import { useTheme } from "../../context/ThemeContext"; // ADDED: Theme context
 import CategoryNav from "../common/CategoryNav";
 import Banner from "../common/Banner";
+import ThemeDecorations from "../common/ThemeDecorations"; // ADDED: Theme decorations
 
 import BannerImage2 from "../../assets/BannerImage2.png";
 
@@ -39,6 +41,18 @@ export default function ProfilesList({onOpenAuthModal}) {
   const [searchTimeout, setSearchTimeout] = useState(null);
 
   const { isAuthenticated, user } = useAuth();
+  const { membershipType, theme, colors, classes } = useTheme(); // ADDED: Theme context
+
+  // Debug logging for membership and theme
+  useEffect(() => {
+    console.log('🎨 ProfilesList - User data:', user);
+    console.log('🎨 ProfilesList - Membership type detected:', membershipType);
+    console.log('🎨 ProfilesList - Theme:', theme);
+    console.log('🎨 ProfilesList - User membership field:', user?.membership || user?.membershipType);
+    console.log('🎨 ProfilesList - Colors object:', colors);
+    console.log('🎨 ProfilesList - Background gradient:', colors.bgGradientStyle);
+    console.log('🎨 ProfilesList - Blob colors:', { blob1: colors.blob1, blob2: colors.blob2, blob3: colors.blob3 });
+  }, [user, membershipType, theme, colors]);
 
   // Fetch all profiles on component mount
   useEffect(() => {
@@ -354,27 +368,82 @@ const performSearch = async (searchFilters) => {
   
   if (loading && profiles.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading profiles...</p>
+      <div 
+        className="min-h-screen flex justify-center items-center relative overflow-hidden"
+        style={{ background: colors.bgGradientStyle }}
+      >
+        {/* Animated Background Blobs */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div 
+            className="absolute top-10 left-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob"
+            style={{ backgroundColor: colors.blob1 }}
+          ></div>
+          <div 
+            className="absolute top-10 right-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"
+            style={{ backgroundColor: colors.blob2 }}
+          ></div>
+          <div 
+            className="absolute bottom-10 left-1/2 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"
+            style={{ backgroundColor: colors.blob3 }}
+          ></div>
+        </div>
+        <div className="text-center relative z-10">
+          <div 
+            className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
+            style={{ borderColor: colors.accent }}
+          ></div>
+          <p className={classes.textColor}>Loading profiles...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Banner Section */}
-      <Banner
-        images={ProfileBannerImages}
-        texts={ProfileBannerTexts}
-        autoPlayInterval={3000}
-        onOpenAuthModal={onOpenAuthModal}
-      />
-      <CategoryNav />
+    <div 
+      className="min-h-screen relative"
+      style={{ 
+        background: colors.bgGradientStyle || 'linear-gradient(to bottom right, #F9FAFB, #F3F4F6, #E5E7EB)',
+        minHeight: '100vh',
+        backgroundColor: colors.primaryLight || '#6B7280' // Fallback
+      }}
+    >
+      {/* Animated Background Blobs - Membership-based colors */}
+      <div className="absolute inset-0 opacity-50 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
+        <div 
+          className="absolute top-20 left-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob"
+          style={{ backgroundColor: colors.blob1 || '#9CA3AF' }}
+        ></div>
+        <div 
+          className="absolute top-20 right-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"
+          style={{ backgroundColor: colors.blob2 || '#6B7280' }}
+        ></div>
+        <div 
+          className="absolute bottom-20 left-1/2 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"
+          style={{ backgroundColor: colors.blob3 || '#4B5563' }}
+        ></div>
+      </div>
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Theme Decorations - Sparkles, Coins, Diamonds */}
+      <ThemeDecorations membershipType={membershipType} colors={colors} />
+      
+      {/* Banner Section - Has its own background */}
+      <div className="relative z-20">
+        <Banner
+          images={ProfileBannerImages}
+          texts={ProfileBannerTexts}
+          autoPlayInterval={3000}
+          onOpenAuthModal={onOpenAuthModal}
+        />
+      </div>
+      
+      {/* CategoryNav - Has its own background */}
+      <div className="relative z-20">
+        <CategoryNav />
+      </div>
+      
+      {/* Main Content Area - Theme background visible here */}
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10" style={{ position: 'relative', zIndex: 10 }}>
+        
         <div className="flex flex-col lg:flex-row gap-8">
           
           {isAuthenticated && (
@@ -413,18 +482,34 @@ const performSearch = async (searchFilters) => {
 
           {/* Main Content Area */}
           <div className={isAuthenticated ? "lg:w-3/4" : "lg:w-full"}>
-            {/* Header Stats */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            {/* Header Stats - Membership-based styling */}
+            <div 
+              className={`${classes.cardBg} rounded-lg shadow-sm border p-6 mb-6`}
+              style={{ borderColor: `${colors.accent}40` }}
+            >
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-800 mb-2">
-                    Find Your Perfect Match
-                  </h1>
-                  <p className="text-gray-600">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className={`text-2xl font-bold ${classes.textColor}`}>
+                      Find Your Perfect Match
+                    </h1>
+                    {membershipType && (
+                      <span 
+                        className="px-3 py-1 rounded-full text-xs font-bold uppercase"
+                        style={{
+                          backgroundColor: colors.accentLight,
+                          color: colors.accent
+                        }}
+                      >
+                        {membershipType} Member
+                      </span>
+                    )}
+                  </div>
+                  <p className={`${classes.textColor} opacity-70`}>
                     {searchResults || hasQuickFilters ? (
-                      <>Found <span className="font-semibold text-red-600">{filteredProfiles.length}</span> profiles matching your criteria</>
+                      <>Found <span className="font-semibold" style={{ color: colors.accent }}>{filteredProfiles.length}</span> profiles matching your criteria</>
                     ) : (
-                      <>Showing <span className="font-semibold text-red-600">{filteredProfiles.length}</span> of <span className="font-semibold">{pagination.totalElements}</span> profiles</>
+                      <>Showing <span className="font-semibold" style={{ color: colors.accent }}>{filteredProfiles.length}</span> of <span className="font-semibold">{pagination.totalElements}</span> {membershipType} profiles</>
                     )}
                   </p>
                 </div>
@@ -434,7 +519,18 @@ const performSearch = async (searchFilters) => {
                   {(searchResults || hasQuickFilters) && (
                     <button
                       onClick={clearAllFilters}
-                      className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center gap-1 px-3 py-1 border border-red-200 rounded"
+                      className="font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors"
+                      style={{
+                        color: colors.accent,
+                        borderColor: `${colors.accent}60`,
+                        backgroundColor: `${colors.accentLight}40`
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = `${colors.accentLight}60`;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = `${colors.accentLight}40`;
+                      }}
                     >
                       <span>✕</span>
                       Clear All Filters
@@ -445,7 +541,8 @@ const performSearch = async (searchFilters) => {
                   {searchResults && (
                     <button
                       onClick={clearSearch}
-                      className="text-gray-600 hover:text-gray-800 font-medium text-sm flex items-center gap-1 px-3 py-1 border border-gray-200 rounded"
+                      className={`${classes.textColor} opacity-70 hover:opacity-100 font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
+                      style={{ borderColor: `${colors.accent}40` }}
                     >
                       <span>↶</span>
                       Clear Search
@@ -455,7 +552,8 @@ const performSearch = async (searchFilters) => {
                   {/* Refresh Button */}
                   <button
                     onClick={() => fetchAllProfiles()}
-                    className="text-gray-600 hover:text-gray-800 font-medium text-sm flex items-center gap-1 px-3 py-1 border border-gray-200 rounded"
+                    className={`${classes.textColor} opacity-70 hover:opacity-100 font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
+                    style={{ borderColor: `${colors.accent}40` }}
                   >
                     <span>🔄</span>
                     Refresh
@@ -464,54 +562,77 @@ const performSearch = async (searchFilters) => {
               </div>
             </div>
 
-            {/* Quick Filter Buttons */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            {/* Quick Filter Buttons - Membership-based styling */}
+            <div 
+              className={`${classes.cardBg} rounded-lg shadow-sm border p-6 mb-6`}
+              style={{ borderColor: `${colors.accent}40` }}
+            >
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Quick Filters</h3>
+                <h3 className={`text-lg font-semibold ${classes.textColor} mb-3`}>Quick Filters</h3>
 
                 {/* Religion Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Religion:</label>
+                  <label className={`block text-sm font-medium ${classes.textColor} mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
-                    {["all", "Hindu", "Muslim", "Christian"].map((religion) => (
-                      <button
-                        key={religion}
-                        onClick={() => setReligionFilter(religion === "all" ? "all" : religion)}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition ${
-                          religionFilter === (religion === "all" ? "all" : religion)
-                            ? "bg-red-600 text-white shadow"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {religion === "all" ? "All Religions" : religion}
-                      </button>
-                    ))}
+                    {["all", "Hindu", "Muslim", "Christian"].map((religion) => {
+                      const isActive = religionFilter === (religion === "all" ? "all" : religion);
+                      return (
+                        <button
+                          key={religion}
+                          onClick={() => setReligionFilter(religion === "all" ? "all" : religion)}
+                          className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+                            isActive
+                              ? "text-white shadow"
+                              : `${classes.textColor} opacity-70 hover:opacity-100`
+                          }`}
+                          style={isActive ? {
+                            backgroundColor: colors.accent
+                          } : {
+                            backgroundColor: colors.accentLight + '40'
+                          }}
+                        >
+                          {religion === "all" ? "All Religions" : religion}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
 
               {/* Active Filters Display */}
               {(genderFilter !== "all" || religionFilter !== "all") && (
-                <div className="pt-4 border-t border-gray-200">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Active Filters:</h4>
+                <div className="pt-4 border-t" style={{ borderColor: `${colors.accent}40` }}>
+                  <h4 className={`text-sm font-medium ${classes.textColor} mb-2`}>Active Filters:</h4>
                   <div className="flex flex-wrap gap-2">
                     {genderFilter !== "all" && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-800 text-sm font-medium">
+                      <span 
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        style={{
+                          backgroundColor: colors.accentLight,
+                          color: colors.accent
+                        }}
+                      >
                         {genderFilter === "brides" ? "👰 Brides" : "🤵 Grooms"}
                         <button 
                           onClick={() => setGenderFilter("all")}
-                          className="ml-2 hover:text-red-900 text-xs"
+                          className="ml-2 hover:opacity-70 text-xs transition-opacity"
                         >
                           ✕
                         </button>
                       </span>
                     )}
                     {religionFilter !== "all" && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                      <span 
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        style={{
+                          backgroundColor: colors.accentLight,
+                          color: colors.accent
+                        }}
+                      >
                         {religionFilter}
                         <button 
                           onClick={() => setReligionFilter("all")}
-                          className="ml-2 hover:text-blue-900 text-xs"
+                          className="ml-2 hover:opacity-70 text-xs transition-opacity"
                         >
                           ✕
                         </button>
@@ -524,15 +645,22 @@ const performSearch = async (searchFilters) => {
 
             {/* Error Alert */}
             {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+              <div 
+                className="mb-6 border rounded-lg p-4"
+                style={{
+                  backgroundColor: colors.accentLight + '40',
+                  borderColor: colors.accent
+                }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <span className="text-red-600 mr-2">⚠️</span>
-                    <span className="text-red-800">{error}</span>
+                    <span className="mr-2" style={{ color: colors.accent }}>⚠️</span>
+                    <span style={{ color: colors.accent }}>{error}</span>
                   </div>
                   <button
                     onClick={() => setError("")}
-                    className="text-red-600 hover:text-red-800"
+                    className="hover:opacity-70 transition-opacity"
+                    style={{ color: colors.accent }}
                   >
                     ✕
                   </button>
@@ -542,17 +670,29 @@ const performSearch = async (searchFilters) => {
 
             {/* Profiles Grid */}
             {filteredProfiles.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="text-gray-500 text-lg mb-4">
+              <div 
+                className={`text-center py-12 ${classes.cardBg} rounded-lg shadow-sm border`}
+                style={{ borderColor: `${colors.accent}40` }}
+              >
+                <div className={`${classes.textColor} opacity-70 text-lg mb-4`}>
                   {searchResults || hasQuickFilters
                     ? "No profiles found matching your search criteria."
-                    : "No profiles available at the moment."
+                    : `No ${membershipType} profiles available at the moment.`
                   }
                 </div>
                 {(searchResults || hasQuickFilters) && (
                   <button
                     onClick={clearAllFilters}
-                    className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                    className="text-white px-6 py-2 rounded-lg transition-colors font-medium"
+                    style={{
+                      backgroundColor: colors.accent
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.opacity = '0.9';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.opacity = '1';
+                    }}
                   >
                     Show All Profiles
                   </button>
@@ -575,7 +715,21 @@ const performSearch = async (searchFilters) => {
                     <button
                       onClick={loadMore}
                       disabled={loading}
-                      className="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                      className={`${classes.cardBg} border px-6 py-3 rounded-lg disabled:opacity-50 transition-colors font-medium`}
+                      style={{
+                        borderColor: `${colors.accent}60`,
+                        color: colors.accent
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading) {
+                          e.target.style.backgroundColor = colors.accentLight + '60';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!loading) {
+                          e.target.style.backgroundColor = '';
+                        }
+                      }}
                     >
                       {loading ? "Loading..." : "Load More Profiles"}
                     </button>
