@@ -481,6 +481,7 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
                   handleSearchResults(updatedFilters);
                 }}
                 theme="gold"
+                membershipType="GOLD"
               />
             </div>
           )}

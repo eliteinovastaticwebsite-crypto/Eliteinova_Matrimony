@@ -66,7 +66,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3 text-gray-400 hover:text-yellow-400 transition-colors">
                 <FaEnvelope className="text-red-400" />
-                <span className="font-medium">eliteinovamatrimony@gmail.com</span>
+                <span className="font-medium">info@eliteinovamatrimony.com</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400">
                 <FaMapMarkerAlt className="text-red-400" />

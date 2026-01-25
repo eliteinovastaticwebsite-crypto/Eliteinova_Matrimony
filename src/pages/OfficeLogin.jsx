@@ -31,13 +31,17 @@ const OfficeLogin = () => {
 
     try {
       const res = await officeService.login(email, password);
+      console.log("Office login response:", res);
+      
       if (res.success) {
+        console.log("✅ Office login successful, redirecting to dashboard");
         navigate("/admin/dashboard", { replace: true });
       } else {
-        setError("Invalid credentials");
+        setError(res.message || res.error || "Invalid credentials");
       }
     } catch (err) {
-      setError("Login failed");
+      console.error("Office login error:", err);
+      setError(err.message || err.error || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -50,7 +54,7 @@ const OfficeLogin = () => {
           Office Login
         </h2>
         <p className="text-gray-400 text-sm text-center mt-1">
-          EliteNXT Matrimony
+          Eliteinova Matrimony
         </p>
 
         {error && (
@@ -62,7 +66,7 @@ const OfficeLogin = () => {
         <form onSubmit={handleLogin} className="mt-6 space-y-4">
           <input
             type="email"
-            placeholder="office@elitenxt.com"
+            placeholder="office@eliteinova.com"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}

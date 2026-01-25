@@ -41,7 +41,7 @@ export default function ChatWidget() {
       return "Pricing depends on the service. Which service would you like pricing for? (e.g. Premium Membership, Verification)";
     }
     if (low.includes("hello") || low.includes("hi")) {
-      return "Hi! 👋 I'm Elitenxt Assistant. How can I help you today? You can ask about membership, verification, or wedding services.";
+      return "Hi! 👋 I'm Eliteinova Assistant. How can I help you today? You can ask about membership, verification, or wedding services.";
     }
     return "Thanks — our team will contact you shortly. Meanwhile, you can check our Services page or request a callback.";
   };

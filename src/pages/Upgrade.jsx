@@ -21,7 +21,7 @@ import BannerImage6 from "../assets/BannerImage6.jpg";
 const UpgradeBannerTexts = [
   {
     title: "Premium Matches for Elite Brides & Grooms",
-    subtitle: "Upgrade to Elitenxt Premium for priority matchmaking, verified profiles, and personalized assistance to help you find your perfect match faster.",
+    subtitle: "Upgrade to EliteinovaPremium for priority matchmaking, verified profiles, and personalized assistance to help you find your perfect match faster.",
     cta: "Register To Upgrade Now",
   },
 ];
@@ -296,15 +296,15 @@ export default function Upgrade({ onOpenAuthModal }) {
                     {plan.description}
                   </p>
 
-                  {/* Pongal Offer Banner */}
+                  {/* Launch Offer Banner */}
                   <div className="mb-6 p-3 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                     <div className="relative z-10 text-center">
                       <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
-                        🎉 Pongal Special Offer! 🎉
+                        🎉 Launch Special Offer! 🎉
                       </h3>
                       <p className="text-white font-semibold text-xs md:text-sm drop-shadow-lg">
-                        Free Registration for Pongal offer
+                        Free Registration for Launch Offer
                       </p>
                     </div>
                   </div>

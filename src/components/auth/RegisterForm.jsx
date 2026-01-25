@@ -37,6 +37,8 @@ export default function RegisterForm({
     partnerAgeMin: "",
     partnerAgeMax: "",
     email: "",
+    physicallyChallenged: "No",
+    physicallyChallengedDescription: "",
 
     // Step 3: Religion Details
     religion: "Hindu",
@@ -56,6 +58,8 @@ export default function RegisterForm({
 
     // Step 5: Professional Details
     education: "Bachelor's",
+    educationalQualification: "",
+    certificateCourses: "",
     specialization: "",
     employedIn: "Private",
     occupation: "",
@@ -236,6 +240,7 @@ const communityCasteData = {
 // ------------ Profession Options ------------
 const professionOptions = [
   { value: "", label: "Select Occupation" },
+  { value: "Occupation with own", label: "Occupation with own" },
   { value: "Software Engineer", label: "Software Engineer" },
   { value: "Doctor", label: "Doctor" },
   { value: "Nurse", label: "Nurse" },
@@ -415,10 +420,15 @@ const professionOptions = [
         if (!form.height) errors.height = "Height required";
         if (!form.familyStatus) errors.familyStatus = "Family status required";
         if (!form.familyType) errors.familyType = "Family type required";
+        if (!form.physicallyChallenged) errors.physicallyChallenged = "Please specify if physically challenged";
+        if (form.physicallyChallenged === "Yes" && !form.physicallyChallengedDescription?.trim()) {
+          errors.physicallyChallengedDescription = "Description required when physically challenged is Yes";
+        }
         break;
       case 5:
         if (!form.education) errors.education = "Education required";
         if (!form.employedIn) errors.employedIn = "Employment required";
+        if (!form.membershipType) errors.membershipType = "Membership type required";
         if (!form.annualIncome) errors.annualIncome = "Income required";
         if (!form.district?.trim()) errors.district = "District required";
         if (!form.state?.trim()) errors.state = "State required";
@@ -493,6 +503,8 @@ const professionOptions = [
             profession: form.occupation || "",
             employedIn: form.employedIn,
             specialization: form.specialization || "",
+            educationalQualification: form.educationalQualification || "",
+            certificateCourses: form.certificateCourses || "",
             annualIncome: parseIncome(form.annualIncome),
             city: form.city || "",
             state: form.state,
@@ -502,6 +514,8 @@ const professionOptions = [
             familyStatus: form.familyStatus,
             familyType: form.familyType,
             height: convertHeightToCm(form.height),
+            physicallyChallenged: form.physicallyChallenged === "Yes",
+            physicallyChallengedDescription: form.physicallyChallenged === "Yes" ? (form.physicallyChallengedDescription || "") : "",
             about: form.about,
             childrenCount: form.childrenCount || "0",
             childrenWithYou: form.childrenWithYou || false,
@@ -562,12 +576,6 @@ const professionOptions = [
             credentials: 'include',
             mode: 'cors',
         });
-        
-        console.log("📡 Response received!");
-        console.log("📡 Response status:", response.status);
-        console.log("📡 Response statusText:", response.statusText);
-        console.log("📡 Response URL:", response.url);
-        console.log("📡 Response headers:", [...response.headers.entries()]);
 
         // Check if response is ok
         if (!response.ok) {
@@ -736,7 +744,20 @@ const professionOptions = [
     if (!incomeString) return 0;
 
     // Handle different income formats
-    if (incomeString.includes("LPA")) {
+    if (incomeString.includes("Cr")) {
+      // Handle crores format like "1Cr-3Cr", "3Cr-5Cr", "5Cr+"
+      if (incomeString.includes("-")) {
+        const range = incomeString.split("-");
+        const upperLimit = parseFloat(range[1].trim().replace("Cr", "").replace("+", ""));
+        return Math.round(upperLimit * 10000000); // Convert crores to rupees
+      } else if (incomeString.includes("+")) {
+        const value = parseFloat(incomeString.replace("Cr+", "").replace("Cr", ""));
+        return Math.round(value * 10000000);
+      } else {
+        const crores = parseFloat(incomeString.replace("Cr", ""));
+        return Math.round(crores * 10000000);
+      }
+    } else if (incomeString.includes("LPA")) {
       // Handle formats like "10-15 LPA" or "15-20 LPA"
       if (incomeString.includes("-")) {
         const range = incomeString.split("-");
@@ -747,17 +768,44 @@ const professionOptions = [
       const lakhs = parseFloat(incomeString.split(" ")[0]);
       return Math.round(lakhs * 100000);
     } else if (incomeString.includes("L")) {
-      const lakhs = parseFloat(incomeString.split(" ")[0]);
+      // Handle formats like "20L-50L", "50L-75L", "75L-1Cr", "0-2L", "2L-5L", etc.
+      if (incomeString.includes("-")) {
+        const range = incomeString.split("-");
+        // Check if second part has Cr
+        if (range[1].includes("Cr")) {
+          const crores = parseFloat(range[1].trim().replace("Cr", ""));
+          return Math.round(crores * 10000000);
+        }
+        // Extract number from second part (could be "50L" or "50")
+        const upperLimitStr = range[1].trim().replace("L", "");
+        const upperLimit = parseFloat(upperLimitStr);
+        return Math.round(upperLimit * 100000);
+      }
+      const lakhs = parseFloat(incomeString.replace("L", ""));
       return Math.round(lakhs * 100000);
-    } else if (incomeString.includes("-")) {
-      // Handle range like "5-10 L" - take the upper limit
-      const range = incomeString.split("-");
-      const upperLimit = parseFloat(range[1].trim().split(" ")[0]);
-      return Math.round(upperLimit * 100000);
     } else if (incomeString.includes("+")) {
-      // Handle "20+" format - take the minimum value
+      // Handle "1Cr+" format - take the minimum value
+      if (incomeString.includes("Cr")) {
+        const value = parseFloat(incomeString.replace("Cr+", "").replace("+", ""));
+        return Math.round(value * 10000000);
+      }
       const value = parseFloat(incomeString.replace("+", ""));
       return Math.round(value * 100000);
+    } else if (incomeString.includes("-")) {
+      // Handle range like "0-2L" or "1Cr-3Cr" - take the upper limit
+      const range = incomeString.split("-");
+      const upperLimitStr = range[1].trim();
+      if (upperLimitStr.includes("Cr")) {
+        const crores = parseFloat(upperLimitStr.replace("Cr", ""));
+        return Math.round(crores * 10000000);
+      } else if (upperLimitStr.includes("L")) {
+        const lakhs = parseFloat(upperLimitStr.replace("L", ""));
+        return Math.round(lakhs * 100000);
+      } else {
+        // Assume lakhs if no unit
+        const lakhs = parseFloat(upperLimitStr);
+        return Math.round(lakhs * 100000);
+      }
     }
 
     return 0;
@@ -1224,6 +1272,50 @@ const professionOptions = [
               <option value="Joint">Joint Family</option>
               <option value="Nuclear">Nuclear Family</option>
             </FloatingInput>
+
+            {/* Physically Challenged Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Physically Challenged *
+              </label>
+              <div className="flex items-center space-x-6">
+                {["Yes", "No"].map((option) => (
+                  <label
+                    key={option}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="physicallyChallenged"
+                      value={option}
+                      checked={form.physicallyChallenged === option}
+                      onChange={handleChange}
+                      className="text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-gray-700">{option}</span>
+                  </label>
+                ))}
+              </div>
+              {validationErrors.physicallyChallenged && (
+                <p className="text-red-500 text-xs mt-1">
+                  {validationErrors.physicallyChallenged}
+                </p>
+              )}
+            </div>
+
+            {/* Description box if Yes is selected */}
+            {form.physicallyChallenged === "Yes" && (
+              <FloatingInput
+                label="Description"
+                name="physicallyChallengedDescription"
+                value={form.physicallyChallengedDescription}
+                onChange={handleChange}
+                textarea
+                placeholder="Please describe your physical challenge"
+                rows="3"
+                error={validationErrors.physicallyChallengedDescription}
+              />
+            )}
           </div>
         )}
 
@@ -1250,6 +1342,45 @@ const professionOptions = [
         <p className="text-red-500 text-sm">{validationErrors.education}</p>
       )}
     </div>
+
+    {/* Educational Qualification */}
+    <div>
+      <label className="block mb-1 font-medium">Educational Qualification</label>
+      <Select
+        value={form.educationalQualification ? { value: form.educationalQualification, label: form.educationalQualification } : null}
+        onChange={(e) =>
+          handleChange({ target: { name: "educationalQualification", value: e.value } })
+        }
+        options={[
+          { value: "10th Pass", label: "10th Pass" },
+          { value: "12th Pass", label: "12th Pass" },
+          { value: "Diploma", label: "Diploma" },
+          { value: "Bachelor's Degree", label: "Bachelor's Degree" },
+          { value: "Master's Degree", label: "Master's Degree" },
+          { value: "M.Phil", label: "M.Phil" },
+          { value: "PhD", label: "PhD" },
+          { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
+          { value: "Engineering", label: "Engineering" },
+          { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
+          { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
+          { value: "Other", label: "Other" },
+        ]}
+        placeholder="Select Educational Qualification"
+        isClearable
+      />
+      {validationErrors.educationalQualification && (
+        <p className="text-red-500 text-sm">{validationErrors.educationalQualification}</p>
+      )}
+    </div>
+
+    {/* Certificate Courses */}
+    <FloatingInput
+      label="Certificate Courses (if any)"
+      name="certificateCourses"
+      value={form.certificateCourses}
+      onChange={handleChange}
+      placeholder="e.g., AWS Certified, PMP, Digital Marketing, etc."
+    />
 
     {/* Specialization (normal input) */}
     <FloatingInput
@@ -1308,12 +1439,19 @@ const professionOptions = [
           handleChange({ target: { name: "annualIncome", value: e.value } })
         }
         options={[
-          { value: "0-2 L", label: "0–2 Lakhs" },
-          { value: "2-5 L", label: "2–5 Lakhs" },
-          { value: "5-10 L", label: "5–10 Lakhs" },
-          { value: "10-15 LPA", label: "10 to 15 LPA" },
-          { value: "15-20 LPA", label: "15 to 20 LPA" },
-          { value: "20+", label: "20+" },
+          { value: "0-2L", label: "0 - 2L" },
+          { value: "2L-5L", label: "2L - 5L" },
+          { value: "5L-10L", label: "5L - 10L" },
+          { value: "10L-15L", label: "10L - 15L" },
+          { value: "15L-20L", label: "15L - 20L" },
+          { value: "20L-50L", label: "20L - 50L" },
+          { value: "50L-75L", label: "50L - 75L" },
+          { value: "75L-1Cr", label: "75L to 1Cr" },
+          { value: "1Cr-3Cr", label: "1Cr - 3Cr" },
+          { value: "3Cr-5Cr", label: "3Cr - 5Cr" },
+          { value: "5Cr-10Cr", label: "5Cr - 10Cr" },
+          { value: "10Cr-20Cr", label: "10Cr - 20Cr" },
+          { value: "20Cr+", label: "20Cr and Above" },
         ]}
         placeholder="Select Income"
       />
@@ -1329,20 +1467,64 @@ const professionOptions = [
         value={form.country ? { value: form.country, label: form.country } : null}
         onChange={(e) => {
           handleChange({ target: { name: "country", value: e.value } });
-          // Reset state and district when country changes
+          // Reset state and district when country changes (only India has states/districts)
           if (e.value !== "India") {
             handleChange({ target: { name: "state", value: "" } });
             handleChange({ target: { name: "district", value: "" } });
           }
         }}
         options={[
+          // South Asia
           { value: "India", label: "India" },
-          { value: "United States", label: "United States" },
-          { value: "United Kingdom", label: "United Kingdom" },
-          { value: "Canada", label: "Canada" },
-          { value: "Australia", label: "Australia" },
+          { value: "Sri Lanka", label: "Sri Lanka" },
+          
+          // Southeast Asia
+          { value: "Malaysia", label: "Malaysia" },
           { value: "Singapore", label: "Singapore" },
-          { value: "UAE", label: "UAE" },
+          { value: "Indonesia", label: "Indonesia" },
+          { value: "Myanmar", label: "Myanmar" },
+          { value: "Thailand", label: "Thailand" },
+          
+          // Middle East
+          { value: "United Arab Emirates", label: "United Arab Emirates (UAE)" },
+          { value: "Saudi Arabia", label: "Saudi Arabia" },
+          { value: "Qatar", label: "Qatar" },
+          { value: "Kuwait", label: "Kuwait" },
+          { value: "Oman", label: "Oman" },
+          { value: "Bahrain", label: "Bahrain" },
+          
+          // Africa
+          { value: "South Africa", label: "South Africa" },
+          { value: "Mauritius", label: "Mauritius" },
+          { value: "Réunion", label: "Réunion (France)" },
+          { value: "Kenya", label: "Kenya" },
+          { value: "Tanzania", label: "Tanzania" },
+          { value: "Uganda", label: "Uganda" },
+          
+          // Europe
+          { value: "United Kingdom", label: "United Kingdom" },
+          { value: "France", label: "France" },
+          { value: "Germany", label: "Germany" },
+          { value: "Switzerland", label: "Switzerland" },
+          { value: "Netherlands", label: "Netherlands" },
+          { value: "Norway", label: "Norway" },
+          { value: "Sweden", label: "Sweden" },
+          { value: "Denmark", label: "Denmark" },
+          
+          // North America
+          { value: "Canada", label: "Canada" },
+          { value: "United States", label: "United States" },
+          
+          // Oceania
+          { value: "Australia", label: "Australia" },
+          { value: "New Zealand", label: "New Zealand" },
+          
+          // Caribbean & South America
+          { value: "Guyana", label: "Guyana" },
+          { value: "Suriname", label: "Suriname" },
+          { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
+          { value: "Fiji", label: "Fiji" },
+          
           { value: "Other", label: "Other" },
         ]}
         placeholder="Select Country"
@@ -1729,56 +1911,17 @@ const professionOptions = [
   </div>
 )}
 
-            {/* Membership Type - Last field in Step 6 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Membership Type *
-              </label>
-              
-              {/* Pongal Offer Banner */}
-              <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-                <div className="relative z-10 text-center">
-                  <h3 className="text-white font-bold text-lg md:text-xl mb-1 animate-bounce">
-                    🎉 Pongal Special Offer! 🎉
-                  </h3>
-                  <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
-                    Free Registration for Pongal offer
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-3">
-                {[
-                  { value: "SILVER", label: "Silver", price: "₹299/Per 12 Months" },
-                  { value: "GOLD", label: "Gold", price: "₹499/Per 12 Months" },
-                  { value: "DIAMOND", label: "Diamond", price: "₹749/Per 12 Months" },
-                ].map((membership) => (
-                  <label
-                    key={membership.value}
-                    className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <input
-                      type="radio"
-                      name="membershipType"
-                      value={membership.value}
-                      checked={form.membershipType === membership.value}
-                      onChange={handleChange}
-                      className="text-red-600 focus:ring-red-500"
-                    />
-                    <span className="text-gray-700 font-medium flex-1">{membership.label}</span>
-                    <div className="flex flex-col items-end">
-                      <span className="text-gray-400 line-through text-sm">{membership.price}</span>
-                      <span className="text-green-600 font-bold text-base">FREE</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-              {validationErrors.membershipType && (
-                <p className="text-red-500 text-xs mt-1">
-                  {validationErrors.membershipType}
+            {/* Launch Offer Banner */}
+            <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+              <div className="relative z-10 text-center">
+                <h3 className="text-white font-bold text-lg md:text-xl mb-1 animate-bounce">
+                  🎉 Launch Special Offer! 🎉
+                </h3>
+                <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
+                  Free Registration for Launch Offer
                 </p>
-              )}
+              </div>
             </div>
           </div>
         )}

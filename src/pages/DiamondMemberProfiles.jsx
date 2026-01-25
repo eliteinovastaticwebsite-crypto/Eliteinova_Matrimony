@@ -511,6 +511,7 @@ export default function DiamondMemberProfiles({ onOpenAuthModal }) {
                   handleSearchResults(updatedFilters);
                 }}
                 theme="diamond"
+                membershipType="DIAMOND"
               />
             </div>
           )}

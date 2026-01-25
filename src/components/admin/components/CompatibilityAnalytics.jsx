@@ -1,7 +1,25 @@
 import { useState, useEffect } from "react";
 import adminService from "../../../services/adminService";
+import officeAuthService from "../../../services/officeAuthService";
 
 function CompatibilityAnalytics() {
+  // Get current user role
+  const getCurrentRole = () => {
+    if (localStorage.getItem('officeToken')) {
+      return 'OFFICE';
+    }
+    const adminUser = adminService.getAdminUser();
+    if (adminUser?.role) {
+      return adminUser.role;
+    }
+    if (localStorage.getItem('adminToken')) {
+      return 'ADMIN';
+    }
+    return null;
+  };
+
+  const currentRole = getCurrentRole();
+  const isOfficeUser = currentRole === 'OFFICE';
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState('30d');
@@ -27,6 +45,7 @@ function CompatibilityAnalytics() {
       setError('');
       console.log('🧬 Fetching compatibility analytics from backend...');
       
+      // Both admin and office users can use adminService (axiosDashboard handles both tokens)
       const response = await adminService.getCompatibilityAnalytics();
       console.log('📥 Backend compatibility response:', response);
       
@@ -50,7 +69,14 @@ function CompatibilityAnalytics() {
       }
     } catch (error) {
       console.error('❌ Error fetching compatibility analytics:', error);
-      setError(`Failed to load analytics: ${error.message || 'Unknown error'}`);
+      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+      
+      // Check if it's an access denied error
+      if (error.response?.status === 403 || errorMessage.includes('access') || errorMessage.includes('permission')) {
+        setError('Access denied: Office users have limited access to compatibility analytics. Please contact an administrator.');
+      } else {
+        setError(`Failed to load analytics: ${errorMessage}`);
+      }
     } finally {
       setLoading(false);
     }

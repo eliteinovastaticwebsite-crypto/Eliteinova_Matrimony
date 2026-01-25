@@ -2,8 +2,26 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import Button from "../../ui/Button";
 import adminService from "../../../services/adminService";
+import officeAuthService from "../../../services/officeAuthService";
 
 function ProfileVerification() {
+  // Get current user role
+  const getCurrentRole = () => {
+    if (localStorage.getItem('officeToken')) {
+      return 'OFFICE';
+    }
+    const adminUser = adminService.getAdminUser();
+    if (adminUser?.role) {
+      return adminUser.role;
+    }
+    if (localStorage.getItem('adminToken')) {
+      return 'ADMIN';
+    }
+    return null;
+  };
+
+  const currentRole = getCurrentRole();
+  const isOfficeUser = currentRole === 'OFFICE';
   // State management
   const [pendingVerification, setPendingVerification] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,13 +96,20 @@ function ProfileVerification() {
           prev.filter(item => item.id !== profileId)
         );
         
-        // Update stats
+        // Update stats optimistically
         setStats(prev => ({
           ...prev,
-          totalPending: prev.totalPending - 1
+          totalPending: Math.max(0, prev.totalPending - 1),
+          verifiedToday: action === 'approved' ? prev.verifiedToday + 1 : prev.verifiedToday
         }));
         
         setShowDetailModal(false);
+        
+        // Refresh stats from backend to get accurate counts (including verifiedToday)
+        // Use a small delay to ensure backend has processed the update
+        setTimeout(() => {
+          fetchPendingVerifications();
+        }, 1000);
       } else {
         throw new Error(response.message);
       }

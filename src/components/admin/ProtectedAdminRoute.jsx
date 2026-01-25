@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import adminService from '../../services/adminService';
+import officeAuthService from '../../services/officeAuthService';
 
 const ProtectedAdminRoute = ({ children }) => {
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
-    loading: true
+    loading: true,
+    role: null
   });
   const location = useLocation();
   const checkInProgress = useRef(false);
@@ -19,21 +21,43 @@ const ProtectedAdminRoute = ({ children }) => {
 
     const checkAuth = async () => {
       try {
-        const authStatus = await adminService.checkAuth();
-        console.log('🛡️ ProtectedAdminRoute: Auth result:', authStatus);
+        // Check for office token first
+        const officeToken = localStorage.getItem('officeToken');
+        if (officeToken) {
+          const officeAuth = await officeAuthService.checkAuth();
+          console.log('🛡️ ProtectedAdminRoute: Office auth result:', officeAuth);
+          
+          if (officeAuth.authenticated) {
+            setAuthState({
+              isAuthenticated: true,
+              loading: false,
+              role: 'OFFICE'
+            });
+            checkInProgress.current = false;
+            return;
+          }
+        }
+
+        // Check for admin token
+        const adminAuth = await adminService.checkAuth();
+        console.log('🛡️ ProtectedAdminRoute: Admin auth result:', adminAuth);
+        
+        // Allow both ADMIN and OFFICE roles to access
+        const isAuthenticated = adminAuth.authenticated === true && 
+          (adminAuth.role === 'ADMIN' || adminAuth.role === 'OFFICE');
         
         setAuthState({
-  isAuthenticated:
-    authStatus.authenticated === true &&
-    authStatus.role === 'ADMIN',
-  loading: false
-});
+          isAuthenticated: isAuthenticated,
+          loading: false,
+          role: adminAuth.role || null
+        });
         
       } catch (error) {
         console.error('🛡️ ProtectedAdminRoute: Auth check error:', error);
         setAuthState({
           isAuthenticated: false,
-          loading: false
+          loading: false,
+          role: null
         });
       } finally {
         checkInProgress.current = false;
@@ -66,7 +90,12 @@ const ProtectedAdminRoute = ({ children }) => {
     console.log('🛡️ Current path:', location.pathname);
     
     // Don't redirect if we're already on login page
-    if (location.pathname !== '/admin-login') {
+    if (location.pathname !== '/admin-login' && location.pathname !== '/office-login') {
+      // Check if there's an office token but auth failed - redirect to office login
+      if (localStorage.getItem('officeToken')) {
+        return <Navigate to="/office-login" state={{ from: location }} replace />;
+      }
+      // Otherwise redirect to admin login
       return <Navigate to="/admin-login" state={{ from: location }} replace />;
     }
     

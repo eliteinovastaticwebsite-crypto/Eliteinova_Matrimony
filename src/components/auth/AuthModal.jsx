@@ -35,7 +35,7 @@ const handleLoginSuccess = async ({ email, password }) => {
   console.log("Login Modal Received:", email, password);
   
   // Check if trying to login as admin
-  if (email.toLowerCase().includes('admin') || email.endsWith('@elitenxtmatrimony.com')) {
+  if (email.toLowerCase().includes('admin') || email.endsWith('@eliteinovamatrimony.com')) {
     alert("Admin users must login through Admin Login page. Redirecting...");
     onClose();
     navigate('/admin-login');

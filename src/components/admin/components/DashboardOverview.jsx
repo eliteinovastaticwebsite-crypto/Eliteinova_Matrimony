@@ -53,7 +53,29 @@ function DashboardOverview() {
       // Fetch stats
       const statsResponse = await adminService.getDashboardStats();
       if (statsResponse.success) {
-        setStats(statsResponse);
+        // Ensure all numeric fields have default values
+        setStats({
+          totalUsers: statsResponse.totalUsers || 0,
+          activeUsers: statsResponse.activeUsers || 0,
+          newUsersToday: statsResponse.newUsersToday || 0,
+          totalMatches: statsResponse.totalMatches || 0,
+          successfulMatches: statsResponse.successfulMatches || 0,
+          pendingMatches: statsResponse.pendingMatches || 0,
+          revenue: statsResponse.revenue || 0,
+          monthlyRevenue: statsResponse.monthlyRevenue || 0,
+          engagementRate: statsResponse.engagementRate || 0,
+          premiumUsers: statsResponse.premiumUsers || 0,
+          conversionRate: statsResponse.conversionRate || 0,
+          pendingVerifications: statsResponse.pendingVerifications || 0,
+          verifiedProfiles: statsResponse.verifiedProfiles || 0,
+          totalProfiles: statsResponse.totalProfiles || 0,
+          todayPayments: statsResponse.todayPayments || 0,
+          dailyActiveUsers: statsResponse.dailyActiveUsers || 0,
+          weeklyActiveUsers: statsResponse.weeklyActiveUsers || 0,
+          monthlyActiveUsers: statsResponse.monthlyActiveUsers || 0,
+          matchRate: statsResponse.matchRate || 0,
+          verificationRate: statsResponse.verificationRate || 0
+        });
       }
       
       // Fetch recent users
@@ -243,13 +265,13 @@ function DashboardOverview() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm md:text-base font-semibold text-gray-600 mb-1 md:mb-2">Revenue</h3>
-              <p className="text-xl md:text-3xl font-bold text-gray-800">₹{stats.revenue.toLocaleString()}</p>
+              <p className="text-xl md:text-3xl font-bold text-gray-800">₹{(stats.revenue || 0).toLocaleString()}</p>
             </div>
             <BanknotesIcon className="w-7 h-7 text-purple-500" />
           </div>
           <div className="flex items-center mt-1 md:mt-2">
             <ArrowUpIcon className="w-4 h-4 text-green-500 mr-1" />
-            <p className="text-xs md:text-sm text-green-600">₹{stats.todayPayments} today</p>
+            <p className="text-xs md:text-sm text-green-600">₹{stats.todayPayments || 0} today</p>
           </div>
         </div>
         
@@ -296,7 +318,7 @@ function DashboardOverview() {
         <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm">
           <div className="text-center">
             <p className="text-sm text-gray-600 mb-1">Monthly Revenue</p>
-            <p className="text-lg font-bold text-gray-800">₹{stats.monthlyRevenue.toLocaleString()}</p>
+            <p className="text-lg font-bold text-gray-800">₹{(stats.monthlyRevenue || 0).toLocaleString()}</p>
             <p className="text-xs text-purple-600">This month</p>
           </div>
         </div>

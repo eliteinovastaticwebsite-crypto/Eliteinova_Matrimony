@@ -15,6 +15,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import ProfileService from '../../services/profileService';
 import ThemeDecorations from './ThemeDecorations';
+import MembershipBanner from './MembershipBanner';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -196,6 +197,14 @@ const Dashboard = () => {
       
       {/* Theme Decorations - Sparkles, Coins, Diamonds */}
       <ThemeDecorations membershipType={membershipType} colors={colors} />
+
+      {/* Membership Banner */}
+      <div className="container mx-auto px-4 pt-8 relative z-10">
+        <MembershipBanner 
+          membershipType={membershipType || user?.membership || user?.membershipType || 'SILVER'} 
+          className="mb-8"
+        />
+      </div>
 
       {/* Header - Membership-based styling */}
       <header 

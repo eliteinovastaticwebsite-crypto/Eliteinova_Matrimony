@@ -9,6 +9,8 @@ import {
   BellIcon,
   ChevronDownIcon,
   ShieldCheckIcon,
+  UserPlusIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { navLinks } from "../../config/footerLinks";
 import Logo from "../../assets/Logo.png";
@@ -154,7 +156,7 @@ const isStaffOffice = isOfficeTokenPresent();
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-lg`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-md`}
       >
         {/* Top decorative strip */}
         <div className="h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
@@ -679,3 +681,4 @@ const isStaffOffice = isOfficeTokenPresent();
     </>
   );
 }
+

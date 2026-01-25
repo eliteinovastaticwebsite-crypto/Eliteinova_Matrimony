@@ -87,6 +87,46 @@ const adminService = {
     }
   },
 
+  // ==================== PASSWORD RESET ====================
+  forgotPassword: async (email) => {
+    try {
+      console.log('🔐 Requesting password reset for:', email);
+      
+      const response = await axiosAdmin.post('/api/admin/auth/forgot-password', {
+        email
+      });
+      
+      return response.data;
+      
+    } catch (error) {
+      console.error('❌ Forgot password error:', error);
+      throw error.response?.data || { 
+        success: false, 
+        error: 'Failed to request password reset' 
+      };
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    try {
+      console.log('🔐 Resetting password with token');
+      
+      const response = await axiosAdmin.post('/api/admin/auth/reset-password', {
+        token,
+        newPassword
+      });
+      
+      return response.data;
+      
+    } catch (error) {
+      console.error('❌ Reset password error:', error);
+      throw error.response?.data || { 
+        success: false, 
+        error: 'Failed to reset password' 
+      };
+    }
+  },
+
   // ==================== DASHBOARD DATA ====================
   // ALL dashboard endpoints now use axiosDashboard
   getDashboardStats: async () => {
@@ -125,6 +165,19 @@ const adminService = {
     } catch (error) {
       console.error('Error fetching user:', error);
       throw error.response?.data || { error: 'Failed to fetch user' };
+    }
+  },
+
+  updateUser: async (userId, userData) => {
+    try {
+      const response = await axiosDashboard.put(
+        `/api/dashboard/users/${userId}`,
+        userData
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error.response?.data || { error: 'Failed to update user' };
     }
   },
 
@@ -540,6 +593,50 @@ const adminService = {
     }
   },
 
+  // ==================== ADMIN/OFFICE USER MANAGEMENT ====================
+  createAdminOrOfficeUser: async (userData, role) => {
+    try {
+      const response = await axiosAdmin.post('/api/admin/users/create-user', {
+        ...userData,
+        role: role
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error.response?.data || { error: 'Failed to create user' };
+    }
+  },
+
+  getAllAdminAndOfficeUsers: async () => {
+    try {
+      const response = await axiosAdmin.get('/api/admin/users');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error.response?.data || { error: 'Failed to fetch users' };
+    }
+  },
+
+  updateAdminOrOfficeUser: async (userId, userData) => {
+    try {
+      const response = await axiosAdmin.put(`/api/admin/users/${userId}`, userData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error.response?.data || { error: 'Failed to update user' };
+    }
+  },
+
+  deleteAdminOrOfficeUser: async (userId) => {
+    try {
+      const response = await axiosAdmin.delete(`/api/admin/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error.response?.data || { error: 'Failed to delete user' };
+    }
+  },
+
   // ==================== HELPER METHOD ====================
   // Check if current user can access a feature (for frontend UI)
   canAccess: (feature) => {
@@ -555,7 +652,8 @@ const adminService = {
       'moderation',
       'user-management-write',
       'profile-verification-write',
-      'report-resolution'
+      'report-resolution',
+      'office-user-management'
     ];
 
     if (user.role === 'ADMIN') {

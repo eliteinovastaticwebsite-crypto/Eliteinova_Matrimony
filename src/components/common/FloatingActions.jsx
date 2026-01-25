@@ -1,5 +1,6 @@
 import React from "react";
 import { PhoneIcon } from "@heroicons/react/24/solid";
+import { UserPlusIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 
 /**
  * Props:
@@ -27,7 +28,7 @@ export default function FloatingActions({
     "w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105";
 
   return (
-    <div className="fixed right-4 bottom-24 z-50 flex flex-col items-center gap-3">
+    <div className="fixed right-4 bottom-6 z-50 flex flex-col items-center gap-3">
       {/* App Store */}
       {/* <a
         href={appStoreUrl}
@@ -58,7 +59,7 @@ export default function FloatingActions({
         </svg>
       </a> */}
 
-      {/* Register Button - Above Login */}
+      {/* Register Button - Above Login - With Text in Round Circle */}
       {onRegister && !isAuthenticated && (
         <button
           onClick={(e) => {
@@ -68,15 +69,15 @@ export default function FloatingActions({
           }}
           onMouseDown={(e) => e.stopPropagation()}
           aria-label="Register"
-          className="px-4 py-3 rounded-full shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-105 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 font-bold text-sm whitespace-nowrap"
+          className={`${btnBase} bg-gradient-to-r from-yellow-400 to-yellow-500 text-white flex flex-col items-center justify-center gap-0.5`}
           title="Register Now"
         >
-          <span>💖</span>
-          <span>Register Now</span>
+          <UserPlusIcon className="w-4 h-4" />
+          <span className="text-[9px] leading-tight font-semibold">Reg</span>
         </button>
       )}
 
-      {/* Login Button - Below Register */}
+      {/* Login Button - Below Register - With Text in Round Circle */}
       {onLogin && !isAuthenticated && (
         <button
           onClick={(e) => {
@@ -86,11 +87,11 @@ export default function FloatingActions({
           }}
           onMouseDown={(e) => e.stopPropagation()}
           aria-label="Login"
-          className="px-4 py-3 rounded-full shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-105 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-bold text-sm whitespace-nowrap"
+          className={`${btnBase} bg-gradient-to-r from-blue-400 to-blue-500 text-white flex flex-col items-center justify-center gap-0.5`}
           title="Login Now"
         >
-          <span>🔐</span>
-          <span>Login Now</span>
+          <ArrowRightOnRectangleIcon className="w-4 h-4" />
+          <span className="text-[9px] leading-tight font-semibold">Login</span>
         </button>
       )}
 

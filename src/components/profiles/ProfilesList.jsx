@@ -10,6 +10,10 @@ import Banner from "../common/Banner";
 import ThemeDecorations from "../common/ThemeDecorations"; // ADDED: Theme decorations
 
 import BannerImage2 from "../../assets/BannerImage2.png";
+// Import membership banner images
+import silverBanner from "../../assets/membershipBanner/silver.png";
+import goldBanner from "../../assets/membershipBanner/gold.png";
+import diamondBanner from "../../assets/membershipBanner/diamond.png";
 
 const ProfileBannerTexts = [
   {
@@ -145,44 +149,9 @@ const performSearch = async (searchFilters) => {
   try {
     console.log("🔍 ProfilesList: Searching with REAL backend", searchFilters);
     
-    // Convert filter field names to match backend API
-    const backendFilters = {
-      // Personal Details
-      minAge: searchFilters.minAge ? parseInt(searchFilters.minAge) : undefined, 
-      maxAge: searchFilters.maxAge ? parseInt(searchFilters.maxAge) : undefined,
-      religion: searchFilters.religion,
-      caste: searchFilters.caste,
-      subCaste: searchFilters.subCaste,
-      maritalStatus: searchFilters.maritalStatus,
-      dosham: searchFilters.dosham,
-      
-      // Professional Details
-      education: searchFilters.education,
-      profession: searchFilters.profession, 
-      occupation: searchFilters.occupation,
-      employedIn: searchFilters.employedIn,
-      annualIncome: searchFilters.annualIncome,
-      
-      // Location Details
-      location: searchFilters.location, 
-      country: searchFilters.country,
-      state: searchFilters.state,
-      district: searchFilters.district,
-      
-      // Additional
-      category: searchFilters.category,
-    };
-
-    // Remove empty filters
-    Object.keys(backendFilters).forEach(key => {
-      if (!backendFilters[key] || backendFilters[key] === "") {
-        delete backendFilters[key];
-      }
-    });
-
-    console.log("🔍 Sending to real backend:", backendFilters);
-    
-    const searchData = await profileService.searchProfiles(backendFilters);
+    // Pass the original searchFilters (including "Other" fields) to searchProfiles
+    // The mapFiltersToBackend function will handle the mapping and "Other" value replacement
+    const searchData = await profileService.searchProfiles(searchFilters);
     console.log("✅ ProfilesList: Real search results:", searchData);
     
     // Handle response structure
@@ -216,6 +185,18 @@ const performSearch = async (searchFilters) => {
     filters 
   });
   
+  // Helper function to get the actual filter value (handles "Other" / "Others" options)
+  const getFilterValue = (fieldName) => {
+    const value = filters[fieldName];
+    if ((value === "Other" || value === "Others") && filters[`${fieldName}Other`]) {
+      const otherValue = filters[`${fieldName}Other`];
+      if (otherValue && typeof otherValue === 'string' && otherValue.trim() !== '') {
+        return otherValue.trim();
+      }
+    }
+    return value;
+  };
+  
   return allProfiles.filter(profile => {
     // ✅ FIXED: Age filter with proper field names
     if (filters.minAge && profile.age < parseInt(filters.minAge)) return false;
@@ -228,13 +209,19 @@ const performSearch = async (searchFilters) => {
       if (profileGender !== filterGender) return false;
     }
     
-    // Religion filter
-    if (filters.religion && profile.religion !== filters.religion) return false;
+    // Religion filter (with "Other" handling)
+    const religionFilter = getFilterValue('religion');
+    if (religionFilter && profile.religion) {
+      const profileReligion = profile.religion.toLowerCase();
+      const filterReligion = religionFilter.toLowerCase();
+      if (!profileReligion.includes(filterReligion)) return false;
+    }
     
-    // Caste filter (case-insensitive partial match)
-    if (filters.caste && profile.caste) {
+    // Caste filter (case-insensitive partial match, with "Others" handling)
+    const casteFilter = getFilterValue('caste');
+    if (casteFilter && profile.caste) {
       const profileCaste = profile.caste.toLowerCase();
-      const filterCaste = filters.caste.toLowerCase();
+      const filterCaste = casteFilter.toLowerCase();
       if (!profileCaste.includes(filterCaste)) return false;
     }
     
@@ -251,17 +238,27 @@ const performSearch = async (searchFilters) => {
     // Marital status filter
     if (filters.maritalStatus && profile.maritalStatus !== filters.maritalStatus) return false;
     
-    // Education filter (case-insensitive partial match)
-    if (filters.education && profile.education) {
+    // Education filter (case-insensitive partial match, with "Other" handling)
+    const educationFilter = getFilterValue('education');
+    if (educationFilter && profile.education) {
       const profileEducation = profile.education.toLowerCase();
-      const filterEducation = filters.education.toLowerCase();
+      const filterEducation = educationFilter.toLowerCase();
       if (!profileEducation.includes(filterEducation)) return false;
     }
     
-    // ✅ FIXED: Occupation filter - search in both occupation and profession fields
-    if (filters.occupation && (profile.occupation || profile.profession)) {
+    // Educational Qualification filter (with "Other" handling)
+    const educationalQualificationFilter = getFilterValue('educationalQualification');
+    if (educationalQualificationFilter && profile.educationalQualification) {
+      const profileEduQual = profile.educationalQualification.toLowerCase();
+      const filterEduQual = educationalQualificationFilter.toLowerCase();
+      if (!profileEduQual.includes(filterEduQual)) return false;
+    }
+    
+    // ✅ FIXED: Occupation filter - search in both occupation and profession fields (with "Other" handling)
+    const occupationFilter = getFilterValue('occupation');
+    if (occupationFilter && (profile.occupation || profile.profession)) {
       const profileOccupation = (profile.occupation || profile.profession || '').toLowerCase();
-      const filterOccupation = filters.occupation.toLowerCase();
+      const filterOccupation = occupationFilter.toLowerCase();
       if (!profileOccupation.includes(filterOccupation)) return false;
     }
     
@@ -278,8 +275,13 @@ const performSearch = async (searchFilters) => {
     // Annual income filter
     if (filters.annualIncome && profile.annualIncome !== filters.annualIncome) return false;
     
-    // Location filters
-    if (filters.country && profile.country !== filters.country) return false;
+    // Location filters (with "Other" handling for country)
+    const countryFilter = getFilterValue('country');
+    if (countryFilter && profile.country) {
+      const profileCountry = profile.country.toLowerCase();
+      const filterCountry = countryFilter.toLowerCase();
+      if (!profileCountry.includes(filterCountry)) return false;
+    }
     if (filters.state && profile.state !== filters.state) return false;
     
     // District filter (case-insensitive partial match)
@@ -398,17 +400,46 @@ const performSearch = async (searchFilters) => {
     );
   }
 
+  // Get membership banner image based on membership type
+  const getMembershipBanner = () => {
+    const normalizedType = membershipType?.toUpperCase() || user?.membership?.toUpperCase() || user?.membershipType?.toUpperCase() || 'SILVER';
+    switch (normalizedType) {
+      case 'GOLD':
+        return goldBanner;
+      case 'DIAMOND':
+        return diamondBanner;
+      case 'SILVER':
+      default:
+        return silverBanner;
+    }
+  };
+
+  const membershipBannerImage = getMembershipBanner();
+
   return (
     <div 
       className="min-h-screen relative"
       style={{ 
-        background: colors.bgGradientStyle || 'linear-gradient(to bottom right, #F9FAFB, #F3F4F6, #E5E7EB)',
+        backgroundImage: `url(${membershipBannerImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
         minHeight: '100vh',
-        backgroundColor: colors.primaryLight || '#6B7280' // Fallback
+        // Add overlay to maintain readability
+        position: 'relative'
       }}
     >
-      {/* Animated Background Blobs - Membership-based colors */}
-      <div className="absolute inset-0 opacity-50 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
+      {/* Subtle overlay for better content readability */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.04) 100%)',
+          zIndex: 0
+        }}
+      ></div>
+      {/* Animated Background Blobs - Membership-based colors (reduced opacity for banner visibility) */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
         <div 
           className="absolute top-20 left-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob"
           style={{ backgroundColor: colors.blob1 || '#9CA3AF' }}
@@ -424,12 +455,14 @@ const performSearch = async (searchFilters) => {
       </div>
       
       {/* Theme Decorations - Sparkles, Coins, Diamonds */}
-      <ThemeDecorations membershipType={membershipType} colors={colors} />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <ThemeDecorations membershipType={membershipType} colors={colors} />
+      </div>
       
       {/* Banner Section - Has its own background */}
-      <div className="relative z-20">
+      <div className="relative" style={{ zIndex: 3 }}>
         <Banner
-          images={ProfileBannerImages}
+          // images={ProfileBannerImages}
           texts={ProfileBannerTexts}
           autoPlayInterval={3000}
           onOpenAuthModal={onOpenAuthModal}
@@ -437,12 +470,12 @@ const performSearch = async (searchFilters) => {
       </div>
       
       {/* CategoryNav - Has its own background */}
-      <div className="relative z-20">
+      <div className="relative" style={{ zIndex: 3 }}>
         <CategoryNav />
       </div>
       
       {/* Main Content Area - Theme background visible here */}
-      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10" style={{ position: 'relative', zIndex: 10 }}>
+      <div className="max-w-7xl mx-auto px-4 py-8 relative" style={{ position: 'relative', zIndex: 3 }}>
         
         <div className="flex flex-col lg:flex-row gap-8">
           
@@ -476,6 +509,17 @@ const performSearch = async (searchFilters) => {
           setSearchResults(null);
         }
       }}
+      theme={(() => {
+        const memType = membershipType || user?.membership || user?.membershipType || "SILVER";
+        if (typeof memType === 'string') {
+          const normalized = memType.toUpperCase();
+          if (normalized === "GOLD") return "gold";
+          if (normalized === "DIAMOND") return "diamond";
+          if (normalized === "SILVER") return "silver";
+        }
+        return "default";
+      })()}
+      membershipType={membershipType || user?.membership || user?.membershipType || "SILVER"}
     />
   </div>
 )}
@@ -490,7 +534,7 @@ const performSearch = async (searchFilters) => {
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className={`text-2xl font-bold ${classes.textColor}`}>
+                    <h1 className={`${isAuthenticated && user?.membership ? 'text-xl' : 'text-2xl'} font-bold ${classes.textColor}`}>
                       Find Your Perfect Match
                     </h1>
                     {membershipType && (
@@ -505,7 +549,7 @@ const performSearch = async (searchFilters) => {
                       </span>
                     )}
                   </div>
-                  <p className={`${classes.textColor} opacity-70`}>
+                  <p className={`${classes.textColor} opacity-70 ${isAuthenticated && user?.membership ? 'text-sm' : ''}`}>
                     {searchResults || hasQuickFilters ? (
                       <>Found <span className="font-semibold" style={{ color: colors.accent }}>{filteredProfiles.length}</span> profiles matching your criteria</>
                     ) : (
@@ -519,7 +563,7 @@ const performSearch = async (searchFilters) => {
                   {(searchResults || hasQuickFilters) && (
                     <button
                       onClick={clearAllFilters}
-                      className="font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors"
+                      className={`font-medium ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
                       style={{
                         color: colors.accent,
                         borderColor: `${colors.accent}60`,
@@ -541,7 +585,7 @@ const performSearch = async (searchFilters) => {
                   {searchResults && (
                     <button
                       onClick={clearSearch}
-                      className={`${classes.textColor} opacity-70 hover:opacity-100 font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
+                      className={`${classes.textColor} opacity-70 hover:opacity-100 font-medium ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
                       style={{ borderColor: `${colors.accent}40` }}
                     >
                       <span>↶</span>
@@ -568,11 +612,11 @@ const performSearch = async (searchFilters) => {
               style={{ borderColor: `${colors.accent}40` }}
             >
               <div className="mb-4">
-                <h3 className={`text-lg font-semibold ${classes.textColor} mb-3`}>Quick Filters</h3>
+                <h3 className={`${isAuthenticated && user?.membership ? 'text-base' : 'text-lg'} font-semibold ${classes.textColor} mb-3`}>Quick Filters</h3>
 
                 {/* Religion Filter */}
                 <div>
-                  <label className={`block text-sm font-medium ${classes.textColor} mb-2`}>Religion:</label>
+                  <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium ${classes.textColor} mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
                     {["all", "Hindu", "Muslim", "Christian"].map((religion) => {
                       const isActive = religionFilter === (religion === "all" ? "all" : religion);
@@ -580,7 +624,7 @@ const performSearch = async (searchFilters) => {
                         <button
                           key={religion}
                           onClick={() => setReligionFilter(religion === "all" ? "all" : religion)}
-                          className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+                          className={`px-4 py-2 rounded-md ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium transition ${
                             isActive
                               ? "text-white shadow"
                               : `${classes.textColor} opacity-70 hover:opacity-100`
@@ -602,11 +646,11 @@ const performSearch = async (searchFilters) => {
               {/* Active Filters Display */}
               {(genderFilter !== "all" || religionFilter !== "all") && (
                 <div className="pt-4 border-t" style={{ borderColor: `${colors.accent}40` }}>
-                  <h4 className={`text-sm font-medium ${classes.textColor} mb-2`}>Active Filters:</h4>
+                  <h4 className={`${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium ${classes.textColor} mb-2`}>Active Filters:</h4>
                   <div className="flex flex-wrap gap-2">
                     {genderFilter !== "all" && (
                       <span 
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        className={`inline-flex items-center px-3 py-1 rounded-full ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium`}
                         style={{
                           backgroundColor: colors.accentLight,
                           color: colors.accent
@@ -623,7 +667,7 @@ const performSearch = async (searchFilters) => {
                     )}
                     {religionFilter !== "all" && (
                       <span 
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        className={`inline-flex items-center px-3 py-1 rounded-full ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium`}
                         style={{
                           backgroundColor: colors.accentLight,
                           color: colors.accent
@@ -674,7 +718,7 @@ const performSearch = async (searchFilters) => {
                 className={`text-center py-12 ${classes.cardBg} rounded-lg shadow-sm border`}
                 style={{ borderColor: `${colors.accent}40` }}
               >
-                <div className={`${classes.textColor} opacity-70 text-lg mb-4`}>
+                <div className={`${classes.textColor} opacity-70 ${isAuthenticated && user?.membership ? 'text-base' : 'text-lg'} mb-4`}>
                   {searchResults || hasQuickFilters
                     ? "No profiles found matching your search criteria."
                     : `No ${membershipType} profiles available at the moment.`

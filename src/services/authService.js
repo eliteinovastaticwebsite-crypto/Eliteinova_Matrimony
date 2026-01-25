@@ -40,7 +40,7 @@ class authService {
     
     // Check if admin email
     const isAdminEmail = credentials.email.toLowerCase().includes('admin') || 
-                         credentials.email.endsWith('@elitenxtmatrimony.com');
+                         credentials.email.endsWith('@eliteinovamatrimony.com');
     
     if (isAdminEmail) {
       console.log("⚠️ Admin detected - should use admin login endpoint");

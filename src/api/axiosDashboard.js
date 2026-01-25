@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosDashboard = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8081",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
 });
 
 axiosDashboard.interceptors.request.use((config) => {
@@ -20,20 +20,24 @@ axiosDashboard.interceptors.request.use((config) => {
 axiosDashboard.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    // Only redirect on 401 (Unauthorized) - not on 403 (Forbidden)
+    // 403 means user is authenticated but doesn't have permission for that specific action
+    if (error.response?.status === 401) {
       // Clear tokens and redirect to login
       localStorage.removeItem("adminToken");
       localStorage.removeItem("officeToken");
       localStorage.removeItem("adminUser");
+      localStorage.removeItem("officeUser");
       
       // Redirect based on current path
       const currentPath = window.location.pathname;
-      if (currentPath.includes("/admin")) {
-        window.location.href = "/admin/login";
+      if (currentPath.includes("/admin") || currentPath.includes("/dashboard")) {
+        window.location.href = "/admin-login";
       } else if (currentPath.includes("/office")) {
-        window.location.href = "/office/login";
+        window.location.href = "/office-login";
       }
     }
+    // For 403 errors, just reject the promise - let components handle the error
     return Promise.reject(error);
   }
 );

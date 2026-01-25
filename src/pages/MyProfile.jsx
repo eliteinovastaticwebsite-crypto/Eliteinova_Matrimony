@@ -3,6 +3,7 @@ import profileService from "../services/profileService";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { buildImageUrl } from "../config/api";
+import MembershipBanner from "../components/common/MembershipBanner";
 
 
 const MyProfile = () => {
@@ -890,6 +891,14 @@ const removePhoto = async (index) => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Membership Banner */}
+      <div className="container mx-auto px-4 pt-8">
+        <MembershipBanner 
+          membershipType={user?.membership || user?.membershipType || 'SILVER'} 
+          className="mb-6"
+        />
+      </div>
+
       {/* Enhanced Header */}
       <header className="bg-gradient-to-r from-red-800 to-red-600 text-white shadow-xl">
         <div className="container mx-auto px-4 py-4">

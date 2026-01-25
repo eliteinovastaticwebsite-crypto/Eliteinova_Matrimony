@@ -15,6 +15,7 @@ import {
   GlobeAltIcon,
   ChartPieIcon,
   FireIcon,
+  BuildingOfficeIcon,
 } from "@heroicons/react/24/outline";
 
 export const getMenuItemsByRole = (role) => {
@@ -34,7 +35,8 @@ export const getMenuItemsByRole = (role) => {
       items: [
         ...(isAdmin ? [{ id: "users", label: "All Users", icon: <UserGroupIcon className="w-5 h-5" /> }] : []),
         { id: "verification", label: "Profile Verification", icon: <ShieldCheckIcon className="w-5 h-5" /> },
-        ...(isAdmin ? [{ id: "reports", label: "User Reports", icon: <FlagIcon className="w-5 h-5" /> }] : [])
+        ...(isAdmin ? [{ id: "reports", label: "User Reports", icon: <FlagIcon className="w-5 h-5" /> }] : []),
+        ...(isAdmin ? [{ id: "office-users", label: "Office & Admin Users", icon: <BuildingOfficeIcon className="w-5 h-5" /> }] : [])
       ]
     }] : []),
 

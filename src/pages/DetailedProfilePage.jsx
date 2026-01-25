@@ -495,8 +495,8 @@ useEffect(() => {
     if (!profile) return;
 
     const shareData = {
-      title: `${profile.name}'s Profile - Elitenxt Matrimony`,
-      text: `Check out ${profile.name}'s profile on Elitenxt Matrimony`,
+      title: `${profile.name}'s Profile - Eliteinova Matrimony`,
+      text: `Check out ${profile.name}'s profile on Eliteinova Matrimony`,
       url: window.location.href,
     };
 

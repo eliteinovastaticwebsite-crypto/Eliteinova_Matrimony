@@ -482,6 +482,7 @@ export default function SilverMemberProfiles({ onOpenAuthModal }) {
                   handleSearchResults(updatedFilters);
                 }}
                 theme="silver"
+                membershipType="SILVER"
               />
             </div>
           )}

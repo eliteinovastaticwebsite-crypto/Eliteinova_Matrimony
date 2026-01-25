@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import adminService from "../../services/adminService";
+import officeAuthService from "../../services/officeAuthService";
 import {
   BellIcon,
   ExclamationTriangleIcon,
@@ -22,6 +24,7 @@ import PhotoApproval from "./components/PhotoApproval";
 import GeographicAnalytics from "./components/GeographicAnalytics";
 import UserBehaviorAnalytics from "./components/UserBehaviorAnalytics";
 import EngagementMetrics from "./components/EngagementMetrics";
+import AdminOfficeUserManagement from "./components/AdminOfficeUserManagement";
 
 import { getMenuItemsByRole } from "./components/SidebarConfig";
 
@@ -35,6 +38,12 @@ export function AdminDashBoard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState(null);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isNavigatingRef = useRef(false);
 
   const getCurrentRole = () => {
   // Check for office token first
@@ -60,6 +69,45 @@ const role = getCurrentRole();
 const menuItems = getMenuItemsByRole(role);
 
 
+  // Handle logout confirmation
+  const handleLogout = async () => {
+    try {
+      if (role === 'OFFICE') {
+        await officeAuthService.logout();
+      } else {
+        await adminService.logout();
+        window.location.href = '/admin-login';
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Clear data even if API call fails
+      if (role === 'OFFICE') {
+        officeAuthService.clearOfficeData();
+        window.location.href = '/office-login';
+      } else {
+        adminService.clearAdminData();
+        window.location.href = '/admin-login';
+      }
+    }
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutConfirm(false);
+    if (pendingNavigation) {
+      isNavigatingRef.current = true;
+      handleLogout();
+    }
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+    setPendingNavigation(null);
+    // Push current location to prevent navigation
+    if (pendingNavigation) {
+      window.history.pushState(null, '', location.pathname);
+    }
+  };
+
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 768;
@@ -75,6 +123,47 @@ const menuItems = getMenuItemsByRole(role);
     fetchDashboardData();
     
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Navigation guard for browser back button
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // Skip if we're programmatically navigating
+      if (isNavigatingRef.current) {
+        isNavigatingRef.current = false;
+        return;
+      }
+
+      // Show confirmation dialog
+      event.preventDefault();
+      window.history.pushState(null, '', location.pathname);
+      setPendingNavigation(true);
+      setShowLogoutConfirm(true);
+    };
+
+    // Push current state to history
+    window.history.pushState(null, '', location.pathname);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [location.pathname]);
+
+  // Handle browser refresh/close
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      const message = 'Do you want to logout? Your session will be cleared.';
+      event.preventDefault();
+      event.returnValue = message;
+      return message;
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   const fetchDashboardData = async () => {
@@ -208,7 +297,7 @@ const menuItems = getMenuItemsByRole(role);
           <div className="flex items-center justify-between">
             {sidebarOpen && (
               <h1 className="text-lg md:text-xl font-bold text-gray-800 truncate">
-                Admin Panel
+                {role === "ADMIN" ? "Admin Panel" : "Office Panel"}
               </h1>
             )}
             <button
@@ -288,7 +377,9 @@ const menuItems = getMenuItemsByRole(role);
               )}
               
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+                <h1 className="text-xl font-bold text-gray-900">
+                  {role === "ADMIN" ? "Admin Dashboard" : "Office Dashboard"}
+                </h1>
                 <p className="text-sm text-gray-600 mt-1">
                   {new Date().toLocaleDateString('en-US', { 
                     weekday: 'long', 
@@ -319,8 +410,16 @@ const menuItems = getMenuItemsByRole(role);
                 onClick={() => {
   localStorage.removeItem('adminToken');
   localStorage.removeItem('officeToken');
+  localStorage.removeItem('adminUser');
+  localStorage.removeItem('officeUser');
   localStorage.removeItem('role');
-  window.location.href = '/admin/login';
+  
+  // Redirect based on current role
+  if (role === 'OFFICE') {
+    window.location.href = '/office-login';
+  } else {
+    window.location.href = '/admin-login';
+  }
 }}
                 className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
@@ -447,8 +546,41 @@ const menuItems = getMenuItemsByRole(role);
               onRefresh={fetchDashboardData}
             />
           )}
+          
+          {activeTab === "office-users" && (
+            <AdminOfficeUserManagement />
+          )}
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+            <div className="flex items-center mb-4">
+              <ExclamationTriangleIcon className="h-8 w-8 text-yellow-500 mr-3" />
+              <h3 className="text-xl font-bold text-gray-900">Confirm Logout</h3>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Do you want to logout? Your session will be cleared and you will be redirected to the login page.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleCancelLogout}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -229,7 +229,7 @@ export default function Home({ onOpenAuthModal }) {
         onOpenAuthModal={handleRegisterFromCard}
       />
 
-      {/* Pongal Offer Banner - Prominent Display */}
+      {/* Launch Offer Banner - Prominent Display */}
       {!isAuthenticated && (
         <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-6 px-4 relative overflow-hidden shadow-2xl">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
@@ -237,10 +237,10 @@ export default function Home({ onOpenAuthModal }) {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-center md:text-left">
                 <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-                  🎉 Pongal Special Offer! 🎉
+                  🎉 Launch Special Offer! 🎉
                 </h3>
                 <p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
-                  Free Registration for Pongal offer - All Membership Plans FREE!
+                  Free Registration for Launch Offer - All Membership Plans FREE!
                 </p>
                 <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
                   <span className="text-white/90 line-through text-sm md:text-base">Silver ₹299</span>
@@ -352,14 +352,14 @@ export default function Home({ onOpenAuthModal }) {
                 </div> */}
               </div>
 
-              {/* Pongal Offer Badge */}
+              {/* Launch Offer Badge */}
               {!isAuthenticated && (
                 <div className="mb-4 inline-block bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl p-3 shadow-lg relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                   <div className="relative z-10 flex items-center space-x-2">
                     <span className="text-white font-bold text-sm md:text-base animate-bounce">🎉</span>
                     <span className="text-white font-semibold text-sm md:text-base">
-                      Pongal Offer: <span className="font-bold">FREE Registration!</span>
+                      Launch Offer: <span className="font-bold">FREE Registration!</span>
                     </span>
                   </div>
                 </div>
@@ -1001,15 +1001,15 @@ export default function Home({ onOpenAuthModal }) {
           </p>
           {!isAuthenticated ? (
             <div className="space-y-6">
-              {/* Pongal Offer Banner */}
+              {/* Launch Offer Banner */}
               <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-6 shadow-2xl relative overflow-hidden max-w-2xl mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                 <div className="relative z-10 text-center">
                   <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-                    🎉 Pongal Special Offer! 🎉
+                    🎉 Launch Special Offer! 🎉
                   </h3>
                   <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
-                    Free Registration for Pongal offer
+                    Free Registration for Launch Offer
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
                     <span className="text-white/90 line-through">Silver ₹299</span>

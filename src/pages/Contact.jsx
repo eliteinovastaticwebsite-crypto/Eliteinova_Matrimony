@@ -53,17 +53,17 @@ export default function Contact() {
       icon: PhoneIcon,
       title: "Call Us",
       details: "+91 7845554882",
-      subtitle: "Mon–Sun: 8AM - 10PM",
+      subtitle: "Monday – Friday: 09.30 AM - 06.30 PM\nSaturday: 09.30 AM - 03.00 PM",
       color: "green",
       link: "tel:+91784554882",
     },
     {
       icon: EnvelopeIcon,
       title: "Email Us",
-      details: "eliteinovamatrimony@gmail.com",
+      details: "info@eliteinovamatrimony.com",
       subtitle: "We reply within 2 hours",
       color: "blue",
-      link: "mailto:eliteinovamatrimony@gmail.com",
+      link: "mailto:info@eliteinovamatrimony.com",
     },
     {
       icon: (props) => (
@@ -81,7 +81,7 @@ export default function Contact() {
     {
       icon: MapPinIcon,
       title: "Visit Us",
-      details: "78, 1st street, Kumaran Colony, Vadapalani, Chennai-26, India",
+      details: "78, 1st street, Kumaran Colony, Vadapalani, Chennai-26, Tamil Nadi, India",
       subtitle: "Come say hello!",
       color: "red",
     },
@@ -165,8 +165,7 @@ export default function Contact() {
                 <span>Why Choose Us?</span>
               </h3>
               <div className="space-y-3">
-                {[
-                  "500+ Successful Matches",
+                {[  //   "500+ Successful Matches",
                   "24/7 Customer Support",
                   "Verified Profiles Only",
                   "Secure & Private",

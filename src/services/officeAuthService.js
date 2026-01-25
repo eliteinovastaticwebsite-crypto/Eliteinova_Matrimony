@@ -2,27 +2,56 @@ import axiosOffice from '../api/axiosOffice';         // For office auth endpoin
 import axiosDashboard from '../api/axiosDashboard';   // For dashboard endpoints
 
 const officeAuthService = {
+  // ==================== AUTH TOKEN MANAGEMENT ====================
+  setAuthToken: (token, user) => {
+    if (token && user) {
+      console.log('🔑 Setting office auth token for:', user.email);
+      localStorage.setItem('officeToken', token);
+      localStorage.setItem('officeUser', JSON.stringify(user));
+    } else {
+      console.log('🔑 Removing office auth data');
+      localStorage.removeItem('officeToken');
+      localStorage.removeItem('officeUser');
+    }
+  },
+
+  getAuthToken: () => {
+    return localStorage.getItem('officeToken');
+  },
+
+  getOfficeUser: () => {
+    const officeStr = localStorage.getItem('officeUser');
+    return officeStr ? JSON.parse(officeStr) : null;
+  },
+
+  clearOfficeData: () => {
+    localStorage.removeItem('officeToken');
+    localStorage.removeItem('officeUser');
+  },
+
+  // ==================== OFFICE AUTHENTICATION ====================
   login: async (email, password) => {
     try {
+      console.log('🔐 Office login attempt:', email);
+      
       const res = await axiosOffice.post('/api/office/auth/login', {
         email,
         password,
       });
 
       if (res.data.success && res.data.token) {
-        localStorage.setItem('officeToken', res.data.token);
-        // Store minimal office user info
-        const officeUser = {
+        const officeUser = res.data.office || {
           email: email,
           role: 'OFFICE',
-          name: email.split('@')[0] // Simple name from email
+          name: email.split('@')[0]
         };
-        localStorage.setItem('officeUser', JSON.stringify(officeUser));
+        officeAuthService.setAuthToken(res.data.token, officeUser);
+        console.log('✅ Office login successful:', officeUser.name);
       }
 
       return res.data;
     } catch (error) {
-      console.error('Office login error:', error);
+      console.error('❌ Office login error:', error);
       throw error.response?.data || { 
         success: false, 
         message: 'Office login failed' 
@@ -30,24 +59,30 @@ const officeAuthService = {
     }
   },
 
-  logout: () => {
-    localStorage.removeItem('officeToken');
-    localStorage.removeItem('officeUser');
-    window.location.href = '/office/login';
+  logout: async () => {
+    try {
+      await axiosOffice.post('/api/office/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      officeAuthService.clearOfficeData();
+      window.location.href = '/office/login';
+    }
   },
 
   checkAuth: async () => {
     try {
+      const token = officeAuthService.getAuthToken();
+      if (!token) {
+        return { success: false, authenticated: false };
+      }
+
       const res = await axiosOffice.get('/api/office/auth/check');
       return res.data;
-    } catch {
-      return { authenticated: false };
+    } catch (error) {
+      console.error('Auth check error:', error);
+      return { success: false, authenticated: false };
     }
-  },
-
-  getOfficeUser: () => {
-    const officeStr = localStorage.getItem('officeUser');
-    return officeStr ? JSON.parse(officeStr) : null;
   },
 
   // ==================== LIMITED DASHBOARD ACCESS ====================

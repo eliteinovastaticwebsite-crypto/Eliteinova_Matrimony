@@ -1,8 +1,26 @@
 import { useState, useEffect } from "react";
 import Button from "../../ui/Button";
 import adminService from "../../../services/adminService";
+import officeAuthService from "../../../services/officeAuthService";
 
 function PhotoApproval() {
+  // Get current user role
+  const getCurrentRole = () => {
+    if (localStorage.getItem('officeToken')) {
+      return 'OFFICE';
+    }
+    const adminUser = adminService.getAdminUser();
+    if (adminUser?.role) {
+      return adminUser.role;
+    }
+    if (localStorage.getItem('adminToken')) {
+      return 'ADMIN';
+    }
+    return null;
+  };
+
+  const currentRole = getCurrentRole();
+  const isOfficeUser = currentRole === 'OFFICE';
   const [pendingPhotos, setPendingPhotos] = useState([]);
   const [filteredPhotos, setFilteredPhotos] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -162,6 +180,12 @@ function PhotoApproval() {
 
   // Handle single photo action
   const handlePhotoAction = async (userId, photoId, action, reason = '') => {
+    // Check if office user is trying to approve/reject
+    if (isOfficeUser) {
+      showNotification('Office users have read-only access. Only admins can approve or reject photos.', 'error');
+      return;
+    }
+
     try {
       // Create a copy of the current state for optimistic update
       const newGroupedByUser = [...groupedByUser];
@@ -217,7 +241,15 @@ function PhotoApproval() {
       }
     } catch (error) {
       console.error('Error processing photo action:', error);
-      showNotification(error.message || 'Failed to process photo action', 'error');
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to process photo action';
+      
+      // Check if it's an access denied error
+      if (error.response?.status === 403 || errorMessage.includes('access') || errorMessage.includes('permission')) {
+        showNotification('Access denied: Only administrators can approve or reject photos.', 'error');
+      } else {
+        showNotification(errorMessage, 'error');
+      }
+      
       // Revert by refreshing data
       fetchPendingPhotos();
     }
@@ -225,6 +257,12 @@ function PhotoApproval() {
 
   // Handle bulk action for a user
   const handleBulkAction = async (userId, action, reason = '') => {
+    // Check if office user is trying to approve/reject
+    if (isOfficeUser) {
+      showNotification('Office users have read-only access. Only admins can approve or reject photos.', 'error');
+      return;
+    }
+
     try {
       const userGroup = groupedByUser.find(g => g.id === userId);
       if (!userGroup) return;
@@ -252,7 +290,15 @@ function PhotoApproval() {
       }
     } catch (error) {
       console.error('Error processing bulk action:', error);
-      showNotification(error.message || 'Failed to process bulk action', 'error');
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to process bulk action';
+      
+      // Check if it's an access denied error
+      if (error.response?.status === 403 || errorMessage.includes('access') || errorMessage.includes('permission')) {
+        showNotification('Access denied: Only administrators can approve or reject photos.', 'error');
+      } else {
+        showNotification(errorMessage, 'error');
+      }
+      
       // Revert by refreshing
       fetchPendingPhotos();
     }
@@ -267,6 +313,13 @@ function PhotoApproval() {
   // Handle global bulk action
   const handleGlobalBulkAction = async () => {
     if (!bulkAction) return;
+    
+    // Check if office user is trying to approve/reject
+    if (isOfficeUser) {
+      showNotification('Office users have read-only access. Only admins can approve or reject photos.', 'error');
+      setBulkAction('');
+      return;
+    }
     
     try {
       // Optimistic update - clear everything
@@ -290,7 +343,15 @@ function PhotoApproval() {
       }
     } catch (error) {
       console.error('Error processing global bulk action:', error);
-      showNotification(error.message || 'Failed to process bulk action', 'error');
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to process bulk action';
+      
+      // Check if it's an access denied error
+      if (error.response?.status === 403 || errorMessage.includes('access') || errorMessage.includes('permission')) {
+        showNotification('Access denied: Only administrators can approve or reject photos.', 'error');
+      } else {
+        showNotification(errorMessage, 'error');
+      }
+      
       // Revert by refreshing
       fetchPendingPhotos();
     }
@@ -323,6 +384,25 @@ function PhotoApproval() {
 
   return (
     <div className="space-y-4 md:space-y-6">
+      {/* Office User Info Banner */}
+      {isOfficeUser && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-blue-900">Read-Only Access</h3>
+              <p className="text-sm text-blue-700 mt-1">
+                As an office user, you can view pending photos but cannot approve or reject them. Only administrators can perform approval actions.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Notification Banner */}
       {notification.show && (
         <div className={`rounded-lg p-4 ${
@@ -405,27 +485,34 @@ function PhotoApproval() {
                 )}
               </div>
               
-              {/* Bulk Actions */}
-              <div className="flex gap-2">
-                <select
-                  value={bulkAction}
-                  onChange={(e) => setBulkAction(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
-                  disabled={loading || filteredPhotos.length === 0}
-                >
-                  <option value="">Bulk Actions</option>
-                  <option value="approve">Approve All</option>
-                  <option value="reject">Reject All</option>
-                </select>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  disabled={!bulkAction || loading}
-                  onClick={handleGlobalBulkAction}
-                >
-                  Apply
-                </Button>
-              </div>
+              {/* Bulk Actions - Admin Only */}
+              {!isOfficeUser && (
+                <div className="flex gap-2">
+                  <select
+                    value={bulkAction}
+                    onChange={(e) => setBulkAction(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                    disabled={loading || filteredPhotos.length === 0}
+                  >
+                    <option value="">Bulk Actions</option>
+                    <option value="approve">Approve All</option>
+                    <option value="reject">Reject All</option>
+                  </select>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    disabled={!bulkAction || loading}
+                    onClick={handleGlobalBulkAction}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              )}
+              {isOfficeUser && (
+                <div className="text-sm text-gray-500 italic">
+                  Read-only mode: Office users cannot approve or reject photos
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -521,22 +608,30 @@ function PhotoApproval() {
                           
                           {photo.status === 'PENDING' && (
                             <div className="flex gap-2">
-                              <Button 
-                                variant="primary" 
-                                size="sm"
-                                className="flex-1 text-xs"
-                                onClick={() => handlePhotoAction(userPhotos.id, photo.id, 'approve')}
-                              >
-                                Approve
-                              </Button>
-                              <Button 
-                                variant="secondary" 
-                                size="sm"
-                                className="flex-1 text-xs"
-                                onClick={() => handlePhotoAction(userPhotos.id, photo.id, 'reject')}
-                              >
-                                Reject
-                              </Button>
+                              {!isOfficeUser ? (
+                                <>
+                                  <Button 
+                                    variant="primary" 
+                                    size="sm"
+                                    className="flex-1 text-xs"
+                                    onClick={() => handlePhotoAction(userPhotos.id, photo.id, 'approve')}
+                                  >
+                                    Approve
+                                  </Button>
+                                  <Button 
+                                    variant="secondary" 
+                                    size="sm"
+                                    className="flex-1 text-xs"
+                                    onClick={() => handlePhotoAction(userPhotos.id, photo.id, 'reject')}
+                                  >
+                                    Reject
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="w-full text-center text-xs text-gray-500 py-2">
+                                  Read-only: Admin action required
+                                </div>
+                              )}
                             </div>
                           )}
                           
@@ -553,22 +648,28 @@ function PhotoApproval() {
                     <div className="text-sm text-gray-600">
                       {userPhotos.pendingCount} of {userPhotos.photos.length} photos pending approval
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => handleBulkAction(userPhotos.id, 'approve')}
-                      >
-                        Approve All
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleBulkAction(userPhotos.id, 'reject')}
-                      >
-                        Reject All
-                      </Button>
-                    </div>
+                    {!isOfficeUser ? (
+                      <div className="flex gap-2">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleBulkAction(userPhotos.id, 'approve')}
+                        >
+                          Approve All
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleBulkAction(userPhotos.id, 'reject')}
+                        >
+                          Reject All
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500 italic">
+                        Read-only mode
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -649,22 +750,30 @@ function PhotoApproval() {
                       
                       {photo.status === 'PENDING' && (
                         <div className="flex gap-2 mt-3">
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="flex-1"
-                            onClick={() => handlePhotoAction(selectedUser.id, photo.id, 'approve')}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="flex-1"
-                            onClick={() => handlePhotoAction(selectedUser.id, photo.id, 'reject')}
-                          >
-                            Reject
-                          </Button>
+                          {!isOfficeUser ? (
+                                <>
+                                  <Button
+                                    variant="primary"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => handlePhotoAction(selectedUser.id, photo.id, 'approve')}
+                                  >
+                                    Approve
+                                  </Button>
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => handlePhotoAction(selectedUser.id, photo.id, 'reject')}
+                                  >
+                                    Reject
+                                  </Button>
+                                </>
+                              ) : (
+                                <div className="w-full text-center text-xs text-gray-500 py-2">
+                                  Read-only: Admin action required
+                                </div>
+                              )}
                         </div>
                       )}
                     </div>
@@ -678,18 +787,29 @@ function PhotoApproval() {
                 {selectedUser.pendingCount} photos pending approval
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant="primary"
-                  onClick={() => handleBulkAction(selectedUser.id, 'approve')}
-                >
-                  Approve All
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowDetailModal(false)}
-                >
-                  Close
-                </Button>
+                {!isOfficeUser ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleBulkAction(selectedUser.id, 'approve')}
+                    >
+                      Approve All
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowDetailModal(false)}
+                    >
+                      Close
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowDetailModal(false)}
+                  >
+                    Close
+                  </Button>
+                )}
               </div>
             </div>
           </div>

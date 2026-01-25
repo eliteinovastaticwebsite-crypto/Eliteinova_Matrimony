@@ -174,7 +174,7 @@ const AboutUs = () => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
               <img
                 src={AboutUsImage}
-                alt="Elitenxt Matrimony Team"
+                alt="Eliteinova Matrimony Team"
                 className="w-full h-[500px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
               {/* Overlay */}
@@ -289,7 +289,7 @@ const AboutUs = () => {
             Success <span className="text-red-600">Stories</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Join thousands of couples who found their perfect match through Elitenxt Matrimony
+            Join thousands of couples who found their perfect match through Eliteinova Matrimony
           </p>
         </div>
 

@@ -175,7 +175,7 @@ export const AuthProvider = ({ children }) => {
           user: result.user,
           token: result.token,
           isAdmin: result.user.role === 'ADMIN',
-          message: result.message || 'Registration completed successfully! Welcome to EliteNXT Matrimony!'
+          message: result.message || 'Registration completed successfully! Welcome to Eliteinova Matrimony!'
         };
       } else {
         return {

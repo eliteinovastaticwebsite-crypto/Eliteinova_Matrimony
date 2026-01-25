@@ -1,6 +1,6 @@
 // AdminLogin.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import adminService from '../services/adminService';
 
 const AdminLogin = () => {
@@ -102,7 +102,7 @@ const AdminLogin = () => {
             Admin Portal
           </h2>
           <p className="text-gray-400 text-sm">
-            EliteNXT Matrimony - Administration Panel
+            Eliteinova Matrimony - Administration Panel
           </p>
         </div>
       </div>
@@ -135,7 +135,7 @@ const AdminLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-white transition-all duration-200"
-                  placeholder="admin@elitenxtmatrimony.com"
+                  placeholder="admin@eliteinovamatrimony.com"
                   disabled={loading}
                 />
               </div>
@@ -178,9 +178,9 @@ const AdminLogin = () => {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-red-400 hover:text-red-300 transition-colors">
+                <Link to="/admin/forgot-password" className="font-medium text-red-400 hover:text-red-300 transition-colors">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -218,7 +218,7 @@ const AdminLogin = () => {
                 Unauthorized access is strictly prohibited.
               </p>
               <p className="mt-1 text-xs text-gray-600">
-                © {new Date().getFullYear()} EliteNXT Matrimony. All rights reserved.
+                © {new Date().getFullYear()} Eliteinova Matrimony. All rights reserved.
               </p>
             </div>
           </div>

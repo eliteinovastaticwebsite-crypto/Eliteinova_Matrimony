@@ -44,7 +44,7 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
         
         {!isInModal && (
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-white">Elitnxt Matrimony</h1>
+            <h1 className="text-3xl font-bold text-white">Elitinova Matrimony</h1>
             <p className="text-gray-300 text-sm mt-1">
               Welcome back! Please login to continue.
             </p>

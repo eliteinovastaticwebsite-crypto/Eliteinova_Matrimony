@@ -51,6 +51,7 @@ class profileService {
     subCaste: 'subCaste',
     maritalStatus: 'maritalStatus',
     education: 'education',
+    educationalQualification: 'educationalQualification',
     occupation: 'occupation',
     employedIn: 'employedIn',
     annualIncome: 'annualIncome',
@@ -58,7 +59,10 @@ class profileService {
     state: 'state',
     district: 'district',
     category: 'category',
-    dosham: 'dosham'
+    dosham: 'dosham',
+    community: 'community',
+    physicalStatus: 'physicalStatus',
+    physicallyChallenged: 'physicalStatus', // Map physicallyChallenged to physicalStatus
   };
 
   const backendFilters = {};
@@ -79,6 +83,70 @@ class profileService {
         if (val.value !== undefined) val = val.value;
         else if (val.label !== undefined && typeof val.label === 'string') val = val.label;
         else val = JSON.stringify(val); // fallback
+      }
+    }
+
+    // Handle "Other" / "Others" options: if field is "Other" or "Others" and there's a custom value, use that instead
+    if ((val === "Other" || val === "Others") && typeof val === 'string') {
+      const otherFieldKey = `${key}Other`;
+      const otherValue = filters[otherFieldKey];
+      if (otherValue && typeof otherValue === 'string' && otherValue.trim() !== '') {
+        val = otherValue.trim(); // Use the custom "Other" value instead
+        console.log(`🔄 Using custom "Other" value for ${key}: "${val}"`);
+      }
+    }
+
+    // Special handling for physicallyChallenged: convert "Yes"/"No" to boolean
+    if (key === 'physicallyChallenged' && typeof val === 'string') {
+      if (val === 'Yes') {
+        val = true;
+      } else if (val === 'No') {
+        val = false;
+      } else {
+        return; // Skip if not "Yes" or "No"
+      }
+    }
+
+    // Special handling for annualIncome: convert formats like "20L-50L" to "20-50", "1Cr+" to "100+"
+    if (key === 'annualIncome' && typeof val === 'string') {
+      val = val.trim();
+      // Convert "20L-50L" to "20-50"
+      if (val.includes('-')) {
+        const parts = val.split('-');
+        if (parts.length === 2) {
+          const min = parts[0].replace(/[^0-9]/g, ''); // Remove non-digits
+          let max = parts[1].replace(/[^0-9]/g, ''); // Remove non-digits
+          
+          // Handle "Cr" (crores) - multiply by 100
+          if (parts[0].toLowerCase().includes('cr')) {
+            const minNum = parseInt(min) * 100;
+            val = minNum.toString();
+            if (parts[1].toLowerCase().includes('cr')) {
+              const maxNum = parseInt(max) * 100;
+              val = `${minNum}-${maxNum}`;
+            } else if (parts[1].includes('+')) {
+              val = `${minNum}+`;
+            }
+          } else if (parts[1].toLowerCase().includes('cr')) {
+            const maxNum = parseInt(max) * 100;
+            val = `${min}-${maxNum}`;
+          } else {
+            val = `${min}-${max}`;
+          }
+        }
+      }
+      // Convert "1Cr+" to "100+"
+      else if (val.toLowerCase().includes('cr') && val.includes('+')) {
+        const num = parseInt(val.replace(/[^0-9]/g, '')) * 100;
+        val = `${num}+`;
+      }
+      // Convert "20L+" to "20+"
+      else if (val.toLowerCase().includes('l') && val.includes('+')) {
+        val = val.replace(/[^0-9+]/g, '');
+      }
+      // Remove "L" suffix if present (e.g., "20L" -> "20")
+      else if (val.toLowerCase().endsWith('l')) {
+        val = val.replace(/[^0-9]/g, '');
       }
     }
 
@@ -393,6 +461,30 @@ async updateProfile(profileData) {
           Gounder: 980,
           Thevar: 850,
         }
+      };
+    }
+  }
+
+  // ✅ ADDED: Get all distinct category/community values from backend
+  async getAllCategories() {
+    try {
+      const response = await api.get('/api/profiles/categories');
+      console.log("✅ Categories response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Get categories error:', error);
+      // Return fallback categories if API fails
+      return {
+        success: true,
+        categories: [
+          { value: "SC", label: "SC - Scheduled Castes" },
+          { value: "ST", label: "ST - Scheduled Tribes" },
+          { value: "BC", label: "BC - Backward Classes" },
+          { value: "MBC", label: "MBC - Most Backward Classes" },
+          { value: "BCM", label: "BCM - Backward Class Muslims" },
+          { value: "DNC", label: "DNC - Denotified Communities" },
+          { value: "GENERAL", label: "General / Others" },
+        ]
       };
     }
   }

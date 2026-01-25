@@ -891,15 +891,15 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                   </div>
                 </div>
 
-                {/* Pongal Offer Banner */}
+                {/* Launch Offer Banner */}
                 <div className="mb-4 p-3 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                   <div className="relative z-10 text-center">
                     <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
-                      🎉 Pongal Special Offer! 🎉
+                      🎉 Launch Special Offer! 🎉
                     </h3>
                     <p className="text-white font-semibold text-xs md:text-sm drop-shadow-lg">
-                      Free Registration for Pongal offer
+                      Free Registration for Launch Offer
                     </p>
                   </div>
                 </div>
@@ -1113,7 +1113,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                 </div>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-green-700 font-semibold">Pongal Offer:</span>
+                    <span className="text-green-700 font-semibold">Launch Offer:</span>
                     <span className="text-green-600 font-bold text-lg">FREE</span>
                   </div>
                 </div>

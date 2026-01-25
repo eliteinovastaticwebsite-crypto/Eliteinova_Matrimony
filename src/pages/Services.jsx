@@ -390,13 +390,13 @@ export default function Services({ onOpenAuthModal }) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
-                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@elitenxt.com")}
+                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@eliteinova.com")}
                 className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 📞 Call Us Now
               </button>
               <button 
-                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@elitenxt.com")}
+                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@eliteinova.com")}
                 className="bg-yellow-400 text-red-900 px-8 py-4 rounded-xl font-bold hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 💬 Chat with Expert

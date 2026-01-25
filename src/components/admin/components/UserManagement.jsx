@@ -13,6 +13,18 @@ function UserManagement() {
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [filterMembership, setFilterMembership] = useState("ALL");
   
+  // View/Edit modal state
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    status: 'ACTIVE',
+    membership: 'SILVER'
+  });
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -149,15 +161,62 @@ function UserManagement() {
   };
 
   const handleViewUser = (userId) => {
-    // Navigate to user details page or open modal
-    window.location.href = `/admin/users/${userId}`;
-    // Or use your router: navigate(`/admin/users/${userId}`);
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      setSelectedUser(user);
+      setShowViewModal(true);
+    }
   };
 
   const handleEditUser = (userId) => {
-    // Open edit modal or navigate to edit page
-    console.log("Edit user:", userId);
-    // Implement your edit modal logic here
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      setSelectedUser(user);
+      setEditFormData({
+        name: user.name || '',
+        email: user.email || '',
+        mobile: user.mobile || '',
+        status: user.status || 'ACTIVE',
+        membership: user.membership || 'SILVER'
+      });
+      setShowEditModal(true);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!selectedUser) return;
+
+    try {
+      // Prepare update data
+      const updateData = {
+        name: editFormData.name,
+        email: editFormData.email,
+        mobile: editFormData.mobile,
+        status: editFormData.status,
+        membership: editFormData.membership
+      };
+
+      // Use the new updateUser endpoint
+      const response = await adminService.updateUser(selectedUser.id, updateData);
+      
+      if (response.success) {
+        toast.success("User updated successfully");
+        setShowEditModal(false);
+        setSelectedUser(null);
+        fetchUsers(); // Refresh the list
+      } else {
+        throw new Error(response.message || "Failed to update user");
+      }
+    } catch (err) {
+      console.error("Error updating user:", err);
+      toast.error(err.response?.data?.error || err.message || "Failed to update user");
+    }
+  };
+
+  const handleCloseModals = () => {
+    setShowViewModal(false);
+    setShowEditModal(false);
+    setSelectedUser(null);
   };
 
   // Pagination handlers
@@ -463,6 +522,153 @@ function UserManagement() {
           )}
         </div>
       </div>
+
+      {/* View User Modal */}
+      {showViewModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900">User Details</h3>
+                <button
+                  onClick={handleCloseModals}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Name</label>
+                  <p className="text-base text-gray-900">{selectedUser.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Email</label>
+                  <p className="text-base text-gray-900">{selectedUser.email || 'N/A'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Mobile</label>
+                  <p className="text-base text-gray-900">{selectedUser.mobile || 'N/A'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Status</label>
+                  <p className="text-base text-gray-900">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      selectedUser.status === 'ACTIVE' 
+                        ? 'bg-green-100 text-green-800'
+                        : selectedUser.status === 'PENDING'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {selectedUser.status || 'UNKNOWN'}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Membership</label>
+                  <p className="text-base text-gray-900">{selectedUser.membership || 'FREE'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Created</label>
+                  <p className="text-base text-gray-900">
+                    {new Date(selectedUser.createdAt || selectedUser.registrationDate).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-200 flex justify-end">
+              <Button variant="secondary" onClick={handleCloseModals}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900">Edit User</h3>
+                <button
+                  onClick={handleCloseModals}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({...editFormData, name: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({...editFormData, email: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+                <input
+                  type="tel"
+                  value={editFormData.mobile}
+                  onChange={(e) => setEditFormData({...editFormData, mobile: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <select
+                    value={editFormData.status}
+                    onChange={(e) => setEditFormData({...editFormData, status: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                  >
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="BLOCKED">Blocked</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Membership</label>
+                  <select
+                    value={editFormData.membership}
+                    onChange={(e) => setEditFormData({...editFormData, membership: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                  >
+                    <option value="SILVER">Silver</option>
+                    <option value="GOLD">Gold</option>
+                    <option value="DIAMOND">Diamond</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
+              <Button variant="secondary" onClick={handleCloseModals}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSaveEdit}>
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

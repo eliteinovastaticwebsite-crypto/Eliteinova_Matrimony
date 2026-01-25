@@ -30,7 +30,7 @@ const FAQSection = () => {
             Eliteinova Matrimony <span className="text-red-600">FAQs</span>
           </h2>
           <p className="text-lg text-gray-600">
-            Find answers to the most common questions about using Elitenxt Matrimony.
+            Find answers to the most common questions about using Eliteinova Matrimony.
           </p>
         </div>
 

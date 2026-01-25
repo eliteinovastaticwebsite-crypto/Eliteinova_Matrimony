@@ -24,10 +24,11 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import DetailedProfilePage from "./pages/DetailedProfilePage";
 import FullFAQPage from "./pages/FullFAQPage";
 import FloatingActions from "./components/common/FloatingActions";
-import ChatWidget from "./components/common/ChatWidget";
 import Notifications from "./components/common/Notifications";
 import NotificationDetails from "./pages/NotificationDetails";
 import AdminLogin from "./pages/AdminLogin";
+import AdminForgotPassword from "./pages/AdminForgotPassword";
+import AdminResetPassword from "./pages/AdminResetPassword";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import PaymentProtectedRoute from "./components/common/PaymentProtectedRoute";
 import OfficeLogin from "./pages/OfficeLogin";
@@ -264,6 +265,8 @@ function AppContent() {
           />
 
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+          <Route path="/admin/reset-password" element={<AdminResetPassword />} />
           <Route path="/office-login" element={<OfficeLogin />} />
 <Route 
   path="/admin/*" 
@@ -320,7 +323,6 @@ function AppContent() {
             onLogin={openLoginModal}
             isAuthenticated={isAuthenticated}
           />
-          <ChatWidget />
         </>
       )}
 
