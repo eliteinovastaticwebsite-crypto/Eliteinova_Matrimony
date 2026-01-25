@@ -1,6 +1,6 @@
 // src/components/profiles/SilverMemberProfiles.jsx
 import React, { useState, useEffect } from "react";
-import profileService from "../services/ProfileService.js";
+import profileService from "../services/profileService";
 import ProfileCard from "../components/profiles/ProfileCard";
 import ProfileFilters from "../components/profiles/FilterSidebar";
 import { useMockAuth as useAuth } from "../context/MockAuthContext";
