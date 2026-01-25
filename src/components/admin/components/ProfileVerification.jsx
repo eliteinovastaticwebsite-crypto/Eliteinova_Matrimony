@@ -31,6 +31,7 @@ function ProfileVerification() {
   const [stats, setStats] = useState({
     totalPending: 0,
     verifiedToday: 0,
+    rejectedToday: 0,
     approvalRate: 0,
     rejectionRate: 0
   });
@@ -54,8 +55,9 @@ function ProfileVerification() {
           ...prev,
           totalPending: pendingList.length,
           verifiedToday: response.verifiedToday || 0,
-          approvalRate: response.approvalRate || 94,
-          rejectionRate: response.rejectionRate || 8.2
+          rejectedToday: response.rejectedToday || 0,
+          approvalRate: response.approvalRate || 0,
+          rejectionRate: response.rejectionRate || 0
         }));
       } else {
         throw new Error(response.message || "Failed to fetch verifications");
@@ -91,7 +93,7 @@ function ProfileVerification() {
       if (response.success) {
         toast.success(`Profile ${actionText}ed successfully`);
         
-        // Remove from local state
+        // Remove from local state immediately
         setPendingVerification(prev => 
           prev.filter(item => item.id !== profileId)
         );
@@ -100,16 +102,17 @@ function ProfileVerification() {
         setStats(prev => ({
           ...prev,
           totalPending: Math.max(0, prev.totalPending - 1),
-          verifiedToday: action === 'approved' ? prev.verifiedToday + 1 : prev.verifiedToday
+          verifiedToday: action === 'approved' ? prev.verifiedToday + 1 : prev.verifiedToday,
+          rejectedToday: action === 'rejected' ? prev.rejectedToday + 1 : prev.rejectedToday
         }));
         
         setShowDetailModal(false);
         
-        // Refresh stats from backend to get accurate counts (including verifiedToday)
+        // Refresh data from backend immediately to ensure consistency
         // Use a small delay to ensure backend has processed the update
         setTimeout(() => {
           fetchPendingVerifications();
-        }, 1000);
+        }, 500);
       } else {
         throw new Error(response.message);
       }
@@ -168,7 +171,7 @@ function ProfileVerification() {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6">
         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md text-center border-l-4 border-yellow-500">
           <div className="text-xl md:text-2xl font-bold text-yellow-600 mb-1 md:mb-2">
             {stats.totalPending}
@@ -184,15 +187,21 @@ function ProfileVerification() {
           </div>
           <div className="text-xs md:text-sm text-gray-600">Verified Today</div>
         </div>
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md text-center border-l-4 border-red-500">
+          <div className="text-xl md:text-2xl font-bold text-red-600 mb-1 md:mb-2">
+            {stats.rejectedToday}
+          </div>
+          <div className="text-xs md:text-sm text-gray-600">Rejected Today</div>
+        </div>
         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md text-center border-l-4 border-blue-500">
           <div className="text-xl md:text-2xl font-bold text-blue-600 mb-1 md:mb-2">
-            {stats.approvalRate}%
+            {stats.approvalRate.toFixed(1)}%
           </div>
           <div className="text-xs md:text-sm text-gray-600">Approval Rate</div>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md text-center border-l-4 border-red-500">
-          <div className="text-xl md:text-2xl font-bold text-red-600 mb-1 md:mb-2">
-            {stats.rejectionRate}%
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md text-center border-l-4 border-orange-500">
+          <div className="text-xl md:text-2xl font-bold text-orange-600 mb-1 md:mb-2">
+            {stats.rejectionRate.toFixed(1)}%
           </div>
           <div className="text-xs md:text-sm text-gray-600">Rejection Rate</div>
         </div>

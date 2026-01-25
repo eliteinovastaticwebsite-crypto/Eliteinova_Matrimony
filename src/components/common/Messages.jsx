@@ -159,8 +159,9 @@ const Messages = () => {
   };
 
   const handleDashboard = () => {
-    // Navigate to dashboard
-    window.location.href = '/dashboard';
+    // ✅ CHANGED: Navigate to profiles page (dashboard removed)
+    // window.location.href = '/dashboard'; // ❌ OLD: Commented out - dashboard removed
+    window.location.href = '/profiles'; // ✅ NEW: Navigate to profiles page
   };
 
   const handleMatches = () => {
@@ -179,7 +180,7 @@ const Messages = () => {
               <ul className="flex space-x-8">
                 <li>
                   <button onClick={handleDashboard} className="hover:text-yellow-300 transition font-medium">
-                    Dashboard
+                    View All Profiles
                   </button>
                 </li>
                 <li>

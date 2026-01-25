@@ -9,7 +9,9 @@ export default function RegistrationCompletion() {
   const membershipType = searchParams.get("membershipType") || "SILVER";
 
   const handleGoToDashboard = () => {
-    navigate(`/dashboard`, { replace: true });
+    // ✅ CHANGED: Navigate to profiles page (dashboard removed)
+    // navigate(`/dashboard`, { replace: true }); // ❌ OLD: Commented out - dashboard removed
+    navigate(`/profiles`, { replace: true }); // ✅ NEW: Navigate directly to profiles page
   };
 
   return (
@@ -45,7 +47,7 @@ export default function RegistrationCompletion() {
             onClick={handleGoToDashboard}
             className="w-full md:w-auto bg-gradient-to-r from-red-600 to-red-500 text-white py-4 px-8 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Go to Dashboard
+            View All Profiles
           </button>
 
           {/* Additional Info */}

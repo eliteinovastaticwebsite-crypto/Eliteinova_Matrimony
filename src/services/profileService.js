@@ -687,6 +687,28 @@ async rejectContactRequest(profileId) {
     };
   }
 }
+
+  // Submit feedback and suggestions
+  async submitFeedback(feedback, suggestions) {
+    try {
+      console.log('📝 Submitting feedback:', { feedback, suggestions });
+      
+      const response = await api.post('/api/feedback/submit', {
+        feedback: feedback || '',
+        suggestions: suggestions || ''
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('✅ Feedback submitted successfully:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Submit feedback error:', error.response?.data || error.message);
+      throw new Error(error.response?.data?.error || error.response?.data?.message || 'Failed to submit feedback. Please try again.');
+    }
+  }
 }
 
 export default new profileService();

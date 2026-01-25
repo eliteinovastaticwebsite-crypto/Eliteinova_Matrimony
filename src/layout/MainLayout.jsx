@@ -17,7 +17,7 @@ export default function MainLayout({ children, onLogin, onRegister }) {
     "/login",
     "/register",
     "/profiles",
-    "/dashboard",
+    // "/dashboard", // ❌ OLD: Commented out - dashboard removed
     "/my-profile"
   ];
 
@@ -43,8 +43,9 @@ export default function MainLayout({ children, onLogin, onRegister }) {
     if (onLogin) {
       onLogin(userData);
     }
-    // Navigate to profiles page after successful login
-    navigate("/profiles");
+    // ✅ CHANGED: Navigate directly to profiles page (dashboard removed)
+    // navigate("/dashboard"); // ❌ OLD: Commented out - dashboard removed
+    navigate("/profiles"); // ✅ NEW: Navigate directly to profiles page
   };
 
   // Handle register click
@@ -67,7 +68,9 @@ export default function MainLayout({ children, onLogin, onRegister }) {
 
   // Check if current path should use theme background (profiles, dashboard, etc.)
   // These pages handle their own background, so we don't add one here
-  const themePaths = ["/profiles", "/dashboard", "/matches", "/messages"];
+  // ✅ CHANGED: Removed /dashboard from theme paths (dashboard removed)
+  // const themePaths = ["/profiles", "/dashboard", "/matches", "/messages"]; // ❌ OLD: Commented out
+  const themePaths = ["/profiles", "/matches", "/messages"]; // ✅ NEW: Dashboard removed
   const shouldUseTheme = themePaths.includes(location.pathname);
   
   // For theme pages, render children directly without layout wrapper

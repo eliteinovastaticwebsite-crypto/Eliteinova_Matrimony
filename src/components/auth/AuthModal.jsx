@@ -36,20 +36,53 @@ const handleLoginSuccess = async ({ email, password }) => {
   
   // Check if trying to login as admin
   if (email.toLowerCase().includes('admin') || email.endsWith('@eliteinovamatrimony.com')) {
-    alert("Admin users must login through Admin Login page. Redirecting...");
-    onClose();
-    navigate('/admin-login');
-    return;
+    throw new Error("Admin users must login through Admin Login page.");
   }
   
-  const res = await login(email, password);
-  
-  if (res && res.success === true) {
-    console.log("✅ Login successful in modal, user:", res.user?.name);
-    onClose();
-    navigate("/profiles");
-  } else {
-    console.error("❌ Login failed in modal:", res?.error || "Unknown error");
+  try {
+    const res = await login(email, password);
+    
+    if (res && res.success === true) {
+      console.log("✅ Login successful in modal, user:", res.user?.name);
+      // Close modal immediately
+      onClose();
+      // Navigate after a brief delay to ensure modal closes first
+      setTimeout(() => {
+        // ✅ CHANGED: Navigate directly to profiles page (dashboard removed)
+        // navigate("/dashboard"); // ❌ OLD: Commented out - dashboard removed
+        navigate("/profiles"); // ✅ NEW: Navigate directly to profiles page
+      }, 50);
+      return { success: true };
+    } else {
+      // Login failed - extract error message
+      const errorMsg = res?.error || res?.message || "Invalid email or password. Please check your credentials and try again.";
+      console.error("❌ Login failed in modal:", errorMsg);
+      // Throw error so LoginForm can catch and display it
+      const loginError = new Error(errorMsg);
+      loginError.error = errorMsg; // Add error property for LoginForm
+      throw loginError;
+    }
+  } catch (error) {
+    // Ensure error message is properly formatted
+    console.error("❌ Login error in handleLoginSuccess:", error);
+    
+    // Extract error message from various possible sources
+    let errorMessage = "Invalid email or password. Please check your credentials and try again.";
+    
+    if (error.message) {
+      errorMessage = error.message;
+    } else if (error.error) {
+      errorMessage = error.error;
+    } else if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    }
+    
+    // Create a new error with the extracted message
+    const formattedError = new Error(errorMessage);
+    formattedError.error = errorMessage;
+    throw formattedError;
   }
 };
 

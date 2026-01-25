@@ -173,8 +173,12 @@ const Matches = () => {
             <nav className="hidden md:block">
               <ul className="flex space-x-8">
                 <li>
-                  <Link to="/dashboard" className="hover:text-yellow-300 transition font-medium">
+                  {/* ❌ OLD: Dashboard link - commented out, dashboard removed */}
+                  {/* <Link to="/dashboard" className="hover:text-yellow-300 transition font-medium">
                     Dashboard
+                  </Link> */}
+                  <Link to="/profiles" className="hover:text-yellow-300 transition font-medium">
+                    View All Profiles
                   </Link>
                 </li>
                 <li>

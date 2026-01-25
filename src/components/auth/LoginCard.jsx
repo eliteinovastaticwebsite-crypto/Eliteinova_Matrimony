@@ -37,8 +37,9 @@ export default function LoginCard({ onRegister, onLoginSuccess }) {
       console.log("Login result:", result); // Debug log
       
       if (result && result.success) {
-        // ✅ Success - navigate to profiles
-        navigate("/profiles");
+        // ✅ CHANGED: Navigate directly to profiles page (dashboard removed)
+        // navigate("/dashboard"); // ❌ OLD: Commented out - dashboard removed
+        navigate("/profiles"); // ✅ NEW: Navigate directly to profiles page
         
         // Call the onLoginSuccess callback if provided
         if (onLoginSuccess) {

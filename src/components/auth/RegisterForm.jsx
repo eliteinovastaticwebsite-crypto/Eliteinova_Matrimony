@@ -45,7 +45,10 @@ export default function RegisterForm({
     motherTongue: "",
     willingOtherCaste: false,
     community: "",
+    communityOther: "",
     caste: "",
+    subCaste: "",
+    subCasteOther: "",
     dosham: "No",
 
     // Step 4: Family Background
@@ -130,6 +133,7 @@ const communityCategories = [
   { value: "BCM", label: "BCM - Backward Class Muslims" },
   { value: "DNC", label: "DNC - Denotified Communities" },
   { value: "GENERAL", label: "General / Others" },
+  { value: "Other", label: "Other" },
 ];
 
 // Caste/Subcaste data for each community category (Official Tamil Nadu Government Lists)
@@ -412,7 +416,16 @@ const professionOptions = [
       case 3:
         if (!form.religion) errors.religion = "Religion required";
         if (!form.community) errors.community = "Community category required";
-        if (!form.caste) errors.caste = "Caste required";
+        if (form.community === "Other" && !form.communityOther) {
+          errors.communityOther = "Please specify community category";
+        }
+        if (!form.caste && form.community !== "Other") errors.caste = "Caste required";
+        if (form.community === "Other" && !form.subCasteOther) {
+          errors.subCasteOther = "Please specify caste/subcaste";
+        }
+        if (form.caste === "Others" && !form.subCasteOther) {
+          errors.subCasteOther = "Please specify caste/subcaste";
+        }
         break;
       case 4:
         if (!form.maritalStatus)
@@ -493,9 +506,9 @@ const professionOptions = [
             age: parseInt(form.age) || calculateAge(form.dob),
             dob: form.dob,
             religion: form.religion,
-            community: form.community,
-            caste: form.caste,
-            subCaste: form.caste, // Keep subCaste for backward compatibility
+            community: form.community === "Other" ? form.communityOther : form.community,
+            caste: form.caste === "Others" ? form.subCasteOther : form.caste,
+            subCaste: form.caste === "Others" ? form.subCasteOther : (form.community === "Other" ? form.subCasteOther : form.caste), // Keep subCaste for backward compatibility
             willingOtherCaste: form.willingOtherCaste,
             dosham: form.dosham,
             education: form.education,
@@ -506,6 +519,7 @@ const professionOptions = [
             educationalQualification: form.educationalQualification || "",
             certificateCourses: form.certificateCourses || "",
             annualIncome: parseIncome(form.annualIncome),
+            address: form.address || "",
             city: form.city || "",
             state: form.state,
             district: form.district,
@@ -635,12 +649,18 @@ const professionOptions = [
                 onRegisterSuccess(result);
             }
             
-            // Always redirect to registration completion page after successful registration
-            // Use a small timeout to ensure state updates propagate
+            // ✅ CHANGED: Navigate directly to profiles page (skip dashboard/registration completion)
+            // ❌ OLD: Was navigating to registration completion page, then dashboard
+            // setTimeout(() => {
+            //     const completionUrl = `/registration-completion?membershipType=${membershipType}`;
+            //     console.log("🚀 Navigating to:", completionUrl);
+            //     navigate(completionUrl, { replace: true });
+            // }, 100);
+            
+            // ✅ NEW: Navigate directly to profiles page (same as login)
             setTimeout(() => {
-                const completionUrl = `/registration-completion?membershipType=${membershipType}`;
-                console.log("🚀 Navigating to:", completionUrl);
-                navigate(completionUrl, { replace: true });
+                console.log("🚀 Navigating directly to profiles page...");
+                navigate("/profiles", { replace: true });
             }, 100);
         } else {
             throw new Error(
@@ -659,15 +679,31 @@ const professionOptions = [
         // Show more detailed error message
         let errorMessage = err.message || "Registration failed. Please try again.";
         
-        // Check for specific error types
-        if (err.name === "TypeError" && err.message?.includes("Failed to fetch")) {
-            errorMessage = "Cannot connect to backend server. Please check:\n1. Backend is running at http://localhost:8080\n2. No firewall/antivirus blocking\n3. Check browser console (F12) for details";
-        } else if (err.message?.includes("403") || err.message?.includes("Forbidden")) {
-            errorMessage = "Access denied (403). Check backend logs and CORS configuration.";
-        } else if (err.message?.includes("CORS") || err.message?.includes("cors")) {
-            errorMessage = "CORS error. Ensure backend at http://localhost:8080 has CORS configured for http://localhost:5173";
-        } else if (err.message?.includes("Network") || err.message?.includes("network")) {
-            errorMessage = "Network error. Backend server may not be running or unreachable.";
+        // Check for specific error types from backend
+        const errorMsg = err.message?.toLowerCase() || "";
+        
+        if (errorMsg.includes("duplicate") || errorMsg.includes("already exists")) {
+            if (errorMsg.includes("email")) {
+                errorMessage = "An account with this email already exists. Please use a different email or try logging in.";
+            } else if (errorMsg.includes("mobile") || errorMsg.includes("phone")) {
+                errorMessage = "An account with this mobile number already exists. Please use a different mobile number or try logging in.";
+            } else {
+                errorMessage = "This information is already registered. Please check your details or try logging in.";
+            }
+        } else if (errorMsg.includes("invalid email") || errorMsg.includes("email")) {
+            errorMessage = "Invalid email address. Please enter a valid email.";
+        } else if (errorMsg.includes("password") && (errorMsg.includes("short") || errorMsg.includes("length"))) {
+            errorMessage = "Password must be at least 6 characters long.";
+        } else if (errorMsg.includes("mobile") || errorMsg.includes("phone")) {
+            errorMessage = "Invalid mobile number. Please enter a valid 10-digit mobile number.";
+        } else if (err.name === "TypeError" && err.message?.includes("Failed to fetch")) {
+            errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
+        } else if (errorMsg.includes("403") || errorMsg.includes("forbidden")) {
+            errorMessage = "Access denied. Please try again later.";
+        } else if (errorMsg.includes("cors")) {
+            errorMessage = "Server configuration error. Please contact support.";
+        } else if (errorMsg.includes("network") || errorMsg.includes("connection")) {
+            errorMessage = "Network error. Please check your internet connection and try again.";
         }
         
         setError(errorMessage);
@@ -1120,12 +1156,38 @@ const professionOptions = [
       <Select
         value={form.community ? { value: form.community, label: communityCategories.find(c => c.value === form.community)?.label || form.community } : null}
         onChange={(e) => {
-          handleChange({ target: { name: "community", value: e.value } });
-          handleChange({ target: { name: "caste", value: "" } });
+          console.log("🏷️ Community selected:", e?.value);
+          if (e && e.value) {
+            handleChange({ target: { name: "community", value: e.value } });
+            handleChange({ target: { name: "caste", value: "" } });
+            handleChange({ target: { name: "subCaste", value: "" } });
+            if (e.value !== "Other") {
+              handleChange({ target: { name: "communityOther", value: "" } });
+            }
+          }
         }}
         options={communityCategories}
         placeholder="Select Community Category"
+        isSearchable={true}
+        menuPortalTarget={document.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 })
+        }}
       />
+      {form.community === "Other" && (
+        <div className="mt-2">
+          <FloatingInput
+            label="Please specify community category"
+            name="communityOther"
+            value={form.communityOther}
+            onChange={handleChange}
+            required
+          />
+          {validationErrors.communityOther && (
+            <p className="text-red-500 text-sm">{validationErrors.communityOther}</p>
+          )}
+        </div>
+      )}
       {validationErrors.community && (
         <p className="text-red-500 text-sm">{validationErrors.community}</p>
       )}
@@ -1136,20 +1198,61 @@ const professionOptions = [
       <label className="block mb-1 font-medium">Caste/Subcaste *</label>
       <Select
         value={form.caste ? { value: form.caste, label: form.caste } : null}
-        onChange={(e) =>
-          handleChange({ target: { name: "caste", value: e.value } })
-        }
-        isDisabled={!form.community}
+        onChange={(e) => {
+          console.log("🏷️ Caste selected:", e?.value);
+          if (e && e.value) {
+            handleChange({ target: { name: "caste", value: e.value } });
+            // Set subCaste same as caste for backward compatibility
+            handleChange({ target: { name: "subCaste", value: e.value } });
+            if (e.value !== "Others") {
+              handleChange({ target: { name: "subCasteOther", value: "" } });
+            }
+          }
+        }}
+        isDisabled={!form.community || form.community === "Other"}
         options={
-          form.community && communityCasteData[form.community]
+          form.community && form.community !== "Other" && communityCasteData[form.community]
             ? communityCasteData[form.community].map((caste) => ({
                 value: caste,
                 label: caste,
               }))
             : []
         }
-        placeholder={form.community ? "Select Caste/Subcaste" : "Select Community Category First"}
+        placeholder={form.community === "Other" ? "Select community category first" : form.community ? "Select Caste/Subcaste" : "Select Community Category First"}
+        isSearchable={true}
+        menuPortalTarget={document.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 })
+        }}
       />
+      {form.caste === "Others" && (
+        <div className="mt-2">
+          <FloatingInput
+            label="Please specify caste/subcaste"
+            name="subCasteOther"
+            value={form.subCasteOther}
+            onChange={handleChange}
+            required
+          />
+          {validationErrors.subCasteOther && (
+            <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
+          )}
+        </div>
+      )}
+      {form.community === "Other" && (
+        <div className="mt-2">
+          <FloatingInput
+            label="Please specify caste/subcaste"
+            name="subCasteOther"
+            value={form.subCasteOther}
+            onChange={handleChange}
+            required
+          />
+          {validationErrors.subCasteOther && (
+            <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
+          )}
+        </div>
+      )}
       {validationErrors.caste && (
         <p className="text-red-500 text-sm">{validationErrors.caste}</p>
       )}
@@ -1602,6 +1705,18 @@ const professionOptions = [
       placeholder="6-digit pincode"
       maxLength="6"
     />
+
+    {/* Address (Optional) */}
+    <FloatingInput
+      label="Address (Optional)"
+      name="address"
+      value={form.address}
+      onChange={handleChange}
+      textarea
+      placeholder="Enter your complete address"
+      rows="4"
+      error={validationErrors.address}
+    />
   </div>
         )}
 
@@ -1911,21 +2026,58 @@ const professionOptions = [
   </div>
 )}
 
-            {/* Launch Offer Banner */}
-            <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-              <div className="relative z-10 text-center">
-                <h3 className="text-white font-bold text-lg md:text-xl mb-1 animate-bounce">
-                  🎉 Launch Special Offer! 🎉
-                </h3>
-                <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
-                  Free Registration for Launch Offer
-                </p>
+            {/* Membership Type - Last field in Step 6 */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Membership Type *
+              </label>
+              
+              {/* Launch Offer Banner */}
+              <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
+                <div className="relative z-10 text-center">
+                  <h3 className="text-white font-bold text-lg md:text-xl mb-1">
+                    🎉 Launch Special Offer! 🎉
+                  </h3>
+                  <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
+                    Free Registration for Launch Offer
+                  </p>
+                </div>
               </div>
+
+              <div className="flex flex-col space-y-3">
+                {[
+                  { value: "SILVER", label: "Silver", price: "₹299/Per 12 Months" },
+                  { value: "GOLD", label: "Gold", price: "₹499/Per 12 Months" },
+                  { value: "DIAMOND", label: "Diamond", price: "₹749/Per 12 Months" },
+                ].map((membership) => (
+                  <label
+                    key={membership.value}
+                    className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <input
+                      type="radio"
+                      name="membershipType"
+                      value={membership.value}
+                      checked={form.membershipType === membership.value}
+                      onChange={handleChange}
+                      className="text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-gray-700 font-medium flex-1">{membership.label}</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-gray-400 line-through text-sm">{membership.price}</span>
+                      <span className="text-green-600 font-bold text-base">FREE</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              {validationErrors.membershipType && (
+                <p className="text-red-500 text-xs mt-1">
+                  {validationErrors.membershipType}
+                </p>
+              )}
             </div>
           </div>
         )}
-
         </form>
       </div>
 

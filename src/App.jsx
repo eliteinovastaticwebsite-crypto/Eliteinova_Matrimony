@@ -17,7 +17,8 @@ import "./index.css";
 import { AuthProvider, useAuth } from "./context/AuthContext"; // ✅ CHANGED: Real AuthContext
 import { ThemeProvider } from "./context/ThemeContext";
 import MyProfile from "./pages/MyProfile";
-import Dashboard from "./components/common/Dashboard";
+// ❌ OLD: Dashboard import - commented out, dashboard removed
+// import Dashboard from "./components/common/Dashboard";
 import Matches from "./components/common/Matches";
 import Messages from "./components/common/Messages";
 import ScrollToTop from "./components/common/ScrollToTop";
@@ -70,16 +71,24 @@ function AppContent() {
       const result = await login(credentials.email, credentials.password);
       console.log("✅ App: Login result:", result);
       
-      if (result.success) {
+      if (result && result.success) {
         setShowLogin(false);
         setShowRegister(false);
-        navigate("/profiles");
+        // ✅ CHANGED: Navigate directly to profiles page (dashboard removed)
+        // navigate("/dashboard"); // ❌ OLD: Commented out - dashboard removed
+        navigate("/profiles"); // ✅ NEW: Navigate directly to profiles page
       } else {
-        alert(result.error || "Login failed");
+        // This should not happen if AuthContext throws errors, but keep as fallback
+        const error = new Error(result?.error || "Login failed");
+        error.error = result?.error || "Login failed";
+        throw error;
       }
     } catch (error) {
       console.error("❌ App: Login error:", error);
-      alert("Login failed. Please try again.");
+      console.error("❌ App: Error message:", error.message);
+      console.error("❌ App: Error object:", error);
+      // Re-throw error so LoginForm can catch and display it
+      throw error;
     }
   };
 
@@ -94,7 +103,13 @@ function AppContent() {
       if (result.success) {
         setShowLogin(false);
         setShowRegister(false);
-        navigate("/profiles");
+        // ✅ CHANGED: Navigate directly to profiles page (skip dashboard/registration completion)
+        // ❌ OLD: Was navigating to registration completion page, then dashboard
+        // const membershipType = userData.membershipType || "SILVER";
+        // navigate(`/registration-completion?membershipType=${membershipType}`, { replace: true });
+        
+        // ✅ NEW: Navigate directly to profiles page (same as login)
+        navigate("/profiles", { replace: true });
       } else {
         alert(result.error || "Registration failed");
       }
@@ -156,14 +171,15 @@ function AppContent() {
             }
           />
           
-          <Route 
+          {/* ❌ OLD: Dashboard route - commented out, users go directly to profiles */}
+          {/* <Route 
             path="/dashboard" 
             element={
               <PaymentProtectedRoute>
                 <Dashboard />
               </PaymentProtectedRoute>
             } 
-          />
+          /> */}
           
           <Route 
             path="/matches" 

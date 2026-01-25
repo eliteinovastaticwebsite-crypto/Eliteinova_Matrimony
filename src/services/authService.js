@@ -57,6 +57,18 @@ class authService {
     
     // Try real backend
     const response = await api.post('/api/auth/login', credentials);
+    console.log("🔍 AuthService: Response data:", response.data);
+    
+    // Check if backend returned success: false (even with 200 status)
+    if (response.data && response.data.success === false) {
+      console.log("❌ AuthService: Backend returned success: false");
+      const errorMessage = response.data.error || response.data.message || "Login failed";
+      const loginError = new Error(errorMessage);
+      loginError.error = errorMessage;
+      loginError.response = { data: response.data, status: 400 }; // Treat as 400 error
+      throw loginError;
+    }
+    
     console.log("✅ Login successful:", response.data);
     return response.data;
     
@@ -73,9 +85,33 @@ class authService {
       return this.getMockLoginResponse(credentials);
     }
     
-    // If backend responded with an error (like wrong password), throw it
-    const backendMessage = error.response?.data?.message || error.response?.data?.error;
-    throw new Error(backendMessage || 'Login failed');
+    // If backend responded with an error (like wrong password), throw it with better message
+    // Backend returns: { success: false, error: "message" } for 400 errors
+    console.log("🔍 AuthService: Error response data:", error.response?.data);
+    
+    let backendMessage = error.response?.data?.error || error.response?.data?.message;
+    
+    // Provide user-friendly error messages based on status code
+    if (error.response?.status === 400) {
+      // Backend returns 400 for wrong password with { success: false, error: "..." }
+      if (!backendMessage) {
+        backendMessage = "Invalid email or password. Please check your credentials and try again.";
+      }
+    } else if (error.response?.status === 401 || error.response?.status === 403) {
+      backendMessage = "Invalid email or password. Please check your credentials and try again.";
+    } else if (error.response?.status === 404) {
+      backendMessage = "No account found with this email. Please register first.";
+    } else if (!backendMessage) {
+      backendMessage = "Login failed. Please check your credentials and try again.";
+    }
+    
+    console.log("🔍 AuthService: Extracted error message:", backendMessage);
+    
+    // Throw error so AuthContext can catch it - preserve the error message in both message and error property
+    const loginError = new Error(backendMessage);
+    loginError.error = backendMessage; // Add error property for easy access
+    loginError.response = error.response; // Preserve response for AuthContext
+    throw loginError;
   }
 }
 

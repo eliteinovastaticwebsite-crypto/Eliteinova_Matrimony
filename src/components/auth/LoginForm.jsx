@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 
@@ -7,6 +7,7 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
     if (error) setError("");
@@ -14,6 +15,7 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
 
     if (!form.email || !form.password) {
       setError("Please fill in all fields");
@@ -24,17 +26,39 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
     setError("");
 
     try {
-      // 🔥 FIXED: We are NOT logging in here.
-      // The AuthModal will call AuthContext.login(email, password)
-      onLoginSuccess({
+      // Call onLoginSuccess which will trigger login in AuthModal
+      await onLoginSuccess({
         email: form.email,
         password: form.password
       });
+      // If successful, onLoginSuccess will handle navigation and close modal
+      // Don't reset loading here - let the modal close handle it
+      // The component will unmount when modal closes, so state will reset
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Login failed. Please try again.");
-    } finally {
+      // Extract error message - check in priority order
+      let errorMessage = "Invalid email or password. Please check your credentials and try again.";
+      
+      // Priority 1: Check error.error property (set by AuthContext)
+      if (err.error) {
+        errorMessage = err.error;
+      }
+      // Priority 2: Check error.message
+      else if (err.message) {
+        errorMessage = err.message;
+      }
+      // Priority 3: Check response data
+      else if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      }
+      else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      // Set loading to false first
       setLoading(false);
+      
+      // Set error immediately - React will re-render
+      setError(errorMessage);
     }
   };
 
@@ -51,7 +75,12 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className={`space-y-4 ${isInModal ? "flex-1 flex flex-col" : ""}`}>
+        <form 
+          onSubmit={handleSubmit} 
+          className={`space-y-4 ${isInModal ? "flex-1 flex flex-col" : ""}`}
+          noValidate
+          id="login-form"
+        >
           <div>
             <label htmlFor="email" className={`block text-sm font-medium ${isInModal ? "text-gray-700" : "text-gray-300"}`}>
               Email Address
@@ -94,16 +123,47 @@ export default function LoginForm({ onLoginSuccess, onRegister, isInModal }) {
             />
           </div>
 
+          {/* ERROR MESSAGE - Inside form after password field */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
-              <strong>Error:</strong> {error}
+            <div 
+              id="login-error-message"
+              className="bg-red-100 border-2 border-red-500 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-lg"
+              role="alert"
+            >
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-red-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <div className="flex-1">
+                  <strong className="font-bold text-base text-red-900 block mb-1">Login Failed</strong>
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setError("")}
+                  className="text-red-600 hover:text-red-800 ml-2 flex-shrink-0"
+                  aria-label="Close error"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
             </div>
           )}
 
           <div className={isInModal ? "mt-auto pt-4" : ""}>
-            <Button type="submit" variant="primary" fullWidth disabled={loading}>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className={`w-full px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                loading 
+                  ? 'bg-gray-400 cursor-not-allowed text-white' 
+                  : 'bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
+              }`}
+            >
               {loading ? "Logging in..." : "Login"}
-            </Button>
+            </button>
           </div>
         </form>
 

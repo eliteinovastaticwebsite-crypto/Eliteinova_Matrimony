@@ -29,6 +29,7 @@ function UserManagement() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
+  const [lastEmptyPageCheck, setLastEmptyPageCheck] = useState(null); // Prevent infinite loops
   const pageSize = 10;
   
   // Filters state
@@ -69,6 +70,26 @@ function UserManagement() {
       setUsers(usersArray);
       setTotalPages(totalPages);
       setTotalElements(totalItems);
+      
+      // Auto-advance to next page if current page is empty and there are more pages
+      // This handles cases where filters result in empty pages
+      // Prevent infinite loops by checking if we've already tried this page
+      const pageKey = `${currentPage}-${filterStatus}-${filterMembership}`;
+      if (usersArray.length === 0 && totalPages > 1 && lastEmptyPageCheck !== pageKey) {
+        if (currentPage < totalPages - 1) {
+          console.log(`📄 Current page (${currentPage + 1}) is empty, auto-advancing to next page...`);
+          setLastEmptyPageCheck(pageKey);
+          setCurrentPage(prev => prev + 1);
+        } else if (currentPage > 0) {
+          // If we're on the last page and it's empty, go back to previous page
+          console.log(`📄 Last page is empty, going back to previous page...`);
+          setLastEmptyPageCheck(pageKey);
+          setCurrentPage(prev => Math.max(0, prev - 1));
+        }
+      } else if (usersArray.length > 0) {
+        // Reset the empty page check if we have results
+        setLastEmptyPageCheck(null);
+      }
     } else {
       // Handle error case
       const errorMessage = response?.message || "Failed to fetch users";
@@ -98,6 +119,7 @@ function UserManagement() {
         search: searchTerm,
       });
       setCurrentPage(0);
+      setLastEmptyPageCheck(null); // Reset empty page check when filters change
     }, 300);
 
     return () => clearTimeout(timer);
@@ -105,35 +127,29 @@ function UserManagement() {
 
   // Handle user actions
   const handleBlockUser = async (userId, currentStatus) => {
-    const newStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-    const action = newStatus === "INACTIVE" ? "block" : "unblock";
+    // Block always sets to INACTIVE, Unblock sets to ACTIVE
+    const isBlocking = currentStatus === "ACTIVE";
+    const newStatus = isBlocking ? "INACTIVE" : "ACTIVE";
+    const action = isBlocking ? "block" : "unblock";
     
     if (!window.confirm(`Are you sure you want to ${action} this user?`)) {
       return;
     }
 
     try {
-      // Option 1: Use blockUser if endpoint exists
-      // const response = await adminService.blockUser(userId);
-
-      // Option 2: Use updateUserStatus (more reliable)
-      const response = await adminService.updateUserStatus(userId, newStatus);  // CONSIDER THIS
+      const response = await adminService.updateUserStatus(userId, newStatus);
       
       if (response.success) {
         toast.success(`User ${action}ed successfully`);
         
-        // Update local state
-        setUsers(users.map(user => 
-          user.id === userId 
-            ? { ...user, status: newStatus }
-            : user
-        ));
+        // Refresh data from backend to ensure consistency
+        await fetchUsers();
       } else {
-        throw new Error(response.message);
+        throw new Error(response.message || response.error);
       }
     } catch (err) {
       console.error(`Error ${action}ing user:`, err);
-      toast.error(`Failed to ${action} user`);
+      toast.error(err.response?.data?.error || err.message || `Failed to ${action} user`);
     }
   };
 
@@ -143,20 +159,36 @@ function UserManagement() {
     }
 
     try {
+      // Optimistically remove user from list immediately
+      const userToDelete = users.find(u => u.id === userId);
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+      setTotalElements(prev => Math.max(0, prev - 1));
+      
       const response = await adminService.deleteUser(userId);
       
       if (response.success) {
         toast.success("User deleted successfully");
         
-        // Remove from local state
-        setUsers(users.filter(user => user.id !== userId));
-        setTotalElements(prev => prev - 1);
+        // Refresh data from backend to ensure consistency
+        await fetchUsers();
       } else {
-        throw new Error(response.message);
+        // If deletion failed, restore the user
+        if (userToDelete) {
+          setUsers(prevUsers => [...prevUsers, userToDelete].sort((a, b) => b.id - a.id));
+          setTotalElements(prev => prev + 1);
+        }
+        throw new Error(response.message || response.error);
       }
     } catch (err) {
       console.error("Error deleting user:", err);
-      toast.error("Failed to delete user");
+      toast.error(err.response?.data?.error || err.message || "Failed to delete user");
+      
+      // Restore user on error
+      const userToRestore = users.find(u => u.id === userId);
+      if (!userToRestore) {
+        // User was removed optimistically, need to refresh to restore
+        await fetchUsers();
+      }
     }
   };
 
@@ -236,18 +268,16 @@ function UserManagement() {
     setCurrentPage(page);
   };
 
-  // Filter users locally for display (if backend doesn't support filtering)
+  // Backend now handles status and membership filtering
+  // Only apply search filter client-side as a fallback (backend also handles search)
   const filteredUsers = users.filter(user => {
+    // Client-side search filter (backend also filters, but this provides instant feedback)
     const matchesSearch = searchTerm === "" || 
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.id?.toString().includes(searchTerm);
     
-    const matchesStatus = filterStatus === "ALL" || user.status === filterStatus;
-    const matchesMembership = filterMembership === "ALL" || 
-      (user.membershipPlan?.planName || "FREE") === filterMembership;
-    
-    return matchesSearch && matchesStatus && matchesMembership;
+    return matchesSearch;
   });
 
   // Format membership display
@@ -314,9 +344,7 @@ function UserManagement() {
               >
                 <option value="ALL">All Status</option>
                 <option value="ACTIVE">Active</option>
-                <option value="PENDING">Pending</option>
                 <option value="INACTIVE">Inactive</option>
-                <option value="BLOCKED">Blocked</option>
               </select>
               
               <select
@@ -325,7 +353,6 @@ function UserManagement() {
                 className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 text-sm md:text-base"
               >
                 <option value="ALL">All Plans</option>
-                <option value="FREE">Free</option>
                 <option value="SILVER">Silver</option>
                 <option value="GOLD">Gold</option>
                 <option value="DIAMOND">Diamond</option>
@@ -440,7 +467,7 @@ function UserManagement() {
                           className="text-xs"
                           onClick={() => handleBlockUser(user.id, user.status)}
                         >
-                          {user.status === 'ACTIVE' ? 'Block' : 'Unblock'}
+                          {user.status === 'ACTIVE' ? 'De Activate' : 'Activate'}
                         </Button>
                         <Button 
                           variant="danger"
@@ -641,7 +668,6 @@ function UserManagement() {
                     <option value="ACTIVE">Active</option>
                     <option value="INACTIVE">Inactive</option>
                     <option value="PENDING">Pending</option>
-                    <option value="BLOCKED">Blocked</option>
                   </select>
                 </div>
                 <div>

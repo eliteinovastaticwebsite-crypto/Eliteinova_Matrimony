@@ -204,6 +204,14 @@ export default function Footer() {
                 <Link to="/cookies" className="hover:text-yellow-400 transition-colors">
                   Cookie Policy
                 </Link>
+                <a 
+                  href="https://www.eliteinovatechpvtltd.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-yellow-400 transition-colors"
+                >
+                  Digital Partner
+                </a>
               </div>
             </div>
             

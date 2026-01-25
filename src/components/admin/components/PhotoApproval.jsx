@@ -231,13 +231,10 @@ function PhotoApproval() {
       if (response.success) {
         showNotification(`Photo ${action === 'approve' ? 'approved' : 'rejected'} successfully`);
         
-        // Remove user from lists if no pending photos left
-        if (userIndex !== -1 && newGroupedByUser[userIndex].pendingCount === 0) {
-          setTimeout(() => {
-            setGroupedByUser(prev => prev.filter(user => user.id !== userId));
-            setFilteredPhotos(prev => prev.filter(user => user.id !== userId));
-          }, 500); // Small delay for better UX
-        }
+        // Refresh data from backend to ensure consistency
+        setTimeout(() => {
+          fetchPendingPhotos();
+        }, 500);
       }
     } catch (error) {
       console.error('Error processing photo action:', error);
@@ -287,6 +284,10 @@ function PhotoApproval() {
       if (successful > 0) {
         showNotification(`All photos ${action === 'approve' ? 'approved' : 'rejected'} successfully`);
         setShowDetailModal(false);
+        // Refresh data from backend to ensure consistency
+        setTimeout(() => {
+          fetchPendingPhotos();
+        }, 500);
       }
     } catch (error) {
       console.error('Error processing bulk action:', error);
@@ -340,6 +341,10 @@ function PhotoApproval() {
       if (successful > 0) {
         showNotification(`All photos ${bulkAction === 'approve' ? 'approved' : 'rejected'} successfully`);
         setBulkAction('');
+        // Refresh data from backend to ensure consistency
+        setTimeout(() => {
+          fetchPendingPhotos();
+        }, 500);
       }
     } catch (error) {
       console.error('Error processing global bulk action:', error);

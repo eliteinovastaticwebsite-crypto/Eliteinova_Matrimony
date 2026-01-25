@@ -7,7 +7,6 @@ import { useAuth } from "../../context/AuthContext"; // REAL AUTH CONTEXT
 import { useTheme } from "../../context/ThemeContext"; // ADDED: Theme context
 import CategoryNav from "../common/CategoryNav";
 import Banner from "../common/Banner";
-import ThemeDecorations from "../common/ThemeDecorations"; // ADDED: Theme decorations
 
 import BannerImage2 from "../../assets/BannerImage2.png";
 // Import membership banner images
@@ -367,39 +366,6 @@ const performSearch = async (searchFilters) => {
   const showLoadMore = !searchResults && pagination.page < pagination.totalPages - 1;
   const hasQuickFilters = genderFilter !== "all" || religionFilter !== "all";
 
-  
-  if (loading && profiles.length === 0) {
-    return (
-      <div 
-        className="min-h-screen flex justify-center items-center relative overflow-hidden"
-        style={{ background: colors.bgGradientStyle }}
-      >
-        {/* Animated Background Blobs */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div 
-            className="absolute top-10 left-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob"
-            style={{ backgroundColor: colors.blob1 }}
-          ></div>
-          <div 
-            className="absolute top-10 right-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"
-            style={{ backgroundColor: colors.blob2 }}
-          ></div>
-          <div 
-            className="absolute bottom-10 left-1/2 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"
-            style={{ backgroundColor: colors.blob3 }}
-          ></div>
-        </div>
-        <div className="text-center relative z-10">
-          <div 
-            className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
-            style={{ borderColor: colors.accent }}
-          ></div>
-          <p className={classes.textColor}>Loading profiles...</p>
-        </div>
-      </div>
-    );
-  }
-
   // Get membership banner image based on membership type
   const getMembershipBanner = () => {
     const normalizedType = membershipType?.toUpperCase() || user?.membership?.toUpperCase() || user?.membershipType?.toUpperCase() || 'SILVER';
@@ -413,6 +379,31 @@ const performSearch = async (searchFilters) => {
         return silverBanner;
     }
   };
+  
+  if (loading && profiles.length === 0) {
+    const membershipBannerImage = getMembershipBanner();
+    return (
+      <div 
+        className="min-h-screen flex justify-center items-center relative overflow-hidden"
+        style={{ 
+          backgroundImage: `url(${membershipBannerImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          minHeight: '100vh'
+        }}
+      >
+        <div className="text-center relative z-10">
+          <div 
+            className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
+            style={{ borderColor: colors.accent }}
+          ></div>
+          <p className={classes.textColor}>Loading profiles...</p>
+        </div>
+      </div>
+    );
+  }
 
   const membershipBannerImage = getMembershipBanner();
 
@@ -426,41 +417,11 @@ const performSearch = async (searchFilters) => {
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
         minHeight: '100vh',
-        // Add overlay to maintain readability
         position: 'relative'
       }}
     >
-      {/* Subtle overlay for better content readability */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.04) 100%)',
-          zIndex: 0
-        }}
-      ></div>
-      {/* Animated Background Blobs - Membership-based colors (reduced opacity for banner visibility) */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
-        <div 
-          className="absolute top-20 left-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob"
-          style={{ backgroundColor: colors.blob1 || '#9CA3AF' }}
-        ></div>
-        <div 
-          className="absolute top-20 right-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"
-          style={{ backgroundColor: colors.blob2 || '#6B7280' }}
-        ></div>
-        <div 
-          className="absolute bottom-20 left-1/2 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"
-          style={{ backgroundColor: colors.blob3 || '#4B5563' }}
-        ></div>
-      </div>
-      
-      {/* Theme Decorations - Sparkles, Coins, Diamonds */}
-      <div style={{ position: 'relative', zIndex: 2 }}>
-        <ThemeDecorations membershipType={membershipType} colors={colors} />
-      </div>
-      
-      {/* Banner Section - Has its own background */}
-      <div className="relative" style={{ zIndex: 3 }}>
+      {/* Banner Section */}
+      <div className="relative" style={{ zIndex: 1 }}>
         <Banner
           // images={ProfileBannerImages}
           texts={ProfileBannerTexts}
@@ -471,7 +432,46 @@ const performSearch = async (searchFilters) => {
       
       {/* CategoryNav - Has its own background */}
       <div className="relative" style={{ zIndex: 3 }}>
-        <CategoryNav />
+        <CategoryNav 
+          onSelect={(selectedCategory) => {
+            console.log("🏷️ CategoryNav selected:", selectedCategory);
+            if (selectedCategory) {
+              // Update filters to filter by caste (communities are castes)
+              const updatedFilters = {
+                ...filters,
+                caste: selectedCategory,
+                subCaste: selectedCategory, // Set subCaste same as caste for backward compatibility
+              };
+              console.log("🔄 Updating filters with category:", updatedFilters);
+              setFilters(updatedFilters);
+              
+              // Trigger search with the new filter
+              performSearch(updatedFilters);
+            } else {
+              // Clear caste filter when deselected
+              const updatedFilters = { ...filters };
+              delete updatedFilters.caste;
+              delete updatedFilters.subCaste;
+              console.log("🔄 Clearing category filter:", updatedFilters);
+              setFilters(updatedFilters);
+              
+              // If no other filters, show all profiles, otherwise search with remaining filters
+              const hasOtherFilters = Object.keys(updatedFilters).some(
+                key => key !== 'caste' && key !== 'subCaste' && 
+                updatedFilters[key] !== "" && updatedFilters[key] !== null && updatedFilters[key] !== undefined
+              );
+              
+              if (hasOtherFilters) {
+                performSearch(updatedFilters);
+              } else {
+                // No filters, show all profiles
+                setSearchResults(null);
+                fetchAllProfiles(0, pagination.size);
+              }
+            }
+          }}
+          profileCounts={{}}
+        />
       </div>
       
       {/* Main Content Area - Theme background visible here */}

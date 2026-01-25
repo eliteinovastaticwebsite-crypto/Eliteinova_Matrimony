@@ -14,8 +14,11 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import ProfileService from '../../services/profileService';
-import ThemeDecorations from './ThemeDecorations';
 import MembershipBanner from './MembershipBanner';
+// Import membership banner images
+import silverBanner from '../../assets/membershipBanner/silver.png';
+import goldBanner from '../../assets/membershipBanner/gold.png';
+import diamondBanner from '../../assets/membershipBanner/diamond.png';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -174,30 +177,34 @@ const Dashboard = () => {
     );
   }
 
+  // Get membership banner image based on membership type
+  const getMembershipBanner = () => {
+    const normalizedType = membershipType?.toUpperCase() || user?.membership?.toUpperCase() || user?.membershipType?.toUpperCase() || 'SILVER';
+    switch (normalizedType) {
+      case 'GOLD':
+        return goldBanner;
+      case 'DIAMOND':
+        return diamondBanner;
+      case 'SILVER':
+      default:
+        return silverBanner;
+    }
+  };
+
+  const membershipBannerImage = getMembershipBanner();
+
   return (
     <div 
       className="min-h-screen relative overflow-hidden"
-      style={{ background: colors.bgGradientStyle }}
+      style={{ 
+        backgroundImage: `url(${membershipBannerImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        minHeight: '100vh'
+      }}
     >
-      {/* Animated Background Blobs - Membership-based colors */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div 
-          className="absolute top-10 left-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob"
-          style={{ backgroundColor: colors.blob1 }}
-        ></div>
-        <div 
-          className="absolute top-10 right-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"
-          style={{ backgroundColor: colors.blob2 }}
-        ></div>
-        <div 
-          className="absolute bottom-10 left-1/2 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"
-          style={{ backgroundColor: colors.blob3 }}
-        ></div>
-      </div>
-      
-      {/* Theme Decorations - Sparkles, Coins, Diamonds */}
-      <ThemeDecorations membershipType={membershipType} colors={colors} />
-
       {/* Membership Banner */}
       <div className="container mx-auto px-4 pt-8 relative z-10">
         <MembershipBanner 
@@ -221,8 +228,12 @@ const Dashboard = () => {
             <nav className="hidden md:block">
               <ul className="flex space-x-8">
                 <li>
-                  <Link to="/dashboard" className="text-yellow-300 font-semibold border-b-2 border-yellow-300 pb-1">
+                  {/* ❌ OLD: Dashboard link - commented out, dashboard removed */}
+                  {/* <Link to="/dashboard" className="text-yellow-300 font-semibold border-b-2 border-yellow-300 pb-1">
                     Dashboard
+                  </Link> */}
+                  <Link to="/profiles" className="text-yellow-300 font-semibold border-b-2 border-yellow-300 pb-1">
+                    View All Profiles
                   </Link>
                 </li>
                 <li>

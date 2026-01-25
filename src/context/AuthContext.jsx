@@ -1,5 +1,5 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import AuthService from '../services/authService';
 import ProfileService from '../services/profileService';
 import api from '../api/axiosUser'; // Remove testBackendConnection import
@@ -19,6 +19,20 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Define logout function early so it can be used in useEffect
+  // Use useCallback to ensure stable reference and avoid closure issues
+  const logout = useCallback(() => {
+    setUser((currentUser) => {
+      console.log('👋 Logging out user:', currentUser?.name);
+      return null;
+    });
+    setIsAuthenticated(false);
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    delete api.defaults.headers.common['Authorization'];
+    console.log('✅ Logout complete');
+  }, []); // Empty deps since we use functional updates
 
   // Check for stored auth on mount
   useEffect(() => {
@@ -74,7 +88,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [logout]); // Include logout in dependencies
 
   // Check if user is admin
   const isAdmin = () => {
@@ -119,6 +133,9 @@ export const AuthProvider = ({ children }) => {
       console.log('✅ User logged in:', userData.name);
       console.log('✅ User membership stored:', userData.membership || userData.membershipType || 'NOT FOUND');
       
+      // Reset loading state after successful login
+      setLoading(false);
+      
       // ✅ CORRECT: Return success based on actual backend response
       return {
         success: true,  // This was incorrectly set to false!
@@ -136,13 +153,47 @@ export const AuthProvider = ({ children }) => {
       };
     }
   } catch (error) {
-    console.error('❌ Login error:', error);
-    return {
-      success: false,
-      error: error.message || 'Login failed. Please check your credentials and try again.'
-    };
-  } finally {
+    console.error('❌ Login error in AuthContext:', error);
+    console.error('❌ Error response data:', error.response?.data);
+    console.error('❌ Error message:', error.message);
+    console.error('❌ Error error property:', error.error);
+    
+    // Extract better error messages from backend
+    // Backend returns: { success: false, error: "message" } for 400 errors
+    let errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+    
+    // Priority 1: Check if error has .error property (set by AuthService)
+    if (error.error) {
+      errorMessage = error.error;
+      console.log('✅ AuthContext: Using error.error:', errorMessage);
+    }
+    // Priority 2: Check response data directly
+    else if (error.response?.data) {
+      const backendError = error.response.data;
+      // Backend returns error in 'error' field for 400 responses: {success: false, error: "..."}
+      if (backendError.error) {
+        errorMessage = backendError.error;
+        console.log('✅ AuthContext: Using response.data.error:', errorMessage);
+      } else if (backendError.message) {
+        errorMessage = backendError.message;
+        console.log('✅ AuthContext: Using response.data.message:', errorMessage);
+      }
+    }
+    // Priority 3: Use error.message
+    else if (error.message) {
+      errorMessage = error.message;
+      console.log('✅ AuthContext: Using error.message:', errorMessage);
+    }
+    
     setLoading(false);
+    
+    // Throw error with both message and error property for LoginForm to catch
+    const loginError = new Error(errorMessage);
+    loginError.error = errorMessage; // Ensure error property is set
+    loginError.message = errorMessage; // Ensure message is set
+    loginError.response = error.response; // Preserve original response
+    console.log('✅ AuthContext: Throwing error with message:', errorMessage);
+    throw loginError;
   }
 };
 
@@ -357,16 +408,7 @@ const uploadPendingFiles = async (userId, token) => {
     }
   };
 
-  // Enhanced logout function
-  const logout = () => {
-    console.log('👋 Logging out user:', user?.name);
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
-    delete api.defaults.headers.common['Authorization'];
-    console.log('✅ User logged out successfully');
-  };
+  // logout function is already defined above (before useEffect)
 
   // Refresh user data
   const refreshUser = async () => {

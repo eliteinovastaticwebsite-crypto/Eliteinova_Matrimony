@@ -907,7 +907,7 @@ const removePhoto = async (index) => {
               <ul className="flex space-x-8">
                 <li>
                   <Link
-                    to="/dashboard"
+                    to="/profiles"
                     className="hover:text-yellow-300 transition font-medium"
                   >
                     Dashboard

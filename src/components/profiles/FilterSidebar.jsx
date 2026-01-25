@@ -525,7 +525,7 @@ export default function FilterSidebar({
   };
 
   // Determine available options based on selected community
-  const availableCastes = filters.community ? (communityCasteData[filters.community] || []) : [];
+  const availableCastes = filters.community && filters.community !== "Other" ? (communityCasteData[filters.community] || []) : [];
   const districtOptions = districtsByState[filters.state] || [];
   
   // Filter states by region if region is selected
@@ -624,6 +624,11 @@ export default function FilterSidebar({
               const newFilters = { ...filters, community: e.target.value };
               delete newFilters.caste;
               delete newFilters.subCaste;
+              delete newFilters.casteOther;
+              delete newFilters.communityOther;
+              if (e.target.value !== "Other") {
+                delete newFilters.communityOther;
+              }
               onFilterChange(newFilters);
             }}
             options={[
@@ -632,41 +637,61 @@ export default function FilterSidebar({
                 value: c.value || c,
                 label: c.label || c,
               })),
+              { value: "Other", label: "Other" },
             ]}
             theme={currentTheme}
             disabled={categoriesLoading}
           />
+          {filters.community === "Other" && (
+            <Input
+              placeholder="Please specify community category"
+              value={filters.communityOther || ""}
+              onChange={(e) => handleOtherChange("community", e.target.value)}
+              theme={currentTheme}
+            />
+          )}
 
           {/* Caste/Subcaste Filter - shown when community is selected */}
           {filters.community && (
             <>
-              <CustomSelect
-                value={filters.caste || ""}
-                onChange={(e) => {
-                  const newFilters = { ...filters, caste: e.target.value };
-                  // Set subCaste same as caste for backward compatibility
-                  newFilters.subCaste = e.target.value;
-                  if (e.target.value !== "Others") {
-                    delete newFilters.casteOther;
-                  }
-                  onFilterChange(newFilters);
-                }}
-                options={[
-                  { value: "", label: "Select Caste/Subcaste" },
-                  ...availableCastes.map((c) => ({
-                    value: c,
-                    label: c,
-                  })),
-                ]}
-                theme={currentTheme}
-              />
-              {filters.caste === "Others" && (
+              {filters.community === "Other" ? (
                 <Input
                   placeholder="Please specify caste/subcaste"
                   value={filters.casteOther || ""}
                   onChange={(e) => handleOtherChange("caste", e.target.value)}
                   theme={currentTheme}
                 />
+              ) : (
+                <>
+                  <CustomSelect
+                    value={filters.caste || ""}
+                    onChange={(e) => {
+                      const newFilters = { ...filters, caste: e.target.value };
+                      // Set subCaste same as caste for backward compatibility
+                      newFilters.subCaste = e.target.value;
+                      if (e.target.value !== "Others") {
+                        delete newFilters.casteOther;
+                      }
+                      onFilterChange(newFilters);
+                    }}
+                    options={[
+                      { value: "", label: "Select Caste/Subcaste" },
+                      ...availableCastes.map((c) => ({
+                        value: c,
+                        label: c,
+                      })),
+                    ]}
+                    theme={currentTheme}
+                  />
+                  {filters.caste === "Others" && (
+                    <Input
+                      placeholder="Please specify caste/subcaste"
+                      value={filters.casteOther || ""}
+                      onChange={(e) => handleOtherChange("caste", e.target.value)}
+                      theme={currentTheme}
+                    />
+                  )}
+                </>
               )}
             </>
           )}
@@ -931,6 +956,11 @@ export default function FilterSidebar({
             />
           ) : null}
         </FilterBox>
+
+        {/* FEEDBACK & SUGGESTIONS */}
+        <FilterBox title="Feedback & Suggestions" theme={currentTheme}>
+          <FeedbackForm theme={currentTheme} />
+        </FilterBox>
       </div>
     </aside>
   );
@@ -947,6 +977,100 @@ function FilterBox({ title, children, theme }) {
       </h3>
       <div className="space-y-3">{children}</div>
     </div>
+  );
+}
+
+/* 🔹 Feedback Form Component */
+function FeedbackForm({ theme }) {
+  const [feedback, setFeedback] = useState("");
+  const [suggestions, setSuggestions] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate that at least one field is filled
+    if (!feedback.trim() && !suggestions.trim()) {
+      setSubmitMessage("Please provide at least feedback or suggestions");
+      setTimeout(() => setSubmitMessage(""), 3000);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitMessage("");
+
+    try {
+      const result = await profileService.submitFeedback(feedback, suggestions);
+      
+      if (result.success) {
+        setSubmitMessage("Thank you for your feedback! We appreciate your input.");
+        setFeedback("");
+        setSuggestions("");
+        setTimeout(() => setSubmitMessage(""), 5000);
+      } else {
+        setSubmitMessage(result.error || "Failed to submit feedback. Please try again.");
+        setTimeout(() => setSubmitMessage(""), 5000);
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      setSubmitMessage(error.message || "Failed to submit feedback. Please try again.");
+      setTimeout(() => setSubmitMessage(""), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Feedback
+        </label>
+        <textarea
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+          placeholder="Share your feedback..."
+          rows={4}
+          className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all placeholder-gray-400 resize-none`}
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Suggestions
+        </label>
+        <textarea
+          value={suggestions}
+          onChange={(e) => setSuggestions(e.target.value)}
+          placeholder="Share your suggestions..."
+          rows={4}
+          className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all placeholder-gray-400 resize-none`}
+        />
+      </div>
+
+      {submitMessage && (
+        <div className={`text-sm p-2 rounded ${
+          submitMessage.includes("Thank you") 
+            ? "bg-green-100 text-green-700" 
+            : "bg-red-100 text-red-700"
+        }`}>
+          {submitMessage}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
+          isSubmitting
+            ? "bg-gray-400 cursor-not-allowed text-white"
+            : `bg-gradient-to-r ${theme.primary === "#6B7280" ? "from-gray-600 to-gray-700" : theme.primary === "#D97706" ? "from-amber-600 to-amber-700" : theme.primary === "#0EA5E9" ? "from-blue-600 to-blue-700" : "from-pink-600 to-pink-700"} text-white hover:opacity-90`
+        }`}
+      >
+        {isSubmitting ? "Submitting..." : "Submit Feedback"}
+      </button>
+    </form>
   );
 }
 
