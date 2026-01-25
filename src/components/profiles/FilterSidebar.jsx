@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { RotateCcw, SlidersHorizontal } from "lucide-react";
 import Select from "react-select";
-import profileService from "../../services/ProfileService";
+import profileService from "../../services/ProfileService.js";
 
 // Theme configurations for FilterSidebar
 const filterThemes = {
