@@ -48,8 +48,8 @@ function UserManagement() {
     const params = {
       page: currentPage,
       size: pageSize,
-      ...(filters.status && filters.status !== "ALL" && { status: filters.status }),
-      ...(filters.membership && filters.membership !== "ALL" && { membership: filters.membership }),
+      status: filters.status,
+      membership: filters.membership,
       ...(filters.search && { search: filters.search }),
     };
 
@@ -62,13 +62,13 @@ function UserManagement() {
     if (response && response.success) {
       // Response has "users" array, not "data" or "content"
       const usersArray = response.users || [];
-      const totalPages = response.totalPages || 1;
+      const totalPagesFromResponse = response.totalPages || 1;
       const totalItems = response.totalItems || usersArray.length;
-      
-      console.log(`📊 Setting ${usersArray.length} users, ${totalPages} pages`);
-      
+
+      console.log(`📊 Setting ${usersArray.length} users, ${totalPagesFromResponse} pages`);
+
       setUsers(usersArray);
-      setTotalPages(totalPages);
+      setTotalPages(totalPagesFromResponse);
       setTotalElements(totalItems);
       
       // Auto-advance to next page if current page is empty and there are more pages
