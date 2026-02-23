@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { RotateCcw, SlidersHorizontal } from "lucide-react";
 import Select from "react-select";
 import profileService from "../../services/profileService";
+import banner1 from "../../assets/banner1.png";
 
 // Theme configurations for FilterSidebar
 const filterThemes = {
@@ -534,445 +535,502 @@ export default function FilterSidebar({
     : indianStates;
 
   return (
-    <aside
-      className={`${currentTheme.background} rounded-2xl shadow-xl ${currentTheme.border} p-5 w-full md:w-80 sticky top-24 max-h-[85vh] overflow-y-auto`}
-    >
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className={currentTheme.icon} size={20} />
-          <h2 className="text-lg font-semibold text-gray-800">
-            Search Filters
-          </h2>
+    <aside className="w-full md:w-80 sticky top-24 max-h-[85vh] overflow-y-auto space-y-4">
+
+      {/* ── Matrimony Registration Card ── */}
+      <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
+        <div className="relative h-44 overflow-hidden">
+          <img
+            src={banner1}
+            alt="Eliteinova Matrimony"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80";
+            }}
+          />
         </div>
-        <button
-          onClick={resetFilters}
-          className={`flex items-center gap-1 text-sm ${currentTheme.button} transition-all`}
-        >
-          <RotateCcw size={16} /> Reset
-        </button>
+        <div className="p-5">
+          <h2
+            className="text-2xl font-bold text-red-600 mb-1 text-center"
+            style={{ fontFamily: "'Pacifico', cursive" }}
+          >
+            Eliteinova Matrimonial Services
+          </h2>
+          <h3
+            className="text-lg font text-yellow-500 mb-4 text-center"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Your Complete Wedding Partner
+          </h3>
+          <a
+            href="https://matrimonial-services.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-4 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md hover:shadow-lg text-base flex items-center justify-center"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+              />
+            </svg>
+            Register Now
+          </a>
+          <p
+            className="text-gray-500 text-xs text-center mt-3"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Redirects to eliteinovamatrimonialservices.com
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-5">
-        {/* PERSONAL DETAILS */}
-        <FilterBox title="Personal Details" theme={currentTheme}>
-          {/* <Select
-            value={filters.gender || ""}
-            onChange={(e) => handleChange("gender", e.target.value)}
-            options={[
-              { value: "", label: "Looking for" },
-              { value: "Male", label: "Groom" },
-              { value: "Female", label: "Bride" },
-            ]}
-            theme={currentTheme}
-          /> */}
-
-          <div className="flex gap-2">
-            <Input
-              type="number"
-              placeholder="Min Age"
-              value={filters.minAge || ""}
-              onChange={(e) => handleChange("minAge", e.target.value)}
-              min="18"
-              max="80"
-              theme={currentTheme}
-            />
-            <Input
-              type="number"
-              placeholder="Max Age"
-              value={filters.maxAge || ""}
-              onChange={(e) => handleChange("maxAge", e.target.value)}
-              min="18"
-              max="80"
-              theme={currentTheme}
-            />
+      {/* ── Filter Panel ── */}
+      <div className="bg-white rounded-lg shadow-lg border border-red-200 p-5">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="text-red-500" size={20} />
+            <h2
+              className="text-lg font-semibold text-gray-800"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Search Filters
+            </h2>
           </div>
+          <button
+            onClick={resetFilters}
+            className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 transition-all"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            <RotateCcw size={16} /> Reset
+          </button>
+        </div>
 
-          <CustomSelect
-            value={filters.religion || ""}
-            onChange={(e) => {
-              const newFilters = { ...filters, religion: e.target.value };
-              // Don't clear community/caste when religion changes
-              if (e.target.value !== "Other") {
-                delete newFilters.religionOther;
-              }
-              onFilterChange(newFilters);
-            }}
-            options={[
-              { value: "", label: "Select Religion" },
-              { value: "Hindu", label: "Hindu" },
-              { value: "Muslim", label: "Muslim" },
-              { value: "Christian", label: "Christian" },
-              { value: "Sikh", label: "Sikh" },
-              { value: "Jain", label: "Jain" },
-              { value: "Other", label: "Other" },
-            ]}
-            theme={currentTheme}
-          />
-          {filters.religion === "Other" && (
-            <Input
-              placeholder="Please specify religion"
-              value={filters.religionOther || ""}
-              onChange={(e) => handleOtherChange("religion", e.target.value)}
+        <div className="space-y-5">
+          {/* PERSONAL DETAILS */}
+          <FilterBox title="Personal Details">
+            {/* <Select
+              value={filters.gender || ""}
+              onChange={(e) => handleChange("gender", e.target.value)}
+              options={[
+                { value: "", label: "Looking for" },
+                { value: "Male", label: "Groom" },
+                { value: "Female", label: "Bride" },
+              ]}
               theme={currentTheme}
-            />
-          )}
+            /> */}
 
-          {/* Community Category Filter (Tamil Nadu Government Categories) */}
-          <CustomSelect
-            value={filters.community || ""}
-            onChange={(e) => {
-              const newFilters = { ...filters, community: e.target.value };
-              delete newFilters.caste;
-              delete newFilters.subCaste;
-              delete newFilters.casteOther;
-              delete newFilters.communityOther;
-              if (e.target.value !== "Other") {
-                delete newFilters.communityOther;
-              }
-              onFilterChange(newFilters);
-            }}
-            options={[
-              { value: "", label: categoriesLoading ? "Loading..." : "Select Community Category" },
-              ...availableCategories.map((c) => ({
-                value: c.value || c,
-                label: c.label || c,
-              })),
-              { value: "Other", label: "Other" },
-            ]}
-            theme={currentTheme}
-            disabled={categoriesLoading}
-          />
-          {filters.community === "Other" && (
-            <Input
-              placeholder="Please specify community category"
-              value={filters.communityOther || ""}
-              onChange={(e) => handleOtherChange("community", e.target.value)}
-              theme={currentTheme}
-            />
-          )}
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                placeholder="Min Age"
+                value={filters.minAge || ""}
+                onChange={(e) => handleChange("minAge", e.target.value)}
+                min="18"
+                max="80"
+              />
+              <Input
+                type="number"
+                placeholder="Max Age"
+                value={filters.maxAge || ""}
+                onChange={(e) => handleChange("maxAge", e.target.value)}
+                min="18"
+                max="80"
+              />
+            </div>
 
-          {/* Caste/Subcaste Filter - shown when community is selected */}
-          {filters.community && (
-            <>
-              {filters.community === "Other" ? (
-                <Input
-                  placeholder="Please specify caste/subcaste"
-                  value={filters.casteOther || ""}
-                  onChange={(e) => handleOtherChange("caste", e.target.value)}
-                  theme={currentTheme}
-                />
-              ) : (
-                <>
-                  <CustomSelect
-                    value={filters.caste || ""}
-                    onChange={(e) => {
-                      const newFilters = { ...filters, caste: e.target.value };
-                      // Set subCaste same as caste for backward compatibility
-                      newFilters.subCaste = e.target.value;
-                      if (e.target.value !== "Others") {
-                        delete newFilters.casteOther;
-                      }
-                      onFilterChange(newFilters);
-                    }}
-                    options={[
-                      { value: "", label: "Select Caste/Subcaste" },
-                      ...availableCastes.map((c) => ({
-                        value: c,
-                        label: c,
-                      })),
-                    ]}
-                    theme={currentTheme}
-                  />
-                  {filters.caste === "Others" && (
-                    <Input
-                      placeholder="Please specify caste/subcaste"
-                      value={filters.casteOther || ""}
-                      onChange={(e) => handleOtherChange("caste", e.target.value)}
-                      theme={currentTheme}
-                    />
-                  )}
-                </>
-              )}
-            </>
-          )}
-          <CustomSelect
-            value={filters.dosham || ""}
-            onChange={(e) => handleChange("dosham", e.target.value)}
-            options={[
-              { value: "", label: "Dosham" },
-              { value: "Yes", label: "Yes" },
-              { value: "No", label: "No" },
-              { value: "Doesn't Matter", label: "Doesn't Matter" },
-            ]}
-            theme={currentTheme}
-          />
-
-          <CustomSelect
-            value={filters.maritalStatus || ""}
-            onChange={(e) => handleChange("maritalStatus", e.target.value)}
-            options={[
-              { value: "", label: "Marital Status" },
-              { value: "Never Married", label: "Never Married" },
-              { value: "Divorced", label: "Divorced" },
-              { value: "Widowed", label: "Widowed" },
-              { value: "Separated", label: "Separated" },
-            ]}
-            theme={currentTheme}
-          />
-
-          <CustomSelect
-            value={filters.physicallyChallenged || ""}
-            onChange={(e) => handleChange("physicallyChallenged", e.target.value)}
-            options={[
-              { value: "", label: "Physically Challenged" },
-              { value: "Yes", label: "Yes" },
-              { value: "No", label: "No" },
-            ]}
-            theme={currentTheme}
-          />
-        </FilterBox>
-
-        {/* PROFESSIONAL DETAILS */}
-        <FilterBox title="Professional Details" theme={currentTheme}>
-          <CustomSelect
-            value={filters.education || ""}
-            onChange={(e) => handleChange("education", e.target.value)}
-            options={[
-              { value: "", label: "Select Education" },
-              { value: "High School", label: "High School" },
-              { value: "Diploma", label: "Diploma" },
-              { value: "Bachelor's", label: "Bachelor's" },
-              { value: "Master's", label: "Master's" },
-              { value: "PhD", label: "PhD" },
-              { value: "Vocational / ITI", label: "Vocational / ITI" },
-              { value: "Other", label: "Other" },
-            ]}
-            theme={currentTheme}
-          />
-          {filters.education === "Other" && (
-            <Input
-              placeholder="Please specify education"
-              value={filters.educationOther || ""}
-              onChange={(e) => handleOtherChange("education", e.target.value)}
-              theme={currentTheme}
-            />
-          )}
-
-          <CustomSelect
-            value={filters.educationalQualification || ""}
-            onChange={(e) => handleChange("educationalQualification", e.target.value)}
-            options={[
-              { value: "", label: "Educational Qualification" },
-              { value: "10th Pass", label: "10th Pass" },
-              { value: "12th Pass", label: "12th Pass" },
-              { value: "Diploma", label: "Diploma" },
-              { value: "Bachelor's Degree", label: "Bachelor's Degree" },
-              { value: "Master's Degree", label: "Master's Degree" },
-              { value: "M.Phil", label: "M.Phil" },
-              { value: "PhD", label: "PhD" },
-              { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
-              { value: "Engineering", label: "Engineering" },
-              { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
-              { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
-              { value: "Other", label: "Other" },
-            ]}
-            theme={currentTheme}
-          />
-          {filters.educationalQualification === "Other" && (
-            <Input
-              placeholder="Please specify educational qualification"
-              value={filters.educationalQualificationOther || ""}
-              onChange={(e) => handleOtherChange("educationalQualification", e.target.value)}
-              theme={currentTheme}
-            />
-          )}
-
-          <Input
-            placeholder="Certificate Courses"
-            value={filters.certificateCourses || ""}
-            onChange={(e) => handleChange("certificateCourses", e.target.value)}
-            theme={currentTheme}
-          />
-
-          <Select
-            value={professionOptions.find(
-              (p) => p.value === filters.occupation
-            )}
-            onChange={(selected) => {
-              const value = selected?.value || "";
-              const newFilters = { ...filters, occupation: value };
-              if (value !== "Other") {
-                delete newFilters.occupationOther;
-              }
-              onFilterChange(newFilters);
-            }}
-            isSearchable={true}
-            options={professionOptions}
-            theme={currentTheme}
-          />
-          {filters.occupation === "Other" && (
-            <Input
-              placeholder="Please specify occupation"
-              value={filters.occupationOther || ""}
-              onChange={(e) => handleOtherChange("occupation", e.target.value)}
-              theme={currentTheme}
-            />
-          )}
-
-          <CustomSelect
-            value={filters.employedIn || ""}
-            onChange={(e) => handleChange("employedIn", e.target.value)}
-            options={[
-              { value: "", label: "Employed In" },
-              { value: "Private", label: "Private" },
-              { value: "Government", label: "Government" },
-              { value: "Business", label: "Business" },
-              { value: "Self Employed", label: "Self Employed" },
-              { value: "Not Working", label: "Not Working" },
-            ]}
-            theme={currentTheme}
-          />
-
-          <CustomSelect
-            value={filters.annualIncome || ""}
-            onChange={(e) => handleChange("annualIncome", e.target.value)}
-            options={getAnnualIncomeOptions(membershipType)}
-            theme={currentTheme}
-          />
-        </FilterBox>
-
-        {/* LOCATION DETAILS */}
-        <FilterBox title="Location" theme={currentTheme}>
-          <CustomSelect
-            value={filters.country || "India"}
-            onChange={(e) => {
-              const newFilters = { ...filters, country: e.target.value };
-              if (e.target.value !== "India") {
-                delete newFilters.state;
-                delete newFilters.district;
-              }
-              if (e.target.value !== "Other") {
-                delete newFilters.countryOther;
-              }
-              onFilterChange(newFilters);
-            }}
-            options={[
-              // South Asia
-              { value: "India", label: "India" },
-              { value: "Sri Lanka", label: "Sri Lanka" },
-              
-              // Southeast Asia
-              { value: "Malaysia", label: "Malaysia" },
-              { value: "Singapore", label: "Singapore" },
-              { value: "Indonesia", label: "Indonesia" },
-              { value: "Myanmar", label: "Myanmar" },
-              { value: "Thailand", label: "Thailand" },
-              
-              // Middle East
-              { value: "United Arab Emirates", label: "United Arab Emirates (UAE)" },
-              { value: "Saudi Arabia", label: "Saudi Arabia" },
-              { value: "Qatar", label: "Qatar" },
-              { value: "Kuwait", label: "Kuwait" },
-              { value: "Oman", label: "Oman" },
-              { value: "Bahrain", label: "Bahrain" },
-              
-              // Africa
-              { value: "South Africa", label: "South Africa" },
-              { value: "Mauritius", label: "Mauritius" },
-              { value: "Réunion", label: "Réunion (France)" },
-              { value: "Kenya", label: "Kenya" },
-              { value: "Tanzania", label: "Tanzania" },
-              { value: "Uganda", label: "Uganda" },
-              
-              // Europe
-              { value: "United Kingdom", label: "United Kingdom" },
-              { value: "France", label: "France" },
-              { value: "Germany", label: "Germany" },
-              { value: "Switzerland", label: "Switzerland" },
-              { value: "Netherlands", label: "Netherlands" },
-              { value: "Norway", label: "Norway" },
-              { value: "Sweden", label: "Sweden" },
-              { value: "Denmark", label: "Denmark" },
-              
-              // North America
-              { value: "Canada", label: "Canada" },
-              { value: "United States", label: "United States" },
-              
-              // Oceania
-              { value: "Australia", label: "Australia" },
-              { value: "New Zealand", label: "New Zealand" },
-              
-              // Caribbean & South America
-              { value: "Guyana", label: "Guyana" },
-              { value: "Suriname", label: "Suriname" },
-              { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
-              { value: "Fiji", label: "Fiji" },
-              
-              { value: "Other", label: "Other" },
-            ]}
-            theme={currentTheme}
-          />
-          {filters.country === "Other" && (
-            <Input
-              placeholder="Please specify country"
-              value={filters.countryOther || ""}
-              onChange={(e) => handleOtherChange("country", e.target.value)}
-              theme={currentTheme}
-            />
-          )}
-
-          {(filters.country === "India" || !filters.country) && (
             <CustomSelect
-              value={filters.state || ""}
+              value={filters.religion || ""}
               onChange={(e) => {
-                const newFilters = { ...filters, state: e.target.value };
-                delete newFilters.district;
+                const newFilters = { ...filters, religion: e.target.value };
+                // Don't clear community/caste when religion changes
+                if (e.target.value !== "Other") {
+                  delete newFilters.religionOther;
+                }
                 onFilterChange(newFilters);
               }}
               options={[
-                { value: "", label: filters.region ? `Select State (${filters.region})` : "Select State" },
-                ...availableStates.map((s) => ({ value: s, label: s })),
+                { value: "", label: "Select Religion" },
+                { value: "Hindu", label: "Hindu" },
+                { value: "Muslim", label: "Muslim" },
+                { value: "Christian", label: "Christian" },
+                { value: "Sikh", label: "Sikh" },
+                { value: "Jain", label: "Jain" },
+                { value: "Other", label: "Other" },
               ]}
-              theme={currentTheme}
             />
-          )}
+            {filters.religion === "Other" && (
+              <Input
+                placeholder="Please specify religion"
+                value={filters.religionOther || ""}
+                onChange={(e) => handleOtherChange("religion", e.target.value)}
+              />
+            )}
 
-          {filters.state && districtOptions.length > 0 ? (
+            {/* Community Category Filter (Tamil Nadu Government Categories) */}
             <CustomSelect
-              value={filters.district || ""}
-              onChange={(e) => handleChange("district", e.target.value)}
+              value={filters.community || ""}
+              onChange={(e) => {
+                const newFilters = { ...filters, community: e.target.value };
+                delete newFilters.caste;
+                delete newFilters.subCaste;
+                delete newFilters.casteOther;
+                delete newFilters.communityOther;
+                if (e.target.value !== "Other") {
+                  delete newFilters.communityOther;
+                }
+                onFilterChange(newFilters);
+              }}
               options={[
-                { value: "", label: "Select District" },
-                ...districtOptions.map((d) => ({ value: d, label: d })),
+                { value: "", label: categoriesLoading ? "Loading..." : "Select Community Category" },
+                ...availableCategories.map((c) => ({
+                  value: c.value || c,
+                  label: c.label || c,
+                })),
+                { value: "Other", label: "Other" },
               ]}
-              theme={currentTheme}
+              disabled={categoriesLoading}
             />
-          ) : filters.state ? (
-            <Input
-              placeholder="District (type)"
-              value={filters.district || ""}
-              onChange={(e) => handleChange("district", e.target.value)}
-              theme={currentTheme}
-            />
-          ) : null}
-        </FilterBox>
+            {filters.community === "Other" && (
+              <Input
+                placeholder="Please specify community category"
+                value={filters.communityOther || ""}
+                onChange={(e) => handleOtherChange("community", e.target.value)}
+              />
+            )}
 
-        {/* FEEDBACK & SUGGESTIONS */}
-        <FilterBox title="Feedback & Suggestions" theme={currentTheme}>
-          <FeedbackForm theme={currentTheme} />
-        </FilterBox>
+            {/* Caste/Subcaste Filter - shown when community is selected */}
+            {filters.community && (
+              <>
+                {filters.community === "Other" ? (
+                  <Input
+                    placeholder="Please specify caste/subcaste"
+                    value={filters.casteOther || ""}
+                    onChange={(e) => handleOtherChange("caste", e.target.value)}
+                  />
+                ) : (
+                  <>
+                    <CustomSelect
+                      value={filters.caste || ""}
+                      onChange={(e) => {
+                        const newFilters = { ...filters, caste: e.target.value };
+                        // Set subCaste same as caste for backward compatibility
+                        newFilters.subCaste = e.target.value;
+                        if (e.target.value !== "Others") {
+                          delete newFilters.casteOther;
+                        }
+                        onFilterChange(newFilters);
+                      }}
+                      options={[
+                        { value: "", label: "Select Caste/Subcaste" },
+                        ...availableCastes.map((c) => ({
+                          value: c,
+                          label: c,
+                        })),
+                      ]}
+                    />
+                    {filters.caste === "Others" && (
+                      <Input
+                        placeholder="Please specify caste/subcaste"
+                        value={filters.casteOther || ""}
+                        onChange={(e) => handleOtherChange("caste", e.target.value)}
+                      />
+                    )}
+                  </>
+                )}
+              </>
+            )}
+            <CustomSelect
+              value={filters.dosham || ""}
+              onChange={(e) => handleChange("dosham", e.target.value)}
+              options={[
+                { value: "", label: "Dosham" },
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+                { value: "Doesn't Matter", label: "Doesn't Matter" },
+              ]}
+            />
+
+            <CustomSelect
+              value={filters.maritalStatus || ""}
+              onChange={(e) => handleChange("maritalStatus", e.target.value)}
+              options={[
+                { value: "", label: "Marital Status" },
+                { value: "Never Married", label: "Never Married" },
+                { value: "Divorced", label: "Divorced" },
+                { value: "Widowed", label: "Widowed" },
+                { value: "Separated", label: "Separated" },
+              ]}
+            />
+
+            <CustomSelect
+              value={filters.physicallyChallenged || ""}
+              onChange={(e) => handleChange("physicallyChallenged", e.target.value)}
+              options={[
+                { value: "", label: "Physically Challenged" },
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+            />
+          </FilterBox>
+
+          {/* PROFESSIONAL DETAILS */}
+          <FilterBox title="Professional Details">
+            <CustomSelect
+              value={filters.education || ""}
+              onChange={(e) => handleChange("education", e.target.value)}
+              options={[
+                { value: "", label: "Select Education" },
+                { value: "High School", label: "High School" },
+                { value: "Diploma", label: "Diploma" },
+                { value: "Bachelor's", label: "Bachelor's" },
+                { value: "Master's", label: "Master's" },
+                { value: "PhD", label: "PhD" },
+                { value: "Vocational / ITI", label: "Vocational / ITI" },
+                { value: "Other", label: "Other" },
+              ]}
+            />
+            {filters.education === "Other" && (
+              <Input
+                placeholder="Please specify education"
+                value={filters.educationOther || ""}
+                onChange={(e) => handleOtherChange("education", e.target.value)}
+              />
+            )}
+
+            <CustomSelect
+              value={filters.educationalQualification || ""}
+              onChange={(e) => handleChange("educationalQualification", e.target.value)}
+              options={[
+                { value: "", label: "Educational Qualification" },
+                { value: "10th Pass", label: "10th Pass" },
+                { value: "12th Pass", label: "12th Pass" },
+                { value: "Diploma", label: "Diploma" },
+                { value: "Bachelor's Degree", label: "Bachelor's Degree" },
+                { value: "Master's Degree", label: "Master's Degree" },
+                { value: "M.Phil", label: "M.Phil" },
+                { value: "PhD", label: "PhD" },
+                { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
+                { value: "Engineering", label: "Engineering" },
+                { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
+                { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
+                { value: "Other", label: "Other" },
+              ]}
+            />
+            {filters.educationalQualification === "Other" && (
+              <Input
+                placeholder="Please specify educational qualification"
+                value={filters.educationalQualificationOther || ""}
+                onChange={(e) => handleOtherChange("educationalQualification", e.target.value)}
+              />
+            )}
+
+            <Input
+              placeholder="Certificate Courses"
+              value={filters.certificateCourses || ""}
+              onChange={(e) => handleChange("certificateCourses", e.target.value)}
+            />
+
+            <Select
+              value={professionOptions.find(
+                (p) => p.value === filters.occupation
+              )}
+              onChange={(selected) => {
+                const value = selected?.value || "";
+                const newFilters = { ...filters, occupation: value };
+                if (value !== "Other") {
+                  delete newFilters.occupationOther;
+                }
+                onFilterChange(newFilters);
+              }}
+              isSearchable={true}
+              options={professionOptions}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#FCA5A5",
+                  borderRadius: "0.5rem",
+                  minHeight: "40px",
+                  boxShadow: "none",
+                  "&:hover": { borderColor: "#EF4444" },
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected
+                    ? "#EF4444"
+                    : state.isFocused
+                    ? "#FEE2E2"
+                    : "white",
+                  color: state.isSelected ? "white" : "#374151",
+                }),
+              }}
+            />
+            {filters.occupation === "Other" && (
+              <Input
+                placeholder="Please specify occupation"
+                value={filters.occupationOther || ""}
+                onChange={(e) => handleOtherChange("occupation", e.target.value)}
+              />
+            )}
+
+            <CustomSelect
+              value={filters.employedIn || ""}
+              onChange={(e) => handleChange("employedIn", e.target.value)}
+              options={[
+                { value: "", label: "Employed In" },
+                { value: "Private", label: "Private" },
+                { value: "Government", label: "Government" },
+                { value: "Business", label: "Business" },
+                { value: "Self Employed", label: "Self Employed" },
+                { value: "Not Working", label: "Not Working" },
+              ]}
+            />
+
+            <CustomSelect
+              value={filters.annualIncome || ""}
+              onChange={(e) => handleChange("annualIncome", e.target.value)}
+              options={getAnnualIncomeOptions(membershipType)}
+            />
+          </FilterBox>
+
+          {/* LOCATION DETAILS */}
+          <FilterBox title="Location">
+            <CustomSelect
+              value={filters.country || "India"}
+              onChange={(e) => {
+                const newFilters = { ...filters, country: e.target.value };
+                if (e.target.value !== "India") {
+                  delete newFilters.state;
+                  delete newFilters.district;
+                }
+                if (e.target.value !== "Other") {
+                  delete newFilters.countryOther;
+                }
+                onFilterChange(newFilters);
+              }}
+              options={[
+                // South Asia
+                { value: "India", label: "India" },
+                { value: "Sri Lanka", label: "Sri Lanka" },
+                
+                // Southeast Asia
+                { value: "Malaysia", label: "Malaysia" },
+                { value: "Singapore", label: "Singapore" },
+                { value: "Indonesia", label: "Indonesia" },
+                { value: "Myanmar", label: "Myanmar" },
+                { value: "Thailand", label: "Thailand" },
+                
+                // Middle East
+                { value: "United Arab Emirates", label: "United Arab Emirates (UAE)" },
+                { value: "Saudi Arabia", label: "Saudi Arabia" },
+                { value: "Qatar", label: "Qatar" },
+                { value: "Kuwait", label: "Kuwait" },
+                { value: "Oman", label: "Oman" },
+                { value: "Bahrain", label: "Bahrain" },
+                
+                // Africa
+                { value: "South Africa", label: "South Africa" },
+                { value: "Mauritius", label: "Mauritius" },
+                { value: "Réunion", label: "Réunion (France)" },
+                { value: "Kenya", label: "Kenya" },
+                { value: "Tanzania", label: "Tanzania" },
+                { value: "Uganda", label: "Uganda" },
+                
+                // Europe
+                { value: "United Kingdom", label: "United Kingdom" },
+                { value: "France", label: "France" },
+                { value: "Germany", label: "Germany" },
+                { value: "Switzerland", label: "Switzerland" },
+                { value: "Netherlands", label: "Netherlands" },
+                { value: "Norway", label: "Norway" },
+                { value: "Sweden", label: "Sweden" },
+                { value: "Denmark", label: "Denmark" },
+                
+                // North America
+                { value: "Canada", label: "Canada" },
+                { value: "United States", label: "United States" },
+                
+                // Oceania
+                { value: "Australia", label: "Australia" },
+                { value: "New Zealand", label: "New Zealand" },
+                
+                // Caribbean & South America
+                { value: "Guyana", label: "Guyana" },
+                { value: "Suriname", label: "Suriname" },
+                { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
+                { value: "Fiji", label: "Fiji" },
+                
+                { value: "Other", label: "Other" },
+              ]}
+            />
+            {filters.country === "Other" && (
+              <Input
+                placeholder="Please specify country"
+                value={filters.countryOther || ""}
+                onChange={(e) => handleOtherChange("country", e.target.value)}
+              />
+            )}
+
+            {(filters.country === "India" || !filters.country) && (
+              <CustomSelect
+                value={filters.state || ""}
+                onChange={(e) => {
+                  const newFilters = { ...filters, state: e.target.value };
+                  delete newFilters.district;
+                  onFilterChange(newFilters);
+                }}
+                options={[
+                  { value: "", label: filters.region ? `Select State (${filters.region})` : "Select State" },
+                  ...availableStates.map((s) => ({ value: s, label: s })),
+                ]}
+              />
+            )}
+
+            {filters.state && districtOptions.length > 0 ? (
+              <CustomSelect
+                value={filters.district || ""}
+                onChange={(e) => handleChange("district", e.target.value)}
+                options={[
+                  { value: "", label: "Select District" },
+                  ...districtOptions.map((d) => ({ value: d, label: d })),
+                ]}
+              />
+            ) : filters.state ? (
+              <Input
+                placeholder="District (type)"
+                value={filters.district || ""}
+                onChange={(e) => handleChange("district", e.target.value)}
+              />
+            ) : null}
+          </FilterBox>
+
+          {/* FEEDBACK & SUGGESTIONS */}
+          <FilterBox title="Feedback & Suggestions">
+            <FeedbackForm />
+          </FilterBox>
+        </div>
       </div>
     </aside>
   );
 }
 
-/* 🔹 Reusable Box Component */
-function FilterBox({ title, children, theme }) {
+/* 🔹 Reusable Box Component — red/gold theme */
+function FilterBox({ title, children }) {
   return (
-    <div
-      className={`${theme.boxBackground} rounded-xl p-4 hover:shadow-md transition-all duration-200`}
-    >
-      <h3 className={`text-md font-semibold ${theme.boxTitle} mb-3`}>
+    <div className="bg-red-50/50 border border-red-100 rounded-xl p-4 hover:shadow-md transition-all duration-200">
+      <h3 className="text-md font-semibold text-red-700 mb-3"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         {title}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -981,7 +1039,7 @@ function FilterBox({ title, children, theme }) {
 }
 
 /* 🔹 Feedback Form Component */
-function FeedbackForm({ theme }) {
+function FeedbackForm() {
   const [feedback, setFeedback] = useState("");
   const [suggestions, setSuggestions] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1032,7 +1090,7 @@ function FeedbackForm({ theme }) {
           onChange={(e) => setFeedback(e.target.value)}
           placeholder="Share your feedback..."
           rows={4}
-          className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all placeholder-gray-400 resize-none`}
+          className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400 resize-none"
         />
       </div>
 
@@ -1045,7 +1103,7 @@ function FeedbackForm({ theme }) {
           onChange={(e) => setSuggestions(e.target.value)}
           placeholder="Share your suggestions..."
           rows={4}
-          className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all placeholder-gray-400 resize-none`}
+          className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400 resize-none"
         />
       </div>
 
@@ -1065,8 +1123,9 @@ function FeedbackForm({ theme }) {
         className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
           isSubmitting
             ? "bg-gray-400 cursor-not-allowed text-white"
-            : `bg-gradient-to-r ${theme.primary === "#6B7280" ? "from-gray-600 to-gray-700" : theme.primary === "#D97706" ? "from-amber-600 to-amber-700" : theme.primary === "#0EA5E9" ? "from-blue-600 to-blue-700" : "from-pink-600 to-pink-700"} text-white hover:opacity-90`
+            : "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 hover:opacity-90 shadow-md hover:shadow-lg"
         }`}
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         {isSubmitting ? "Submitting..." : "Submit Feedback"}
       </button>
@@ -1074,24 +1133,25 @@ function FeedbackForm({ theme }) {
   );
 }
 
-/* 🔹 Styled Input Component */
-function Input({ placeholder, theme, ...props }) {
+/* 🔹 Styled Input Component — red/gold border */
+function Input({ placeholder, ...props }) {
   return (
     <input
       {...props}
-      className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all placeholder-gray-400`}
+      className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400"
       placeholder={placeholder}
     />
   );
 }
 
-/* 🔹 Styled Select Component */
-function CustomSelect({ value, onChange, options, theme }) {
+/* 🔹 Styled Select Component — red/gold border */
+function CustomSelect({ value, onChange, options, disabled }) {
   return (
     <select
       value={value}
       onChange={onChange}
-      className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 ${theme.focus} transition-all`}
+      disabled={disabled}
+      className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all disabled:bg-gray-100 disabled:text-gray-500"
     >
       {options.map((opt) => (
         <option key={String(opt.value)} value={opt.value}>
