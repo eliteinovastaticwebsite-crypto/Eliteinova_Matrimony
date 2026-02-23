@@ -553,7 +553,7 @@ export default function SilverMemberProfiles({ onOpenAuthModal }) {
                 <div>
                   <label className={`block text-sm font-medium ${theme.textPrimary} mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
-                    {["all", "Hindu", "Muslim", "Christian"].map((religion) => (
+                    {[ "Hindu", "Muslim", "Christian"].map((religion) => (
                       <button
                         key={religion}
                         onClick={() => setReligionFilter(religion === "all" ? "all" : religion)}

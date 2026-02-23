@@ -5,7 +5,7 @@ const MobilAppSection = () => {
   return (
     <div
       id="mobileapp-section"
-      className="py-16 text-white relative bg-gradient-to-b from-white to-red-50"
+      className="py-4 text-white relative bg-gradient-to-b from-white to-red-50"
     >
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

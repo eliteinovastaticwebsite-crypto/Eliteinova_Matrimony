@@ -239,18 +239,18 @@ export default function Home({ onOpenAuthModal }) {
                 <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
                   🎉 Launch Special Offer! 🎉
                 </h3>
-                <p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
+                 {/*<p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
                   Free Registration for Launch Offer - All Membership Plans FREE!
-                </p>
+                </p>*/}
                 <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                  <span className="text-white/90 line-through text-sm md:text-base">Silver ₹299</span>
+                  <span className="text-white/90 text-sm md:text-base">Silver ₹299</span>
                   <span className="text-white font-bold">|</span>
-                  <span className="text-white/90 line-through text-sm md:text-base">Gold ₹499</span>
+                  <span className="text-white/90 text-sm md:text-base">Gold ₹499</span>
                   <span className="text-white font-bold">|</span>
-                  <span className="text-white/90 line-through text-sm md:text-base">Diamond ₹749</span>
-                  <span className="bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm md:text-base ml-2">
+                  <span className="text-white/90 text-sm md:text-base">Diamond ₹749</span>
+                 {/*<span className="bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm md:text-base ml-2">
                     NOW FREE! ✨
-                  </span>
+                  </span>*/}
                 </div>
               </div>
               <button
@@ -352,7 +352,7 @@ export default function Home({ onOpenAuthModal }) {
                 </div> */}
               </div>
 
-              {/* Launch Offer Badge */}
+              {/* Launch Offer Badge 
               {!isAuthenticated && (
                 <div className="mb-4 inline-block bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl p-3 shadow-lg relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
@@ -363,7 +363,7 @@ export default function Home({ onOpenAuthModal }) {
                     </span>
                   </div>
                 </div>
-              )}
+              )}*/}
 
               {/* Quick Action Buttons */}
               {!isAuthenticated ? (
@@ -380,13 +380,13 @@ export default function Home({ onOpenAuthModal }) {
                       </div>
                     ) : (
                       <>
-                        <span>Register Now - FREE!</span>
+                        <span>Register Now </span>
                         <span className="text-xl transform group-hover:scale-110 transition-transform">
                           🎯
                         </span>
-                        <div className="absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-bold rounded-bl-lg">
+                        {/*<div className="absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-bold rounded-bl-lg">
                           FREE
-                        </div>
+                        </div>*/}
                       </>
                     )}
                   </button>
@@ -1008,18 +1008,18 @@ export default function Home({ onOpenAuthModal }) {
                   <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
                     🎉 Launch Special Offer! 🎉
                   </h3>
-                  <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
+                 {/* <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
                     Free Registration for Launch Offer
-                  </p>
+                  </p>*/}
                   <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
-                    <span className="text-white/90 line-through">Silver ₹299</span>
+                    <span className="text-white/90">Silver ₹299</span>
                     <span className="text-white font-bold">|</span>
-                    <span className="text-white/90 line-through">Gold ₹499</span>
+                    <span className="text-white/90">Gold ₹499</span>
                     <span className="text-white font-bold">|</span>
-                    <span className="text-white/90 line-through">Diamond ₹749</span>
-                    <span className="bg-green-500 text-white px-4 py-2 rounded-full font-bold">
+                    <span className="text-white/90">Diamond ₹749</span>
+                   {/*<span className="bg-green-500 text-white px-4 py-2 rounded-full font-bold">
                       ALL FREE NOW! ✨
-                    </span>
+                    </span>*/}
                   </div>
                 </div>
               </div>
@@ -1027,10 +1027,10 @@ export default function Home({ onOpenAuthModal }) {
                 onClick={handleRegisterFromCard}
                 className="bg-gradient-to-r from-red-600 to-red-500 text-white px-12 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 relative"
               >
-                Register Now - Claim Your FREE Membership
-                <span className="absolute -top-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                Register Now 
+                {/*<span className="absolute -top-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
                   FREE
-                </span>
+                </span>*/}
               </button>
             </div>
           ) : (
