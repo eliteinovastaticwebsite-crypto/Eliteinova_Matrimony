@@ -480,9 +480,9 @@ const performSearch = async (searchFilters) => {
         <div className="flex flex-col lg:flex-row gap-8">
           
           {isAuthenticated && (
-  <div className="lg:w-1/4">
-    <ProfileFilters
-      filters={filters}
+             <div className="lg:w-1/4">
+            <ProfileFilters
+            filters={filters}
       onFilterChange={(updatedFilters) => {
         console.log("🔄 Filter changed:", updatedFilters);
         
@@ -618,7 +618,7 @@ const performSearch = async (searchFilters) => {
                 <div>
                   <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium ${classes.textColor} mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
-                    {["all", "Hindu", "Muslim", "Christian"].map((religion) => {
+                    {["Hindu", "Muslim", "Christian"].map((religion) => {
                       const isActive = religionFilter === (religion === "all" ? "all" : religion);
                       return (
                         <button

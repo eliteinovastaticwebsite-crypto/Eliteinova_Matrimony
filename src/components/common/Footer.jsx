@@ -36,16 +36,16 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/30">
-                  <FaHeart className="text-red-900 text-lg" />
+                  <FaHeart className="text-white text-lg" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-red-950 drop-shadow">
-                    Eliteinova <span className="text-yellow-900">Matrimony</span>
+                  <h3 className="text-2xl font-bold text-white drop-shadow">
+                    Eliteinova <span className="text-white">Matrimony</span>
                   </h3>
-                  <p className="text-red-900/80 text-sm font-medium">Where Trust Meets Tradition</p>
+                  <p className="text-white/90 text-sm font-medium">Where Trust Meets Tradition</p>
                 </div>
               </div>
-              <p className="text-red-950/75 max-w-md leading-relaxed">
+              <p className="text-white/85 max-w-md leading-relaxed">
                 Connecting hearts through verified, meaningful relationships.
                 Join thousands of successful matches in your journey to find the perfect life partner.
               </p>
@@ -54,27 +54,27 @@ export default function Footer() {
             {/* Trust Badges */}
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/30">
-                <FaShieldAlt className="text-yellow-900 text-sm" />
-                <span className="text-sm font-semibold text-red-950">100% Verified Profiles</span>
+                <FaShieldAlt className="text-white text-sm" />
+                <span className="text-sm font-semibold text-white">100% Verified Profiles</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/30">
-                <FaUsers className="text-yellow-900 text-sm" />
-                <span className="text-sm font-semibold text-red-950">500+ Success Stories</span>
+                <FaUsers className="text-white text-sm" />
+                <span className="text-sm font-semibold text-white">500+ Success Stories</span>
               </div>
             </div>
 
             {/* Contact */}
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-red-950/80 hover:text-red-950 transition-colors">
-                <FaPhoneAlt className="text-yellow-900 flex-shrink-0" />
+              <div className="flex items-center space-x-3 text-white/85 hover:text-white transition-colors">
+                <FaPhoneAlt className="text-white flex-shrink-0" />
                 <span className="font-medium">+91 7845554882</span>
               </div>
-              <div className="flex items-center space-x-3 text-red-950/80 hover:text-red-950 transition-colors">
-                <FaEnvelope className="text-yellow-900 flex-shrink-0" />
+              <div className="flex items-center space-x-3 text-white/85 hover:text-white transition-colors">
+                <FaEnvelope className="text-white flex-shrink-0" />
                 <span className="font-medium">info@eliteinovamatrimony.com</span>
               </div>
-              <div className="flex items-center space-x-3 text-red-950/80">
-                <FaMapMarkerAlt className="text-yellow-900 flex-shrink-0" />
+              <div className="flex items-center space-x-3 text-white/85">
+                <FaMapMarkerAlt className="text-white flex-shrink-0" />
                 <span className="font-medium">Eliteinova Tech Pvt Ltd</span>
               </div>
             </div>
@@ -84,8 +84,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Quick Links */}
             <div>
-              <h4 className="text-lg font-bold mb-6 text-red-950 flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-950 rounded-full"></div>
+              <h4 className="text-lg font-bold mb-6 text-white flex items-center space-x-2">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
                 <span>Quick Links</span>
               </h4>
               <ul className="space-y-3">
@@ -93,9 +93,9 @@ export default function Footer() {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className="flex items-center space-x-2 text-red-950/70 hover:text-red-950 transition-all duration-300 hover:translate-x-1 group"
+                      className="flex items-center space-x-2 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group"
                     >
-                      <span className="w-1.5 h-1.5 bg-red-950 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                      <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
                       <span>{link.label}</span>
                     </Link>
                   </li>
@@ -105,8 +105,8 @@ export default function Footer() {
 
             {/* Services */}
             <div>
-              <h4 className="text-lg font-bold mb-6 text-red-950 flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-900 rounded-full"></div>
+              <h4 className="text-lg font-bold mb-6 text-white flex items-center space-x-2">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
                 <span>Services</span>
               </h4>
               <ul className="space-y-3">
@@ -114,9 +114,9 @@ export default function Footer() {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className="flex items-center space-x-2 text-red-950/70 hover:text-red-950 transition-all duration-300 hover:translate-x-1 group"
+                      className="flex items-center space-x-2 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group"
                     >
-                      <span className="w-1.5 h-1.5 bg-red-950 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                      <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
                       <span>{link.label}</span>
                     </Link>
                   </li>
@@ -126,8 +126,8 @@ export default function Footer() {
 
             {/* Company */}
             <div>
-              <h4 className="text-lg font-bold mb-6 text-red-950 flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-950 rounded-full"></div>
+              <h4 className="text-lg font-bold mb-6 text-white flex items-center space-x-2">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
                 <span>Company</span>
               </h4>
               <ul className="space-y-3">
@@ -135,9 +135,9 @@ export default function Footer() {
                   <li key={link.path}>
                     <Link
                       to={link.path}
-                      className="flex items-center space-x-2 text-red-950/70 hover:text-red-950 transition-all duration-300 hover:translate-x-1 group"
+                      className="flex items-center space-x-2 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group"
                     >
-                      <span className="w-1.5 h-1.5 bg-red-950 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                      <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
                       <span>{link.label}</span>
                     </Link>
                   </li>
@@ -148,11 +148,11 @@ export default function Footer() {
         </div>
 
         {/* Social & Newsletter Section */}
-        <div className="border-t border-red-950/30 pt-8">
+        <div className="border-t border-white/30 pt-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             {/* Social Media */}
             <div className="flex items-center space-x-6">
-              <span className="text-red-950 font-semibold">Follow Us:</span>
+              <span className="text-white font-semibold">Follow Us:</span>
               <div className="flex gap-4">
                 {[
                   { icon: FaFacebookF, label: "Facebook" },
@@ -166,7 +166,7 @@ export default function Footer() {
                     aria-label={social.label}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-red-950 hover:bg-white hover:text-orange-500 transition-all duration-300 hover:scale-110 border border-red-950/20"
+                    className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-white hover:bg-white hover:text-orange-500 transition-all duration-300 hover:scale-110 border border-white/30"
                   >
                     <social.icon className="text-lg" />
                   </a>
@@ -177,14 +177,14 @@ export default function Footer() {
             {/* Newsletter */}
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="text-center sm:text-right">
-                <p className="text-red-950 font-semibold mb-1">Stay Updated</p>
-                <p className="text-red-950/70 text-sm">Get the latest matchmaking insights</p>
+                <p className="text-white font-semibold mb-1">Stay Updated</p>
+                <p className="text-white/75 text-sm">Get the latest matchmaking insights</p>
               </div>
               <div className="flex gap-2">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="px-4 py-2 bg-white/20 border border-red-950/30 rounded-lg text-red-950 placeholder-red-950/40 focus:outline-none focus:border-red-950 focus:bg-white/30 transition-all min-w-[200px]"
+                  className="px-4 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white focus:bg-white/30 transition-all min-w-[200px]"
                 />
                 <button className="px-6 py-2 bg-white text-orange-600 rounded-lg font-bold hover:bg-yellow-50 transition-all duration-300 shadow-lg hover:shadow-white/20 hover:scale-105 whitespace-nowrap">
                   Subscribe
@@ -195,27 +195,27 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-red-950/30 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-red-950/70">
+        <div className="border-t border-white/30 mt-8 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/75">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <span>&copy; {new Date().getFullYear()} Eliteinova Matrimony. All rights reserved.</span>
               <div className="hidden md:flex items-center space-x-4">
-                <Link to="/privacypolicy" className="hover:text-red-950 transition-colors">Privacy Policy</Link>
-                <Link to="/terms" className="hover:text-red-950 transition-colors">Terms of Service</Link>
-                <Link to="/cookies" className="hover:text-red-950 transition-colors">Cookie Policy</Link>
+                <Link to="/privacypolicy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                <Link to="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
                 <a
                   href="https://www.eliteinovatechpvtltd.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-red-950 transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   Digital Partner
                 </a>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 text-white/75">
               <span>Made with</span>
-              <FaHeart className="text-red-900 animate-pulse" />
+              <FaHeart className="text-white animate-pulse" />
               <span>for meaningful connections</span>
             </div>
           </div>

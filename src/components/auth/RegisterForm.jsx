@@ -43,6 +43,8 @@ export default function RegisterForm({
     // Step 3: Religion Details
     religion: "Hindu",
     motherTongue: "",
+    motherTongueOther: "",
+    religionOther: "",
     willingOtherCaste: false,
     community: "",
     communityOther: "",
@@ -66,6 +68,8 @@ export default function RegisterForm({
     specialization: "",
     employedIn: "Private",
     occupation: "",
+    occupationOther: "",      // <-- ADD THIS LINE
+    employedInOther: "",       // <-- ADD THIS LINE
     annualIncome: "5-10 L",
     address: "",
     city: "",
@@ -275,7 +279,6 @@ const professionOptions = [
   { value: "Driver", label: "Driver" },
   { value: "Farmer", label: "Farmer" },
   { value: "Not Working", label: "Not Working" },
-  { value: "Other", label: "Other" },
 ];
 
   const steps = [
@@ -312,7 +315,7 @@ const professionOptions = [
     return age;
   };
 
-  const formatMobileNumber = (value) => value.replace(/\D/g, "").slice(0, 10);
+  const formatMobileNumber = (value) => value.replace(/\D/g, "").slice(0, 14);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -323,6 +326,17 @@ const professionOptions = [
     if (name === "dob" && value) {
       const age = calculateAge(value);
       setForm((prev) => ({ ...prev, age: age.toString() }));
+      
+      // Add validation for minimum age (18) and maximum age (born after 1975)
+      const birthYear = new Date(value).getFullYear();
+      if (birthYear < 1975) {
+        setValidationErrors(prev => ({ 
+          ...prev, 
+          dob: "Sorry, registration is only available for individuals born after 1975" 
+        }));
+      } else {
+        setValidationErrors(prev => ({ ...prev, dob: "" }));
+      }
     }
 
     if (validationErrors[name])
@@ -334,31 +348,36 @@ const professionOptions = [
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
   };
 
-  const handlePhotoUpload = (e) => {
+    const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
     setError("");
+
+    // Check if adding new files would exceed the 3 photo limit
+    const totalAfterAdd = form.photos.length + files.length;
+    if (totalAfterAdd > 3) {
+      setError(`You can only upload up to 3 photos. You already have ${form.photos.length} photo(s).`);
+      return;
+    }
 
     const validFiles = files.filter((file) => {
       if (file.type.startsWith("image/")) {
         if (file.size > 5 * 1024 * 1024) {
-          setError(`File ${file.name} too large`);
-          return false;
-        }
-        return true;
-      } else if (file.type === "application/pdf") {
-        if (file.size > 10 * 1024 * 1024) {
-          setError(`File ${file.name} too large`);
+          setError(`File ${file.name} too large (max 5MB)`);
           return false;
         }
         return true;
       } else {
-        setError(`File ${file.name} not supported`);
+        setError(`File ${file.name} not supported. Please upload only images.`);
         return false;
       }
     });
 
-    if (validFiles.length > 0)
-      setForm((prev) => ({ ...prev, photos: [...prev.photos, ...validFiles] }));
+    if (validFiles.length > 0) {
+      setForm((prev) => ({ 
+        ...prev, 
+        photos: [...prev.photos, ...validFiles] 
+      }));
+    }
   };
 
   const removePhoto = (index) => {
@@ -376,18 +395,32 @@ const professionOptions = [
         if (!form.mobile?.trim()) errors.mobile = "Mobile number is required";
         if (!form.password || form.password.trim() === "") errors.password = "Password is required";
         if (form.password && form.password.length < 6) errors.password = "Password must be at least 6 characters";
+        if (form.password && form.password.length >= 6) {
+          const hasUpperCase = /[A-Z]/.test(form.password);
+          const hasLowerCase = /[a-z]/.test(form.password);
+          const hasNumber = /[0-9]/.test(form.password);
+          if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+            errors.password = "Password must contain at least one uppercase letter, one lowercase letter, and one number";
+          }
+        }
         if (form.password !== form.confirmPassword)
           errors.confirmPassword = "Passwords do not match";
         break;
       case 2:
         if (!form.email?.trim()) errors.email = "Email required";
         
-        // Age validation: must be 18 or above (validate both DOB and calculated age)
+        // Age validation: must be 18 or above AND born after 1975
         if (form.dob) {
           const calculatedAge = calculateAge(form.dob);
+          const birthYear = new Date(form.dob).getFullYear();
+          
           if (calculatedAge < 18) {
             errors.dob = "You must be at least 18 years old to register";
             errors.age = "Age must be 18 or above";
+          }
+          
+          if (birthYear < 1975) {
+            errors.dob = "Sorry, registration is only available for individuals born after 1975";
           }
         } else if (form.age) {
           const ageNum = parseInt(form.age);
@@ -413,13 +446,15 @@ const professionOptions = [
           }
         }
         break;
-      case 3:
+
+        case 3:
         if (!form.religion) errors.religion = "Religion required";
-        if (!form.community) errors.community = "Community category required";
+        // Remove required validation for community and caste
+        // if (!form.community) errors.community = "Community category required";
         if (form.community === "Other" && !form.communityOther) {
           errors.communityOther = "Please specify community category";
         }
-        if (!form.caste && form.community !== "Other") errors.caste = "Caste required";
+        // if (!form.caste && form.community !== "Other") errors.caste = "Caste required";
         if (form.community === "Other" && !form.subCasteOther) {
           errors.subCasteOther = "Please specify caste/subcaste";
         }
@@ -427,6 +462,7 @@ const professionOptions = [
           errors.subCasteOther = "Please specify caste/subcaste";
         }
         break;
+        
       case 4:
         if (!form.maritalStatus)
           errors.maritalStatus = "Marital status required";
@@ -505,7 +541,14 @@ const professionOptions = [
             maritalStatus: convertMaritalStatus(form.maritalStatus),
             age: parseInt(form.age) || calculateAge(form.dob),
             dob: form.dob,
-            religion: form.religion,
+            // For mother tongue - use the "Other" text if selected
+            motherTongue: form.motherTongue === "Other" 
+              ? (form.motherTongueOther || "Other") 
+              : form.motherTongue,
+            // For religion - use the "Other" text if selected
+            religion: form.religion === "Other" 
+              ? (form.religionOther || "Other") 
+              : form.religion,
             community: form.community === "Other" ? form.communityOther : form.community,
             caste: form.caste === "Others" ? form.subCasteOther : form.caste,
             subCaste: form.caste === "Others" ? form.subCasteOther : (form.community === "Other" ? form.subCasteOther : form.caste), // Keep subCaste for backward compatibility
@@ -695,7 +738,7 @@ const professionOptions = [
         } else if (errorMsg.includes("password") && (errorMsg.includes("short") || errorMsg.includes("length"))) {
             errorMessage = "Password must be at least 6 characters long.";
         } else if (errorMsg.includes("mobile") || errorMsg.includes("phone")) {
-            errorMessage = "Invalid mobile number. Please enter a valid 10-digit mobile number.";
+            errorMessage = "Invalid mobile number. Please enter a valid mobile number.";
         } else if (err.name === "TypeError" && err.message?.includes("Failed to fetch")) {
             errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
         } else if (errorMsg.includes("403") || errorMsg.includes("forbidden")) {
@@ -964,8 +1007,8 @@ const professionOptions = [
               required
               type="tel"
               error={validationErrors.mobile}
-              placeholder="10-digit mobile number"
-              maxLength="10"
+              placeholder="mobile number"
+              maxLength="14"
             />
 
             <FloatingInput
@@ -1085,12 +1128,18 @@ const professionOptions = [
 {step === 3 && (
   <div className="space-y-4">
 
-    {/* ⭐ Mother Tongue Select */}
+        {/* ⭐ Mother Tongue Select with Other option */}
     <div>
       <label className="block mb-1 font-medium">Mother Tongue</label>
       <Select
         value={form.motherTongue ? { value: form.motherTongue, label: form.motherTongue } : null}
-        onChange={(e) => handleChange({ target: { name: "motherTongue", value: e.value } })}
+        onChange={(e) => {
+          handleChange({ target: { name: "motherTongue", value: e.value } });
+          // If not "Other", clear the other text field
+          if (e.value !== "Other") {
+            handleChange({ target: { name: "motherTongueOther", value: "" } });
+          }
+        }}
         options={[
           "Tamil",
           "English",
@@ -1101,7 +1150,8 @@ const professionOptions = [
           "Urdu",
           "Marathi",
           "Bengali",
-          "Gujarati"
+          "Gujarati",
+          "Other"
         ].map((lang) => ({
           value: lang,
           label: lang,
@@ -1111,9 +1161,27 @@ const professionOptions = [
       {validationErrors.motherTongue && (
         <p className="text-red-500 text-sm">{validationErrors.motherTongue}</p>
       )}
+      
+      {/* Show text input when "Other" is selected */}
+      {form.motherTongue === "Other" && (
+        <div className="mt-3">
+          <FloatingInput
+            label="Please specify your mother tongue"
+            name="motherTongueOther"
+            value={form.motherTongueOther || ""}
+            onChange={handleChange}
+            required
+            placeholder="Enter your mother tongue"
+            error={validationErrors.motherTongueOther}
+          />
+          {validationErrors.motherTongueOther && (
+            <p className="text-red-500 text-sm">{validationErrors.motherTongueOther}</p>
+          )}
+        </div>
+      )}
     </div>
 
-    {/* ⭐ Religion Select */}
+        {/* ⭐ Religion Select with Other option */}
     <div>
       <label className="block mb-1 font-medium">Religion</label>
       <Select
@@ -1122,6 +1190,10 @@ const professionOptions = [
           handleChange({ target: { name: "religion", value: e.value } });
           handleChange({ target: { name: "community", value: "" } });
           handleChange({ target: { name: "caste", value: "" } });
+          // If not "Other", clear the other text field
+          if (e.value !== "Other") {
+            handleChange({ target: { name: "religionOther", value: "" } });
+          }
         }}
         options={[
           { value: "Hindu", label: "Hindu" },
@@ -1129,12 +1201,33 @@ const professionOptions = [
           { value: "Christian", label: "Christian" },
           { value: "Sikh", label: "Sikh" },
           { value: "Jain", label: "Jain" },
+          { value: "Buddhist", label: "Buddhist" },
+          { value: "Jewish", label: "Jewish" },
+          { value: "Parsi", label: "Parsi" },
           { value: "Other", label: "Other" },
         ]}
         placeholder="Select Religion"
       />
       {validationErrors.religion && (
         <p className="text-red-500 text-sm">{validationErrors.religion}</p>
+      )}
+      
+      {/* Show text input when "Other" is selected */}
+      {form.religion === "Other" && (
+        <div className="mt-3">
+          <FloatingInput
+            label="Please specify your religion"
+            name="religionOther"
+            value={form.religionOther || ""}
+            onChange={handleChange}
+            required
+            placeholder="Enter your religion"
+            error={validationErrors.religionOther}
+          />
+          {validationErrors.religionOther && (
+            <p className="text-red-500 text-sm">{validationErrors.religionOther}</p>
+          )}
+        </div>
       )}
     </div>
 
@@ -1152,7 +1245,7 @@ const professionOptions = [
 
     {/* ⭐ Community Category Select (Tamil Nadu Government Categories) */}
     <div>
-      <label className="block mb-1 font-medium">Community Category *</label>
+      <label className="block mb-1 font-medium">Community Category</label>
       <Select
         value={form.community ? { value: form.community, label: communityCategories.find(c => c.value === form.community)?.label || form.community } : null}
         onChange={(e) => {
@@ -1195,7 +1288,7 @@ const professionOptions = [
 
     {/* ⭐ Caste/Subcaste Select */}
     <div>
-      <label className="block mb-1 font-medium">Caste/Subcaste *</label>
+      <label className="block mb-1 font-medium">Caste/Subcaste </label>
       <Select
         value={form.caste ? { value: form.caste, label: form.caste } : null}
         onChange={(e) => {
@@ -1358,9 +1451,11 @@ const professionOptions = [
               select
               error={validationErrors.familyStatus}
             >
+              <option value="Lower Middle Class">Lower Middle Class</option>
               <option value="Middle Class">Middle Class</option>
               <option value="Upper Middle Class">Upper Middle Class</option>
               <option value="Rich">Rich</option>
+              <option value="Upper Rich">Upper Rich</option>
             </FloatingInput>
 
             <FloatingInput
@@ -1494,29 +1589,52 @@ const professionOptions = [
       placeholder="e.g., Computer Science, Business Administration"
     />
 
-    {/* ⭐ Employed In */}
+       {/* ⭐ Employed In with Other option */}
     <div>
       <label className="block mb-1 font-medium">Employed In</label>
       <Select
         value={form.employedIn ? { value: form.employedIn, label: form.employedIn } : null}
-        onChange={(e) =>
-          handleChange({ target: { name: "employedIn", value: e.value } })
-        }
+        onChange={(e) => {
+          handleChange({ target: { name: "employedIn", value: e.value } });
+          // If not "Other", clear the other text field
+          if (e.value !== "Other") {
+            handleChange({ target: { name: "employedInOther", value: "" } });
+          }
+        }}
         options={[
           { value: "Private", label: "Private Sector" },
           { value: "Government", label: "Government Sector" },
           { value: "Self-Employed", label: "Self-Employed" },
           { value: "Business", label: "Business" },
           { value: "Not Employed", label: "Not Employed" },
+          { value: "Other", label: "Other" },
         ]}
         placeholder="Select Employment"
       />
       {validationErrors.employedIn && (
         <p className="text-red-500 text-sm">{validationErrors.employedIn}</p>
       )}
+      
+      {/* Show text input when "Other" is selected */}
+      {form.employedIn === "Other" && (
+        <div className="mt-3">
+          <FloatingInput
+            label="Please specify your employment type"
+            name="employedInOther"
+            value={form.employedInOther || ""}
+            onChange={handleChange}
+            required
+            placeholder="Enter your employment type"
+            error={validationErrors.employedInOther}
+          />
+          {validationErrors.employedInOther && (
+            <p className="text-red-500 text-sm">{validationErrors.employedInOther}</p>
+          )}
+        </div>
+      )}
     </div>
 
-    {/* ⭐ Occupation (react-select full list) */}
+        {/* ⭐ Occupation with Other option */}
     <div>
       <label className="block mb-1 font-medium">Occupation</label>
       <Select
@@ -1525,12 +1643,37 @@ const professionOptions = [
             ? { value: form.occupation, label: form.occupation }
             : null
         }
-        onChange={(e) =>
-          handleChange({ target: { name: "occupation", value: e.value } })
-        }
-        options={professionOptions} // ← from your earlier list
+        onChange={(e) => {
+          handleChange({ target: { name: "occupation", value: e.value } });
+          // If not "Other", clear the other text field
+          if (e.value !== "Other") {
+            handleChange({ target: { name: "occupationOther", value: "" } });
+          }
+        }}
+        options={[
+          ...professionOptions,
+          { value: "Other", label: "Other" }
+        ]}
         placeholder="Select Occupation"
       />
+      
+      {/* Show text input when "Other" is selected */}
+      {form.occupation === "Other" && (
+        <div className="mt-3">
+          <FloatingInput
+            label="Please specify your occupation"
+            name="occupationOther"
+            value={form.occupationOther || ""}
+            onChange={handleChange}
+            required
+            placeholder="Enter your occupation"
+            error={validationErrors.occupationOther}
+          />
+          {validationErrors.occupationOther && (
+            <p className="text-red-500 text-sm">{validationErrors.occupationOther}</p>
+          )}
+        </div>
+      )}
     </div>
 
     {/* ⭐ Annual Income */}
@@ -1687,13 +1830,20 @@ const professionOptions = [
     )}
     
     {/* ⭐ ADD CITY INPUT FIELD HERE */}
+        {/* ⭐ ADD CITY INPUT FIELD HERE with 15 character limit */}
     <FloatingInput
       label="City/Town"
       name="city"
       value={form.city}
-      onChange={handleChange}
-      placeholder="Enter your city or town"
+      onChange={(e) => {
+        const value = e.target.value;
+        if (value.length <= 15) {
+          handleChange(e);
+        }
+      }}
+      placeholder="Enter your city or town (max 15 characters)"
       error={validationErrors.city}
+      maxLength="15"
     />
 
     {/* Pincode */}
@@ -1706,8 +1856,8 @@ const professionOptions = [
       maxLength="6"
     />
 
-    {/* Address (Optional) */}
-    <FloatingInput
+        {/* Address (Optional) - Commented out for now */}
+    {/* <FloatingInput
       label="Address (Optional)"
       name="address"
       value={form.address}
@@ -1716,15 +1866,18 @@ const professionOptions = [
       placeholder="Enter your complete address"
       rows="4"
       error={validationErrors.address}
-    />
+    /> */}
   </div>
         )}
 
         {/* Step 6: About Yourself & Documents */}
         {step === 6 && (
           <div className="space-y-6">
-            {/* About Yourself */}
+                        {/* About Yourself with bold heading */}
             <div>
+              <label className="block text-lg font-bold text-gray-800 mb-3">
+                📝 About Yourself
+              </label>
               <FloatingInput
                 label="About Yourself"
                 name="about"
@@ -1738,29 +1891,32 @@ const professionOptions = [
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>Share your personality, hobbies, and expectations</span>
-                <span>{form.about?.length || 0}/1000</span>
+                <span className={form.about?.length > 0 ? "text-green-600 font-medium" : "text-gray-500"}>
+                  {form.about?.length || 0}/1000
+                </span>
               </div>
             </div>
 
-            {/* Photos Upload */}
+            {/* Photos Upload - Updated with green colors */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                📸 Profile Photos (Optional)
-                <span className="text-xs text-gray-500 ml-2">
-                  Upload clear, recent photos for better matches
-                </span>
+              <label className="block text-lg font-bold text-gray-800 mb-1">
+                📸 Profile Photos
               </label>
-              <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-red-500 transition-colors duration-300 bg-gray-50 hover:bg-gray-100">
+              <p className="text-sm text-gray-600 mb-3">
+                Upload clear, recent photos for better matches
+              </p>
+              <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-500 transition-colors duration-300 bg-gray-50 hover:bg-green-50">
                 <input
                   type="file"
                   multiple
                   accept="image/*"
                   onChange={handlePhotoUpload}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={form.photos.length >= 3}
                 />
                 <div className="flex flex-col items-center justify-center">
                   <svg
-                    className="w-12 h-12 text-gray-400 mb-3"
+                    className="w-12 h-12 text-green-400 mb-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1773,11 +1929,11 @@ const professionOptions = [
                     />
                   </svg>
                   <p className="text-sm text-gray-600 font-medium">
-                    <span className="text-red-600">Click to upload photos</span>{" "}
+                    <span className="text-green-600 font-semibold">Click to upload photos</span>{" "}
                     or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG up to 5MB each (Max 6 photos)
+                  <p className="text-xs text-green-600 mt-1 font-medium">
+                    PNG, JPG up to 5MB each (Max 3 photos)
                   </p>
                 </div>
               </div>
@@ -1786,32 +1942,32 @@ const professionOptions = [
               {form.photos.length > 0 && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-medium text-gray-700">
-                      Uploaded Photos ({form.photos.length}/6)
+                    <p className="text-sm font-semibold text-green-700">
+                      Uploaded Photos ({form.photos.length}/3)
                     </p>
-                    {form.photos.length >= 6 && (
-                      <p className="text-xs text-red-600">
-                        Maximum 6 photos allowed
+                    {form.photos.length >= 3 && (
+                      <p className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
+                        ✓ Maximum 3 photos reached
                       </p>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     {form.photos.map((file, idx) => (
                       <div key={idx} className="relative group">
                         <img
                           src={URL.createObjectURL(file)}
                           alt={`Preview ${idx + 1}`}
-                          className="w-full h-24 object-cover rounded-lg border-2 border-gray-200 group-hover:border-red-500 transition-colors shadow-sm"
+                          className="w-full h-20 object-cover rounded-lg border-2 border-green-200 group-hover:border-green-500 transition-colors shadow-sm"
                         />
                         <button
                           type="button"
                           onClick={() => removePhoto(idx)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-600 shadow-lg"
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-600 shadow-lg"
                           title="Remove photo"
                         >
                           ×
                         </button>
-                        <div className="absolute bottom-1 left-1 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                        <div className="absolute bottom-1 left-1 bg-green-600 text-white text-xs px-1.5 py-0.5 rounded">
                           {idx === 0 ? "Main" : idx + 1}
                         </div>
                       </div>
@@ -1821,14 +1977,14 @@ const professionOptions = [
               )}
             </div>
 
-            {/* Aadhar Document Upload */}
+                        {/* ID Proof Upload - Changed from Aadhar */}
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-3">
-    🆔 Aadhar Card (Optional for Verification)
-    <span className="text-xs text-gray-500 ml-2">
-      Upload for identity verification (kept confidential)
-    </span>
+  <label className="block text-lg font-bold text-gray-800 mb-1">
+    🆔 Upload Any ID Proof
   </label>
+  <p className="text-sm text-gray-600 mb-3">
+    Upload for identity verification
+  </p>
   <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-500 transition-colors duration-300 bg-green-50 hover:bg-green-100">
     <input
       type="file"
@@ -1844,13 +2000,13 @@ const professionOptions = [
           ];
           if (validTypes.includes(file.type)) {
             if (file.size > 10 * 1024 * 1024) {
-              setError("Aadhar file too large (max 10MB)");
+              setError("ID Proof file too large (max 10MB)");
               return;
             }
             setForm((prev) => ({ ...prev, aadhar: file }));
             setError("");
           } else {
-            setError("Please upload PDF, JPG, or PNG for Aadhar");
+            setError("Please upload PDF, JPG, or PNG for ID Proof");
           }
         }
       }}
@@ -1871,8 +2027,8 @@ const professionOptions = [
         />
       </svg>
       <p className="text-sm text-gray-600 font-medium">
-        <span className="text-green-600">
-          Click to upload Aadhar
+        <span className="text-green-600 font-semibold">
+          Click to upload ID Proof
         </span>{" "}
         or drag and drop
       </p>
@@ -2026,33 +2182,21 @@ const professionOptions = [
   </div>
 )}
 
-            {/* Membership Type - Last field in Step 6 */}
+                        {/* Membership Type - Updated with bold and 3 months */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-lg font-bold text-gray-800 mb-3">
                 Membership Type *
               </label>
-              
-              {/* Launch Offer Banner */}
-              <div className="mb-4 p-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
-                <div className="relative z-10 text-center">
-                  <h3 className="text-white font-bold text-lg md:text-xl mb-1">
-                    🎉 Launch Special Offer! 🎉
-                  </h3>
-                  <p className="text-white font-semibold text-sm md:text-base drop-shadow-lg">
-                    Free Registration for Launch Offer
-                  </p>
-                </div>
-              </div>
 
               <div className="flex flex-col space-y-3">
                 {[
-                  { value: "SILVER", label: "Silver", price: "₹299/Per 12 Months" },
-                  { value: "GOLD", label: "Gold", price: "₹499/Per 12 Months" },
-                  { value: "DIAMOND", label: "Diamond", price: "₹749/Per 12 Months" },
+                  { value: "SILVER", label: "SILVER", price: "₹299/Per 3 Months" },
+                  { value: "GOLD", label: "GOLD", price: "₹499/Per 3 Months" },
+                  { value: "DIAMOND", label: "DIAMOND", price: "₹749/Per 3 Months" },
                 ].map((membership) => (
                   <label
                     key={membership.value}
-                    className="flex items-center gap-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 cursor-pointer p-3 border-2 rounded-xl hover:bg-green-50 transition-colors"
                   >
                     <input
                       type="radio"
@@ -2060,12 +2204,11 @@ const professionOptions = [
                       value={membership.value}
                       checked={form.membershipType === membership.value}
                       onChange={handleChange}
-                      className="text-red-600 focus:ring-red-500"
+                      className="text-green-600 focus:ring-green-500 w-4 h-5"
                     />
-                    <span className="text-gray-700 font-medium flex-1">{membership.label}</span>
+                    <span className="text-green-700 font-bold text-lg flex-1">{membership.label}</span>
                     <div className="flex flex-col items-end">
-                      <span className="text-gray-400 line-through text-sm">{membership.price}</span>
-                      <span className="text-green-600 font-bold text-base">FREE</span>
+                      <span className="text-green-600 font-bold text-base">{membership.price}</span>
                     </div>
                   </label>
                 ))}

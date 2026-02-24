@@ -555,68 +555,70 @@ export default function FilterSidebar({
       style={{ maxHeight: "calc(100vh - 6rem)" }}
     >
 
-      {/* ── Matrimony Registration Card — NOT scrollable, fixed height ── */}
-      <div className="flex-shrink-0 mb-3">
-        <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
-          {/* Top — banner image */}
-          <div className="h-25 overflow-hidden rounded-lg">
-  <img
-    src={banner1}
-    alt="Eliteinova Matrimony"
-    className="w-full h-full object-contain bg-gray-100"
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src =
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80";
-    }}
-  />
-</div>
-          {/* Bottom — text + button */}
-          <div className="px-4 py-3 text-center">
-            <h2
-              className="text-xl font-bold text-red-600 mb-0.5"
-              style={{ fontFamily: "'Pacifico', cursive" }}
-            >
-              Eliteinova Matrimonial Services
-            </h2>
-            <p
-              className="text-sm font-bold text-yellow-500 mb-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              Your Complete Wedding Partner
-            </p>
-            <a
-              href="https://matrimonial-services.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white py-2 px-4 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md text-sm"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                />
-              </svg>
-              Register Now
-            </a>
-            <p
-              className="text-gray-400 text-[10px] mt-2"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              Redirects to eliteinovamatrimonialservices.com
-            </p>
-          </div>
-        </div>
+     {/* ── Matrimony Registration Card — NOT scrollable, fixed height ── */}
+<div className="flex-shrink-0 mb-3">
+  <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
+    <div className="flex items-stretch">
+      {/* Left — banner image */}
+      <div className="w-28 flex-shrink-0 overflow-hidden">
+        <img
+          src={banner1}
+          alt="Eliteinova Matrimony"
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80";
+          }}
+        />
       </div>
 
+      {/* Right — text + button */}
+      <div className="flex-1 px-3 py-2 flex flex-col justify-center">
+        <h2
+          className="text-lg font-bold text-red-600 leading-tight mb-0.5"
+          style={{ fontFamily: "'Pacifico', cursive" }}
+        >
+          Eliteinova Matrimonial Services
+        </h2>
+        <p
+          className="text-xs font-bold text-yellow-500 mb-2"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          Your Complete Wedding Partner
+        </p>
+        
+          <a href="https://matrimonial-services.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white py-1.5 px-3 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md text-xs"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          <svg
+            className="w-3 h-3 mr-1.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+            />
+          </svg>
+          Register Now
+        </a>
+        <p
+          className="text-gray-400 text-[9px] mt-1"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          Redirects to eliteinovamatrimonialservices.com
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
       {/* ── Filter Panel — scrollable independently below the card ── */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-red-200 scrollbar-track-gray-100">
         <div className="bg-white rounded-lg shadow-lg border border-red-200 p-5">
