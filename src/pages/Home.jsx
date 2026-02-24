@@ -237,7 +237,7 @@ export default function Home({ onOpenAuthModal }) {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-center md:text-left">
                 <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-                  🎉 Launch Special Offer! 🎉
+                  🎉 Register Now! 🎉
                 </h3>
                  {/*<p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
                   Free Registration for Launch Offer - All Membership Plans FREE!
@@ -1006,7 +1006,7 @@ export default function Home({ onOpenAuthModal }) {
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                 <div className="relative z-10 text-center">
                   <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-                    🎉 Launch Special Offer! 🎉
+                    🎉 Register Now! 🎉
                   </h3>
                  {/* <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
                     Free Registration for Launch Offer

@@ -1,7 +1,7 @@
 // src/components/ui/FloatingInput.jsx
 import React from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // ✅ imported in JS, not CSS file
+import "react-datepicker/dist/react-datepicker.css";
 
 const FloatingInput = ({
   label,
@@ -19,54 +19,76 @@ const FloatingInput = ({
   placeholder,
   onFocus: propsOnFocus,
   onBlur: propsOnBlur,
+  rows = 4,
   ...props
 }) => {
-  const baseClasses =
-    "block px-3 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border appearance-none focus:outline-none focus:ring-0 peer transition-colors duration-200 placeholder:opacity-0 focus:placeholder:opacity-100";
-  const normalClasses = `${baseClasses} ${
-    error
-      ? "border-red-500 focus:border-red-600"
-      : "border-gray-300 focus:border-red-600"
-  }`;
-  const disabledClasses = `${baseClasses} border-gray-200 bg-gray-100 cursor-not-allowed text-gray-500`;
-
-  const inputClasses = disabled ? disabledClasses : normalClasses;
-  
-  // Determine if input has a value
-  const hasValue = value && value.toString().trim() !== "";
+  const baseInputClasses = `
+    w-full px-4 py-3 text-sm text-gray-800
+    border-2 rounded-xl outline-none transition-all duration-200
+    bg-white placeholder:text-gray-400
+    ${error
+      ? "border-red-400 focus:border-red-500"
+      : "border-gray-300 focus:border-red-500"
+    }
+    ${disabled ? "bg-gray-100 cursor-not-allowed text-gray-400" : ""}
+  `;
 
   return (
-    <div className={`relative z-0 ${className}`}>
-      {/* ✅ Modern Date Picker */}
+    <div className={`flex flex-col gap-1 ${className}`}>
+      {/* Label above the input */}
+      {label && (
+        <label
+          htmlFor={name}
+          className={`text-sm font-semibold ${error ? "text-red-500" : "text-gray-700"}`}
+        >
+          {label}
+          {required && <span className="text-red-500 ml-0.5">*</span>}
+        </label>
+      )}
+
+      {/* Input / Select / Textarea / DatePicker */}
       {type === "date" ? (
         <DatePicker
           id={name}
           selected={value ? new Date(value) : null}
           onChange={(date) =>
-            onChange({ target: { name, value: date?.toISOString().split("T")[0] } })
+            onChange({
+              target: {
+                name,
+                value: date?.toISOString().split("T")[0],
+              },
+            })
           }
           dateFormat="dd/MM/yyyy"
           showMonthDropdown
           showYearDropdown
           dropdownMode="select"
-          placeholderText="Select date"
+          placeholderText={placeholder || "Select date"}
           disabled={disabled}
-          className={`${inputClasses} bg-white`}
+          className={baseInputClasses}
           {...props}
         />
       ) : select ? (
-        <select
-          id={name}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-          disabled={disabled}
-          className={inputClasses}
-          {...props}
-        >
-          {children}
-        </select>
+        <div className="relative">
+          <select
+            id={name}
+            name={name}
+            value={value}
+            onChange={onChange}
+            required={required}
+            disabled={disabled}
+            className={`${baseInputClasses} appearance-none pr-10 cursor-pointer`}
+            {...props}
+          >
+            {children}
+          </select>
+          {/* Dropdown arrow */}
+          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       ) : textarea ? (
         <textarea
           id={name}
@@ -77,9 +99,9 @@ const FloatingInput = ({
           onBlur={propsOnBlur}
           required={required}
           disabled={disabled}
-          rows={4}
-          placeholder={placeholder}
-          className={`${inputClasses} resize-none`}
+          rows={rows}
+          placeholder={placeholder || `Enter ${label?.toLowerCase() || ""}`}
+          className={`${baseInputClasses} resize-none`}
           {...props}
         />
       ) : (
@@ -93,37 +115,16 @@ const FloatingInput = ({
           onBlur={propsOnBlur}
           required={required}
           disabled={disabled}
-          placeholder={placeholder}
-          className={inputClasses}
+          placeholder={placeholder || `Enter ${label?.toLowerCase() || ""}`}
+          className={baseInputClasses}
           {...props}
         />
       )}
 
-      <label
-        htmlFor={name}
-        className={`absolute text-sm transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 
-        opacity-100
-        peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-        peer-placeholder-shown:top-1/2 
-        peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:opacity-0 left-1 
-        transition-all duration-200 ${
-          hasValue ? "!opacity-100" : ""
-        } ${
-          error
-            ? "text-red-500 peer-focus:text-red-600"
-            : "text-gray-500 peer-focus:text-red-600"
-        } ${disabled ? "text-gray-400 bg-gray-100" : "bg-white"}`}
-      >
-        {label} {required && "*"}
-      </label>
-
+      {/* Error message */}
       {error && (
-        <p className="text-red-500 text-xs mt-1 flex items-center">
-          <svg
-            className="w-3 h-3 mr-1"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+        <p className="text-red-500 text-xs flex items-center gap-1 mt-0.5">
+          <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"

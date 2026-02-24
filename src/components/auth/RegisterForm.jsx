@@ -41,7 +41,7 @@ export default function RegisterForm({
     physicallyChallengedDescription: "",
 
     // Step 3: Religion Details
-    religion: "Hindu",
+    religion: "",
     motherTongue: "",
     motherTongueOther: "",
     religionOther: "",
@@ -130,6 +130,7 @@ const districtsByState = {
 // ------------ Tamil Nadu Government Community Categories ------------
 // Community categories as per Tamil Nadu Government official classification
 const communityCategories = [
+  { value: "Other", label: "Other" },
   { value: "SC", label: "SC - Scheduled Castes" },
   { value: "ST", label: "ST - Scheduled Tribes" },
   { value: "BC", label: "BC - Backward Classes" },
@@ -137,12 +138,13 @@ const communityCategories = [
   { value: "BCM", label: "BCM - Backward Class Muslims" },
   { value: "DNC", label: "DNC - Denotified Communities" },
   { value: "GENERAL", label: "General / Others" },
-  { value: "Other", label: "Other" },
+  
 ];
 
 // Caste/Subcaste data for each community category (Official Tamil Nadu Government Lists)
 const communityCasteData = {
   SC: [
+    "Others",
     "Adi Dravida",
     "Adi Andhra",
     "Arunthathiyar",
@@ -161,9 +163,9 @@ const communityCasteData = {
     "Paraiyar",
     "Samban",
     "Thoti",
-    "Others",
   ],
   ST: [
+    "Others",
     "Adiyan",
     "Aranadan",
     "Eravallan",
@@ -177,9 +179,9 @@ const communityCasteData = {
     "Paniyan",
     "Toda",
     "Kota",
-    "Others",
   ],
   BC: [
+    "Others",
     "Agamudayar (including Thozhu / Thuluva Vellala)",
     "Archakarai Vellala",
     "Aryavathi",
@@ -197,9 +199,9 @@ const communityCasteData = {
     "Viswakarma (Goldsmith, Carpenter, etc.)",
     "Yadava",
     "Arya Vysya",
-    "Others",
   ],
   MBC: [
+    "Others",
     "Ambalakarar",
     "Bestha / Siviar",
     "Boyar / Oddar",
@@ -214,9 +216,9 @@ const communityCasteData = {
     "Vanniyar",
     "Andipandaram",
     "Kuravar",
-    "Others",
   ],
   BCM: [
+    "Others",
     "Ansar",
     "Dekkani Muslims",
     "Labbai (including Rowthar, Marakayar)",
@@ -226,22 +228,21 @@ const communityCasteData = {
     "Mapilla",
     "Sheik",
     "Syed",
-    "Others",
   ],
   DNC: [
+    "Others",
     "Attur Kilnad Koravars",
     "Appanad Koravars",
     "Dommars",
     "Donga Boya",
     "Narikuravar",
-    "Others",
   ],
   GENERAL: [
+    "Others",
     "Brahmin (Iyer, Iyengar)",
     "Jain",
     "Sikh",
-    "Christian (Forward communities not in BC list)",
-    "Others",
+    "Christian (Forward communities not in BC list)", 
   ],
 };
 
@@ -1141,6 +1142,7 @@ const professionOptions = [
           }
         }}
         options={[
+          "Other",
           "Tamil",
           "English",
           "Telugu",
@@ -1150,8 +1152,7 @@ const professionOptions = [
           "Urdu",
           "Marathi",
           "Bengali",
-          "Gujarati",
-          "Other"
+          "Gujarati"
         ].map((lang) => ({
           value: lang,
           label: lang,
@@ -1196,6 +1197,7 @@ const professionOptions = [
           }
         }}
         options={[
+          { value: "Other", label: "Other" },
           { value: "Hindu", label: "Hindu" },
           { value: "Muslim", label: "Muslim" },
           { value: "Christian", label: "Christian" },
@@ -1204,7 +1206,7 @@ const professionOptions = [
           { value: "Buddhist", label: "Buddhist" },
           { value: "Jewish", label: "Jewish" },
           { value: "Parsi", label: "Parsi" },
-          { value: "Other", label: "Other" },
+          
         ]}
         placeholder="Select Religion"
       />
@@ -1550,6 +1552,7 @@ const professionOptions = [
           handleChange({ target: { name: "educationalQualification", value: e.value } })
         }
         options={[
+          { value: "Other", label: "Other" },
           { value: "10th Pass", label: "10th Pass" },
           { value: "12th Pass", label: "12th Pass" },
           { value: "Diploma", label: "Diploma" },
@@ -1561,7 +1564,6 @@ const professionOptions = [
           { value: "Engineering", label: "Engineering" },
           { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
           { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
-          { value: "Other", label: "Other" },
         ]}
         placeholder="Select Educational Qualification"
         isClearable
@@ -1602,12 +1604,12 @@ const professionOptions = [
           }
         }}
         options={[
+          { value: "Other", label: "Other" },
           { value: "Private", label: "Private Sector" },
           { value: "Government", label: "Government Sector" },
           { value: "Self-Employed", label: "Self-Employed" },
           { value: "Business", label: "Business" },
           { value: "Not Employed", label: "Not Employed" },
-          { value: "Other", label: "Other" },
         ]}
         placeholder="Select Employment"
       />
@@ -1651,8 +1653,8 @@ const professionOptions = [
           }
         }}
         options={[
+          { value: "Other", label: "Other" },
           ...professionOptions,
-          { value: "Other", label: "Other" }
         ]}
         placeholder="Select Occupation"
       />
@@ -1720,6 +1722,7 @@ const professionOptions = [
           }
         }}
         options={[
+          { value: "Other", label: "Other" },
           // South Asia
           { value: "India", label: "India" },
           { value: "Sri Lanka", label: "Sri Lanka" },
@@ -1771,7 +1774,6 @@ const professionOptions = [
           { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
           { value: "Fiji", label: "Fiji" },
           
-          { value: "Other", label: "Other" },
         ]}
         placeholder="Select Country"
       />
@@ -1857,7 +1859,7 @@ const professionOptions = [
     />
 
         {/* Address (Optional) - Commented out for now */}
-    {/* <FloatingInput
+    <FloatingInput
       label="Address (Optional)"
       name="address"
       value={form.address}
@@ -1866,7 +1868,7 @@ const professionOptions = [
       placeholder="Enter your complete address"
       rows="4"
       error={validationErrors.address}
-    /> */}
+    />
   </div>
         )}
 
@@ -1875,7 +1877,7 @@ const professionOptions = [
           <div className="space-y-6">
                         {/* About Yourself with bold heading */}
             <div>
-              <label className="block text-lg font-bold text-gray-800 mb-3">
+              <label className="block text-lg font-bold text-red-600 mb-3">
                 📝 About Yourself
               </label>
               <FloatingInput
@@ -1899,7 +1901,7 @@ const professionOptions = [
 
             {/* Photos Upload - Updated with green colors */}
             <div>
-              <label className="block text-lg font-bold text-gray-800 mb-1">
+              <label className="block text-lg font-bold text-red-600 mb-1">
                 📸 Profile Photos
               </label>
               <p className="text-sm text-gray-600 mb-3">
@@ -1976,10 +1978,9 @@ const professionOptions = [
                 </div>
               )}
             </div>
-
-                        {/* ID Proof Upload - Changed from Aadhar */}
+ {/* ID Proof Upload - Changed from Aadhar */}
 <div>
-  <label className="block text-lg font-bold text-gray-800 mb-1">
+  <label className="block text-lg font-bold text-red-600 mb-1">
     🆔 Upload Any ID Proof
   </label>
   <p className="text-sm text-gray-600 mb-3">
@@ -2182,9 +2183,9 @@ const professionOptions = [
   </div>
 )}
 
-                        {/* Membership Type - Updated with bold and 3 months */}
+   {/* Membership Type - Updated with bold and 3 months */}
             <div>
-              <label className="block text-lg font-bold text-gray-800 mb-3">
+              <label className="block text-lg font-bold text-red-600 mb-3">
                 Membership Type *
               </label>
 
