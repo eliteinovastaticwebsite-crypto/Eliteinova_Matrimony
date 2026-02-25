@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
 
         <h2 className="text-2xl font-bold text-red-800 mt-10 mb-3">Contact Information</h2>
         <p className="mb-6">
-          📞 Phone:+91 7845554882<br />
+          📞 Phone:+91 9940200736<br />
           📧 Email: info@eliteinovamatrimony.com<br />
           🌐 Website: www.eliteinovamatrimony.com
         </p>

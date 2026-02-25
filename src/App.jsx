@@ -333,8 +333,8 @@ function AppContent() {
         <>
           <Footer />
           <FloatingActions
-            whatsappNumber="+917845554882"
-            phoneNumber="+917845554882"
+            whatsappNumber="+919940200736"
+            phoneNumber="+919940200736"
             onRegister={openRegisterModal}
             onLogin={openLoginModal}
             isAuthenticated={isAuthenticated}

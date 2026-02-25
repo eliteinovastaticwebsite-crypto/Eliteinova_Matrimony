@@ -52,7 +52,7 @@ export default function Contact() {
     {
       icon: PhoneIcon,
       title: "Call Us",
-      details: "+91 7845554882",
+      details: "+91 9940200736",
       subtitle: "Monday – Friday: 09.30 AM - 06.30 PM\nSaturday: 09.30 AM - 03.00 PM",
       color: "green",
       link: "tel:+91784554882",
@@ -73,7 +73,7 @@ export default function Contact() {
         </svg>
       ),
       title: "Chat on WhatsApp",
-      details: "+91 7845554882",
+      details: "+91 9940200736",
       subtitle: "Instant Support Available",
       color: "green",
       link: "https://api.whatsapp.com/send?phone=91784554882",

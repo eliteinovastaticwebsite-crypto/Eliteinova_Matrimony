@@ -67,7 +67,7 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-white/85 hover:text-white transition-colors">
                 <FaPhoneAlt className="text-white flex-shrink-0" />
-                <span className="font-medium">+91 7845554882</span>
+                <span className="font-medium">+91 9940200736</span>
               </div>
               <div className="flex items-center space-x-3 text-white/85 hover:text-white transition-colors">
                 <FaEnvelope className="text-white flex-shrink-0" />
