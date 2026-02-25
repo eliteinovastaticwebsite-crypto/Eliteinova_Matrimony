@@ -103,33 +103,226 @@ export default function RegisterForm({
 
 // ------------- Districts Mapping -------------
 const districtsByState = {
-  "Tamil Nadu": [
-    "Chennai","Chengalpattu","Kanchipuram","Tiruvallur","Vellore","Tiruvannamalai",
-    "Villupuram","Cuddalore","Pondicherry","Salem","Namakkal","Erode",
-    "Coimbatore","Tiruppur","Karur","Dindigul","Madurai","Theni",
-    "Sivaganga","Ramanathapuram","Virudhunagar","Tenkasi","Thoothukudi","Kanniyakumari",
-    "Nagapattinam","Thanjavur","Tiruchirappalli","Perambalur","Ariyalur","Mayiladuthurai",
-    "Krishnagiri","Dharmapuri","Nilgiris","Kallakurichi"
+
+  "Andhra Pradesh": [
+    "Anantapur","Chittoor","East Godavari","Guntur","Kadapa","Krishna",
+    "Kurnool","Nellore","Prakasam","Srikakulam","Visakhapatnam",
+    "Vizianagaram","West Godavari","Tirupati"
   ],
+
+  "Arunachal Pradesh": [
+    "Tawang","West Kameng","East Kameng","Papum Pare","Kurung Kumey",
+    "Kra Daadi","Lower Subansiri","Upper Subansiri","West Siang",
+    "East Siang","Siang","Upper Siang","Lower Siang","Lower Dibang Valley",
+    "Dibang Valley","Anjaw","Lohit","Namsai","Changlang","Tirap","Longding"
+  ],
+
+  Assam: [
+    "Baksa","Barpeta","Biswanath","Bongaigaon","Cachar","Charaideo",
+    "Chirang","Darrang","Dhemaji","Dhubri","Dibrugarh","Dima Hasao",
+    "Goalpara","Golaghat","Hailakandi","Hojai","Jorhat","Kamrup",
+    "Kamrup Metropolitan","Karbi Anglong","Karimganj","Kokrajhar",
+    "Lakhimpur","Majuli","Morigaon","Nagaon","Nalbari","Sivasagar",
+    "Sonitpur","South Salmara","Tinsukia","Udalguri","West Karbi Anglong"
+  ],
+
+  Bihar: [
+    "Araria","Arwal","Aurangabad","Banka","Begusarai","Bhagalpur","Bhojpur",
+    "Buxar","Darbhanga","East Champaran","Gaya","Gopalganj","Jamui",
+    "Jehanabad","Kaimur","Katihar","Khagaria","Kishanganj","Lakhisarai",
+    "Madhepura","Madhubani","Munger","Muzaffarpur","Nalanda","Nawada",
+    "Patna","Purnia","Rohtas","Saharsa","Samastipur","Saran","Sheikhpura",
+    "Sheohar","Sitamarhi","Siwan","Supaul","Vaishali","West Champaran"
+  ],
+
+  Chhattisgarh: [
+    "Balod","Baloda Bazar","Balrampur","Bastar","Bemetara","Bijapur",
+    "Bilaspur","Dantewada","Dhamtari","Durg","Gariaband","Janjgir-Champa",
+    "Jashpur","Kabirdham","Kanker","Kondagaon","Korba","Korea",
+    "Mahasamund","Mungeli","Narayanpur","Raigarh","Raipur","Rajnandgaon",
+    "Sukma","Surajpur","Surguja"
+  ],
+
+  Goa: ["North Goa","South Goa"],
+
+  Gujarat: [
+    "Ahmedabad","Amreli","Anand","Aravalli","Banaskantha","Bharuch",
+    "Bhavnagar","Botad","Chhota Udaipur","Dahod","Dang","Devbhoomi Dwarka",
+    "Gandhinagar","Gir Somnath","Jamnagar","Junagadh","Kheda","Kutch",
+    "Mahisagar","Mehsana","Morbi","Narmada","Navsari","Panchmahal",
+    "Patan","Porbandar","Rajkot","Sabarkantha","Surat","Surendranagar",
+    "Tapi","Vadodara","Valsad"
+  ],
+
+  Haryana: [
+    "Ambala","Bhiwani","Charkhi Dadri","Faridabad","Fatehabad","Gurgaon",
+    "Hisar","Jhajjar","Jind","Kaithal","Karnal","Kurukshetra","Mahendragarh",
+    "Nuh","Palwal","Panchkula","Panipat","Rewari","Rohtak","Sirsa",
+    "Sonipat","Yamunanagar"
+  ],
+
+  "Himachal Pradesh": [
+    "Bilaspur","Chamba","Hamirpur","Kangra","Kinnaur","Kullu",
+    "Lahaul and Spiti","Mandi","Shimla","Sirmaur","Solan","Una"
+  ],
+
+  Jharkhand: [
+    "Bokaro","Chatra","Deoghar","Dhanbad","Dumka","East Singhbhum",
+    "Garhwa","Giridih","Godda","Gumla","Hazaribagh","Jamtara","Khunti",
+    "Koderma","Latehar","Lohardaga","Pakur","Palamu","Ramgarh",
+    "Ranchi","Sahebganj","Saraikela Kharsawan","Simdega","West Singhbhum"
+  ],
+
+  Karnataka: [
+    "Bagalkot","Ballari","Belagavi","Bengaluru Rural","Bengaluru Urban",
+    "Bidar","Chamarajanagar","Chikkaballapur","Chikkamagaluru",
+    "Chitradurga","Dakshina Kannada","Davanagere","Dharwad",
+    "Gadag","Hassan","Haveri","Kalaburagi","Kodagu","Kolar","Koppal",
+    "Mandya","Mysuru","Raichur","Ramanagara","Shivamogga",
+    "Tumakuru","Udupi","Uttara Kannada","Vijayapura","Yadgir"
+  ],
+
   Kerala: [
     "Thiruvananthapuram","Kollam","Pathanamthitta","Alappuzha","Kottayam",
-    "Idukki","Ernakulam","Thrissur","Palakkad","Malappuram","Kozhikode",
-    "Wayanad","Kannur","Kasaragod"
+    "Idukki","Ernakulam","Thrissur","Palakkad","Malappuram",
+    "Kozhikode","Wayanad","Kannur","Kasaragod"
   ],
-  Karnataka: [
-    "Bengaluru Urban","Bengaluru Rural","Mysuru","Mangalore","Tumakuru",
-    "Dharwad","Hubli-Dharwad","Belagavi","Ballari","Hassan","Mandya"
+
+  "Madhya Pradesh": [
+    "Agar Malwa","Alirajpur","Anuppur","Ashoknagar","Balaghat","Barwani",
+    "Betul","Bhind","Bhopal","Burhanpur","Chhatarpur","Chhindwara",
+    "Damoh","Datia","Dewas","Dhar","Dindori","Guna","Gwalior","Harda",
+    "Hoshangabad","Indore","Jabalpur","Jhabua","Katni","Khandwa",
+    "Khargone","Mandla","Mandsaur","Morena","Narsinghpur","Neemuch",
+    "Panna","Raisen","Rajgarh","Ratlam","Rewa","Sagar","Satna",
+    "Sehore","Seoni","Shahdol","Shajapur","Sheopur","Shivpuri",
+    "Sidhi","Singrauli","Tikamgarh","Ujjain","Umaria","Vidisha"
   ],
-  "Andhra Pradesh": [
-    "Visakhapatnam","Vijayawada","Guntur","Tirupati","Anantapur","Kurnool","Nellore"
-  ],
-  Telangana: [
-    "Hyderabad","Rangareddy","Medchal-Malkajgiri","Nizamabad",
-    "Karimnagar","Warangal"
-  ],
+
   Maharashtra: [
-    "Mumbai","Pune","Thane","Nagpur","Nashik","Aurangabad","Kolhapur"
+    "Ahmednagar","Akola","Amravati","Aurangabad","Beed","Bhandara",
+    "Buldhana","Chandrapur","Dhule","Gadchiroli","Gondia","Hingoli",
+    "Jalgaon","Jalna","Kolhapur","Latur","Mumbai City","Mumbai Suburban",
+    "Nagpur","Nanded","Nandurbar","Nashik","Osmanabad","Palghar",
+    "Parbhani","Pune","Raigad","Ratnagiri","Sangli","Satara",
+    "Sindhudurg","Solapur","Thane","Wardha","Washim","Yavatmal"
   ],
+
+  Manipur: [
+    "Bishnupur","Chandel","Churachandpur","Imphal East","Imphal West",
+    "Jiribam","Kakching","Kamjong","Kangpokpi","Noney","Pherzawl",
+    "Senapati","Tamenglong","Tengnoupal","Thoubal","Ukhrul"
+  ],
+
+  Meghalaya: [
+    "East Garo Hills","East Khasi Hills","Jaintia Hills",
+    "North Garo Hills","Ri-Bhoi","South Garo Hills",
+    "South West Garo Hills","South West Khasi Hills",
+    "West Garo Hills","West Khasi Hills"
+  ],
+
+  Mizoram: [
+    "Aizawl","Champhai","Kolasib","Lawngtlai","Lunglei",
+    "Mamit","Saiha","Serchhip"
+  ],
+
+  Nagaland: [
+    "Dimapur","Kiphire","Kohima","Longleng","Mokokchung",
+    "Mon","Peren","Phek","Tuensang","Wokha","Zunheboto"
+  ],
+
+  Odisha: [
+    "Angul","Balangir","Balasore","Bargarh","Bhadrak","Boudh",
+    "Cuttack","Deogarh","Dhenkanal","Gajapati","Ganjam","Jagatsinghpur",
+    "Jajpur","Jharsuguda","Kalahandi","Kandhamal","Kendrapara",
+    "Kendujhar","Khordha","Koraput","Malkangiri","Mayurbhanj",
+    "Nabarangpur","Nayagarh","Nuapada","Puri","Rayagada",
+    "Sambalpur","Subarnapur","Sundargarh"
+  ],
+
+  Punjab: [
+    "Amritsar","Barnala","Bathinda","Faridkot","Fatehgarh Sahib",
+    "Fazilka","Ferozepur","Gurdaspur","Hoshiarpur","Jalandhar",
+    "Kapurthala","Ludhiana","Mansa","Moga","Mohali",
+    "Muktsar","Pathankot","Patiala","Rupnagar","Sangrur",
+    "Shaheed Bhagat Singh Nagar","Tarn Taran"
+  ],
+
+  Rajasthan: [
+    "Ajmer","Alwar","Banswara","Baran","Barmer","Bharatpur",
+    "Bhilwara","Bikaner","Bundi","Chittorgarh","Churu","Dausa",
+    "Dholpur","Dungarpur","Hanumangarh","Jaipur","Jaisalmer",
+    "Jalore","Jhalawar","Jhunjhunu","Jodhpur","Karauli","Kota",
+    "Nagaur","Pali","Pratapgarh","Rajsamand","Sawai Madhopur",
+    "Sikar","Sirohi","Sri Ganganagar","Tonk","Udaipur"
+  ],
+
+  Sikkim: ["East Sikkim","North Sikkim","South Sikkim","West Sikkim"],
+
+  "Tamil Nadu": [
+    "Chennai","Chengalpattu","Kanchipuram","Tiruvallur","Vellore",
+    "Tiruvannamalai","Villupuram","Cuddalore","Salem","Namakkal",
+    "Erode","Coimbatore","Tiruppur","Karur","Dindigul","Madurai",
+    "Theni","Sivaganga","Ramanathapuram","Virudhunagar","Tenkasi",
+    "Thoothukudi","Kanniyakumari","Nagapattinam","Thanjavur",
+    "Tiruchirappalli","Perambalur","Ariyalur","Mayiladuthurai",
+    "Krishnagiri","Dharmapuri","Nilgiris","Kallakurichi"
+  ],
+
+  Telangana: [
+    "Adilabad","Bhadradri Kothagudem","Hyderabad","Jagtial",
+    "Jangaon","Jayashankar Bhupalpally","Jogulamba Gadwal",
+    "Kamareddy","Karimnagar","Khammam","Mahabubabad",
+    "Mahabubnagar","Mancherial","Medak","Medchal",
+    "Nagarkurnool","Nalgonda","Narayanpet","Nirmal",
+    "Nizamabad","Peddapalli","Rajanna Sircilla",
+    "Rangareddy","Sangareddy","Siddipet","Suryapet",
+    "Vikarabad","Wanaparthy","Warangal"
+  ],
+
+  Tripura: ["Dhalai","Gomati","Khowai","North Tripura","Sepahijala","South Tripura","Unakoti","West Tripura"],
+
+  "Uttar Pradesh": [
+    "Agra","Aligarh","Allahabad","Ambedkar Nagar","Amethi","Amroha",
+    "Auraiya","Ayodhya","Azamgarh","Baghpat","Bahraich","Ballia",
+    "Balrampur","Banda","Barabanki","Bareilly","Basti","Bhadohi",
+    "Bijnor","Budaun","Bulandshahr","Chandauli","Chitrakoot","Deoria",
+    "Etah","Etawah","Farrukhabad","Fatehpur","Firozabad","Gautam Buddha Nagar",
+    "Ghaziabad","Ghazipur","Gonda","Gorakhpur","Hamirpur","Hapur",
+    "Hardoi","Hathras","Jalaun","Jaunpur","Jhansi","Kannauj",
+    "Kanpur Dehat","Kanpur Nagar","Kasganj","Kaushambi","Kheri",
+    "Kushinagar","Lalitpur","Lucknow","Maharajganj","Mahoba",
+    "Mainpuri","Mathura","Mau","Meerut","Mirzapur","Moradabad",
+    "Muzaffarnagar","Pilibhit","Pratapgarh","Raebareli","Rampur",
+    "Saharanpur","Sambhal","Sant Kabir Nagar","Shahjahanpur",
+    "Shamli","Shravasti","Siddharthnagar","Sitapur","Sonbhadra",
+    "Sultanpur","Unnao","Varanasi"
+  ],
+
+  Uttarakhand: [
+    "Almora","Bageshwar","Chamoli","Champawat","Dehradun",
+    "Haridwar","Nainital","Pauri Garhwal","Pithoragarh",
+    "Rudraprayag","Tehri Garhwal","Udham Singh Nagar","Uttarkashi"
+  ],
+
+  "West Bengal": [
+    "Alipurduar","Bankura","Birbhum","Cooch Behar","Dakshin Dinajpur",
+    "Darjeeling","Hooghly","Howrah","Jalpaiguri","Jhargram",
+    "Kalimpong","Kolkata","Malda","Murshidabad","Nadia",
+    "North 24 Parganas","Paschim Bardhaman","Paschim Medinipur",
+    "Purba Bardhaman","Purba Medinipur","Purulia",
+    "South 24 Parganas","Uttar Dinajpur"
+  ],
+
+  "Andaman and Nicobar Islands": ["Nicobar","North and Middle Andaman","South Andaman"],
+  Chandigarh: ["Chandigarh"],
+  "Dadra and Nagar Haveli and Daman and Diu": ["Daman","Diu","Dadra and Nagar Haveli"],
+  Delhi: ["Central Delhi","East Delhi","New Delhi","North Delhi","North East Delhi","North West Delhi","Shahdara","South Delhi","South East Delhi","South West Delhi","West Delhi"],
+  "Jammu and Kashmir": ["Anantnag","Bandipora","Baramulla","Budgam","Doda","Ganderbal","Jammu","Kathua","Kishtwar","Kulgam","Kupwara","Poonch","Pulwama","Rajouri","Ramban","Reasi","Samba","Shopian","Srinagar","Udhampur"],
+  Ladakh: ["Kargil","Leh"],
+  Lakshadweep: ["Lakshadweep"],
+  Puducherry: ["Karaikal","Mahe","Puducherry","Yanam"]
+
 };
 
 // ------------ Tamil Nadu Government Community Categories ------------
@@ -413,45 +606,77 @@ const professionOptions = [
           errors.confirmPassword = "Passwords do not match";
         break;
       case 2:
-        if (!form.email?.trim()) errors.email = "Email required";
-        
-        // Age validation: must be 18 or above AND born after 1975
-        if (form.dob) {
-          const calculatedAge = calculateAge(form.dob);
-          const birthYear = new Date(form.dob).getFullYear();
-          
-          if (calculatedAge < 18) {
-            errors.dob = "You must be at least 18 years old to register";
-            errors.age = "Age must be 18 or above";
-          }
-          
-          if (birthYear < 1975) {
-            errors.dob = "Sorry, registration is only available for individuals born after 1975";
-          }
-        } else if (form.age) {
-          const ageNum = parseInt(form.age);
-          if (isNaN(ageNum) || ageNum < 18) {
-            errors.age = "Age must be 18 or above";
-          }
-        }
-        
-        // Preferred min age validation: must be 18 or above
-        if (form.partnerAgeMin) {
-          const minAgeNum = parseInt(form.partnerAgeMin);
-          if (isNaN(minAgeNum) || minAgeNum < 18) {
-            errors.partnerAgeMin = "Preferred minimum age must be 18 or above";
-          }
-        }
-        
-        // Preferred max age validation: must be greater than or equal to min age (if both provided)
-        if (form.partnerAgeMax && form.partnerAgeMin) {
-          const maxAgeNum = parseInt(form.partnerAgeMax);
-          const minAgeNum = parseInt(form.partnerAgeMin);
-          if (!isNaN(maxAgeNum) && !isNaN(minAgeNum) && maxAgeNum < minAgeNum) {
-            errors.partnerAgeMax = "Maximum age must be greater than or equal to minimum age";
-          }
-        }
-        break;
+  if (!form.email?.trim()) errors.email = "Email required";
+  
+  if (form.dob) {
+    const calculatedAge = calculateAge(form.dob);
+    const birthYear = new Date(form.dob).getFullYear();
+    
+    if (calculatedAge < 18) {
+      errors.dob = "You must be at least 18 years old to register";
+      errors.age = "Age must be 18 or above";
+    }
+    
+    if (birthYear < 1975) {
+      errors.dob = "Sorry, registration is only available for individuals born after 1975";
+    }
+  } else if (form.age) {
+    const ageNum = parseInt(form.age);
+    if (isNaN(ageNum) || ageNum < 18) {
+      errors.age = "Age must be 18 or above";
+    }
+  }
+
+  const userAge = parseInt(form.age) || calculateAge(form.dob);
+  const minAge = parseInt(form.partnerAgeMin);
+  const maxAge = parseInt(form.partnerAgeMax);
+
+  if (form.gender === "Female") {
+    if (form.partnerAgeMin) {
+      if (isNaN(minAge) || minAge < 18) {
+        errors.partnerAgeMin = "Preferred minimum age must be 18 or above";
+      } else if (minAge < userAge) {
+        errors.partnerAgeMin = `Minimum age must be at least your age (${userAge}). Female profiles should prefer same age or older partners`;
+      }
+    }
+    if (form.partnerAgeMax) {
+      if (isNaN(maxAge) || maxAge < 18) {
+        errors.partnerAgeMax = "Preferred maximum age must be 18 or above";
+      } else if (maxAge <= userAge) {
+        errors.partnerAgeMax = `Maximum age must be greater than your age (${userAge}). Female profiles should prefer partners older than themselves`;
+      }
+    }
+    if (form.partnerAgeMin && form.partnerAgeMax) {
+      if (!isNaN(minAge) && !isNaN(maxAge) && maxAge < minAge) {
+        errors.partnerAgeMax = "Maximum age must be greater than or equal to minimum age";
+      }
+      // ← REMOVED: 10 years difference condition for Female
+    }
+  }
+
+  if (form.gender === "Male") {
+    if (form.partnerAgeMin) {
+      if (isNaN(minAge) || minAge < 18) {
+        errors.partnerAgeMin = "Preferred minimum age must be 18 or above";
+      } else if (minAge >= userAge) {
+        errors.partnerAgeMin = `Minimum age must be less than your age (${userAge}). Male profiles should prefer partners younger than themselves`;
+      }
+    }
+    if (form.partnerAgeMax) {
+      if (isNaN(maxAge) || maxAge < 18) {
+        errors.partnerAgeMax = "Preferred maximum age must be 18 or above";
+      } else if (maxAge > userAge) {
+        errors.partnerAgeMax = `Maximum age must not exceed your age (${userAge}). Male profiles should prefer partners up to their own age`;
+      }
+    }
+    if (form.partnerAgeMin && form.partnerAgeMax) {
+      if (!isNaN(minAge) && !isNaN(maxAge) && maxAge < minAge) {
+        errors.partnerAgeMax = "Maximum age must be greater than or equal to minimum age";
+      }
+      // ← REMOVED: 10 years difference condition for Male
+    }
+  }
+  break;
 
         case 3:
           if (!form.religion) errors.religion = "Religion is required";
@@ -1131,6 +1356,18 @@ const professionOptions = [
                 error={validationErrors.partnerAgeMax}
               />
             </div>
+            {/* Age Guidelines */}
+<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-gray-700 space-y-1.5">
+  <p className="font-semibold text-yellow-800 mb-1">📋 Age Guidelines:</p>
+  <ul className="space-y-0.3 list-disc list-inside">
+    <li>Age must match official ID proof (Aadhar / Passport / Driving License).</li>
+    <li>Profiles with incorrect age details may be rejected.</li>
+    <li>Age preference should be realistic and within culturally acceptable limits.</li>
+    <li className="text-green-700">
+      💡 <span className="font-medium">Tip:</span> Accurate age details improve your Tamil Bride Search or Tamil Groom Search results and increase profile visibility.
+    </li>
+  </ul>
+</div>
 
             <FloatingInput
               label="Email ID"
@@ -1957,19 +2194,34 @@ const professionOptions = [
       maxLength="6"
     />
 
-        {/* Address (Optional) - Commented out for now */}
-    <FloatingInput
-      label="Address (Optional)"
-      name="address"
-      value={form.address}
-      onChange={handleChange}
-      textarea
-      placeholder="Enter your complete address"
-      rows="4"
-      error={validationErrors.address}
-    />
-  </div>
-        )}
+        {/* Address (Optional) */}
+<FloatingInput
+  label="Address (Optional)"
+  name="address"
+  value={form.address}
+  onChange={handleChange}
+  textarea
+  placeholder="Enter your complete address"
+  rows="4"
+  error={validationErrors.address}
+/>
+
+{/* Address Guidelines */}
+<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-gray-700 space-y-1.5">
+  <p className="font-semibold text-yellow-800 mb-1">📋 Address Guidelines:</p>
+  <ul className="space-y-0.3 list-disc list-inside">
+    <li>Mention correct current residence.</li>
+    <li>If working abroad, specify work country and native place separately in the Address message box.</li>
+    <li>NRI profiles must clearly mention visa/work status in the <span className="font-medium">"About Yourself"</span> box.</li>
+    <li className="text-green-700">
+      💡 <span className="font-medium">Tip:</span> Selecting flexible location preferences increases better match suggestions in our Community Matrimony Tamil Nadu and global Tamil network.
+    </li>
+  </ul>
+</div>
+
+</div>
+
+      )}
 
         {/* Step 6: About Yourself & Documents */}
         {step === 6 && (
@@ -2034,7 +2286,7 @@ const professionOptions = [
                     or drag and drop
                   </p>
                   <p className="text-xs text-green-600 mt-1 font-medium">
-                    PNG, JPG up to 5MB each (Max 3 photos)
+                    PNG, JPG, JPEG up to 5MB each (Max 3 photos)
                   </p>
                 </div>
               </div>
@@ -2076,6 +2328,19 @@ const professionOptions = [
                   </div>
                 </div>
               )}
+              {/* Photo Guidelines */}
+             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-gray-700 space-y-1.5 mt-3">
+             <p className="font-semibold text-yellow-800 mb-1">📋 Photo Guidelines:</p>
+            <ul className="space-y-0.3 list-disc list-inside">
+           <li>Upload a recent passport-size or clear portrait photo.</li>
+           <li>Face must be clearly visible (no sunglasses or heavy filters).</li>
+           <li>Neutral or traditional attire preferred.</li>
+           <li>Minimum resolution: 400 x 400 pixels.</li>
+           <li>Maximum file size: 5 MB per profile photo.</li>
+          <li>Accepted formats: JPG, JPEG, PNG.</li>
+         </ul>
+     </div>
+
             </div>
  {/* ID Proof Upload - Changed from Aadhar */}
 <div>
@@ -2133,7 +2398,7 @@ const professionOptions = [
         or drag and drop
       </p>
       <p className="text-xs text-gray-500 mt-1">
-        PDF, JPG, PNG (Max 10MB) • Front and Back in one file
+        PDF, JPG, PNG (Max 10MB) • Upload any ID Proof (Driving License, Aadhar,Voter ID, Passport and Others)
       </p>
     </div>
   </div>
@@ -2244,6 +2509,25 @@ const professionOptions = [
       </p>
     </div>
   )}
+         {/* ID Proof Guidelines */}
+  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-gray-700 space-y-0.3 mt-3">
+    <p className="font-semibold text-yellow-800 mb-1">📋 ID Proof Guidelines:</p>
+    <ul className="space-y-0.3 list-disc list-inside">
+      <li>Upload a clear and readable scanned copy or photo.</li>
+      <li>Ensure name and date of birth are visible.</li>
+      <li>Maximum file size: 5 MB (front page with address).</li>
+      <li>Accepted formats: JPG, JPEG, PNG, PDF.</li>
+    </ul>
+    <div className="mt-2 pt-2 border-t border-yellow-300">
+      <p className="font-semibold text-yellow-800 mb-1">📝 Notes:</p>
+      <ul className="space-y-0.3 list-disc list-inside">
+        <li>ID proof is used only for verification purposes.</li>
+        <li>ID details will <span className="font-semibold">NOT</span> be displayed publicly on your profile.</li>
+        <li>Profiles without verification may have limited visibility.</li>
+        <li className="text-red-600 font-medium">Fake or tampered documents will lead to permanent account removal.</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
             {/* Upload Summary */}
@@ -2284,10 +2568,21 @@ const professionOptions = [
 
    {/* Membership Type - Updated with bold and 3 months */}
             <div>
-              <label className="block text-lg font-bold text-red-600 mb-3">
-                Membership Type *
-              </label>
-
+              <div className="flex items-center justify-between mb-3">
+                <label className="block text-lg font-bold text-red-600">
+                  Membership Type *
+                </label>
+                <button
+                 type="button"
+                 onClick={() => {}}
+                 className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-yellow-600"
+               >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Update Currencies
+                </button>
+              </div>
               <div className="flex flex-col space-y-3">
                 {[
                   { value: "SILVER", label: "SILVER", price: "₹299/Per 3 Months" },
