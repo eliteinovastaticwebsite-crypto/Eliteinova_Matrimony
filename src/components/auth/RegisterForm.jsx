@@ -51,7 +51,7 @@ export default function RegisterForm({
     caste: "",
     subCaste: "",
     subCasteOther: "",
-    dosham: "No",
+    dosham: "Don't Know",
 
     // Step 4: Family Background
     maritalStatus: "Single",
@@ -60,6 +60,8 @@ export default function RegisterForm({
     height: "5.6",
     familyStatus: "Middle Class",
     familyType: "Joint",
+    familyStatusOther: "",
+    familyTypeOther: "",
 
     // Step 5: Professional Details
     education: "Bachelor's",
@@ -77,6 +79,9 @@ export default function RegisterForm({
     pincode: "",
     state: "",
     country: "India",
+    educationOther: "",
+    educationalQualificationOther: "",
+    annualIncomeOther: "",
 
     // Step 6: About & Files
     about: "",
@@ -449,39 +454,36 @@ const professionOptions = [
         break;
 
         case 3:
-        if (!form.religion) errors.religion = "Religion required";
-        // Remove required validation for community and caste
-        // if (!form.community) errors.community = "Community category required";
-        if (form.community === "Other" && !form.communityOther) {
-          errors.communityOther = "Please specify community category";
-        }
-        // if (!form.caste && form.community !== "Other") errors.caste = "Caste required";
-        if (form.community === "Other" && !form.subCasteOther) {
-          errors.subCasteOther = "Please specify caste/subcaste";
-        }
-        if (form.caste === "Others" && !form.subCasteOther) {
-          errors.subCasteOther = "Please specify caste/subcaste";
-        }
-        break;
+          if (!form.religion) errors.religion = "Religion is required";
+          if (!form.motherTongue) errors.motherTongue = "Mother tongue is required";
+          if (form.motherTongue === "Other" && !form.motherTongueOther?.trim())
+             errors.motherTongueOther = "Please specify your mother tongue";
+          if (form.religion === "Other" && !form.religionOther?.trim())
+             errors.religionOther = "Please specify your religion";
+          // Community "Other" text and caste "Others" text are now OPTIONAL
+         break;
         
       case 4:
         if (!form.maritalStatus)
           errors.maritalStatus = "Marital status required";
         if (!form.height) errors.height = "Height required";
-        if (!form.familyStatus) errors.familyStatus = "Family status required";
-        if (!form.familyType) errors.familyType = "Family type required";
+        {/*if (!form.familyStatus) errors.familyStatus = "Family status required";
+        if (!form.familyType) errors.familyType = "Family type required"; */}
         if (!form.physicallyChallenged) errors.physicallyChallenged = "Please specify if physically challenged";
         if (form.physicallyChallenged === "Yes" && !form.physicallyChallengedDescription?.trim()) {
           errors.physicallyChallengedDescription = "Description required when physically challenged is Yes";
         }
         break;
       case 5:
-        if (!form.education) errors.education = "Education required";
-        if (!form.employedIn) errors.employedIn = "Employment required";
-        if (!form.membershipType) errors.membershipType = "Membership type required";
-        if (!form.annualIncome) errors.annualIncome = "Income required";
-        if (!form.district?.trim()) errors.district = "District required";
-        if (!form.state?.trim()) errors.state = "State required";
+          if (!form.education) errors.education = "Education required";
+          if (form.education === "Other" && !form.educationOther?.trim())
+            errors.educationOther = "Please specify your education";
+          if (form.educationalQualification === "Other" && !form.educationalQualificationOther?.trim())
+            errors.educationalQualificationOther = "Please specify your qualification";
+          if (!form.employedIn) errors.employedIn = "Employment required";
+          if (!form.annualIncome) errors.annualIncome = "Income required";
+          if (!form.district?.trim()) errors.district = "District required";
+          if (!form.state?.trim()) errors.state = "State required";
         break;
       case 6:
         if (!form.about?.trim()) errors.about = "About yourself required";
@@ -1033,6 +1035,24 @@ const professionOptions = [
               error={validationErrors.confirmPassword}
               placeholder="Re-enter your password"
             />
+            {/* Password Requirements */}
+<div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-600 space-y-1">
+  <p className="font-semibold text-gray-700 mb-1">Password must contain:</p>
+  <ul className="space-y-1">
+    <li className={`flex items-center gap-2 ${form.password?.length >= 6 ? 'text-green-600' : 'text-gray-500'}`}>
+      <span>{form.password?.length >= 6 ? '✅' : '⬜'}</span> At least 6 characters
+    </li>
+    <li className={`flex items-center gap-2 ${/[A-Z]/.test(form.password || '') ? 'text-green-600' : 'text-gray-500'}`}>
+      <span>{/[A-Z]/.test(form.password || '') ? '✅' : '⬜'}</span> At least one uppercase letter (A-Z)
+    </li>
+    <li className={`flex items-center gap-2 ${/[a-z]/.test(form.password || '') ? 'text-green-600' : 'text-gray-500'}`}>
+      <span>{/[a-z]/.test(form.password || '') ? '✅' : '⬜'}</span> At least one lowercase letter (a-z)
+    </li>
+    <li className={`flex items-center gap-2 ${/[0-9]/.test(form.password || '') ? 'text-green-600' : 'text-gray-500'}`}>
+      <span>{/[0-9]/.test(form.password || '') ? '✅' : '⬜'}</span> At least one number (0-9)
+    </li>
+  </ul>
+</div>
           </div>
         )}
 
@@ -1131,7 +1151,7 @@ const professionOptions = [
 
         {/* ⭐ Mother Tongue Select with Other option */}
     <div>
-      <label className="block mb-1 font-medium">Mother Tongue</label>
+      <label className="block mb-1 font-medium">Mother Tongue <span className="text-red-500">*</span></label>
       <Select
         value={form.motherTongue ? { value: form.motherTongue, label: form.motherTongue } : null}
         onChange={(e) => {
@@ -1184,7 +1204,7 @@ const professionOptions = [
 
         {/* ⭐ Religion Select with Other option */}
     <div>
-      <label className="block mb-1 font-medium">Religion</label>
+     <label className="block mb-1 font-medium">Religion <span className="text-red-500">*</span></label>
       <Select
         value={form.religion ? { value: form.religion, label: form.religion } : null}
         onChange={(e) => {
@@ -1270,19 +1290,18 @@ const professionOptions = [
         }}
       />
       {form.community === "Other" && (
-        <div className="mt-2">
-          <FloatingInput
-            label="Please specify community category"
-            name="communityOther"
-            value={form.communityOther}
-            onChange={handleChange}
-            required
-          />
-          {validationErrors.communityOther && (
-            <p className="text-red-500 text-sm">{validationErrors.communityOther}</p>
-          )}
-        </div>
-      )}
+  <div className="mt-2">
+    <FloatingInput
+      label="Please specify community category"
+      name="communityOther"
+      value={form.communityOther}
+      onChange={handleChange}
+    />
+    {validationErrors.communityOther && (
+      <p className="text-red-500 text-sm">{validationErrors.communityOther}</p>
+    )}
+  </div>
+)}
       {validationErrors.community && (
         <p className="text-red-500 text-sm">{validationErrors.community}</p>
       )}
@@ -1321,33 +1340,31 @@ const professionOptions = [
         }}
       />
       {form.caste === "Others" && (
-        <div className="mt-2">
-          <FloatingInput
-            label="Please specify caste/subcaste"
-            name="subCasteOther"
-            value={form.subCasteOther}
-            onChange={handleChange}
-            required
-          />
-          {validationErrors.subCasteOther && (
-            <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
-          )}
-        </div>
-      )}
-      {form.community === "Other" && (
-        <div className="mt-2">
-          <FloatingInput
-            label="Please specify caste/subcaste"
-            name="subCasteOther"
-            value={form.subCasteOther}
-            onChange={handleChange}
-            required
-          />
-          {validationErrors.subCasteOther && (
-            <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
-          )}
-        </div>
-      )}
+  <div className="mt-2">
+    <FloatingInput
+      label="Please specify caste/subcaste"
+      name="subCasteOther"
+      value={form.subCasteOther}
+      onChange={handleChange}
+    />
+    {validationErrors.subCasteOther && (
+      <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
+    )}
+  </div>
+)}
+{form.community === "Other" && (
+  <div className="mt-2">
+    <FloatingInput
+      label="Please specify caste/subcaste"
+      name="subCasteOther"
+      value={form.subCasteOther}
+      onChange={handleChange}
+    />
+    {validationErrors.subCasteOther && (
+      <p className="text-red-500 text-sm">{validationErrors.subCasteOther}</p>
+    )}
+  </div>
+)}
       {validationErrors.caste && (
         <p className="text-red-500 text-sm">{validationErrors.caste}</p>
       )}
@@ -1444,34 +1461,68 @@ const professionOptions = [
               })}
             </datalist>
 
-            <FloatingInput
-              label="Family Status"
-              name="familyStatus"
-              value={form.familyStatus}
-              onChange={handleChange}
-              required
-              select
-              error={validationErrors.familyStatus}
-            >
-              <option value="Lower Middle Class">Lower Middle Class</option>
-              <option value="Middle Class">Middle Class</option>
-              <option value="Upper Middle Class">Upper Middle Class</option>
-              <option value="Rich">Rich</option>
-              <option value="Upper Rich">Upper Rich</option>
-            </FloatingInput>
+            <div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Financial Status <span className="text-gray-400 font-normal">(Optional)</span>
+  </label>
+  <select
+    name="familyStatus"
+    value={form.familyStatus}
+    onChange={handleChange}
+    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+  >
+    <option value="Other">Other</option>
+    <option value="Lower Middle Class">Lower Middle Class</option>
+    <option value="Middle Class">Middle Class</option>
+    <option value="Upper Middle Class">Upper Middle Class</option>
+    <option value="Rich">Rich</option>
+    <option value="Upper Rich">Upper Rich</option>
+  </select>
+  {form.familyStatus === "Other" && (
+    <div className="mt-2">
+      <FloatingInput
+        label="Please specify financial status"
+        name="familyStatusOther"
+        value={form.familyStatusOther || ""}
+        onChange={handleChange}
+        placeholder="Enter your financial status"
+      />
+    </div>
+  )}
+  {validationErrors.familyStatus && (
+    <p className="text-red-500 text-xs mt-1">{validationErrors.familyStatus}</p>
+  )}
+</div>
 
-            <FloatingInput
-              label="Family Type"
-              name="familyType"
-              value={form.familyType}
-              onChange={handleChange}
-              required
-              select
-              error={validationErrors.familyType}
-            >
-              <option value="Joint">Joint Family</option>
-              <option value="Nuclear">Nuclear Family</option>
-            </FloatingInput>
+            <div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Family Type <span className="text-gray-400 font-normal">(Optional)</span>
+  </label>
+  <select
+    name="familyType"
+    value={form.familyType}
+    onChange={handleChange}
+    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+  >
+    <option value="Other">Other</option>
+    <option value="Joint">Joint Family</option>
+    <option value="Nuclear">Nuclear Family</option>
+  </select>
+  {form.familyType === "Other" && (
+    <div className="mt-2">
+      <FloatingInput
+        label="Please specify family type"
+        name="familyTypeOther"
+        value={form.familyTypeOther || ""}
+        onChange={handleChange}
+        placeholder="Enter your family type"
+      />
+    </div>
+  )}
+  {validationErrors.familyType && (
+    <p className="text-red-500 text-xs mt-1">{validationErrors.familyType}</p>
+  )}
+</div>
 
             {/* Physically Challenged Field */}
             <div>
@@ -1524,54 +1575,87 @@ const professionOptions = [
     
     {/* ⭐ Highest Education */}
     <div>
-      <label className="block mb-1 font-medium">Highest Education</label>
-      <Select
-        value={form.education ? { value: form.education, label: form.education } : null}
-        onChange={(e) =>
-          handleChange({ target: { name: "education", value: e.value } })
-        }
-        options={[
-          { value: "High School", label: "High School" },
-          { value: "Bachelor's", label: "Bachelor's Degree" },
-          { value: "Master's", label: "Master's Degree" },
-          { value: "PhD", label: "PhD" },
-        ]}
-        placeholder="Select Education"
-      />
-      {validationErrors.education && (
-        <p className="text-red-500 text-sm">{validationErrors.education}</p>
-      )}
-    </div>
+  <label className="block mb-1 font-medium">Highest Education</label>
+  <Select
+    value={form.education ? { value: form.education, label: form.education } : null}
+    onChange={(e) => {
+      handleChange({ target: { name: "education", value: e.value } });
+      if (e.value !== "Other") {
+        handleChange({ target: { name: "educationOther", value: "" } });
+      }
+    }}
+    options={[
+      { value: "Other", label: "Other" },
+      { value: "High School", label: "High School" },
+      { value: "Bachelor's", label: "Bachelor's Degree" },
+      { value: "Master's", label: "Master's Degree" },
+      { value: "PhD", label: "PhD" },
+    ]}
+    placeholder="Select Education"
+  />
+  {form.education === "Other" && (
+  <div className="mt-2">
+    <FloatingInput
+      label="Please specify your education"
+      name="educationOther"
+      value={form.educationOther || ""}
+      onChange={handleChange}
+      required                    // ← ADDED
+      placeholder="Enter your highest education"
+      error={validationErrors.educationOther}   // ← ADDED
+    />
+  </div>
+)}
+  {validationErrors.education && (
+    <p className="text-red-500 text-sm">{validationErrors.education}</p>
+  )}
+</div>
 
     {/* Educational Qualification */}
     <div>
-      <label className="block mb-1 font-medium">Educational Qualification</label>
-      <Select
-        value={form.educationalQualification ? { value: form.educationalQualification, label: form.educationalQualification } : null}
-        onChange={(e) =>
-          handleChange({ target: { name: "educationalQualification", value: e.value } })
-        }
-        options={[
-          { value: "Other", label: "Other" },
-          { value: "10th Pass", label: "10th Pass" },
-          { value: "12th Pass", label: "12th Pass" },
-          { value: "Diploma", label: "Diploma" },
-          { value: "Bachelor's Degree", label: "Bachelor's Degree" },
-          { value: "Master's Degree", label: "Master's Degree" },
-          { value: "M.Phil", label: "M.Phil" },
-          { value: "PhD", label: "PhD" },
-          { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
-          { value: "Engineering", label: "Engineering" },
-          { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
-          { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
-        ]}
-        placeholder="Select Educational Qualification"
-        isClearable
-      />
-      {validationErrors.educationalQualification && (
-        <p className="text-red-500 text-sm">{validationErrors.educationalQualification}</p>
-      )}
-    </div>
+  <label className="block mb-1 font-medium">Educational Qualification</label>
+  <Select
+    value={form.educationalQualification ? { value: form.educationalQualification, label: form.educationalQualification } : null}
+    onChange={(e) => {
+      handleChange({ target: { name: "educationalQualification", value: e.value } });
+      if (e.value !== "Other") {
+        handleChange({ target: { name: "educationalQualificationOther", value: "" } });
+      }
+    }}
+    options={[
+      { value: "Other", label: "Other" },
+      { value: "10th Pass", label: "10th Pass" },
+      { value: "12th Pass", label: "12th Pass" },
+      { value: "Diploma", label: "Diploma" },
+      { value: "Bachelor's Degree", label: "Bachelor's Degree" },
+      { value: "Master's Degree", label: "Master's Degree" },
+      { value: "M.Phil", label: "M.Phil" },
+      { value: "PhD", label: "PhD" },
+      { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
+      { value: "Engineering", label: "Engineering" },
+      { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
+      { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
+    ]}
+    placeholder="Select Educational Qualification"
+    isClearable
+  />
+  {form.educationalQualification === "Other" && (
+  <div className="mt-2">
+    <FloatingInput
+      label="Please specify your qualification"
+      name="educationalQualificationOther"
+      value={form.educationalQualificationOther || ""}
+      onChange={handleChange}
+      required                    // ← ADDED
+      placeholder="Enter your educational qualification"
+      error={validationErrors.educationalQualificationOther}  // ← ADDED
+    />
+  </div>
+)}
+ {validationErrors.educationalQualification && (
+    <p className="text-red-500 text-sm">{validationErrors.educationalQualification}</p>
+  )} 
+</div>
 
     {/* Certificate Courses */}
     <FloatingInput
@@ -1680,33 +1764,48 @@ const professionOptions = [
 
     {/* ⭐ Annual Income */}
     <div>
-      <label className="block mb-1 font-medium">Annual Income (Rs)</label>
-      <Select
-        value={form.annualIncome ? { value: form.annualIncome, label: form.annualIncome } : null}
-        onChange={(e) =>
-          handleChange({ target: { name: "annualIncome", value: e.value } })
-        }
-        options={[
-          { value: "0-2L", label: "0 - 2L" },
-          { value: "2L-5L", label: "2L - 5L" },
-          { value: "5L-10L", label: "5L - 10L" },
-          { value: "10L-15L", label: "10L - 15L" },
-          { value: "15L-20L", label: "15L - 20L" },
-          { value: "20L-50L", label: "20L - 50L" },
-          { value: "50L-75L", label: "50L - 75L" },
-          { value: "75L-1Cr", label: "75L to 1Cr" },
-          { value: "1Cr-3Cr", label: "1Cr - 3Cr" },
-          { value: "3Cr-5Cr", label: "3Cr - 5Cr" },
-          { value: "5Cr-10Cr", label: "5Cr - 10Cr" },
-          { value: "10Cr-20Cr", label: "10Cr - 20Cr" },
-          { value: "20Cr+", label: "20Cr and Above" },
-        ]}
-        placeholder="Select Income"
+  <label className="block mb-1 font-medium">Annual Income (Rs)</label>
+  <Select
+    value={form.annualIncome ? { value: form.annualIncome, label: form.annualIncome } : null}
+    onChange={(e) => {
+      handleChange({ target: { name: "annualIncome", value: e.value } });
+      if (e.value !== "Other") {
+        handleChange({ target: { name: "annualIncomeOther", value: "" } });
+      }
+    }}
+    options={[
+      { value: "0-2L", label: "0 - 2L" },
+      { value: "2L-5L", label: "2L - 5L" },
+      { value: "5L-10L", label: "5L - 10L" },
+      { value: "10L-15L", label: "10L - 15L" },
+      { value: "15L-20L", label: "15L - 20L" },
+      { value: "20L-50L", label: "20L - 50L" },
+      { value: "50L-75L", label: "50L - 75L" },
+      { value: "75L-1Cr", label: "75L to 1Cr" },
+      { value: "1Cr-3Cr", label: "1Cr - 3Cr" },
+      { value: "3Cr-5Cr", label: "3Cr - 5Cr" },
+      { value: "5Cr-10Cr", label: "5Cr - 10Cr" },
+      { value: "10Cr-20Cr", label: "10Cr - 20Cr" },
+      { value: "20Cr+", label: "20Cr and Above" },
+      { value: "Other", label: "Other" },
+    ]}
+    placeholder="Select Income"
+  />
+  {form.annualIncome === "Other" && (
+    <div className="mt-2">
+      <FloatingInput
+        label="Please specify your annual income"
+        name="annualIncomeOther"
+        value={form.annualIncomeOther || ""}
+        onChange={handleChange}
+        placeholder="e.g., 25,000/month or 3L per year"
       />
-      {validationErrors.annualIncome && (
-        <p className="text-red-500 text-sm">{validationErrors.annualIncome}</p>
-      )}
     </div>
+  )}
+  {validationErrors.annualIncome && (
+    <p className="text-red-500 text-sm">{validationErrors.annualIncome}</p>
+  )}
+</div>
 
     {/* ⭐ COUNTRY SELECT - MOVED ABOVE STATE */}
     <div>
