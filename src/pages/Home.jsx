@@ -282,133 +282,6 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div> */}
 
-      {/* ===================================================
-    MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE
-    =================================================== */}
-
-<section className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
-  <div className="container mx-auto px-2 lg:px-4">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-      
-      {/* LEFT SIDE - CONTENT - BIGGER FONTS */}
-      <div className="space-y-4">
-        {/* Main Heading - Much Bigger */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimonial Services</span>
-        </h1>
-
-        {/* Two-line Description - Bigger */}
-        <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-          Access our Vendor, Customer, and Matrimony portals.<br />
-          Find your perfect partner with verified profiles and expert matchmaking.
-        </p>
-
-        {/* ADDED CONTENT - Portals Description */}
-        <div className="grid grid-cols-3 gap-2 pt-0.2">
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">🏢</span>
-            <h4 className="font-bold text-gray-900 text-sm">Vendor Portal</h4>
-            <p className="text-xs text-gray-600">Partner services access</p>
-          </div>
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">👤</span>
-            <h4 className="font-bold text-gray-900 text-sm">Customer Portal</h4>
-            <p className="text-xs text-gray-600">Access your profile</p>
-          </div>
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">💍</span>
-            <h4 className="font-bold text-gray-900 text-sm">Matrimony Portal</h4>
-            <p className="text-xs text-gray-600">Find your partner</p>
-          </div>
-        </div>
-
-        {/* Button - Bigger */}
-        <div className="pt-3">
-          <a 
-            href="https://matrimonial-services.vercel.app/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl"
-          >
-            Visit Our Service Page →
-          </a>
-        </div>
-
-        {/* Feature Badges - Bigger with icons
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Verified Profiles
-          </span>
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Privacy Protected
-          </span>
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Expert Matchmaking
-          </span>
-        </div> */}
-      </div>
-
-      {/* RIGHT SIDE - IMAGE - WIDER TO MATCH SPACE */}
-      <div className="lg:justify-self-end w-full">
-  <div 
-    className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-3 border border-red-200 shadow-xl hover:shadow-2xl transition-all"
-    style={{
-      width: '500px',  
-      height: '350px',   // Change this value to control card width
-      maxWidth: '100%',    // Ensures it doesn't overflow on mobile
-      margin: '0 auto'     // Centers the card
-    }}
-  >
-          
-          {/* Main Image - CUSTOM WIDTH AND HEIGHT */}
-          <div className="bg-white rounded-xl overflow-hidden border-2 border-red-200 mb-1">
-            <img 
-              src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-              alt="Indian Wedding Couple"
-              className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
-              style={{
-                width: '100%',      // Controls image width
-                height: '190px',     // Fixed height - change this value
-                objectFit: 'cover'   // Ensures image covers area without distortion
-              }}
-            />
-          </div>
-          
-          {/* Image Caption */}
-          <p className="text-center text-sm font-medium text-gray-700 mb-1">Matrimony • Vendor • Customer Portals</p>
-          
-          {/* Additional Content Below Image */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="text-center bg-white/80 p-0.5 rounded-lg">
-              <div className="text-lg font-bold text-red-600">500+</div>
-              <div className="text-xs text-gray-600">Wedding Vendors</div>
-            </div>
-            <div className="text-center bg-white/80 p-0.5 rounded-lg">
-              <div className="text-lg font-bold text-red-600">1000+</div>
-              <div className="text-xs text-gray-600">Happy Couples</div>
-            </div>
-          </div>
-          
-          {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-2 bg-green-50 p-2 rounded-lg border border-green-100 mt-3">
-            <span className="text-green-600 text-sm">✓</span>
-            <span className="text-xs text-gray-700">All portals are verified and secure</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
       {/* Premium Hero Section */}
       <div className="relative bg-gradient-to-br from-gray-200 via-white to-gray-200 py-8 lg:py-16">
         {/* Animated Background Pattern */}
@@ -697,6 +570,194 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div>
 
+
+      {/* ===================================================
+    MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE
+    =================================================== */}
+
+<section className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
+  <div className="container mx-auto px-2 lg:px-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
+      
+      {/* LEFT SIDE - CONTENT - BIGGER FONTS */}
+      <div className="space-y-4">
+        {/* Main Heading - Much Bigger */}
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimonial Services</span>
+        </h1>
+
+        {/* Two-line Description - Bigger */}
+        <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+          Access our Vendor, Customer, and Matrimony portals.<br />
+          Find your perfect partner with verified profiles and expert matchmaking.
+        </p>
+
+        {/* ADDED CONTENT - Portals Description */}
+        <div className="grid grid-cols-3 gap-2 pt-0.2">
+          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-2xl block mb-1">🏢</span>
+            <h4 className="font-bold text-gray-900 text-sm">Vendor Portal</h4>
+            <p className="text-xs text-gray-600">Partner services access</p>
+          </div>
+          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-2xl block mb-1">👤</span>
+            <h4 className="font-bold text-gray-900 text-sm">Customer Portal</h4>
+            <p className="text-xs text-gray-600">Access your profile</p>
+          </div>
+          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-2xl block mb-1">💍</span>
+            <h4 className="font-bold text-gray-900 text-sm">Matrimony Portal</h4>
+            <p className="text-xs text-gray-600">Find your partner</p>
+          </div>
+        </div>
+
+        {/* Button - Bigger */}
+        <div className="pt-3">
+          <a 
+            href="https://matrimonial-services.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl"
+          >
+            Visit Our Service Page →
+          </a>
+        </div>
+
+        {/* Feature Badges - Bigger with icons
+        <div className="flex flex-wrap items-center gap-2 pt-2">
+          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
+            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+              <span className="text-green-600 text-xs">✓</span>
+            </span>
+            Verified Profiles
+          </span>
+          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
+            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+              <span className="text-green-600 text-xs">✓</span>
+            </span>
+            Privacy Protected
+          </span>
+          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
+            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+              <span className="text-green-600 text-xs">✓</span>
+            </span>
+            Expert Matchmaking
+          </span>
+        </div> */}
+      </div>
+
+      {/* RIGHT SIDE - IMAGE - WIDER TO MATCH SPACE */}
+      <div className="lg:justify-self-end w-full">
+  <div 
+    className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-3 border border-red-200 shadow-xl hover:shadow-2xl transition-all"
+    style={{
+      width: '500px',  
+      height: '350px',   // Change this value to control card width
+      maxWidth: '100%',    // Ensures it doesn't overflow on mobile
+      margin: '0 auto'     // Centers the card
+    }}
+  >
+          
+          {/* Main Image - CUSTOM WIDTH AND HEIGHT */}
+          <div className="bg-white rounded-xl overflow-hidden border-2 border-red-200 mb-1">
+            <img 
+              src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+              alt="Indian Wedding Couple"
+              className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
+              style={{
+                width: '100%',      // Controls image width
+                height: '190px',     // Fixed height - change this value
+                objectFit: 'cover'   // Ensures image covers area without distortion
+              }}
+            />
+          </div>
+          
+          {/* Image Caption */}
+          <p className="text-center text-sm font-medium text-gray-700 mb-1">Matrimony • Vendor • Customer Portals</p>
+          
+          {/* Additional Content Below Image */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="text-center bg-white/80 p-0.5 rounded-lg">
+              <div className="text-lg font-bold text-red-600">500+</div>
+              <div className="text-xs text-gray-600">Wedding Vendors</div>
+            </div>
+            <div className="text-center bg-white/80 p-0.5 rounded-lg">
+              <div className="text-lg font-bold text-red-600">1000+</div>
+              <div className="text-xs text-gray-600">Happy Couples</div>
+            </div>
+          </div>
+          
+          {/* Trust Badge */}
+          <div className="flex items-center justify-center gap-2 bg-green-50 p-2 rounded-lg border border-green-100 mt-3">
+            <span className="text-green-600 text-sm">✓</span>
+            <span className="text-xs text-gray-700">All portals are verified and secure</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{/* ── Bottom CTA Banner ── */}
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-4 md:p-3 text-center shadow-2xl">
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
+      <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2"></div>
+      
+      <div className="relative z-10">
+        <div className="text-5xl mb-4 animate-bounce">💍</div>
+        
+        <h3 className="text-white font-bold text-3xl md:text-4xl mb-3">Start Your Journey Today</h3>
+        
+        <p className="text-white/90 text-lg max-w-3xl mx-auto mb-4 leading-relaxed">
+          If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.
+        </p>
+        
+        <p className="text-white font-semibold text-xl mb-6 flex items-center justify-center gap-2">
+          <span className="text-2xl">💍</span>
+          <span>Register today and begin your beautiful marriage journey with Eliteinova Matrimony.</span>
+        </p>
+
+        {/* Pricing Cards */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+          {[
+            { name: "Silver", price: "₹299", featured: false },
+            { name: "Gold", price: "₹499", featured: true },
+            { name: "Diamond", price: "₹749", featured: false }
+          ].map((plan, i) => (
+            <div key={i} 
+              className={`bg-white/10 backdrop-blur rounded-xl px-6 py-3 text-center border border-white/20 hover:scale-110 transition-all duration-300
+                ${plan.featured ? 'ring-2 ring-yellow-300 scale-105 shadow-xl' : ''}`}>
+              <div className="text-white font-bold text-lg">{plan.name}</div>
+              <div className="text-white/80 text-sm">{plan.price}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Features Grid */}
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-white/80 text-sm max-w-4xl mx-auto">
+          {[
+            "Free to Register",
+            "100% Verified Profiles",
+            "Community-specific Matchmaking",
+            "Confidential Bride and Groom Search",
+            "Flexible Membership Plans",
+            "24/7 Customer Assistance",
+            "Premium Matchmaking Assistance"
+          ].map((feature, i) => (
+            <span key={i} className="flex items-center gap-1 hover:text-white transition-colors">
+              <span>✓</span>
+              <span>{feature}</span>
+              {i < 6 && <span className="hidden md:inline text-white/40">•</span>}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+
     {/* ===================================================
     PASTE THIS BETWEEN HERO SECTION AND <MobilAppSection />
     =================================================== */}
@@ -835,11 +896,11 @@ export default function Home({ onOpenAuthModal }) {
             <p className="text-sm text-gray-500 text-center mb-4">Getting started is simple:</p>
             <div className="space-y-3">
               {[
-                "Create a free account",
-                "Complete your profile with accurate details",
-                "Upload recent photographs",
-                "Start searching & sending interests",
-                "Upgrade to premium to directly connect with potential matches"
+                "Verified & Genuine Profiles",
+                "Community-Based Tamil Matrimony",
+                "Advanced Partner Search Options",
+                "Safe & Secure Matrimony Platform",
+                "Premium & Assisted Matrimony Services"
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3 group">
                   <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
@@ -1155,63 +1216,7 @@ export default function Home({ onOpenAuthModal }) {
       </div>
     </div>
 
-    {/* ── Bottom CTA Banner ── */}
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-4 md:p-3 text-center shadow-2xl">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2"></div>
-      
-      <div className="relative z-10">
-        <div className="text-5xl mb-4 animate-bounce">💍</div>
-        
-        <h3 className="text-white font-bold text-3xl md:text-4xl mb-3">Start Your Journey Today</h3>
-        
-        <p className="text-white/90 text-lg max-w-3xl mx-auto mb-4 leading-relaxed">
-          If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.
-        </p>
-        
-        <p className="text-white font-semibold text-xl mb-6 flex items-center justify-center gap-2">
-          <span className="text-2xl">💍</span>
-          <span>Register today and begin your beautiful marriage journey with Eliteinova Matrimony.</span>
-        </p>
-
-        {/* Pricing Cards */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-          {[
-            { name: "Silver", price: "₹299", featured: false },
-            { name: "Gold", price: "₹499", featured: true },
-            { name: "Diamond", price: "₹749", featured: false }
-          ].map((plan, i) => (
-            <div key={i} 
-              className={`bg-white/10 backdrop-blur rounded-xl px-6 py-3 text-center border border-white/20 hover:scale-110 transition-all duration-300
-                ${plan.featured ? 'ring-2 ring-yellow-300 scale-105 shadow-xl' : ''}`}>
-              <div className="text-white font-bold text-lg">{plan.name}</div>
-              <div className="text-white/80 text-sm">{plan.price}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Features Grid */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-white/80 text-sm max-w-4xl mx-auto">
-          {[
-            "Free to Register",
-            "100% Verified Profiles",
-            "Community-specific Matchmaking",
-            "Confidential Bride and Groom Search",
-            "Flexible Membership Plans",
-            "24/7 Customer Assistance",
-            "Premium Matchmaking Assistance"
-          ].map((feature, i) => (
-            <span key={i} className="flex items-center gap-1 hover:text-white transition-colors">
-              <span>✓</span>
-              <span>{feature}</span>
-              {i < 6 && <span className="hidden md:inline text-white/40">•</span>}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
+    
 
   </div>
 
