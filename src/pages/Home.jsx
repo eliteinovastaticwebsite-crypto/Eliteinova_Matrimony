@@ -312,7 +312,7 @@ export default function Home({ onOpenAuthModal }) {
                   </span>
                 </h1>
 
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-xl text-gray-600 leading-relaxed text-justify">
                   Join{" "}
                   {/* <span className="font-semibold text-red-500">
                     {formatNumber(stats.profiles)}+
@@ -572,52 +572,172 @@ export default function Home({ onOpenAuthModal }) {
 
 
       {/* ===================================================
+    BOTTOM CTA BANNER - SEPARATE SECTION
+    =================================================== */}
+
+<section className="py-6 bg-gradient-to-b from-white via-gray-50 to-white">
+  <div className="container mx-auto px-4 lg:px-8">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 shadow-2xl">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 left-0 w-48 h-48 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+      <div className="relative z-10 flex flex-col md:flex-row items-stretch">
+
+        {/* ── LEFT ── */}
+        <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 text-center flex flex-col items-center justify-center">
+          <div className="text-4xl mb-2 animate-bounce">💍</div>
+
+          <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
+            Start Your Journey Today
+          </h3>
+
+          <p className="text-white/90 text-xs sm:text-sm max-w-md mx-auto mb-3 leading-relaxed text-justify">
+            If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.
+          </p>
+
+          <p className="text-white font-semibold text-xs sm:text-sm mb-4 flex items-center justify-center gap-2 px-2 text-center">
+            <span>Register today and begin your beautiful marriage journey with Eliteinova Matrimony.</span>
+          </p>
+
+          {/* Pricing Cards */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+            {[
+              { name: "Silver",  price: "₹299", featured: false },
+              { name: "Gold",    price: "₹499", featured: true  },
+              { name: "Diamond", price: "₹749", featured: false },
+            ].map((plan, i) => (
+              <div key={i}
+                className={`bg-white/10 backdrop-blur rounded-xl px-3 sm:px-5 py-1.5 sm:py-2 text-center border border-white/30 hover:scale-105 transition-all duration-300
+                  ${plan.featured ? "ring-2 ring-yellow-300 scale-105 shadow-xl bg-white/20" : ""}`}>
+                <div className="text-white font-bold text-xs sm:text-base">{plan.name}</div>
+                <div className="text-white/80 text-[10px] sm:text-xs">{plan.price}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Feature Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1 text-white/80 text-[10px] sm:text-xs max-w-md mx-auto">
+            {[
+              "Free to Register",
+              "100% Verified Profiles",
+              "Community-specific Matchmaking",
+              "Confidential Bride and Groom Search",
+              "Flexible Membership Plans",
+              "24/7 Customer Assistance",
+              "Premium Matchmaking Assistance",
+            ].map((feature, i, arr) => (
+              <span key={i} className="flex items-center gap-1 hover:text-white transition-colors">
+                <span>✓</span>
+                <span>{feature}</span>
+                {i < arr.length - 1 && <span className="hidden md:inline text-white/40">•</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="hidden md:block w-px bg-white/20 my-6"></div>
+
+        {/* ── RIGHT ── */}
+        <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 flex flex-col items-center justify-center gap-4">
+          {/* Header */}
+          <div className="text-center">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-2 flex items-center justify-center shadow-xl">
+              <span className="text-2xl sm:text-3xl">🛡️</span>
+            </div>
+            <h3 className="text-white font-bold text-sm sm:text-base md:text-lg">Verified &amp; Genuine Profiles</h3>
+            <p className="text-white/80 text-[10px] sm:text-xs">Safe · Authentic · Trusted</p>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full max-w-xs">
+            {[
+              { value: "100%", label: "Profile Review" },
+              { value: "24/7", label: "Customer Assistance" },
+            ].map((stat, i) => (
+              <div key={i} className="bg-white/15 backdrop-blur rounded-xl p-2 sm:p-3 text-center border border-white/25">
+                <div className="text-base sm:text-lg md:text-xl font-bold text-white">{stat.value}</div>
+                <div className="text-white/80 text-[8px] sm:text-[10px] md:text-xs">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Premium Features */}
+          <div className="w-full max-w-xs bg-white/10 backdrop-blur rounded-2xl p-3 sm:p-4 border border-white/20">
+            <h4 className="font-bold text-white text-xs sm:text-sm mb-1">Premium &amp; Assisted Matrimony Services</h4>
+            <p className="text-white/70 text-[10px] sm:text-xs mb-2">Upgrade your membership to unlock:</p>
+            <div className="space-y-1.5">
+              {[
+                "Direct contact details",
+                "Unlimited profile viewing",
+                "Priority profile listing",
+                "Best Tamil Matrimony Site for best matchers",
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-white/90 text-[10px] sm:text-xs">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+      {/* ===================================================
     MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE
     =================================================== */}
 
 <section className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
-  <div className="container mx-auto px-2 lg:px-4">
+  <div className="container mx-auto px-4 sm:px-2 lg:px-4">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
       
       {/* LEFT SIDE - CONTENT - BIGGER FONTS */}
-      <div className="space-y-4">
+      <div className="space-y-4 px-4 sm:px-0">
         {/* Main Heading - Much Bigger */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center sm:text-left">
           Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimonial Services</span>
         </h1>
 
         {/* Two-line Description - Bigger */}
-        <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed text-justify">
           Access our Vendor, Customer, and Matrimony portals.<br />
           Find your perfect partner with verified profiles and expert matchmaking.
         </p>
 
         {/* ADDED CONTENT - Portals Description */}
         <div className="grid grid-cols-3 gap-2 pt-0.2">
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">🏢</span>
-            <h4 className="font-bold text-gray-900 text-sm">Vendor Portal</h4>
-            <p className="text-xs text-gray-600">Partner services access</p>
+          <div className="bg-red-50 p-2 sm:p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-xl sm:text-2xl block mb-1">🏢</span>
+            <h4 className="font-bold text-gray-900 text-xs sm:text-sm">Vendor Portal</h4>
+            <p className="text-[10px] sm:text-xs text-gray-600">Partner services access</p>
           </div>
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">👤</span>
-            <h4 className="font-bold text-gray-900 text-sm">Customer Portal</h4>
-            <p className="text-xs text-gray-600">Access your profile</p>
+          <div className="bg-red-50 p-2 sm:p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-xl sm:text-2xl block mb-1">👤</span>
+            <h4 className="font-bold text-gray-900 text-xs sm:text-sm">Customer Portal</h4>
+            <p className="text-[10px] sm:text-xs text-gray-600">Access your profile</p>
           </div>
-          <div className="bg-red-50 p-3 rounded-lg border border-red-100 text-center">
-            <span className="text-2xl block mb-1">💍</span>
-            <h4 className="font-bold text-gray-900 text-sm">Matrimony Portal</h4>
-            <p className="text-xs text-gray-600">Find your partner</p>
+          <div className="bg-red-50 p-2 sm:p-3 rounded-lg border border-red-100 text-center">
+            <span className="text-xl sm:text-2xl block mb-1">💍</span>
+            <h4 className="font-bold text-gray-900 text-xs sm:text-sm">Matrimony Portal</h4>
+            <p className="text-[10px] sm:text-xs text-gray-600">Find your partner</p>
           </div>
         </div>
 
         {/* Button - Bigger */}
-        <div className="pt-3">
+        <div className="pt-3 flex justify-center sm:justify-start">
           <a 
             href="https://matrimonial-services.vercel.app/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl"
+            className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
           >
             Visit Our Service Page →
           </a>
@@ -647,14 +767,13 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* RIGHT SIDE - IMAGE - WIDER TO MATCH SPACE */}
-      <div className="lg:justify-self-end w-full">
+      <div className="lg:justify-self-end w-full flex justify-center px-4 sm:px-0">
   <div 
     className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-3 border border-red-200 shadow-xl hover:shadow-2xl transition-all"
     style={{
-      width: '500px',  
-      height: '350px',   // Change this value to control card width
-      maxWidth: '100%',    // Ensures it doesn't overflow on mobile
-      margin: '0 auto'     // Centers the card
+      width: '100%',
+      maxWidth: '500px',
+      margin: '0 auto'
     }}
   >
           
@@ -665,32 +784,34 @@ export default function Home({ onOpenAuthModal }) {
               alt="Indian Wedding Couple"
               className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
               style={{
-                width: '100%',      // Controls image width
-                height: '190px',     // Fixed height - change this value
-                objectFit: 'cover'   // Ensures image covers area without distortion
+                width: '100%',
+                height: 'auto',
+                minHeight: '160px',
+                maxHeight: '190px',
+                objectFit: 'cover'
               }}
             />
           </div>
           
           {/* Image Caption */}
-          <p className="text-center text-sm font-medium text-gray-700 mb-1">Matrimony • Vendor • Customer Portals</p>
+          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 mb-1">Matrimony • Vendor • Customer Portals</p>
           
           {/* Additional Content Below Image */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="text-center bg-white/80 p-0.5 rounded-lg">
-              <div className="text-lg font-bold text-red-600">500+</div>
-              <div className="text-xs text-gray-600">Wedding Vendors</div>
+            <div className="text-center bg-white/80 p-1 sm:p-0.5 rounded-lg">
+              <div className="text-base sm:text-lg font-bold text-red-600">500+</div>
+              <div className="text-[10px] sm:text-xs text-gray-600">Wedding Vendors</div>
             </div>
-            <div className="text-center bg-white/80 p-0.5 rounded-lg">
-              <div className="text-lg font-bold text-red-600">1000+</div>
-              <div className="text-xs text-gray-600">Happy Couples</div>
+            <div className="text-center bg-white/80 p-1 sm:p-0.5 rounded-lg">
+              <div className="text-base sm:text-lg font-bold text-red-600">1000+</div>
+              <div className="text-[10px] sm:text-xs text-gray-600">Happy Couples</div>
             </div>
           </div>
           
           {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-2 bg-green-50 p-2 rounded-lg border border-green-100 mt-3">
-            <span className="text-green-600 text-sm">✓</span>
-            <span className="text-xs text-gray-700">All portals are verified and secure</span>
+          <div className="flex items-center justify-center gap-2 bg-green-50 p-1.5 sm:p-2 rounded-lg border border-green-100 mt-2 sm:mt-3">
+            <span className="text-green-600 text-xs sm:text-sm">✓</span>
+            <span className="text-[10px] sm:text-xs text-gray-700">All portals are verified and secure</span>
           </div>
         </div>
       </div>
@@ -699,70 +820,104 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 </section>
 
-{/* ── Bottom CTA Banner ── */}
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-4 md:p-3 text-center shadow-2xl">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2"></div>
-      
-      <div className="relative z-10">
-        <div className="text-5xl mb-4 animate-bounce">💍</div>
-        
-        <h3 className="text-white font-bold text-3xl md:text-4xl mb-3">Start Your Journey Today</h3>
-        
-        <p className="text-white/90 text-lg max-w-3xl mx-auto mb-4 leading-relaxed">
-          If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.
-        </p>
-        
-        <p className="text-white font-semibold text-xl mb-6 flex items-center justify-center gap-2">
-          <span className="text-2xl">💍</span>
-          <span>Register today and begin your beautiful marriage journey with Eliteinova Matrimony.</span>
-        </p>
 
-        {/* Pricing Cards */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+{/* ===================================================
+    FIND BY PROFESSION SECTION - SEPARATE SECTION
+    =================================================== */}
+
+<section className="py-8 sm:py-12 bg-gradient-to-b from-white via-gray-50 to-white">
+  <div className="container mx-auto px-4 lg:px-8">
+    
+    {/* ── ROW: Content LEFT | Image RIGHT ── */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+      
+      {/* Left Content */}
+      <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
+        <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Find by Profession</span>
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
+          Find Brides & Grooms <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">by Profession</span>
+        </h2>
+
+        <p className="text-base sm:text-lg text-gray-600 text-center sm:text-left">We offer specialized searches for:</p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
           {[
-            { name: "Silver", price: "₹299", featured: false },
-            { name: "Gold", price: "₹499", featured: true },
-            { name: "Diamond", price: "₹749", featured: false }
-          ].map((plan, i) => (
-            <div key={i} 
-              className={`bg-white/10 backdrop-blur rounded-xl px-6 py-3 text-center border border-white/20 hover:scale-110 transition-all duration-300
-                ${plan.featured ? 'ring-2 ring-yellow-300 scale-105 shadow-xl' : ''}`}>
-              <div className="text-white font-bold text-lg">{plan.name}</div>
-              <div className="text-white/80 text-sm">{plan.price}</div>
+            { icon: "🩺", label: "Doctors" },
+            { icon: "⚙️", label: "Engineers" },
+            { icon: "💻", label: "IT Professionals" },
+            { icon: "🏛️", label: "Government Employees" },
+            { icon: "💼", label: "Business Owners" },
+            { icon: "📊", label: "Chartered Accountants" },
+            { icon: "📚", label: "Teachers" },
+            { icon: "🚀", label: "Entrepreneurs" },
+            { icon: "⚖️", label: "Lawyers" },
+            { icon: "🏦", label: "Bankers" },
+            { icon: "✈️", label: "Pilots" },
+            { icon: "🎓", label: "Professors" }
+          ].map((profession, i) => (
+            <div key={i} className="bg-white border border-gray-200 rounded-xl p-2 sm:p-3 flex flex-col items-center justify-center hover:border-red-300 hover:shadow-lg hover:scale-105 transition-all cursor-pointer group">
+              <span className="text-xl sm:text-2xl block mb-1 group-hover:scale-110 transition-transform">{profession.icon}</span>
+              <span className="text-gray-800 text-[10px] sm:text-xs font-medium group-hover:text-red-600 transition-colors text-center leading-tight">{profession.label}</span>
             </div>
           ))}
         </div>
 
-        {/* Features Grid */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-white/80 text-sm max-w-4xl mx-auto">
-          {[
-            "Free to Register",
-            "100% Verified Profiles",
-            "Community-specific Matchmaking",
-            "Confidential Bride and Groom Search",
-            "Flexible Membership Plans",
-            "24/7 Customer Assistance",
-            "Premium Matchmaking Assistance"
-          ].map((feature, i) => (
-            <span key={i} className="flex items-center gap-1 hover:text-white transition-colors">
-              <span>✓</span>
-              <span>{feature}</span>
-              {i < 6 && <span className="hidden md:inline text-white/40">•</span>}
-            </span>
-          ))}
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed text-justify">Our intelligent matchmaking system suggests profiles based on shared goals, lifestyle compatibility, and family background.</p>
+      </div>
+
+      {/* Right Panel */}
+      <div className="lg:sticky lg:top-8 px-4 sm:px-0">
+        <div className="bg-gradient-to-br from-amber-50 to-red-50 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
+          <div className="bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-6 sm:p-8 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
+                <span className="text-3xl sm:text-4xl">🌍</span>
+              </div>
+              <h3 className="text-white font-bold text-lg sm:text-xl">Global Presence</h3>
+              <p className="text-white/90 text-sm sm:text-base">Serving Tamil Families Worldwide</p>
+            </div>
+          </div>
+
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
+              <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-2">Tamil Nadu Cities:</h4>
+              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">Chennai | Coimbatore | Madurai | Salem | Trichy | Erode | Tirunelveli | Vellore | Thanjavur | Tiruppur</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
+              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2">All over India</h3>
+              <h4 className="font text-gray-900 text-xs sm:text-sm mb-2">Specified Indian Cities:</h4>
+              <p className="text-gray-600 text-xs sm:text-sm">Bangalore | Hyderabad | Mumbai | Delhi | Pune</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
+              <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-2">International Locations:</h4>
+              <p className="text-gray-600 text-xs sm:text-sm">USA | UK | Canada | Australia | Singapore | Malaysia | Dubai | Sri Lanka</p>
+            </div>
+
+            <p className="text-xs sm:text-sm text-gray-500 italic text-center">We help brides and grooms connect globally while preserving traditional values.</p>
+          </div>
         </div>
       </div>
     </div>
+
+  </div>
+</section>
+   
+   <MobilAppSection />
+
 
 
     {/* ===================================================
     PASTE THIS BETWEEN HERO SECTION AND <MobilAppSection />
     =================================================== */}
 
-<section className="py-20 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+<section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
   {/* Decorative Background Elements */}
   <div className="absolute inset-0 opacity-30">
     <div className="absolute top-40 left-20 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
@@ -773,29 +928,29 @@ export default function Home({ onOpenAuthModal }) {
   <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
     {/* ── ROW 1: Content LEFT | Image RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
       
       {/* Content Column */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
         <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Trusted Matrimony Service</span>
+          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Trusted Matrimony Service</span>
         </div>
         
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
           Trusted Matrimony Service for <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Meaningful Matches</span>
         </h2>
         
-        <div className="space-y-4 text-gray-600">
-          <p className="text-lg leading-relaxed">Welcome to Eliteinova Matrimony, one of the most trusted and growing matrimony websites dedicated to helping brides and grooms find compatible matches based on tradition, values, and family preferences.</p>
-          <p className="text-lg leading-relaxed">Marriage is not just a union of two individuals but a bond between two families. At Eliteinova, we understand the importance of culture, community background, and compatibility in marriages. Whether you are searching for an All over the World bride or groom across India, and abroad, we help you connect with genuine profiles quickly and safely.</p>
+        <div className="space-y-3 sm:space-y-4 text-gray-600">
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-justify">Welcome to Eliteinova Matrimony, one of the most trusted and growing matrimony websites dedicated to helping brides and grooms find compatible matches based on tradition, values, and family preferences.</p>
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-justify">Marriage is not just a union of two individuals but a bond between two families. At Eliteinova, we understand the importance of culture, community background, and compatibility in marriages. Whether you are searching for an All over the World bride or groom across India, and abroad, we help you connect with genuine profiles quickly and safely.</p>
         </div>
 
         {/* Benefits Card */}
-        <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-6 border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300">
-          <h4 className="font-bold text-gray-900 text-lg mb-3">Benefits of Online Tamil Matrimony</h4>
-          <p className="text-gray-600 mb-4">Choosing Eliteinova Matrimony gives you:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-4 sm:p-6 border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300">
+          <h4 className="font-bold text-gray-900 text-base sm:text-lg mb-2 sm:mb-3">Benefits of Online Tamil Matrimony</h4>
+          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4">Choosing Eliteinova Matrimony gives you:</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             {[
               "Time-saving partner search",
               "Access to thousands of verified Tamil profiles",
@@ -806,41 +961,41 @@ export default function Home({ onOpenAuthModal }) {
               "Premium matchmaking assistance"
             ].map((benefit, i) => (
               <div key={i} className="flex items-center gap-2 text-gray-700">
-                <div className="w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className="text-sm font-medium">{benefit}</span>
+                <span className="text-xs sm:text-sm font-medium">{benefit}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-gray-600 leading-relaxed">Online matrimony platforms simplify the traditional marriage process while maintaining cultural values. Eliteinova is a premium Online Tamil Marriage Bureau offering online searching for matches. Leading Online Marriage Bureau in India. We serve families across Tamil Nadu, Chennai, Bangalore, Mumbai, Delhi, and global Tamil communities in the USA, UK, Singapore, Australia, and the Middle East.</p>
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed text-justify">Online matrimony platforms simplify the traditional marriage process while maintaining cultural values. Eliteinova is a premium Online Tamil Marriage Bureau offering online searching for matches. Leading Online Marriage Bureau in India. We serve families across Tamil Nadu, Chennai, Bangalore, Mumbai, Delhi, and global Tamil communities in the USA, UK, Singapore, Australia, and the Middle East.</p>
       </div>
 
       {/* Sticky Image Panel */}
-      <div className="lg:sticky lg:top-8">
+      <div className="lg:sticky lg:top-8 px-4 sm:px-0">
         <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
           {/* Header with gradient from Home.jsx */}
-          <div className="bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-8 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-6 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
             <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
-                <span className="text-4xl">💍</span>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
+                <span className="text-3xl sm:text-4xl">💍</span>
               </div>
-              <h3 className="text-white font-bold text-xl">Eliteinova Matrimony</h3>
-              <p className="text-white/90 font-medium">Trusted · Verified · Growing</p>
+              <h3 className="text-white font-bold text-lg sm:text-xl">Eliteinova Matrimony</h3>
+              <p className="text-white/90 font-medium text-sm sm:text-base">Trusted · Verified · Growing</p>
             </div>
           </div>
 
           {/* Steps */}
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-4 text-center">How to Register on Eliteinova Matrimony?</h4>
-              <p className="text-sm text-gray-500 text-center mb-4">Getting started is simple:</p>
-              <div className="space-y-3">
+              <h4 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4 text-center">How to Register on Eliteinova Matrimony?</h4>
+              <p className="text-xs sm:text-sm text-gray-500 text-center mb-3 sm:mb-4">Getting started is simple:</p>
+              <div className="space-y-2 sm:space-y-3">
                 {[
                   "Create a free account",
                   "Complete your profile with accurate details",
@@ -848,22 +1003,22 @@ export default function Home({ onOpenAuthModal }) {
                   "Start searching & sending interests",
                   "Upgrade to premium to directly connect with potential matches"
                 ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-3 group">
-                    <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
-                      <span className="text-white text-xs font-bold">{i + 1}</span>
+                  <div key={i} className="flex items-start gap-2 sm:gap-3 group">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
+                      <span className="text-white text-[10px] sm:text-xs font-bold">{i + 1}</span>
                     </div>
-                    <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{step}</span>
+                    <span className="text-gray-700 text-xs sm:text-sm group-hover:text-gray-900 transition-colors">{step}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* CTA */}
-            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-5 border border-red-100">
-              <h4 className="font-bold text-gray-900 text-lg mb-2">Start Your Journey Today</h4>
-              <p className="text-gray-600 text-sm mb-3">If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.</p>
-              <p className="text-red-600 font-semibold flex items-center gap-2">
-                <span className="text-xl">💍</span>
+            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 sm:p-5 border border-red-100">
+              <h4 className="font-bold text-gray-900 text-base sm:text-lg mb-2">Start Your Journey Today</h4>
+              <p className="text-gray-600 text-xs sm:text-sm mb-3 text-justify">If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.</p>
+              <p className="text-red-600 font-semibold text-xs sm:text-sm flex items-center gap-2">
+                <span className="text-lg sm:text-xl">💍</span>
                 <span>Register today and begin your beautiful marriage journey</span>
               </p>
             </div>
@@ -873,350 +1028,227 @@ export default function Home({ onOpenAuthModal }) {
     </div>
 
     {/* ── ROW 2: Image LEFT | Content RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
       
       {/* Left Column with Two Panels */}
-      <div className="lg:sticky lg:top-8 space-y-6">
+      <div className="lg:sticky lg:top-8 space-y-4 sm:space-y-6 px-4 sm:px-0">
         
         {/* Panel 1 */}
         <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-          <div className="bg-gradient-to-r from-amber-500 via-red-500 to-red-600 p-8 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-amber-500 via-red-500 to-red-600 p-6 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-red-500 to-red-600 opacity-75 animate-pulse"></div>
             <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
-                <span className="text-4xl">💍</span>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
+                <span className="text-3xl sm:text-4xl">💍</span>
               </div>
-              <h3 className="text-white font-bold text-xl">Eliteinova Matrimony</h3>
-              <p className="text-white/90">Trusted · Verified · Growing</p>
+              <h3 className="text-white font-bold text-lg sm:text-xl">Eliteinova Matrimony</h3>
+              <p className="text-white/90 text-sm sm:text-base">Trusted · Verified · Growing</p>
             </div>
           </div>
-          
-          <div className="p-6">
-            <h4 className="font-bold text-gray-900 text-lg mb-4 text-center">Why is Eliteinova the Best Tamil Matrimony Website?</h4>
-            <p className="text-sm text-gray-500 text-center mb-4">Getting started is simple:</p>
-            <div className="space-y-3">
+
+          <div className="p-4 sm:p-6">
+            <h4 className="font-bold text-gray-900 text-base sm:text-lg mb-1 text-center">Communities We Serve</h4>
+            <p className="text-xs sm:text-sm text-gray-500 text-center mb-3 sm:mb-4">Find your perfect match within your community</p>
+
+            <div className="grid grid-cols-2 gap-1 sm:gap-2">
               {[
-                "Verified & Genuine Profiles",
-                "Community-Based Tamil Matrimony",
-                "Advanced Partner Search Options",
-                "Safe & Secure Matrimony Platform",
-                "Premium & Assisted Matrimony Services"
-              ].map((step, i) => (
-                <div key={i} className="flex items-start gap-3 group">
-                  <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
-                    <span className="text-white text-xs font-bold">{i + 1}</span>
-                  </div>
-                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{step}</span>
-                </div>
+                "Mudaliar Matrimony",
+                "Pillai Matrimony",
+                "Naidu Matrimony",
+                "Reddy Matrimony",
+                "Kamma Matrimony",
+                "Brahmin Matrimony",
+                "Kshatriya Matrimony",
+                "Vaishya Matrimony",
+                "Viswakarma Matrimony",
+                "Nair Matrimony",
+                "Ezhava Matrimony",
+                "Maravar Matrimony",
+                "Kallar Matrimony",
+                "Agamudayar Matrimony",
+                "Balija Matrimony",
+                "Bestha Matrimony",
+                "Boyer Matrimony",
+                "Chakkiliyar Matrimony",
+                "Vanniyar Matrimony",
+                "Gounder Matrimony",
+                "Thevar Matrimony",
+                "Nadar Matrimony",
+                "Vellalar Matrimony",
+                "Kongu Vellalar Matrimony",
+                "Iyer Matrimony",
+                "Iyengar Matrimony",
+                "Chettiar Matrimony",
+              ].map((community, i) => (
+                <span
+                  key={i}
+                  className="px-2 sm:px-3 py-1 sm:py-2 rounded-full border border-red-200 text-gray-700 text-[10px] sm:text-xs hover:bg-red-50 hover:border-red-400 hover:text-red-600 transition-all duration-200 cursor-pointer text-center"
+                >
+                  {community}
+                </span>
               ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Panel 2 */}
-        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-          <div className="bg-gradient-to-r from-gray-700 via-gray-700 to-gray-800 p-8 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-700 opacity-75 animate-pulse"></div>
-            <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
-                <span className="text-4xl">🛡️</span>
-              </div>
-              <h3 className="text-white font-bold text-xl">Verified & Genuine Profiles</h3>
-              <p className="text-gray-300">Safe · Authentic · Trusted</p>
-            </div>
-          </div>
-
-          <div className="p-6 space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 text-center border border-red-100">
-                <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">100%</div>
-                <div className="text-sm text-gray-600">Profile Review</div>
-              </div>
-              <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 text-center border border-red-100">
-                <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">24/7</div>
-                <div className="text-sm text-gray-600">Customer Assistance</div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-3">Premium & Assisted Matrimony Services</h4>
-              <p className="text-sm text-gray-500 mb-3">Upgrade your membership to unlock:</p>
-              <div className="space-y-2">
-                {[
-                  "Direct contact details",
-                  "Unlimited profile viewing",
-                  "Priority profile listing",
-                  "Best Tamil Matrimony Site for best matchers"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 group">
-                    <svg className="w-5 h-5 text-red-500 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-700 group-hover:text-gray-900 transition-colors text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Right Column Content */}
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8 px-4 sm:px-0">
         <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Why Eliteinova</span>
+          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Why Eliteinova</span>
         </div>
 
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
           Why is Eliteinova the Best <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Tamil Matrimony Website?</span>
         </h2>
 
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Point 1 */}
-          <div className="space-y-2">
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-3">
-              <span className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">1</span>
+          <div className="space-y-1 sm:space-y-2">
+            <h4 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2 sm:gap-3">
+              <span className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">1</span>
               Verified & Genuine Profiles
             </h4>
-            <p className="text-gray-600 pl-10">We prioritize authenticity. Every profile is reviewed to ensure it meets our quality standards. Our goal is to reduce fake profiles and create a safe matchmaking experience.</p>
+            <p className="text-gray-600 text-sm sm:text-base pl-8 sm:pl-10 text-justify">We prioritize authenticity. Every profile is reviewed to ensure it meets our quality standards. Our goal is to reduce fake profiles and create a safe matchmaking experience.</p>
           </div>
 
           {/* Point 2 */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-3">
-              <span className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">2</span>
+          <div className="space-y-2 sm:space-y-3">
+            <h4 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2 sm:gap-3">
+              <span className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">2</span>
               Community-Based Tamil Matrimony
             </h4>
-            <p className="text-gray-600 pl-10">We provide exclusive matchmaking services for major Tamil communities including:</p>
-            <div className="pl-10 flex flex-wrap gap-2">
+            <p className="text-gray-600 text-sm sm:text-base pl-8 sm:pl-10 text-justify">We provide exclusive matchmaking services for major Tamil communities including:</p>
+            <div className="pl-8 sm:pl-10 flex flex-wrap gap-1 sm:gap-2">
               {[
                 "Vanniyar Matrimony", "Gounder Matrimony", "Thevar Matrimony", "Nadar Matrimony", "Vellalar Matrimony",
                 "Kongu Vellalar Matrimony", "Iyer Matrimony", "Iyengar Matrimony", "Chettiar Matrimony", "Mudaliar Matrimony"
               ].map((community, i) => (
-                <span key={i} className="bg-gradient-to-r from-red-50 to-amber-50 text-red-700 px-3 py-1 rounded-full text-sm font-medium border border-red-200 hover:border-red-300 hover:shadow-md transition-all">
+                <span key={i} className="bg-gradient-to-r from-red-50 to-amber-50 text-red-700 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border border-red-200 hover:border-red-300 hover:shadow-md transition-all">
                   {community}
                 </span>
               ))}
             </div>
-            <p className="text-gray-600 pl-10">Our community filters make it easy to find the perfect partner within your caste and tradition. Whether you are looking for a Tamil Bride Search or Tamil Groom Search, Eliteinova perfect matchmaking services tailored to your expectations.</p>
+            <p className="text-gray-600 text-sm sm:text-base pl-8 sm:pl-10 text-justify">Our community filters make it easy to find the perfect partner within your caste and tradition. Whether you are looking for a Tamil Bride Search or Tamil Groom Search, Eliteinova perfect matchmaking services tailored to your expectations.</p>
           </div>
 
           {/* Point 3 */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-3">
-              <span className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">3</span>
+          <div className="space-y-2 sm:space-y-3">
+            <h4 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2 sm:gap-3">
+              <span className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">3</span>
               Advanced Partner Search Options
             </h4>
-            <p className="text-gray-600 pl-10">You can filter matches by:</p>
-            <div className="pl-10 grid grid-cols-2 gap-3">
+            <p className="text-gray-600 text-sm sm:text-base pl-8 sm:pl-10">You can filter matches by:</p>
+            <div className="pl-8 sm:pl-10 grid grid-cols-2 gap-2 sm:gap-3">
               {[
                 "Age & Location",
                 "Education & Profession",
                 "Community & Sub-caste",
                 "Income & Lifestyle Preferences"
               ].map((filter, i) => (
-                <div key={i} className="flex items-center gap-2 text-gray-700">
-                  <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div key={i} className="flex items-center gap-1 sm:gap-2 text-gray-700">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm">{filter}</span>
+                  <span className="text-xs sm:text-sm">{filter}</span>
                 </div>
               ))}
             </div>
-            <p className="text-gray-600 pl-10 text-sm">This ensures accurate and highly compatible results.</p>
+            <p className="text-gray-600 text-xs sm:text-sm pl-8 sm:pl-10">This ensures accurate and highly compatible results.</p>
           </div>
 
           {/* Point 4 */}
           <div>
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-3">
-              <span className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">4</span>
+            <h4 className="font-bold text-gray-900 text-base sm:text-lg flex items-center gap-2 sm:gap-3">
+              <span className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">4</span>
               Safe & Secure Matrimony Platform
             </h4>
-            <p className="text-gray-600 pl-10">Your privacy is our top priority. We use strong security measures to protect user data and personal information.</p>
-          </div>
-
-          {/* Point 5 */}
-          <div>
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-3">
-              <span className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">5</span>
-              Premium & Assisted Matrimony Services
-            </h4>
-            <p className="text-gray-600 pl-10 mb-2">Upgrade your membership to unlock:</p>
-            <div className="pl-10 space-y-2">
-              {[
-                "Direct contact details",
-                "Unlimited profile viewing",
-                "Priority profile listing",
-                "Best Tamil Matrimony Site for best matchers"
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-gray-700 text-sm">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* ── ROW 3: Content LEFT | Image RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
-      
-      {/* Left Content */}
-      <div className="space-y-6">
-        <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Find by Profession</span>
-        </div>
-
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-          Find Tamil Brides & Grooms <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">by Profession</span>
-        </h2>
-
-        <p className="text-lg text-gray-600">We offer specialized searches for:</p>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { icon: "🩺", label: "Doctors" },
-            { icon: "⚙️", label: "Engineers" },
-            { icon: "💻", label: "IT Professionals" },
-            { icon: "🏛️", label: "Government Employees" },
-            { icon: "💼", label: "Business Owners" },
-            { icon: "📊", label: "Chartered Accountants" },
-            { icon: "📚", label: "Teachers" },
-            { icon: "🚀", label: "Entrepreneurs" }
-          ].map((profession, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-xl p-3 text-center hover:border-red-300 hover:shadow-lg hover:scale-105 transition-all cursor-pointer group">
-              <span className="text-2xl block mb-1 group-hover:scale-110 transition-transform">{profession.icon}</span>
-              <span className="text-gray-800 text-xs font-medium group-hover:text-red-600 transition-colors">{profession.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-gray-600 leading-relaxed">Our intelligent matchmaking system suggests profiles based on shared goals, lifestyle compatibility, and family background.</p>
-      </div>
-
-      {/* Right Panel */}
-      <div className="lg:sticky lg:top-8">
-        <div className="bg-gradient-to-br from-amber-50 to-red-50 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-          <div className="bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-8 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
-            <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
-                <span className="text-4xl">🌍</span>
-              </div>
-              <h3 className="text-white font-bold text-xl">Global Presence</h3>
-              <p className="text-white/90">Serving Tamil Families Worldwide</p>
-            </div>
-          </div>
-
-          <div className="p-6 space-y-4">
-            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 border border-red-100">
-              <h4 className="font-bold text-gray-900 mb-2">Tamil Nadu Cities:</h4>
-              <p className="text-gray-600 text-sm leading-relaxed">Chennai | Coimbatore | Madurai | Salem | Trichy | Erode | Tirunelveli | Vellore | Thanjavur | Tiruppur</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 border border-red-100">
-              <h4 className="font-bold text-gray-900 mb-2">Other Indian Cities:</h4>
-              <p className="text-gray-600">Bangalore | Hyderabad | Mumbai | Delhi | Pune</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 border border-red-100">
-              <h4 className="font-bold text-gray-900 mb-2">International Locations:</h4>
-              <p className="text-gray-600">USA | UK | Canada | Australia | Singapore | Malaysia | Dubai | Sri Lanka</p>
-            </div>
-
-            <p className="text-sm text-gray-500 italic text-center">We help Tamil brides and grooms connect globally while preserving traditional values.</p>
+            <p className="text-gray-600 text-sm sm:text-base pl-8 sm:pl-10 text-justify">Your privacy is our top priority. We use strong security measures to protect user data and personal information.</p>
           </div>
         </div>
       </div>
     </div>
 
     {/* ── ROW 4: Image LEFT | Content RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-20">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
       
       {/* Left Panel */}
-      <div className="lg:sticky lg:top-8">
+      <div className="lg:sticky lg:top-8 px-4 sm:px-0">
         <div className="bg-gradient-to-br from-rose-50 to-red-50 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
-          <div className="bg-gradient-to-r from-red-600 via-red-500 to-rose-500 p-8 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-red-600 via-red-500 to-rose-500 p-6 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-rose-400 opacity-75 animate-pulse"></div>
             <div className="relative z-10">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
-                <span className="text-4xl">⭐</span>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl">
+                <span className="text-3xl sm:text-4xl">⭐</span>
               </div>
-              <h3 className="text-white font-bold text-xl">Horoscope Matching</h3>
-              <p className="text-white/90">Jathagam Matching</p>
+              <h3 className="text-white font-bold text-lg sm:text-xl">Horoscope Matching</h3>
+              <p className="text-white/90 text-sm sm:text-base">Jathagam Matching</p>
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="p-4 sm:p-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
               {[
                 { val: "Rasi", desc: "Star Sign" },
                 { val: "Nakshatra", desc: "Birth Star" },
                 { val: "Dosham", desc: "Dosha Check" },
                 { val: "Jathagam", desc: "Compatibility" }
               ].map((item, i) => (
-                <div key={i} className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-4 text-center border border-red-100 hover:border-red-300 hover:shadow-md transition-all">
-                  <div className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">{item.val}</div>
-                  <div className="text-xs text-gray-600">{item.desc}</div>
+                <div key={i} className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 text-center border border-red-100 hover:border-red-300 hover:shadow-md transition-all">
+                  <div className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">{item.val}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-600">{item.desc}</div>
                 </div>
               ))}
             </div>
-            <p className="text-sm text-gray-500 italic text-center">Families who prioritize astrology can find suitable partners easily using our refined search options.</p>
+            <p className="text-xs sm:text-sm text-gray-500 italic text-center">Families who prioritize astrology can find suitable partners easily using our refined search options.</p>
           </div>
         </div>
       </div>
 
       {/* Right Content */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
         <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Horoscope Matching</span>
+          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Horoscope Matching</span>
         </div>
 
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
           Horoscope Matching <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">(Jathagam Matching)</span>
         </h2>
 
-        <p className="text-lg text-gray-600">Horoscope compatibility plays an important role in Tamil marriages. Our platform allows users to filter matches based on:</p>
+        <p className="text-base sm:text-lg text-gray-600 text-center sm:text-left">Horoscope compatibility plays an important role in Tamil marriages. Our platform allows users to filter matches based on:</p>
 
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {["Rasi", "Nakshatra", "Dosham", "Jathagam Matching"].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 group">
-              <div className="w-6 h-6 bg-gradient-to-br from-red-100 to-amber-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <svg className="w-3 h-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div key={i} className="flex items-center gap-2 sm:gap-3 group">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-red-100 to-amber-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg className="w-2 h-2 sm:w-3 sm:h-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <span className="text-gray-800 font-medium group-hover:text-red-600 transition-colors">{item}</span>
+              <span className="text-gray-800 text-sm sm:text-base font-medium group-hover:text-red-600 transition-colors">{item}</span>
             </div>
           ))}
         </div>
 
-        <p className="text-gray-600">Families who prioritize astrology can find suitable partners easily using our refined search options.</p>
+        <p className="text-gray-600 text-sm sm:text-base text-justify">Families who prioritize astrology can find suitable partners easily using our refined search options.</p>
 
-        <div className="border-t border-gray-200 pt-6">
-          <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100 mb-3">
+        <div className="border-t border-gray-200 pt-4 sm:pt-6">
+          <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100 mb-2 sm:mb-3">
             <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Success Stories</span>
+            <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Success Stories</span>
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Success Stories – Building Happy Tamil Families</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 text-center sm:text-left">Success Stories – Building Happy Tamil Families</h3>
           
-          <div className="space-y-3">
-            <p className="text-gray-600">Thousands of Tamil brides and grooms have found their life partners through Eliteinova Matrimony. We are proud to contribute to successful marriages rooted in trust, compatibility, and tradition.</p>
-            <p className="text-gray-600">Our growing community proves that finding a perfect life partner online can be secure, simple, and successful.</p>
+          <div className="space-y-2 sm:space-y-3">
+            <p className="text-gray-600 text-sm sm:text-base text-justify">Thousands of Tamil brides and grooms have found their life partners through Eliteinova Matrimony. We are proud to contribute to successful marriages rooted in trust, compatibility, and tradition.</p>
+            <p className="text-gray-600 text-sm sm:text-base text-justify">Our growing community proves that finding a perfect life partner online can be secure, simple, and successful.</p>
           </div>
         </div>
       </div>
     </div>
-
-    
 
   </div>
 
@@ -1241,32 +1273,31 @@ export default function Home({ onOpenAuthModal }) {
 </section>
 
 {/* === END OF SECTION === */}
-      <MobilAppSection />
 
       {/* Professional How It Works Section */}
-      <div className="py-20 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
+      <div className="py-12 sm:py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
             <div className="inline-flex items-center justify-center mb-4">
-              <div className="w-2 h-8 bg-red-600 mr-3"></div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+              <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 mr-2 sm:mr-3"></div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
                 How It Works
               </h2>
-              <div className="w-2 h-8 bg-red-600 ml-3"></div>
+              <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 ml-2 sm:ml-3"></div>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 text-justify">
               A streamlined process designed to help you find meaningful connections with confidence
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-0">
             {[
               {
                 step: "01",
                 title: "Create Your Profile",
                 desc: "Build your comprehensive profile with essential details and preferences",
                 icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 ),
@@ -1277,7 +1308,7 @@ export default function Home({ onOpenAuthModal }) {
                 title: "Verification Process",
                 desc: "Complete our secure verification to ensure authenticity and trust",
                 icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 ),
@@ -1288,7 +1319,7 @@ export default function Home({ onOpenAuthModal }) {
                 title: "Discover Matches",
                 desc: "Receive curated matches based on compatibility and shared values",
                 icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 ),
@@ -1299,7 +1330,7 @@ export default function Home({ onOpenAuthModal }) {
                 title: "Connect & Communicate",
                 desc: "Engage in meaningful conversations with verified matches",
                 icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 ),
@@ -1314,24 +1345,24 @@ export default function Home({ onOpenAuthModal }) {
                   <div className="h-1 bg-gradient-to-r from-red-600 to-red-500"></div>
                   
                   {/* Card Content */}
-                  <div className="p-8">
+                  <div className="p-4 sm:p-6 md:p-8">
                     {/* Step Number */}
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="text-2xl font-bold text-gray-400 group-hover:text-red-600 transition-colors duration-300">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                      <div className="text-xl sm:text-2xl font-bold text-gray-400 group-hover:text-red-600 transition-colors duration-300">
                         {item.step}
                       </div>
                       {/* Icon */}
-                      <div className="w-12 h-12 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center text-red-600 transition-colors duration-300">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center text-red-600 transition-colors duration-300">
                         {item.icon}
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">
+                    <div className="space-y-2 sm:space-y-3 md:space-y-4">
+                      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">
                         {item.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed text-sm font-light">
+                      <p className="text-gray-600 leading-relaxed text-xs sm:text-sm font-light text-justify">
                         {item.desc}
                       </p>
                     </div>
@@ -1351,13 +1382,13 @@ export default function Home({ onOpenAuthModal }) {
           </div>
 
           {/* Bottom Progress Line (Mobile) */}
-          <div className="lg:hidden mt-12">
+          <div className="lg:hidden mt-8 sm:mt-12">
             <div className="flex justify-center">
-              <div className="flex space-x-8">
+              <div className="flex space-x-6 sm:space-x-8">
                 {[0, 1, 2, 3].map((dot) => (
                   <div key={dot} className="flex flex-col items-center">
-                    <div className="w-3 h-3 bg-gray-300 rounded-full mb-2"></div>
-                    {dot < 3 && <div className="w-8 h-0.5 bg-gray-300 mt-1"></div>}
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-300 rounded-full mb-1 sm:mb-2"></div>
+                    {dot < 3 && <div className="w-6 sm:w-8 h-0.5 bg-gray-300 mt-1"></div>}
                   </div>
                 ))}
               </div>
@@ -1390,57 +1421,57 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* Premium Services Section */}
-      <div className="py-16 bg-gradient-to-b from-white to-gray-200">
+      <div className="py-12 sm:py-16 bg-gradient-to-b from-white to-gray-200">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Our <span className="text-red-500">Services Include</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4 text-justify">
               Comprehensive services designed to make your matchmaking journey
               seamless and successful
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-0">
             {/* Premium Membership Plans */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-2xl text-white">👑</span>
+            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <span className="text-xl sm:text-2xl text-white">👑</span>
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 text-xl">
+                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
                     Membership Plans
                   </div>
-                  <div className="text-red-500 font-semibold">
+                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
                     Premium Membership Options
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="text-lg font-bold text-gray-900">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-base sm:text-lg font-bold text-gray-900">
                   Choose the plan that{" "}
                   <span className="text-red-500">fits you best</span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {[
                     "Complete profile creation",
                     "Premium advanced features",
                     "Unlimited matches",
                     "Priority customer support",
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-green-600 text-sm">✓</span>
+                    <div key={index} className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
                       </div>
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
                 <button 
                   onClick={handleCreateProfile}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl mt-6 group-hover:scale-105"
+                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105"
                 >
                   View Plans →
                 </button>
@@ -1448,84 +1479,84 @@ export default function Home({ onOpenAuthModal }) {
             </div>
 
             {/* Profile Verification & Privacy Controls */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-2xl text-white">🔒</span>
+            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <span className="text-xl sm:text-2xl text-white">🔒</span>
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 text-xl">
+                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
                     Verification & Privacy
                   </div>
-                  <div className="text-red-500 font-semibold">
+                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
                     Secure & Trusted
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="text-lg font-bold text-gray-900">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-base sm:text-lg font-bold text-gray-900">
                   Your safety is our{" "}
                   <span className="text-red-500">top priority</span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {[
                     "Advanced profile verification",
                     "Complete privacy controls",
                     "Secure data protection",
                     "Verified member badges",
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-green-600 text-sm">✓</span>
+                    <div key={index} className="flex items-start space-x-2 sm:space-x-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
                       </div>
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
-                <button className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl mt-6 group-hover:scale-105">
+                <button className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105">
                   Learn More →
                 </button>
               </div>
             </div>
 
             {/* Personalized Match Recommendations */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-2xl text-white">💝</span>
+            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <span className="text-xl sm:text-2xl text-white">💝</span>
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 text-xl">
+                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
                     Smart Matching
                   </div>
-                  <div className="text-red-500 font-semibold">
+                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
                     Personalized Recommendations
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="text-lg font-bold text-gray-900">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-base sm:text-lg font-bold text-gray-900">
                   Find your perfect{" "}
                   <span className="text-red-500">match faster</span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {[
                     "AI-powered match suggestions",
                     "Compatibility scoring",
                     "Interest-based matching",
                     "Daily curated profiles",
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-green-600 text-sm">✓</span>
+                    <div key={index} className="flex items-start space-x-2 sm:space-x-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
                       </div>
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
                 <button 
                   onClick={handleViewAllProfiles}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl mt-6 group-hover:scale-105"
+                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105"
                 >
                   Get Matches →
                 </button>
@@ -1536,18 +1567,18 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* Success Stories Section */}
-      <div className="py-16 bg-gradient-to-br from-gray-200 to-yellow-400/20">
+      <div className="py-12 sm:py-16 bg-gradient-to-br from-gray-200 to-yellow-400/20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Hear From Happy Couples
             </h2>
-            <p className="text-gray-600 text-xl">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 text-justify">
               Real stories from couples who found love through our platform
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto px-4 sm:px-0">
             {[
               {
                 couple: "Rajesh & Priya",
@@ -1568,39 +1599,39 @@ export default function Home({ onOpenAuthModal }) {
             ].map((story, index) => (
               <div
                 key={index}
-                className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-200"
+                className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-200"
               >
                 {/* Quote Icon */}
-                <div className="text-4xl text-red-500 mb-4">❝</div>
+                <div className="text-3xl sm:text-4xl text-red-500 mb-3 sm:mb-4">❝</div>
 
                 {/* Story */}
-                <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 italic text-justify">
                   {story.story}
                 </p>
 
                 {/* Couple Info */}
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl shadow-lg">
                     {story.image}
                   </div>
                   <div className="flex-1">
-                    <div className="font-bold text-gray-900 text-xl">
+                    <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
                       {story.couple}
                     </div>
-                    <div className="text-red-500 text-sm font-medium">
+                    <div className="text-red-500 text-xs sm:text-sm font-medium">
                       {story.married}
                     </div>
-                    <div className="text-gray-500 text-sm">
+                    <div className="text-gray-500 text-xs sm:text-sm">
                       {story.background}
                     </div>
                   </div>
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-end mt-3 sm:mt-4">
                   <div className="flex space-x-1">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <span key={star} className="text-yellow-400 text-lg">
+                      <span key={star} className="text-yellow-400 text-base sm:text-lg">
                         ★
                       </span>
                     ))}
@@ -1662,32 +1693,32 @@ export default function Home({ onOpenAuthModal }) {
       </div> */}
 
       {/* Footer CTA */}
-      <div className="bg-gray-50 py-16 border-t border-gray-200 z-20">
+      <div className="bg-gray-50 py-12 sm:py-16 border-t border-gray-200 z-20">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900">
             Ready to Start Your Journey?
           </h3>
-          <p className="text-gray-600 text-xl mb-8">
+          <p className="text-gray-600 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 px-4">
             Join millions in finding their perfect life partner
           </p>
           {!isAuthenticated ? (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Launch Offer Banner */}
-              <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-6 shadow-2xl relative overflow-hidden max-w-2xl mx-auto">
+              <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden max-w-2xl mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                 <div className="relative z-10 text-center">
-                  <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
+                  <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">
                     🎉 Register Now! 🎉
                   </h3>
                  {/* <p className="text-white font-semibold text-lg md:text-xl mb-4 drop-shadow-lg">
                     Free Registration for Launch Offer
                   </p>*/}
-                  <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
-                    <span className="text-white/90">Silver ₹299</span>
-                    <span className="text-white font-bold">|</span>
-                    <span className="text-white/90">Gold ₹499</span>
-                    <span className="text-white font-bold">|</span>
-                    <span className="text-white/90">Diamond ₹749</span>
+                  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+                    <span className="text-white font-bold text-xs sm:text-sm">|</span>
+                    <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+                    <span className="text-white font-bold text-xs sm:text-sm">|</span>
+                    <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
                    {/*<span className="bg-green-500 text-white px-4 py-2 rounded-full font-bold">
                       ALL FREE NOW! ✨
                     </span>*/}
@@ -1696,7 +1727,7 @@ export default function Home({ onOpenAuthModal }) {
               </div>
               <button
                 onClick={handleRegisterFromCard}
-                className="bg-gradient-to-r from-red-600 to-red-500 text-white px-12 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 relative"
+                className="bg-gradient-to-r from-red-600 to-red-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:scale-105 relative"
               >
                 Register Now 
                 {/*<span className="absolute -top-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
@@ -1707,7 +1738,7 @@ export default function Home({ onOpenAuthModal }) {
           ) : (
             <button
               onClick={handleViewAllProfiles}
-              className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-red-900 px-12 py-4 rounded-xl hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-500 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105"
+              className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-red-900 px-8 sm:px-12 py-3 sm:py-4 rounded-xl hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-500 transition-all duration-300 font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:scale-105"
             >
               Browse Profiles
             </button>
