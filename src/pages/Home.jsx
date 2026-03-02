@@ -230,40 +230,52 @@ export default function Home({ onOpenAuthModal }) {
       />
 
       {/* Launch Offer Banner - Prominent Display */}
-      {!isAuthenticated && (
-        <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-6 px-4 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-          <div className="container mx-auto relative z-10">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="text-center md:text-left">
-                <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-                  🎉 Register Now! 🎉
-                </h3>
-                 {/*<p className="text-white font-semibold text-lg md:text-xl drop-shadow-lg">
-                  Free Registration for Launch Offer - All Membership Plans FREE!
-                </p>*/}
-                <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                  <span className="text-white/90 text-sm md:text-base">Silver ₹299</span>
-                  <span className="text-white font-bold">|</span>
-                  <span className="text-white/90 text-sm md:text-base">Gold ₹499</span>
-                  <span className="text-white font-bold">|</span>
-                  <span className="text-white/90 text-sm md:text-base">Diamond ₹749</span>
-                 {/*<span className="bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm md:text-base ml-2">
-                    NOW FREE! ✨
-                  </span>*/}
-                </div>
-              </div>
-              <button
-                onClick={handleRegisterFromCard}
-                className="bg-white text-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center space-x-2 whitespace-nowrap"
-              >
-                <span>Register Now</span>
-                <span className="text-2xl">👉</span>
-              </button>
-            </div>
+{!isAuthenticated && (
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-6 px-4 relative overflow-hidden shadow-2xl">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="container mx-auto relative z-10">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Left: Register Now */}
+        <div className="text-center md:text-left">
+          <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
+            🎉 Register Now! 🎉
+          </h3>
+          <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
+            <span className="text-white/90 text-sm md:text-base">Silver ₹299</span>
+            <span className="text-white font-bold">|</span>
+            <span className="text-white/90 text-sm md:text-base">Gold ₹499</span>
+            <span className="text-white font-bold">|</span>
+            <span className="text-white/90 text-sm md:text-base">Diamond ₹749</span>
           </div>
         </div>
-      )}
+
+        {/* Middle: EliteInova Matrimonial Services */}
+        <div className="text-center flex flex-col items-center gap-2 border-l border-r border-white/30 px-6 md:px-10">
+          <h3 className="text-white font-bold text-xl md:text-2xl drop-shadow-md whitespace-nowrap">
+            💍 EliteInova Matrimonial Services
+          </h3>
+          
+           <a href="https://matrimonial-services.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-orange-600 px-5 py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm md:text-base shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap"
+          >
+            Visit Our Service Page →
+          </a>
+        </div>
+
+        {/* Right: Register Now Button */}
+        <button
+          onClick={handleRegisterFromCard}
+          className="bg-white text-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center space-x-2 whitespace-nowrap"
+        >
+          <span>Register Now</span>
+          <span className="text-2xl">👉</span>
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Category Navigation at the top */}
       <CategoryNav onSelect={handleCategorySelect} />
@@ -619,7 +631,6 @@ export default function Home({ onOpenAuthModal }) {
           {/* Feature Badges */}
           <div className="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1 text-white/80 text-[10px] sm:text-xs max-w-md mx-auto">
             {[
-              "Free to Register",
               "100% Verified Profiles",
               "Community-specific Matchmaking",
               "Confidential Bride and Groom Search",
@@ -870,7 +881,7 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* Right Panel */}
-      <div className="lg:sticky lg:top-8 px-4 sm:px-0">
+      <div className="lg:sticky lg:top-8 px-2 sm:px-0">
         <div className="bg-gradient-to-br from-amber-50 to-red-50 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform hover:scale-[1.02] transition-all duration-500">
           <div className="bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 p-6 sm:p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-red-500 to-yellow-400 opacity-75 animate-pulse"></div>
@@ -879,20 +890,20 @@ export default function Home({ onOpenAuthModal }) {
                 <span className="text-3xl sm:text-4xl">🌍</span>
               </div>
               <h3 className="text-white font-bold text-lg sm:text-xl">Global Presence</h3>
-              <p className="text-white/90 text-sm sm:text-base">Serving Tamil Families Worldwide</p>
+              <p className="text-white/90 text-sm sm:text-base">Serving Families Worldwide</p>
             </div>
           </div>
 
           <div className="p-4 sm:p-6 space-y-4">
+             <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2">All Over India</h3>
+
+             <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
+              <h4 className="font-bold text-gray-900 text-xs sm:text-sm mb-2">Specified Indian Cities:</h4>
+              <p className="text-gray-600 text-xs sm:text-sm">Bangalore | Hyderabad | Mumbai | Delhi | Pune</p>
+            </div>
             <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
               <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-2">Tamil Nadu Cities:</h4>
               <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">Chennai | Coimbatore | Madurai | Salem | Trichy | Erode | Tirunelveli | Vellore | Thanjavur | Tiruppur</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
-              <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2">All over India</h3>
-              <h4 className="font text-gray-900 text-xs sm:text-sm mb-2">Specified Indian Cities:</h4>
-              <p className="text-gray-600 text-xs sm:text-sm">Bangalore | Hyderabad | Mumbai | Delhi | Pune</p>
             </div>
 
             <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
@@ -1233,25 +1244,59 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <p className="text-gray-600 text-sm sm:text-base text-justify">Families who prioritize astrology can find suitable partners easily using our refined search options.</p>
-
-        <div className="border-t border-gray-200 pt-4 sm:pt-6">
-          <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100 mb-2 sm:mb-3">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Success Stories</span>
-          </div>
-          
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 text-center sm:text-left">Success Stories – Building Happy Tamil Families</h3>
-          
-          <div className="space-y-2 sm:space-y-3">
-            <p className="text-gray-600 text-sm sm:text-base text-justify">Thousands of Tamil brides and grooms have found their life partners through Eliteinova Matrimony. We are proud to contribute to successful marriages rooted in trust, compatibility, and tradition.</p>
-            <p className="text-gray-600 text-sm sm:text-base text-justify">Our growing community proves that finding a perfect life partner online can be secure, simple, and successful.</p>
-          </div>
-        </div>
       </div>
     </div>
 
-  </div>
 
+  </div>
+  
+
+  <section className="py-10 bg-gradient-to-b from-white via-red-50 to-white">
+  <div className="container mx-auto px-4 lg:px-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+      {/* LEFT: Text Content */}
+      <div>
+        <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100 mb-3">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+          <span className="text-red-600 text-sm font-semibold uppercase tracking-wider">Success Stories</span>
+        </div>
+
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+          Success Stories – Building Happy Families
+        </h3>
+
+        <div className="space-y-3">
+          <p className="text-gray-600 text-base text-justify leading-relaxed">
+            Thousands of Tamil brides and grooms have found their life partners through Eliteinova Matrimony. We are proud to contribute to successful marriages rooted in trust, compatibility, and tradition.
+          </p>
+          <p className="text-gray-600 text-base text-justify leading-relaxed">
+            Our growing community proves that finding a perfect life partner online can be secure, simple, and successful.
+          </p>
+        </div>
+      </div>
+
+      {/* RIGHT: Stats / Highlights */}
+      <div className="grid grid-cols-2 gap-4">
+        {[
+          { value: "10,000+", label: "Happy Couples", icon: "💑" },
+          { value: "98%",     label: "Success Rate",  icon: "⭐" },
+          { value: "27+",     label: "Communities",   icon: "🏘️" },
+          { value: "24/7",    label: "Support",       icon: "🤝" },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white rounded-2xl shadow-md border border-red-100 p-5 text-center hover:shadow-lg hover:scale-105 transition-all duration-300">
+            <div className="text-3xl mb-2">{stat.icon}</div>
+            <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">
+              {stat.value}
+            </div>
+            <div className="text-gray-600 text-sm mt-1">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>
   {/* Add the animation styles from Home.jsx */}
   <style>{`
     @keyframes blob {
@@ -1566,6 +1611,8 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div>
 
+      <FAQSection />
+
       {/* Success Stories Section */}
       <div className="py-12 sm:py-16 bg-gradient-to-br from-gray-200 to-yellow-400/20">
         <div className="container mx-auto px-4">
@@ -1663,7 +1710,6 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div>
 
-      <FAQSection />
 
       {/* Community Stats Section */}
       {/* <div className="bg-gray-100 text-red-500 py-12">

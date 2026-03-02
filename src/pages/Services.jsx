@@ -1,415 +1,202 @@
-// src/pages/ServicesPage.jsx
-import React, { useEffect, useState, useMemo } from "react";
-import { mockServiceService } from "../services/MockServiceService";
-import { 
-  StarIcon, 
-  CheckBadgeIcon, 
-  ClockIcon, 
-  ShieldCheckIcon,
-  HeartIcon,
-  UsersIcon,
-  ChatBubbleLeftRightIcon,
-  PhotoIcon,
-  UserGroupIcon,
-  CakeIcon,
-  HeartIcon as HeartOutlineIcon
-} from "@heroicons/react/24/solid";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Banner from "../components/common/Banner";
-import AuthModal from "../components/auth/AuthModal"; // Add this import
-import BannerImage5 from "../assets/BannerImage5.jpg";
+import AuthModal from "../components/auth/AuthModal";
+import banner1 from "../assets/banner1.png";
+import banner2 from "../assets/banner2.png";
+import banner3 from "../assets/banner3.png";
+import banner4 from "../assets/banner4.png";
+import banner5 from "../assets/banner5.png";
+import photography from "../assets/photography.jpg";
+import catering from "../assets/catering.jpg";
+import weddinghalls from "../assets/weddinghalls.jpg";
+import decoration from "../assets/decoration.jpg";
+import invitation from "../assets/invitation.jpg";
+import makeup from "../assets/makeup.jpg";
+import entertainment from "../assets/entertainment.jpg";
 
-const ServiceBannerTexts = [
-  {
-    title: "Premium Matrimony Services",
-    subtitle: "Choose from Membership Plans, Profile Verification, Assisted Matrimony, and Wedding Planning — everything you need for a successful match.",
-    cta: "Explore Our Services",
-  },
-];
-
-const ServiceBannerImages = [BannerImage5];
+const ServiceBannerImages = [banner1, banner2, banner3, banner4, banner5];
 
 export default function Services({ onOpenAuthModal }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  // ADD THESE LINES - Local auth state
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("register");
 
-  // Enhanced icon mapping with fallbacks
-  const iconMap = {
-    HeartIcon: HeartIcon,
-    ShieldCheckIcon: ShieldCheckIcon,
-    StarIcon: StarIcon,
-    UserGroupIcon: UserGroupIcon,
-    CakeIcon: CakeIcon,
-    HeartOutlineIcon: HeartOutlineIcon,
-    UsersIcon: UsersIcon,
-    ChatBubbleLeftRightIcon: ChatBubbleLeftRightIcon,
-    PhotoIcon: PhotoIcon
-  };
-
-  // ADD THIS FUNCTION - Handle auth modal opening
   const handleOpenAuthModal = (mode = "register") => {
-    if (onOpenAuthModal && typeof onOpenAuthModal === 'function') {
-      // Use parent's function if provided
+    if (onOpenAuthModal && typeof onOpenAuthModal === "function") {
       onOpenAuthModal(mode);
     } else {
-      // Use local state if no parent function
       setAuthModalMode(mode);
       setShowAuthModal(true);
     }
   };
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        
-        // Check if service exists and has the method
-        if (!mockServiceService || typeof mockServiceService.getServices !== 'function') {
-          console.warn('MockServiceService not available, using fallback data');
-          // Provide fallback services data
-          const fallbackServices = getFallbackServices();
-          setServices(fallbackServices);
-          return;
-        }
-        
-        const servicesData = await mockServiceService.getServices();
-        
-        if (servicesData && servicesData.services) {
-          setServices(servicesData.services);
-        } else {
-          console.warn('No services data returned, using fallback');
-          const fallbackServices = getFallbackServices();
-          setServices(fallbackServices);
-        }
-      } catch (err) {
-        console.error("Error fetching services:", err);
-        setError(err.message || "Failed to load services. Showing demo services.");
-        // Provide fallback services
-        const fallbackServices = getFallbackServices();
-        setServices(fallbackServices);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchServices();
-  }, []);
-
-  // Fallback services data in case the service is not available
-  const getFallbackServices = () => {
-    return [
-      {
-        id: 1,
-        name: "Premium Membership",
-        description: "Unlock unlimited profile views, advanced search filters, and priority customer support.",
-        category: "membership",
-        icon: { name: "StarIcon" },
-        popular: true,
-        badge: "Most Popular",
-        duration: "1 Year",
-        features: [
-          "Unlimited Profile Views",
-          "Advanced Search Filters",
-          "Priority Customer Support",
-          "Express Interest to 50+ Profiles"
-        ]
-      },
-      {
-        id: 2,
-        name: "Profile Verification",
-        description: "Get your profile verified with background checks and document verification for trust and safety.",
-        category: "verification",
-        icon: { name: "ShieldCheckIcon" },
-        featured: true,
-        duration: "48 Hours",
-        features: [
-          "Document Verification",
-          "Background Check",
-          "Trust Badge on Profile",
-          "Priority in Search Results"
-        ]
-      },
-      {
-        id: 3,
-        name: "Assisted Matrimony",
-        description: "Personal matchmaking service with dedicated relationship managers for personalized matches.",
-        category: "assisted",
-        icon: { name: "UserGroupIcon" },
-        duration: "3 Months",
-        features: [
-          "Dedicated Relationship Manager",
-          "Personalized Match Suggestions",
-          "Profile Optimization",
-          "Meeting Coordination"
-        ]
-      },
-      {
-        id: 4,
-        name: "Wedding Planning",
-        description: "Complete wedding planning assistance from venue selection to ceremony coordination.",
-        category: "wedding",
-        icon: { name: "CakeIcon" },
-        duration: "Custom",
-        features: [
-          "Venue Selection",
-          "Vendor Coordination",
-          "Budget Planning",
-          "Day-of Coordination"
-        ]
-      },
-      {
-        id: 5,
-        name: "Photo Shoot Service",
-        description: "Professional profile photo shoot to make your profile stand out.",
-        category: "assisted",
-        icon: { name: "PhotoIcon" },
-        duration: "1 Day",
-        features: [
-          "Professional Photographer",
-          "Multiple Outfits",
-          "Studio & Outdoor Shoots",
-          "Digital Copies Provided"
-        ]
-      },
-      {
-        id: 6,
-        name: "Astrology Matching",
-        description: "Detailed horoscope matching and compatibility analysis for perfect matches.",
-        category: "verification",
-        icon: { name: "HeartIcon" },
-        duration: "24 Hours",
-        features: [
-          "Detailed Horoscope Analysis",
-          "Compatibility Report",
-          "Matching Points Calculation",
-          "Remedial Suggestions"
-        ]
-      }
-    ];
-  };
-
-  // Memoized categories to prevent recalculation on every render
-  const categories = useMemo(() => [
-    { id: "all", name: "All Services", count: services.length },
-    { id: "membership", name: "Membership Plans", count: services.filter(s => s.category === "membership").length },
-    { id: "verification", name: "Verification & Privacy", count: services.filter(s => s.category === "verification").length },
-    { id: "assisted", name: "Assisted Matrimony", count: services.filter(s => s.category === "assisted").length },
-    { id: "wedding", name: "Wedding Assistance", count: services.filter(s => s.category === "wedding").length }
-  ], [services]);
-
-  const filteredServices = selectedCategory === "all" 
-    ? services 
-    : services.filter(service => service.category === selectedCategory);
-
-  const handleServiceSelect = (service) => {
-    console.log("Service selected:", service);
-    
-    if (onOpenAuthModal) {
-      // If user is not logged in, open auth modal
-      onOpenAuthModal("register");
-    } else {
-      // Fallback action
-      alert(`Thank you for your interest in ${service.name}! Our team will contact you shortly.`);
-    }
-  };
-
-  // Helper function to get icon component safely
-  const getIconComponent = (service) => {
-    if (!service.icon) return UsersIcon;
-    
-    const iconName = typeof service.icon === 'string' ? service.icon : service.icon.name;
-    return iconMap[iconName] || UsersIcon;
-  };
+  const homeCategories = [
+    { name: "Photography", path: "/photography", image: photography },
+    { name: "Catering & Foods", path: "/catering", image: catering },
+    { name: "Wedding Halls", path: "/wedding-halls", image: weddinghalls },
+    { name: "Decorations", path: "/decorations", image: decoration },
+    { name: "Entertainment", path: "/entertainment", image: entertainment },
+    { name: "Invitation & Gifts", path: "/invitation", image: invitation },
+    { name: "Bridal Styling", path: "/styling", image: makeup },
+    {
+      name: "Bride & Groom Background Investigations",
+      path: "/background-investigations",
+      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
-      {/* UPDATE THE BANNER - Use the local function */}
-      <Banner
-        images={ServiceBannerImages}
-        texts={ServiceBannerTexts}
-        autoPlayInterval={3000}
-        onOpenAuthModal={() => handleOpenAuthModal("register")} 
-      />
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Category Filter */}
-        <div className="flex flex-wrap gap-3 mb-8 justify-center">
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 border-2 ${
-                selectedCategory === category.id
-                  ? "bg-red-600 text-white border-red-600 shadow-lg"
-                  : "bg-white text-gray-700 border-gray-300 hover:border-red-400 hover:text-red-600"
-              } hover:scale-105`}
-            >
-              {category.name}
-              <span className="ml-2 text-sm opacity-80">({category.count})</span>
-            </button>
+      <div style={{ height: "700px", overflow: "hidden" }}>
+  <div style={{ height: "100%" }} className="[&>section]:!h-full [&>section]:!min-h-0">
+    <Banner
+      images={ServiceBannerImages}
+      autoPlayInterval={3000}
+      onOpenAuthModal={() => handleOpenAuthModal("register")}
+      hideOverlay={true}
+      showText={false}
+    />
+  </div>
+</div>
+
+      <main className="container mx-auto px-4 md:px-6 py-6 md:py-8 mt-4 md:mt-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-red-800 mb-4 md:mb-6">
+            Welcome to Eliteinova Matrimonial Services
+          </h2>
+          <div className="bg-white rounded-lg md:rounded-xl shadow-md md:shadow-lg p-4 md:p-6 lg:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
+
+              <div className="bg-gradient-to-br from-yellow-100 to-red-100 p-4 md:p-5 lg:p-6 rounded-lg border border-yellow-200">
+                <h3 className="font-pacifico text-base md:text-lg lg:text-xl text-red-700 mb-2 md:mb-3">Vendor Portal</h3>
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">Partner services access</p>
+                <div className="flex gap-2">
+                  <Link to="/vendor-login" className="flex-1 bg-yellow-600 text-red-900 px-3 py-2 rounded-lg text-sm hover:bg-yellow-700 transition-colors text-center">
+                    Login
+                  </Link>
+                  <Link to="/vendor-login" className="flex-1 bg-yellow-500 text-red-900 px-3 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors text-center">
+                    Register
+                  </Link>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-red-100 to-yellow-100 p-4 md:p-5 lg:p-6 rounded-lg border border-red-200">
+                <h3 className="font-pacifico text-base md:text-lg lg:text-xl text-red-700 mb-2 md:mb-3">Customer Portal</h3>
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">Access your profile</p>
+                <div className="flex gap-2">
+                  <Link to="/customer-login" className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors text-center">
+                    Login
+                  </Link>
+                  <Link to="/customer-registration" className="flex-1 bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600 transition-colors text-center">
+                    Register
+                  </Link>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-pink-100 to-red-100 p-4 md:p-5 lg:p-6 rounded-lg border border-pink-200">
+                <h3 className="font-pacifico text-base md:text-lg lg:text-xl text-red-700 mb-2 md:mb-3">Matrimony Portal</h3>
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">Find your perfect partner</p>
+                
+                 <a href="https://eliteinovamatrimony.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 py-2 rounded-lg text-sm hover:from-red-700 hover:to-pink-700 transition-all text-center"
+                >
+                  Matrimony Registration
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <section className="container mx-auto px-3 md:px-4 py-6 md:py-8 lg:py-12">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-red-800 mb-6 md:mb-8 lg:mb-12">
+          Our Categories
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto">
+          {homeCategories.map((category, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <Link to={category.path} className="block group">
+                <div className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-full border-3 md:border-4 lg:border-[5px] border-amber-800 overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 shadow-lg hover:shadow-xl transition-all duration-300 p-0.5 md:p-1">
+                  <div className="w-full h-full rounded-full overflow-hidden">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-105 md:group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+                      }}
+                    />
+                  </div>
+                </div>
+              </Link>
+              <h3 className="mt-2 md:mt-3 lg:mt-4 text-center font-semibold text-gray-800 text-sm md:text-base lg:text-lg">
+                {category.name}
+              </h3>
+            </div>
           ))}
         </div>
+      </section>
 
-        {/* Error Message - Only show if it's a real error, not fallback message */}
-        {error && !error.includes("demo") && !error.includes("fallback") && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-8 text-center max-w-2xl mx-auto shadow-sm">
-            <div className="flex items-center justify-center space-x-2">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span>{error}</span>
+      <section className="container mx-auto px-3 md:px-4 py-6 md:py-8 lg:py-12">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-red-800 mb-6 md:mb-8">
+          Why Choose Eliteinova?
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
+          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-red-100 hover:shadow-xl transition-shadow duration-300">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
+              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
             </div>
+            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Verified Profiles</h3>
+            <p className="text-gray-600 text-xs md:text-sm text-center">All profiles are thoroughly verified for authenticity and reliability</p>
           </div>
-        )}
 
-        {/* Info Message for Fallback Data */}
-        {error && (error.includes("demo") || error.includes("fallback")) && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-6 py-4 rounded-2xl mb-8 text-center max-w-2xl mx-auto shadow-sm">
-            <div className="flex items-center justify-center space-x-2">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span>Showing demo services data</span>
+          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-yellow-100 hover:shadow-xl transition-shadow duration-300">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
+              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
             </div>
+            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Privacy Protected</h3>
+            <p className="text-gray-600 text-xs md:text-sm text-center">Your personal data is secure with advanced encryption technology</p>
           </div>
-        )}
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading premium services...</p>
+          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-red-100 hover:shadow-xl transition-shadow duration-300">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
+              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
+            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Expert Matchmaking</h3>
+            <p className="text-gray-600 text-xs md:text-sm text-center">Professional assistance using advanced algorithms for perfect matches</p>
           </div>
-        ) : filteredServices.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <HeartIcon className="w-10 h-10 text-gray-400" />
+
+          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-yellow-100 hover:shadow-xl transition-shadow duration-300">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
+              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No services found</h3>
-            <p className="text-gray-500">Try selecting a different category</p>
+            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">24/7 Support</h3>
+            <p className="text-gray-600 text-xs md:text-sm text-center">Round-the-clock customer support for all your queries and concerns</p>
           </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredServices.map((service) => {
-              const IconComponent = getIconComponent(service);
-              
-              return (
-                <div
-                  key={service.id}
-                  className={`relative bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group border ${
-                    service.popular ? 'border-yellow-300' : 'border-gray-200'
-                  } hover:border-red-300 hover:-translate-y-2`}
-                >
-                  {/* Popular Badge */}
-                  {service.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg flex items-center space-x-1">
-                        <StarIcon className="w-4 h-4" />
-                        <span>{service.badge || "Popular"}</span>
-                      </div>
-                    </div>
-                  )}
 
-                  {/* Featured Ribbon */}
-                  {service.featured && !service.popular && (
-                    <div className="absolute -top-2 -right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold rotate-12 shadow-lg">
-                      Featured
-                    </div>
-                  )}
-
-                  {/* Service Icon */}
-                  <div className="mb-6">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
-                      service.popular 
-                        ? 'bg-gradient-to-br from-yellow-400 to-yellow-500' 
-                        : service.featured
-                        ? 'bg-gradient-to-br from-red-500 to-red-600'
-                        : 'bg-gradient-to-br from-blue-500 to-blue-600'
-                    }`}>
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-
-                  {/* Service Details */}
-                  <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-red-600 transition-colors">
-                    {service.name}
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Duration */}
-                  {service.duration && (
-                    <div className="mb-6">
-                      <div className="flex items-center space-x-2 text-gray-500">
-                        <ClockIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">{service.duration}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Features List */}
-                  <div className="mb-6 space-y-2">
-                    {service.features && service.features.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-3 text-sm text-gray-600">
-                        <CheckBadgeIcon className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* CTA Button */}
-                  <button 
-                    onClick={() => handleServiceSelect(service)}
-                    className={`w-full py-4 rounded-xl font-bold transition-all duration-300 group-hover:scale-105 ${
-                      service.popular
-                        ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 hover:from-yellow-500 hover:to-yellow-600'
-                        : service.featured
-                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
-                        : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
-                    } shadow-lg hover:shadow-xl`}
-                  >
-                    Get Started Now
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-3xl p-12 text-white">
-            <h2 className="text-3xl font-bold mb-4">Need Personalized Assistance?</h2>
-            <p className="text-xl text-red-100 mb-8 max-w-2xl mx-auto">
-              Our relationship experts are here to help you choose the perfect service for your needs
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@eliteinova.com")}
-                className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                📞 Call Us Now
-              </button>
-              <button 
-                onClick={() => onOpenAuthModal ? onOpenAuthModal("register") : alert("Please contact us at support@eliteinova.com")}
-                className="bg-yellow-400 text-red-900 px-8 py-4 rounded-xl font-bold hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                💬 Chat with Expert
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
-       <AuthModal
+      </section>
+
+      <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         initialMode={authModalMode}
       />
+
     </div>
   );
 }
