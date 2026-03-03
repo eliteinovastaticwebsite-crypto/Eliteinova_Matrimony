@@ -8,6 +8,12 @@ const MobilAppSection = () => {
       className="py-4 text-white relative bg-gradient-to-b from-white to-red-50"
     >
       <div className="container mx-auto px-4 relative z-10">
+        <div className="flex justify-start mb-3">
+  <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
+    <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+    <span className="text-red-600 text-sm font-medium uppercase">Matrimony Mobile App </span>
+  </div>
+</div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
           {/* Content Section */}
           <div className="text-center lg:text-left">

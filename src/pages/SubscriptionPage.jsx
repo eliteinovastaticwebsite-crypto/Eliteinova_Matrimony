@@ -899,6 +899,7 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                     <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
                       🎉 Premium special Offer 🎉
                     </h3>
+                    <p className="text-white">For Quality Matches</p>
                   </div>
                 </div>
 

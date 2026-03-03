@@ -1,4 +1,4 @@
-// src/pages/Home.jsx - FIXED VERSION
+// src/pages/Home.jsx - FIXED VERSION WITH ID ATTRIBUTES
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/auth/LoginCard";
@@ -280,19 +280,44 @@ export default function Home({ onOpenAuthModal }) {
       {/* Category Navigation at the top */}
       <CategoryNav onSelect={handleCategorySelect} />
 
-      {/* Premium Header Banner */}
-      {/* <div className="bg-gradient-to-r from-red-600 to-red-500 text-white py-2 px-4 text-center text-sm">
-        <div className="container mx-auto flex items-center justify-center space-x-4">
-          <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span>
-              Live Matches: {formatNumber(Math.floor(Math.random() * 500) + 100)} today
-            </span>
-          </span>
-          <span>•</span>
-          <span>Trusted by {formatNumber(stats.marriages)}+ families</span>
-        </div>
-      </div> */}
+      {/* Quick Navigation Bar */}
+<div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm overflow-x-auto">
+  <div className="container mx-auto px-4 py-3">
+    <div className="flex items-center space-x-2 min-w-max">
+      {[
+        { label: "Premium Plans",              id: "premium-plans" },
+        { label: "Matrimonial Services",       id: "matrimonial-services" },
+        { label: "Find by Profession",         id: "find-by-profession" },
+        { label: "Matrimony Mobile App",       id: "mobile-app" },
+        { label: "Trusted Matrimony Service",  id: "trusted-matrimony" },
+        { label: "Why Eliteinova",             id: "why-eliteinova" },
+        { label: "Horoscope Matching",         id: "horoscope-matching" },
+        { label: "Success Stories",            id: "success-stories" },
+      ].map((link, i) => (
+        <button
+          key={i}
+          onClick={() => {
+            const element = document.getElementById(link.id);
+            if (element) {
+              const headerOffset = 100; // Height of the sticky header plus some padding
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+              });
+            }
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50/50 text-red-600 text-xs sm:text-sm font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 whitespace-nowrap"
+        >
+          <span className="w-1.5 h-1.5 bg-red-400 rounded-full group-hover:bg-white"></span>
+          {link.label}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* Premium Hero Section */}
       <div className="relative bg-gradient-to-br from-gray-200 via-white to-gray-200 py-8 lg:py-16">
@@ -311,7 +336,7 @@ export default function Home({ onOpenAuthModal }) {
                 {/* Trust Badge */}
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
                   <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-                  <span className="text-red-600 text-sm font-medium">
+                  <span className="text-red-600 text-sm font-medium uppercase">
                     Most Trusted Matrimony Service
                   </span>
                 </div>
@@ -332,50 +357,7 @@ export default function Home({ onOpenAuthModal }) {
                   verified members in their journey to find lifelong partners.
                   Where tradition meets modern matchmaking.
                 </p>
-
-                {/* Live Stats Counter */}
-                {/* <div className="grid grid-cols-3 gap-6 py-6">
-                  {[
-                    {
-                      number: formatNumber(stats.profiles),
-                      label: "Verified Profiles",
-                      icon: "👥",
-                    },
-                    { number: "25+", label: "Years Trust", icon: "🏆" },
-                    {
-                      number: formatNumber(stats.marriages),
-                      label: "Successful Marriages",
-                      icon: "💖",
-                    },
-                  ].map((stat, index) => (
-                    <div
-                      key={index}
-                      className="text-center p-4 bg-white rounded-xl shadow-sm border border-gray-200"
-                    >
-                      <div className="text-2xl mb-1">{stat.icon}</div>
-                      <div className="text-xl font-bold text-red-500">
-                        {stat.number}
-                      </div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
-                </div> */}
               </div>
-
-              {/* Launch Offer Badge 
-              {!isAuthenticated && (
-                <div className="mb-4 inline-block bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl p-3 shadow-lg relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-                  <div className="relative z-10 flex items-center space-x-2">
-                    <span className="text-white font-bold text-sm md:text-base animate-bounce">🎉</span>
-                    <span className="text-white font-semibold text-sm md:text-base">
-                      Launch Offer: <span className="font-bold">FREE Registration!</span>
-                    </span>
-                  </div>
-                </div>
-              )}*/}
 
               {/* Quick Action Buttons */}
               {!isAuthenticated ? (
@@ -396,9 +378,6 @@ export default function Home({ onOpenAuthModal }) {
                         <span className="text-xl transform group-hover:scale-110 transition-transform">
                           🎯
                         </span>
-                        {/*<div className="absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-bold rounded-bl-lg">
-                          FREE
-                        </div>*/}
                       </>
                     )}
                   </button>
@@ -444,29 +423,6 @@ export default function Home({ onOpenAuthModal }) {
                   </div>
                 ))}
               </div>
-
-              {/* Top Communities Quick View */}
-              {/* <div className="pt-6 border-t border-gray-200">
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                  Popular Communities
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {getTopCommunities().map(({ community, count }) => (
-                    <div
-                      key={community}
-                      className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer transition-colors"
-                      onClick={() => handleCategorySelect(community)}
-                    >
-                      <span className="text-sm font-medium text-gray-700">
-                        {community}
-                      </span>
-                      <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
-                        {formatNumber(count)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div> */}
             </div>
 
             {/* Right Content - Integrated Cards */}
@@ -521,62 +477,6 @@ export default function Home({ onOpenAuthModal }) {
                   />
                 </div>
               )}
-
-              {/* Featured Profiles Preview */}
-              {/* {featuredProfiles.length > 0 && (
-                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
-                  <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center">
-                    <span className="text-yellow-500 mr-2">⭐</span>
-                    Featured Profiles
-                  </h3>
-                  <div className="space-y-3">
-                    {featuredProfiles.slice(0, 3).map((profile) => (
-                      <div
-                        key={profile.id}
-                        className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                        onClick={() => handleProfileClick(profile.id)}
-                      >
-                        <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          {profile.name?.charAt(0) || "U"}
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-semibold text-gray-800 text-sm">
-                            {profile.name}
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            {profile.age} • {profile.education}
-                          </div>
-                        </div>
-                        {profile.isPremium && (
-                          <span className="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">
-                            Premium
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    onClick={handleViewAllProfiles}
-                    className="w-full mt-4 text-red-500 hover:text-red-600 text-sm font-semibold"
-                  >
-                    View All Featured Profiles →
-                  </button>
-                </div>
-              )} */}
-
-              {/* Quick Stats Cards */}
-              {/* <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-2xl font-bold text-red-500">500+</div>
-                  <div className="text-gray-600 text-xs">Matches Today</div>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-2xl font-bold text-red-500">
-                    {stats.cities}+
-                  </div>
-                  <div className="text-gray-600 text-xs">Cities Worldwide</div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -587,17 +487,28 @@ export default function Home({ onOpenAuthModal }) {
     BOTTOM CTA BANNER - SEPARATE SECTION
     =================================================== */}
 
-<section className="py-6 bg-gradient-to-b from-white via-gray-50 to-white">
+<section id="premium-plans" className="py-6 bg-gradient-to-b from-white via-gray-50 to-white">
+  
   <div className="container mx-auto px-4 lg:px-8">
+    {/* Badge OUTSIDE above the box */}
+<div className="flex justify-start mb-3">
+  <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
+    <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+    <span className="text-red-600 text-sm font-medium uppercase">Premium & Assisted Matrimony Services</span>
+  </div>
+</div>
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-500 to-yellow-500 shadow-2xl">
       {/* Decorative blobs */}
       <div className="absolute top-0 left-0 w-48 h-48 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
-
+       
+      
       <div className="relative z-10 flex flex-col md:flex-row items-stretch">
 
         {/* ── LEFT ── */}
+        
         <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 text-center flex flex-col items-center justify-center">
+          
           <div className="text-4xl mb-2 animate-bounce">💍</div>
 
           <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
@@ -707,8 +618,14 @@ export default function Home({ onOpenAuthModal }) {
     MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE
     =================================================== */}
 
-<section className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
+<section id="matrimonial-services" className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
   <div className="container mx-auto px-4 sm:px-2 lg:px-4">
+    <div className="flex justify-start mb-3">
+  <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
+    <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+    <span className="text-red-600 text-sm font-medium uppercase">Eliteinova Matrimonial Services</span>
+  </div>
+</div>
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
       
       {/* LEFT SIDE - CONTENT - BIGGER FONTS */}
@@ -754,28 +671,6 @@ export default function Home({ onOpenAuthModal }) {
             Visit Our Service Page →
           </a>
         </div>
-
-        {/* Feature Badges - Bigger with icons
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Verified Profiles
-          </span>
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Privacy Protected
-          </span>
-          <span className="text-sm md:text-base text-gray-700 flex items-center gap-2">
-            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-600 text-xs">✓</span>
-            </span>
-            Expert Matchmaking
-          </span>
-        </div> */}
       </div>
 
       {/* RIGHT SIDE - IMAGE - WIDER TO MATCH SPACE */}
@@ -837,9 +732,8 @@ export default function Home({ onOpenAuthModal }) {
     FIND BY PROFESSION SECTION - SEPARATE SECTION
     =================================================== */}
 
-<section className="py-8 sm:py-12 bg-gradient-to-b from-white via-gray-50 to-white">
+<section id="find-by-profession" className="py-8 sm:py-12 bg-gradient-to-b from-white via-gray-50 to-white">
   <div className="container mx-auto px-4 lg:px-8">
-    
     {/* ── ROW: Content LEFT | Image RIGHT ── */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
       
@@ -920,7 +814,7 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 </section>
    
-   <MobilAppSection />
+   <div id="mobile-app"><MobilAppSection /></div>
 
 
 
@@ -939,7 +833,7 @@ export default function Home({ onOpenAuthModal }) {
   <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
     {/* ── ROW 1: Content LEFT | Image RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
+    <div id="trusted-matrimony" className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
       
       {/* Content Column */}
       <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
@@ -1104,7 +998,7 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* Right Column Content */}
-      <div className="space-y-6 sm:space-y-8 px-4 sm:px-0">
+      <div id="why-eliteinova" className="space-y-6 sm:space-y-8 px-4 sm:px-0">
         <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
           <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Why Eliteinova</span>
@@ -1182,7 +1076,7 @@ export default function Home({ onOpenAuthModal }) {
     </div>
 
     {/* ── ROW 4: Image LEFT | Content RIGHT ── */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
+    <div id="horoscope-matching" className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12 sm:mb-16 md:mb-20">
       
       {/* Left Panel */}
       <div className="lg:sticky lg:top-8 px-4 sm:px-0">
@@ -1251,7 +1145,7 @@ export default function Home({ onOpenAuthModal }) {
   </div>
   
 
-  <section className="py-10 bg-gradient-to-b from-white via-red-50 to-white">
+  <section id="success-stories" className="py-10 bg-gradient-to-b from-white via-red-50 to-white">
   <div className="container mx-auto px-4 lg:px-8">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
@@ -1318,7 +1212,7 @@ export default function Home({ onOpenAuthModal }) {
 </section>
 
 {/* === END OF SECTION === */}
-
+      
       {/* Professional How It Works Section */}
       <div className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
@@ -1610,7 +1504,26 @@ export default function Home({ onOpenAuthModal }) {
           </div>
         </div>
       </div>
-
+      {!isAuthenticated && (
+  <div className="container mx-auto px-4 py-8">
+    <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden w-full">
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+      <div className="relative z-10 text-center">
+        <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+          <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+          <span className="text-white font-bold">|</span>
+          <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+          <span className="text-white font-bold">|</span>
+          <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+        </div>
+        <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+          Register Now
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       <FAQSection />
 
       {/* Success Stories Section */}

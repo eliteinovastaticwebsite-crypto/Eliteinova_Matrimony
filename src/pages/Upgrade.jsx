@@ -59,6 +59,7 @@ const getFallbackPlans = () => [
     "Profile Verification Available",
     "Mobile App Access"
   ],
+  savings: "Save 10%",
   buttonText: "Get Started"
 },
   {
@@ -82,7 +83,7 @@ const getFallbackPlans = () => [
       "Message Read Receipts",
       "Extended Profile Visibility"
     ],
-    savings: "Save 40%",
+    savings: "Save 20%",
     buttonText: "Go Gold"
   },
   {
@@ -107,7 +108,7 @@ const getFallbackPlans = () => [
       "Exclusive Events Access",
       "Relationship Counseling Sessions"
     ],
-    savings: "Save 50%",
+    savings: "Save 30%",
     buttonText: "Go Diamond"
   }
 ];
@@ -229,10 +230,13 @@ export default function Upgrade({ onOpenAuthModal }) {
         
         {/* INTRO SECTION */}
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <div className="inline-flex items-center justify-center p-2 px-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full mb-6">
-            <RocketLaunchIcon className="w-5 h-5 text-purple-600 mr-2" />
-            <span className="text-purple-700 font-semibold text-sm">PREMIUM MEMBERSHIP</span>
-          </div>
+          <div 
+  onClick={() => document.getElementById("diamond-benefits")?.scrollIntoView({ behavior: "smooth" })}
+  className="inline-flex items-center justify-center p-2 px-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full mb-6 cursor-pointer hover:from-purple-200 hover:to-pink-200 transition-all duration-200"
+>
+  <RocketLaunchIcon className="w-5 h-5 text-purple-600 mr-2" />
+  <span className="text-purple-700 font-semibold text-sm">PREMIUM MEMBERSHIP</span>
+</div>
           
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Get <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Premium</span> Plan
@@ -346,9 +350,13 @@ export default function Upgrade({ onOpenAuthModal }) {
                     </h2>
 
                     {/* Plan Description */}
-                    <p className="text-gray-600 text-center mb-6">
-                      {plan.description}
-                    </p>
+                    <p className={`text-center mb-6 font-medium italic ${
+  plan.name === 'Silver' ? 'text-gray-500' :
+  plan.name === 'Gold' ? 'text-yellow-600' :
+  'text-purple-600'
+}`}>
+  {plan.description}
+</p>
 
                     {/* Launch Offer Banner */}
                     <div className="mb-6 p-3 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-xl shadow-lg relative overflow-hidden">
@@ -357,18 +365,16 @@ export default function Upgrade({ onOpenAuthModal }) {
                         <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
                           🎉 Premium special Offer 🎉
                         </h3>
+                        <p className="text-white">For Quality Matches</p>
                       </div>
                     </div>
 
                     {/* Pricing */}
                     <div className="text-center mb-8">
                       <div className="flex flex-col items-center justify-center space-y-2">
-                        <span className={`text-2xl font-bold ${
-                          plan.popular ? 'text-gray-600' : 
-                          plan.name === 'Silver' ? 'text-gray-600' : 'text-gray-600'
-                        }`}>
-                          {`₹${plan.price}/Per 3 Months + Tax`}
-                        </span>
+                        <span className="text-lg font-bold text-gray-600 whitespace-nowrap">
+  {`₹${plan.price}/Per 3 Months + Tax`}
+</span>
                       </div>
                       {plan.savings && (
                         <p className="text-green-600 text-sm font-semibold mt-2">
@@ -502,7 +508,7 @@ export default function Upgrade({ onOpenAuthModal }) {
             </div>
 
             {/* EXTRA DIAMOND INFO BOX - Only for Diamond */}
-            <div className="mt-16">
+            <div id="diamond-benefits" className="mt-16">
               {/* Section Title */}
               <div className="text-center mb-8">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -647,21 +653,6 @@ export default function Upgrade({ onOpenAuthModal }) {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto mt-16">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white p-6 rounded-2xl border border-gray-200 hover:border-red-200 transition-colors">
-                <h3 className="font-semibold text-gray-800 mb-2">{faq.question}</h3>
-                <p className="text-gray-600 text-sm">{faq.answer}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -23,6 +23,7 @@ export const mockPlanService = {
           "Dedicated Customer Support"
 
         ],
+        savings: "Save 10%",
         buttonText: "Get Started"
       },
       {
@@ -130,6 +131,7 @@ export const mockPlanService = {
             "Secure contact with Interested Members",
             "Dedicated Customer Support",
           ],
+          savings: "Save 10%",
           buttonText: "Get Started"
         },
         {
@@ -149,7 +151,7 @@ export const mockPlanService = {
              "Profile Highlight in Search Results",
 
           ],
-          savings: "Save 40%",
+          savings: "Save 20%",
           buttonText: "Go Gold"
         },
         {
@@ -169,7 +171,7 @@ export const mockPlanService = {
              "Profile Highlight in Premium Listings",
              "Faster Response & Priority Support",
           ],
-          savings: "Save 50%",
+          savings: "Save 30%",
           buttonText: "Go Diamond"
         }
       ];
