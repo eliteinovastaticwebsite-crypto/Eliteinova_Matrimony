@@ -22,6 +22,14 @@ import {
   HeartIcon,
   ChatBubbleLeftRightIcon,
   EyeIcon,
+  InformationCircleIcon,
+  UserGroupIcon,
+  BriefcaseIcon,
+  GlobeAltIcon,
+  AcademicCapIcon,
+  BuildingOfficeIcon,
+  FingerPrintIcon,
+  RocketLaunchIcon
 } from "@heroicons/react/24/solid";
 import { mockPlanService as planService } from "../services/mockPlanService";
 import api from "../api/axiosUser";
@@ -117,39 +125,34 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
     {
       id: 1,
       name: "Silver",
-      description: "Essential features to start your journey",
-      price: "299",
-      originalPrice: "299",
-      duration: "1 month",
+      description: "Your Future Partner is One Premium Step Away",
+      price: "1000",
+      duration: "3 months + Tax",
       features: [
-        "Create Complete Profile",
-        "Browse Limited Profiles Daily",
-        "Send 10 Interests Monthly",
-        "Basic Search Filters",
-        "Email Support",
-        "Profile Verification Available",
-        "Mobile App Access",
+        "View More Verified Profiles",
+        "Send limited Interests",
+        "Access Basic Contact Details",
+        "Priority Profile Listing",
+        "Secure contact with Interested Members",
+        "Dedicated Customer Support",
       ],
       buttonText: "Get Started",
     },
     {
       id: 2,
       name: "Gold",
-      description: "Enhanced features for serious seekers",
-      price: "2,999",
-      originalPrice: "4,998",
-      duration: "3 months",
+      description: "Verified Matches. Unlimited Access. Premium Advantage",
+      price: "2000",
+      duration: "3 months + Tax",
       features: [
         "Unlimited Profile Views",
-        "Priority in Search Results",
-        "Send Unlimited Interests",
-        "Advanced Search Filters",
-        "View Contact Details",
-        "Dedicated Support Manager",
-        "Profile Highlighting",
-        "Compatibility Reports",
-        "Message Read Receipts",
-        "Extended Profile Visibility",
+        "Direct Contact Details Access",
+        "Unlimited Chat & Messaging",
+        "Send & Receive Unlimited Interests",
+        "Top Priority Profile Visibility",
+        "Advanced Match Filters",
+        "Dedicated Relationship Manager Support",
+        "Profile Highlight in Search Results",
       ],
       savings: "Save 40%",
       buttonText: "Go Gold",
@@ -157,22 +160,20 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
     {
       id: 3,
       name: "Diamond",
-      description: "Ultimate personalized matchmaking experience",
-      price: "9,999",
+      description: "Join Premium Today – Experience Elite Matchmaking",
+      price: "3000",
       originalPrice: "19,998",
-      duration: "6 months",
+      duration: "3 months + Tax",
       features: [
-        "All Gold Features",
-        "Personal Matchmaking Assistant",
-        "Video Profile Creation",
-        "Premium Background Verification",
-        "Astrology Compatibility Reports",
-        "Family Mediation Services",
-        "24/7 Priority Support",
-        "Featured Profile Daily",
-        "Verified Trust Badge",
-        "Exclusive Events Access",
-        "Relationship Counseling Sessions",
+         "Unlimited Profile Views & Direct Contact Access",
+         "Top Priority Placement in All Search Results",
+         "Featured “Diamond Profile” Badge",
+         "Unlimited Chat, Interests & Requests",
+         "Advanced Matchmaking Filters",
+         "Dedicated Relationship Manager",
+         "Personal Match Recommendations",
+         "Profile Highlight in Premium Listings",
+         "Faster Response & Priority Support",
       ],
       savings: "Save 50%",
       buttonText: "Go Diamond",
@@ -896,21 +897,15 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
                   <div className="relative z-10 text-center">
                     <h3 className="text-white font-bold text-base md:text-lg mb-1 animate-bounce">
-                      🎉 Launch Special Offer! 🎉
+                      🎉 Premium special Offer 🎉
                     </h3>
-                    <p className="text-white font-semibold text-xs md:text-sm drop-shadow-lg">
-                      Free Registration for Launch Offer
-                    </p>
                   </div>
                 </div>
 
                 {/* Pricing */}
                 <div className="flex flex-col items-start space-y-2 mb-4">
-                  <span className={`text-2xl font-bold line-through text-gray-400`}>
-                    {`₹${plan.price.replace(/,/g, "")}/Per 12 Months`}
-                  </span>
-                  <span className={`text-4xl font-bold text-green-600`}>
-                    FREE
+                  <span className={`text-2xl font-bold text-gray-600`}>
+                    {`₹${plan.price.replace(/,/g, "")}/Per 3 Months + Tax`}
                   </span>
                 </div>
 
@@ -923,17 +918,19 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
                 )}
               </div>
 
-              {/* Quick Stats */}
-              <div className="text-right">
-                <div className="flex items-center space-x-1 text-green-600 mb-2">
-                  <CheckCircleIcon className="w-4 h-4" />
-                  <span className="text-sm font-semibold">Active</span>
-                </div>
-                <div className="flex items-center space-x-1 text-gray-500">
-                  <ClockIcon className="w-4 h-4" />
-                  <span className="text-sm">Instant Activation</span>
-                </div>
-              </div>
+              {/* Quick Stats - UPDATED: Side by side arrangement */}
+<div className="flex flex-col items-end space-y-2">
+  <div className="flex items-center space-x-3">
+    <div className="flex items-center space-x-1.5 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+      <span className="text-xs font-semibold text-green-700">Active</span>
+    </div>
+    <div className="flex items-center space-x-1.5 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
+      <ClockIcon className="w-3.5 h-3.5 text-blue-500" />
+      <span className="text-xs font-semibold text-blue-700">Instant Activation</span>
+    </div>
+  </div>
+</div>
             </div>
 
             {/* Features Grid */}
@@ -951,8 +948,126 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
               ))}
             </div>
 
+            {/* WHY CHOOSE SECTION - Added here */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <h4 className="font-semibold text-gray-800 text-lg mb-4 flex items-center">
+                <InformationCircleIcon className={`w-5 h-5 mr-2 ${
+                  plan.name === 'Silver' ? 'text-gray-500' : 
+                  plan.name === 'Gold' ? 'text-amber-500' : 'text-purple-500'
+                }`} />
+                Why Choose {plan.name}?
+              </h4>
+              
+              {plan.name === 'Silver' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm">
+                    <BoltIcon className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Faster Responses</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm">
+                    <EyeIcon className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Better Profile Visibility</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm">
+                    <HeartIcon className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Connect with Serious Families</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm">
+                    <ShieldCheckIcon className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Safe & Verified Platform</span>
+                  </div>
+                </div>
+              )}
+
+              {plan.name === 'Gold' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-amber-400">
+                    <BoltIcon className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Faster Match Responses</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-amber-400">
+                    <UserGroupIcon className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Connect with Verified & Premium Profiles</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-amber-400">
+                    <EyeIcon className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Higher Visibility – More Proposals</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-amber-400">
+                    <LockClosedIcon className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Trusted & Secure Communication</span>
+                  </div>
+                  <div className="flex items-center bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-amber-400">
+                    <HeartIcon className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">Serious Families Only</span>
+                  </div>
+                </div>
+              )}
+
+              {plan.name === 'Diamond' && (
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div className="flex items-start bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-purple-400">
+                      <span className="text-purple-500 mr-2">🔹</span>
+                      <span className="text-sm text-gray-700"><span className="font-medium">Maximum Visibility</span> – Be Seen First</span>
+                    </div>
+                    <div className="flex items-start bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-purple-400">
+                      <span className="text-purple-500 mr-2">🔹</span>
+                      <span className="text-sm text-gray-700"><span className="font-medium">Connect with Verified Premium Families</span></span>
+                    </div>
+                    <div className="flex items-start bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-purple-400">
+                      <span className="text-purple-500 mr-2">🔹</span>
+                      <span className="text-sm text-gray-700"><span className="font-medium">Faster Match Finalization</span></span>
+                    </div>
+                    <div className="flex items-start bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-purple-400">
+                      <span className="text-purple-500 mr-2">🔹</span>
+                      <span className="text-sm text-gray-700"><span className="font-medium">Personalized Assistance</span></span>
+                    </div>
+                    <div className="flex items-start bg-white/70 p-3 rounded-lg shadow-sm border-l-4 border-purple-400">
+                      <span className="text-purple-500 mr-2">🔹</span>
+                      <span className="text-sm text-gray-700"><span className="font-medium">100% Secure & Confidential Process</span></span>
+                    </div>
+                  </div>
+                  
+                  {/* Perfect For section for Diamond */}
+                  <div className="mt-4 bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-xl">
+                    <h5 className="font-semibold text-purple-700 mb-3 flex items-center">
+                      <BriefcaseIcon className="w-4 h-4 mr-2" />
+                      Perfect For:
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div className="flex items-center bg-white p-2 rounded-lg text-xs">
+                        <AcademicCapIcon className="w-3 h-3 text-purple-500 mr-1" />
+                        <span>Doctors, Engineers, IT Professionals</span>
+                      </div>
+                      <div className="flex items-center bg-white p-2 rounded-lg text-xs">
+                        <BuildingOfficeIcon className="w-3 h-3 text-purple-500 mr-1" />
+                        <span>Business Owners & Entrepreneurs</span>
+                      </div>
+                      <div className="flex items-center bg-white p-2 rounded-lg text-xs">
+                        <UserGroupIcon className="w-3 h-3 text-purple-500 mr-1" />
+                        <span>High-Profile Families</span>
+                      </div>
+                      <div className="flex items-center bg-white p-2 rounded-lg text-xs">
+                        <GlobeAltIcon className="w-3 h-3 text-purple-500 mr-1" />
+                        <span>NRI & International Alliances</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Diamond Advantage Badge */}
+                  <div className="mt-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-3 text-white text-xs">
+                    <div className="flex items-center">
+                      <TrophyIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span><span className="font-bold">Diamond Advantage:</span> Elite Connections Begin with Premium Access. Upgrade Your Search. Upgrade Your Future.</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Security Features */}
-            <div className="border-t pt-6">
+            <div className="border-t pt-6 mt-6">
               <h4 className="font-semibold text-gray-900 mb-4">
                 Security & Trust
               </h4>
@@ -1109,20 +1224,17 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
             <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Plan Price:</span>
-                  <span className="font-semibold line-through text-gray-400">₹{plan.price}/Per 12 Months</span>
+                  <span className="font-semibold text-gray-600">₹{plan.price}/Per 3 Months + Tax</span>
                 </div>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-green-700 font-semibold">Launch Offer:</span>
-                    <span className="text-green-600 font-bold text-lg">FREE</span>
+                    {/*<span className="text-green-700 font-semibold">Launch Offer:</span>
+                    <span className="text-green-600 font-bold text-lg">FREE</span>*/}
                   </div>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                   <span className="font-semibold text-gray-900">
                     Total Amount:
-                  </span>
-                  <span className="text-xl font-bold text-green-600">
-                    FREE
                   </span>
                 </div>
             </div>
@@ -1150,9 +1262,6 @@ export default function SubscriptionPage({ planId, onClose, onSuccess }) {
               ) : (
                 <span className="flex items-center justify-center space-x-2">
                   <CheckCircleIcon className="w-4 h-4" />
-                  <span>
-                    Complete Free Registration
-                  </span>
                   <BoltIcon className="w-4 h-4" />
                 </span>
               )}

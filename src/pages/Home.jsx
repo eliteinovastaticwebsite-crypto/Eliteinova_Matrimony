@@ -657,6 +657,7 @@ export default function Home({ onOpenAuthModal }) {
             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-2 flex items-center justify-center shadow-xl">
               <span className="text-2xl sm:text-3xl">🛡️</span>
             </div>
+            <h2 className="text-white font-bold text-sm sm:text-base md:text-lg">Premium &amp; Assisted Matrimony Services</h2>
             <h3 className="text-white font-bold text-sm sm:text-base md:text-lg">Verified &amp; Genuine Profiles</h3>
             <p className="text-white/80 text-[10px] sm:text-xs">Safe · Authentic · Trusted</p>
           </div>
@@ -905,9 +906,8 @@ export default function Home({ onOpenAuthModal }) {
               <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-2">Tamil Nadu Cities:</h4>
               <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">Chennai | Coimbatore | Madurai | Salem | Trichy | Erode | Tirunelveli | Vellore | Thanjavur | Tiruppur</p>
             </div>
-
+             <h3 className="font-bold text-gray-900 text-sm sm:text-base mb-2">International Locations</h3>
             <div className="bg-gradient-to-br from-red-50 to-amber-50 rounded-xl p-3 sm:p-4 border border-red-100">
-              <h4 className="font-bold text-gray-900 text-sm sm:text-base mb-2">International Locations:</h4>
               <p className="text-gray-600 text-xs sm:text-sm">USA | UK | Canada | Australia | Singapore | Malaysia | Dubai | Sri Lanka</p>
             </div>
 

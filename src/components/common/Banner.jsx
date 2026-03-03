@@ -28,6 +28,7 @@ export default function Banner({
     {
       title: "Find Your Perfect Match",
       subtitle: "Join thousands of successful marriages in Tamil Nadu",
+      paragraph: "", // Added empty paragraph to default texts
       cta: "Get Started Now",
     },
   ];
@@ -148,10 +149,10 @@ export default function Banner({
               </span>
             </h1>
 
-            {/* Subtitle */}
+            {/* Subtitle - INCREASED SIZE, NORMAL WEIGHT */}
             {currentText.subtitle && (
               <p
-                className={`text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 text-yellow-200 max-w-2xl mx-auto leading-relaxed transition-all duration-700 delay-200 ${
+                className={`text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-normal mb-4 sm:mb-6 text-yellow-200 max-w-3xl mx-auto leading-relaxed transition-all duration-700 delay-200 ${
                   fade
                     ? "opacity-100 transform translate-y-0"
                     : "opacity-0 transform translate-y-4"
@@ -161,9 +162,22 @@ export default function Banner({
               </p>
             )}
 
+            {/* Paragraph - VERY THIN LIGHT FONT */}
+            {currentText.paragraph && (
+              <p
+                className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extralight mb-6 sm:mb-8 text-white/90 max-w-4xl mx-auto leading-relaxed tracking-wide transition-all duration-700 delay-300 ${
+                  fade
+                    ? "opacity-100 transform translate-y-0"
+                    : "opacity-0 transform translate-y-4"
+                }`}
+              >
+                {currentText.paragraph}
+              </p>
+            )}
+
             {/* CTA Button */}
             <div
-              className={`transition-all duration-700 delay-300 ${
+              className={`transition-all duration-700 delay-400 ${
                 fade
                   ? "opacity-100 transform translate-y-0"
                   : "opacity-0 transform translate-y-4"
@@ -185,12 +199,6 @@ export default function Banner({
             </div>
           </div>
         </div>
-      )}
-
-      {/* Arrows */}
-      {bannerImages.length > 1 && (
-        <>
-        </>
       )}
 
       {/* Dots */}

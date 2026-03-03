@@ -2585,7 +2585,7 @@ const professionOptions = [
               </div>
               <div className="flex flex-col space-y-3">
                 {[
-                  { value: "SILVER", label: "SILVER", price: "₹299/Per 3 Months" },
+                  { value: "SILVER", label: "SILVER", price: "/Per 3 Months" },
                   { value: "GOLD", label: "GOLD", price: "₹499/Per 3 Months" },
                   { value: "DIAMOND", label: "DIAMOND", price: "₹749/Per 3 Months" },
                 ].map((membership) => (

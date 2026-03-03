@@ -116,7 +116,7 @@ function MembershipManagement() {
       icon: Star,
       color: "yellow",
       gradient: "from-yellow-400 to-yellow-600",
-      description: "Enhanced features for serious seekers",
+      description: "Verified Matches. Unlimited Access. Premium Advantage",
       defaultFeatures: [
         "Enhanced Profile Visibility",
         "Unlimited Swipes",
