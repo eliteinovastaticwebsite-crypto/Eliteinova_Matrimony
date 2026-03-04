@@ -932,23 +932,28 @@ export default function Home({ onOpenAuthModal }) {
           </div>
         </div>
          {!isAuthenticated && (
-  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-12 sm:p-4 shadow-2xl relative overflow-hidden w-7/12 mx-auto my-5">
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-4 sm:p-5 shadow-2xl relative overflow-hidden w-[90%] sm:w-10/12 md:w-8/12 lg:w-7/12 mx-auto my-5">
     <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
     <div className="relative z-10 text-center">
-      <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
-        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
-        <span className="text-white font-bold">|</span>
-        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
-        <span className="text-white font-bold">|</span>
-        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+      <h3 className="text-white font-bold text-base sm:text-xl md:text-2xl mb-1 animate-bounce">
+        🎉 Register Now! 🎉
+      </h3>
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 mb-2">
+        <span className="text-white/90 text-[11px] sm:text-sm">Silver ₹299</span>
+        <span className="text-white font-bold text-[11px] sm:text-sm">|</span>
+        <span className="text-white/90 text-[11px] sm:text-sm">Gold ₹499</span>
+        <span className="text-white font-bold text-[11px] sm:text-sm">|</span>
+        <span className="text-white/90 text-[11px] sm:text-sm">Diamond ₹749</span>
       </div>
-      <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+      <button
+        onClick={handleRegisterFromCard}
+        className="bg-red-600 hover:bg-red-700 text-white px-5 sm:px-7 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+      >
         Register Now
       </button>
     </div>
   </div>
-          )}
+)}
       </div>
     </div>
 
