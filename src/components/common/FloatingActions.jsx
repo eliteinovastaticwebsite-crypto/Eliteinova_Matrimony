@@ -62,18 +62,6 @@ export default function FloatingActions({
   return (
     <div className="fixed right-3 md:right-6 bottom-4 md:bottom-8 z-50 flex flex-col items-center gap-2 md:gap-4">
 
-      {/* Scroll to Top Button - Shows after scrolling down */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-          className={`${btnBase} bg-gray-700 text-white hover:bg-gray-800 animate-bounce`}
-          title="Go to top"
-        >
-          <ChevronUpIcon className={iconClass} />
-        </button>
-      )}
-
       {/* Register Button - Only show when NOT logged in */}
       {onRegister && !isAuthenticated && (
         <button
@@ -84,7 +72,7 @@ export default function FloatingActions({
           }}
           onMouseDown={(e) => e.stopPropagation()}
           aria-label="Register"
-          className={`${btnBase} bg-gradient-to-r from-red-500 to-red-600 text-white flex flex-col items-center justify-center gap-0.5 md:gap-1`}
+          className={`${btnBase} bg-gradient-to-r from-red-500 to-red-600 text-white flex flex-col items-center justify-center gap-0.5 md:gap-1 animate-bounce`}
           title="Register Now"
         >
           <UserPlusIcon className={iconClass} />
@@ -102,7 +90,7 @@ export default function FloatingActions({
           }}
           onMouseDown={(e) => e.stopPropagation()}
           aria-label="Login"
-          className={`${btnBase} bg-gradient-to-r from-blue-400 to-blue-500 text-white flex flex-col items-center justify-center gap-0.5 md:gap-1`}
+          className={`${btnBase} bg-gradient-to-r from-green-500 to-green-600 text-white flex flex-col items-center justify-center gap-0.5 md:gap-1 animate-bounce`}
           title="Login Now"
         >
           <ArrowRightOnRectangleIcon className={iconClass} />
@@ -137,6 +125,18 @@ export default function FloatingActions({
         >
           <PhoneIcon className={iconClass} />
         </a>
+      )}
+
+      {/* Scroll to Top Button - Shows after scrolling down, always at the bottom */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          className={`${btnBase} bg-gray-700 text-white hover:bg-gray-800 mt-2`}
+          title="Go to top"
+        >
+          <ChevronUpIcon className={iconClass} />
+        </button>
       )}
 
     </div>

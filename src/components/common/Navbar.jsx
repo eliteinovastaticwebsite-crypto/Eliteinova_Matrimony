@@ -35,29 +35,27 @@ export default function Navbar({ onLogin, onRegister }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [userDropdown, setUserDropdown] = useState(false);
+  const [moreDropdown, setMoreDropdown] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("login");
 
   const isStaffAdmin = isAdminTokenPresent();
-const isStaffOffice = isOfficeTokenPresent();
-
+  const isStaffOffice = isOfficeTokenPresent();
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const { user, isAuthenticated, logout, isAdmin } = useAuth();
 
-  // Check if we're on the FAQ page - more explicit check
-  const isFAQPage = location.pathname === "/faqs" || 
-                     location.pathname === "/faqs/" ||
-                     location.pathname.startsWith("/faqs");
-  
-  // Debug log (remove in production)
+  const isFAQPage =
+    location.pathname === "/faqs" ||
+    location.pathname === "/faqs/" ||
+    location.pathname.startsWith("/faqs");
+
   useEffect(() => {
     console.log("Current pathname:", location.pathname, "isFAQPage:", isFAQPage);
   }, [location.pathname, isFAQPage]);
 
-  // Pages that need h-10 spacer
   const shortSpacerPages = [
     "/",
     "/aboutus",
@@ -76,11 +74,9 @@ const isStaffOffice = isOfficeTokenPresent();
     });
   }, [isAuthenticated, user, isAdmin]);
 
-  // Check if current page needs short spacer
   const needsShortSpacer = shortSpacerPages.includes(location.pathname);
   const spacerHeight = needsShortSpacer ? "h-10" : "h-20";
 
-  // Check scroll position (keeping for other functionality)
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -90,28 +86,22 @@ const isStaffOffice = isOfficeTokenPresent();
   }, []);
 
   const handleLogout = () => {
-    console.log("🚪 Logging out user:", user?.name);
     logout();
     setUserDropdown(false);
     setOpen(false);
     navigate("/");
-    console.log("✅ Logout completed");
   };
 
   const handleAdminDashboard = () => {
-  console.log("🛠️ Navigating to admin dashboard");
-  
-  // Check if user is admin using adminService, not regular auth
-  const adminToken = localStorage.getItem('adminToken');
-  if (adminToken) {
-    navigate("/admin/dashboard");
-    setUserDropdown(false);
-    setOpen(false);
-  } else {
-    console.log("🔄 No admin token, redirecting to admin login");
-    navigate('/admin-login');
-  }
-};
+    const adminToken = localStorage.getItem("adminToken");
+    if (adminToken) {
+      navigate("/admin/dashboard");
+      setUserDropdown(false);
+      setOpen(false);
+    } else {
+      navigate("/admin-login");
+    }
+  };
 
   const handleProfile = () => {
     navigate("/my-profile");
@@ -135,15 +125,9 @@ const isStaffOffice = isOfficeTokenPresent();
     return name ? name.charAt(0).toUpperCase() : "U";
   };
 
-  const handleNotificationsClick = () => {
-    navigate("/notifications");
-  };
+  const handleNotificationsClick = () => navigate("/notifications");
+  const handleMessagesClick = () => navigate("/messages");
 
-  const handleMessagesClick = () => {
-    navigate("/messages");
-  };
-
-  // Debug info - remove in production
   useEffect(() => {
     console.log("🔍 Navbar State Update:", {
       isAuthenticated,
@@ -155,9 +139,7 @@ const isStaffOffice = isOfficeTokenPresent();
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-md`}
-      >
+      <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-md">
         {/* Top decorative strip */}
         <div className="h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
 
@@ -167,7 +149,7 @@ const isStaffOffice = isOfficeTokenPresent();
             <div className="relative">
               <img
                 src={Logo}
-                alt="BalaSabari Matrimony Logo"
+                alt="Eliteinova Matrimony Logo"
                 className="w-[80px] h-[80px] rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300"
               />
             </div>
@@ -177,12 +159,12 @@ const isStaffOffice = isOfficeTokenPresent();
             >
               <span className="font-pacifico text-3xl">Elite</span>
               <span className="font-pacifico text-xl">inova</span>{" "}
-              <span className="font-pacifico text-xl">Matrimony</span> <br />{" "}
+              <span className="font-pacifico text-xl">Matrimony</span> <br />
               <span className="text-1.5xl">Eliteinova Tech Pvt Ltd</span>
             </Link>
           </div>
 
-          {/* Desktop Menu */}
+          {/* Desktop Nav Links */}
           <ul className="hidden lg:flex items-center space-x-3 font-semibold text-[15px] tracking-wide">
             {(isAuthenticated ? navLinks : publicNavLinks).map((link) => (
               <li key={link.path} className="relative group">
@@ -193,11 +175,9 @@ const isStaffOffice = isOfficeTokenPresent();
                       "/faqs": "faq-section",
                       "/mobileapp": "mobileapp-section",
                     };
-
                     if (scrollTargets[link.path]) {
                       e.preventDefault();
                       const sectionId = scrollTargets[link.path];
-
                       const jumpToSection = () => {
                         const section = document.getElementById(sectionId);
                         if (section) {
@@ -209,18 +189,15 @@ const isStaffOffice = isOfficeTokenPresent();
                           window.scrollTo({ top, behavior: "auto" });
                         }
                       };
-
                       if (location.pathname === "/") {
                         jumpToSection();
                       } else {
                         navigate("/", { replace: false });
                         setTimeout(() => jumpToSection(), 100);
                       }
-
                       setOpen(false);
                       return;
                     }
-
                     setOpen(false);
                   }}
                   className={`relative py-2 transition-all duration-50 ${
@@ -239,7 +216,6 @@ const isStaffOffice = isOfficeTokenPresent();
               </li>
             ))}
 
-            {/* Admin Dashboard Link - Only show for admin users */}
             {isStaffAdmin && (
               <li className="relative group">
                 <Link
@@ -267,10 +243,9 @@ const isStaffOffice = isOfficeTokenPresent();
           </ul>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex space-x-4 items-center">
+          <div className="hidden md:flex space-x-3 items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-6">
-                {/* Notification Icons - Hide for admin if needed */}
                 {!isStaffAdmin && !isStaffOffice && (
                   <div className="flex space-x-4">
                     <button
@@ -282,7 +257,6 @@ const isStaffOffice = isOfficeTokenPresent();
                         3
                       </span>
                     </button>
-
                     <button
                       onClick={handleMessagesClick}
                       className="p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/10 hover:bg-white/20 text-white"
@@ -292,7 +266,7 @@ const isStaffOffice = isOfficeTokenPresent();
                   </div>
                 )}
 
-                {/* User Profile with Dropdown */}
+                {/* User Profile Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setUserDropdown(!userDropdown)}
@@ -328,10 +302,8 @@ const isStaffOffice = isOfficeTokenPresent();
                     </div>
                   </button>
 
-                  {/* User Dropdown Menu */}
                   {userDropdown && (
                     <div className="absolute top-full right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 py-2 z-50 animate-fadeIn">
-                      {/* User Info */}
                       <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center space-x-3">
                           <div
@@ -347,9 +319,7 @@ const isStaffOffice = isOfficeTokenPresent();
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-800">
-                              {user?.name}
-                            </p>
+                            <p className="font-semibold text-gray-800">{user?.name}</p>
                             <p className="text-sm text-gray-600">
                               {isAdmin() ? "Administrator" : user?.email}
                             </p>
@@ -357,9 +327,9 @@ const isStaffOffice = isOfficeTokenPresent();
                         </div>
                       </div>
 
-                      {/* Admin Dashboard Link */}
                       {isStaffAdmin && (
-  <button onClick={handleAdminDashboard}
+                        <button
+                          onClick={handleAdminDashboard}
                           className="w-full px-4 py-3 text-left hover:bg-yellow-50 text-yellow-700 font-medium transition-colors flex items-center space-x-3 border-b border-gray-100"
                         >
                           <ShieldCheckIcon className="w-5 h-5" />
@@ -367,7 +337,6 @@ const isStaffOffice = isOfficeTokenPresent();
                         </button>
                       )}
 
-                      {/* Regular User Options */}
                       {!isAdmin() && (
                         <button
                           onClick={handleProfile}
@@ -378,7 +347,6 @@ const isStaffOffice = isOfficeTokenPresent();
                         </button>
                       )}
 
-                      {/* Logout Button */}
                       <button
                         onClick={handleLogout}
                         className="w-full px-4 py-3 text-left hover:bg-red-50 text-red-600 font-medium transition-colors flex items-center space-x-3 border-t border-gray-100"
@@ -391,31 +359,67 @@ const isStaffOffice = isOfficeTokenPresent();
                 </div>
               </div>
             ) : (
-              <div className="flex space-x-4 items-center">
-                {/* Auth Buttons */}
+              <div className="flex space-x-3 items-center">
+                {/* Register Button - Now same as Login button color */}
+                <button
+                  onClick={handleRegisterClick}
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
+                >
+                  <UserPlusIcon className="w-5 h-5 mr-2" />
+                  Register
+                </button>
+
+                {/* Login Button */}
                 <button
                   onClick={handleLoginClick}
-                  className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Login
                 </button>
 
-                <button
-        onClick={() => navigate('/office-login')}
-        className="px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
-      >
-        <ShieldCheckIcon className="w-5 h-5 mr-2" />
-        Office
-      </button>
+                {/* More Dropdown (Office & Admin) */}
+                <div className="relative">
+                  <button
+                    onClick={() => setMoreDropdown(!moreDropdown)}
+                    className="px-4 py-3 bg-white/10 border border-yellow-400/50 text-white rounded-full font-bold hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+                    title="Staff Access"
+                  >
+                    <Bars3Icon className="w-5 h-5" />
+                    <ChevronDownIcon
+                      className={`w-4 h-4 transition-transform duration-300 ${
+                        moreDropdown ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
 
-                {/* ✅ ADD THIS ADMIN LOGIN BUTTON */}
-      <button
-        onClick={() => navigate('/admin-login')}
-        className="px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
-      >
-        <ShieldCheckIcon className="w-5 h-5 mr-2" />
-        Admin
-      </button>
+                  {moreDropdown && (
+                    <div className="absolute top-full right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 py-2 z-50 animate-fadeIn">
+                      <p className="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-gray-100">
+                        Staff Access
+                      </p>
+                      <button
+                        onClick={() => {
+                          navigate("/office-login");
+                          setMoreDropdown(false);
+                        }}
+                        className="w-full px-4 py-3 text-left hover:bg-yellow-50 text-gray-700 font-medium transition-colors flex items-center space-x-3"
+                      >
+                        <ShieldCheckIcon className="w-5 h-5 text-yellow-600" />
+                        <span>Office Login</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate("/admin-login");
+                          setMoreDropdown(false);
+                        }}
+                        className="w-full px-4 py-3 text-left hover:bg-red-50 text-gray-700 font-medium transition-colors flex items-center space-x-3 border-t border-gray-100"
+                      >
+                        <ShieldCheckIcon className="w-5 h-5 text-red-600" />
+                        <span>Admin Login</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -451,32 +455,24 @@ const isStaffOffice = isOfficeTokenPresent();
                     "/faqs": "faq-section",
                     "/mobileapp": "mobileapp-section",
                   };
-
                   if (scrollTargets[link.path]) {
                     e.preventDefault();
                     const sectionId = scrollTargets[link.path];
-
                     const jumpToSection = () => {
                       const section = document.getElementById(sectionId);
                       if (section) {
-                        section.scrollIntoView({
-                          behavior: "auto",
-                          block: "start",
-                        });
+                        section.scrollIntoView({ behavior: "auto", block: "start" });
                       }
                     };
-
                     if (location.pathname === "/") {
                       jumpToSection();
                     } else {
                       navigate("/", { replace: false });
                       setTimeout(() => jumpToSection(), 100);
                     }
-
                     setOpen(false);
                     return;
                   }
-
                   setOpen(false);
                 }}
                 className={`block py-4 text-lg font-semibold transition-all duration-300 border-l-4 pl-6 relative group ${
@@ -494,9 +490,9 @@ const isStaffOffice = isOfficeTokenPresent();
               </Link>
             ))}
 
-            {/* Admin Dashboard Link in Mobile - Only for admin */}
             {isStaffAdmin && (
-  <button onClick={handleAdminDashboard}
+              <button
+                onClick={handleAdminDashboard}
                 className={`w-full text-left block py-4 text-lg font-semibold transition-all duration-300 border-l-4 pl-6 relative group ${
                   location.pathname.startsWith("/admin")
                     ? "text-yellow-400 border-yellow-400 bg-white/10 rounded-r-xl"
@@ -507,11 +503,6 @@ const isStaffOffice = isOfficeTokenPresent();
                   <ShieldCheckIcon className="w-5 h-5" />
                   <span>Admin Dashboard</span>
                 </div>
-                <span
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full ${
-                    location.pathname.startsWith("/admin") ? "w-full" : ""
-                  }`}
-                ></span>
               </button>
             )}
 
@@ -532,22 +523,20 @@ const isStaffOffice = isOfficeTokenPresent();
                     )}
                   </div>
                   <div>
-                    <p className="font-bold text-lg text-white">
-                      {user?.name || "User"}
-                    </p>
+                    <p className="font-bold text-lg text-white">{user?.name || "User"}</p>
                     <p className="text-sm text-yellow-100">
-                      {isAdmin() 
-                        ? "Administrator" 
-                        : user?.membership 
-                          ? `${user.membership} Member`
-                          : "Premium Member"}
+                      {isAdmin()
+                        ? "Administrator"
+                        : user?.membership
+                        ? `${user.membership} Member`
+                        : "Premium Member"}
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Mobile Buttons - Conditional */}
+            {/* Mobile Buttons */}
             <div className="pt-6 border-t border-white/20 space-y-4">
               {isAuthenticated ? (
                 <>
@@ -562,7 +551,8 @@ const isStaffOffice = isOfficeTokenPresent();
                       </button>
                     )}
                     {isStaffAdmin && (
-  <button onClick={handleAdminDashboard}
+                      <button
+                        onClick={handleAdminDashboard}
                         className="flex items-center justify-center space-x-2 px-4 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-2xl font-bold hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg"
                       >
                         <ShieldCheckIcon className="w-6 h-6" />
@@ -577,7 +567,6 @@ const isStaffOffice = isOfficeTokenPresent();
                     </button>
                   </div>
 
-                  {/* Quick Actions - Hide for admin */}
                   {!isStaffAdmin && !isStaffOffice && (
                     <div className="grid grid-cols-3 gap-2">
                       <button
@@ -589,14 +578,12 @@ const isStaffOffice = isOfficeTokenPresent();
                           3
                         </span>
                       </button>
-
                       <button
                         onClick={handleMessagesClick}
                         className="p-2 rounded-full transition-all duration-300 hover:scale-110 bg-white/10 hover:bg-white/20 text-white"
                       >
                         <ChatBubbleLeftRightIcon className="w-6 h-6" />
                       </button>
-
                       <button className="p-3 rounded-xl text-center transition-all bg-white/10 hover:bg-white/20 text-white">
                         <HeartIcon className="w-5 h-5 mx-auto mb-1" />
                         <span className="text-xs">Matches</span>
@@ -608,41 +595,57 @@ const isStaffOffice = isOfficeTokenPresent();
                 <div className="space-y-4">
                   <div className="text-center p-4 rounded-2xl bg-white/10 text-yellow-100">
                     <HeartIcon className="w-8 h-8 mx-auto mb-2 text-red-400" />
-                    <p className="text-sm opacity-100">
-                      Start your journey today
-                    </p>
+                    <p className="text-sm">Start your journey today</p>
                   </div>
 
-                  <div className="grid gap-4 grid-cols-1">
-                    <button
-                      onClick={handleLoginClick}
-                      className="px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg"
-                    >
-                      Login
-                    </button>
-                  </div>
-
-                   <button
-    onClick={() => {
-      navigate('/office-login');
-      setOpen(false);
-    }}
-    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center"
-  >
-    <ShieldCheckIcon className="w-5 h-5 mr-2" />
-    Office
-  </button>
-
+                  {/* Register Button - Now same yellow gradient */}
                   <button
-    onClick={() => {
-      navigate('/admin-login');
-      setOpen(false);
-    }}
-    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center"
-  >
-    <ShieldCheckIcon className="w-5 h-5 mr-2" />
-    Admin
-  </button>
+                    onClick={() => {
+                      handleRegisterClick();
+                      setOpen(false);
+                    }}
+                    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <UserPlusIcon className="w-5 h-5" />
+                    Register Now
+                  </button>
+
+                  {/* Login Button */}
+                  <button
+                    onClick={handleLoginClick}
+                    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg"
+                  >
+                    Login
+                  </button>
+
+                  {/* Staff Access */}
+                  <div className="border-t border-white/20 pt-4">
+                    <p className="text-white/60 text-xs text-center mb-3 uppercase tracking-wider">
+                      Staff Access
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => {
+                          navigate("/office-login");
+                          setOpen(false);
+                        }}
+                        className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <ShieldCheckIcon className="w-5 h-5" />
+                        Office
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate("/admin-login");
+                          setOpen(false);
+                        }}
+                        className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <ShieldCheckIcon className="w-5 h-5" />
+                        Admin
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -660,15 +663,17 @@ const isStaffOffice = isOfficeTokenPresent();
         initialMode={authModalMode}
       />
 
-      {/* Close dropdown when clicking outside */}
-      {userDropdown && (
+      {/* Close dropdowns when clicking outside */}
+      {(userDropdown || moreDropdown) && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setUserDropdown(false)}
+          onClick={() => {
+            setUserDropdown(false);
+            setMoreDropdown(false);
+          }}
         ></div>
       )}
 
-      {/* Custom Animations */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-10px); }
@@ -681,4 +686,3 @@ const isStaffOffice = isOfficeTokenPresent();
     </>
   );
 }
-

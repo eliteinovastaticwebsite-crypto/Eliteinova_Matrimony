@@ -289,7 +289,7 @@ export default function Home({ onOpenAuthModal }) {
         { label: "Matrimonial Services",       id: "matrimonial-services" },
         { label: "Find by Profession",         id: "find-by-profession" },
         { label: "Matrimony Mobile App",       id: "mobile-app" },
-        { label: "Trusted Matrimony Service",  id: "trusted-matrimony" },
+        { label: "Trustful Services",          id: "trusted-matrimony" },
         { label: "Why Eliteinova",             id: "why-eliteinova" },
         { label: "Horoscope Matching",         id: "horoscope-matching" },
         { label: "Success Stories",            id: "success-stories" },
@@ -814,7 +814,9 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 </section>
    
-   <div id="mobile-app"><MobilAppSection /></div>
+   <div id="mobile-app">
+  <MobilAppSection onRegister={!isAuthenticated ? handleRegisterFromCard : null} />
+</div>
 
 
 
@@ -839,7 +841,7 @@ export default function Home({ onOpenAuthModal }) {
       <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
         <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full border border-red-100">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Trusted Matrimony Service</span>
+          <span className="text-red-600 text-xs sm:text-sm font-semibold uppercase tracking-wider">Trustful Services</span>
         </div>
         
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
@@ -1143,8 +1145,26 @@ export default function Home({ onOpenAuthModal }) {
 
 
   </div>
-  
 
+  {!isAuthenticated && (
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-12 sm:p-4 shadow-2xl relative overflow-hidden w-7/12 mx-auto my-5">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="relative z-10 text-center">
+      <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+      </div>
+      <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+        Register Now
+      </button>
+    </div>
+  </div>
+)}
+  
   <section id="success-stories" className="py-10 bg-gradient-to-b from-white via-red-50 to-white">
   <div className="container mx-auto px-4 lg:px-8">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -1173,7 +1193,7 @@ export default function Home({ onOpenAuthModal }) {
       {/* RIGHT: Stats / Highlights */}
       <div className="grid grid-cols-2 gap-4">
         {[
-          { value: "10,000+", label: "Happy Couples", icon: "💑" },
+          { value: "More", label: "Happy Couples", icon: "💑" },
           { value: "98%",     label: "Success Rate",  icon: "⭐" },
           { value: "27+",     label: "Communities",   icon: "🏘️" },
           { value: "24/7",    label: "Support",       icon: "🤝" },
@@ -1212,6 +1232,25 @@ export default function Home({ onOpenAuthModal }) {
 </section>
 
 {/* === END OF SECTION === */}
+
+    {!isAuthenticated && (
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-12 sm:p-4 shadow-2xl relative overflow-hidden w-7/12 mx-auto my-5">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="relative z-10 text-center">
+      <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+      </div>
+      <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+        Register Now
+      </button>
+    </div>
+  </div>
+)}
       
       {/* Professional How It Works Section */}
       <div className="py-12 sm:py-16 md:py-20 bg-white">
@@ -1504,23 +1543,21 @@ export default function Home({ onOpenAuthModal }) {
           </div>
         </div>
       </div>
-      {!isAuthenticated && (
-  <div className="container mx-auto px-4 py-8">
-    <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden w-full">
-      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-      <div className="relative z-10 text-center">
-        <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
-          <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
-          <span className="text-white font-bold">|</span>
-          <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
-          <span className="text-white font-bold">|</span>
-          <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
-        </div>
-        <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-          Register Now
-        </button>
+    {!isAuthenticated && (
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-12 sm:p-4 shadow-2xl relative overflow-hidden w-7/12 mx-auto my-5">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="relative z-10 text-center">
+      <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
       </div>
+      <button onClick={handleRegisterFromCard} className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+        Register Now
+      </button>
     </div>
   </div>
 )}
