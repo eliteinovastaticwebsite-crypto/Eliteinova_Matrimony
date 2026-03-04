@@ -598,7 +598,7 @@ export default function Navbar({ onLogin, onRegister }) {
                     <p className="text-sm">Start your journey today</p>
                   </div>
 
-                  {/* Register Button - Now same yellow gradient */}
+                  {/* Register Button - Mobile */}
                   <button
                     onClick={() => {
                       handleRegisterClick();
@@ -610,11 +610,15 @@ export default function Navbar({ onLogin, onRegister }) {
                     Register Now
                   </button>
 
-                  {/* Login Button */}
+                  {/* Login Button - Mobile */}
                   <button
-                    onClick={handleLoginClick}
-                    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg"
+                    onClick={() => {
+                      handleLoginClick();
+                      setOpen(false);
+                    }}
+                    className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
                   >
+                    <ArrowRightOnRectangleIcon className="w-5 h-5" />
                     Login
                   </button>
 
