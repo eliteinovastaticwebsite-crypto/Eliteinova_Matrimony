@@ -1,5 +1,5 @@
 // src/components/common/Footer.jsx
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaFacebookF,
   FaTwitter,
@@ -14,7 +14,19 @@ import {
 } from "react-icons/fa";
 import { footerLinks } from "../../config/footerLinks";
 
-export default function Footer() {
+export default function Footer({ onRegister, onLogin }) {
+  const navigate = useNavigate();
+
+  const handleRegister = () => {
+    if (onRegister) onRegister();
+    else navigate("/customer-registration");
+  };
+
+  const handleLogin = () => {
+    if (onLogin) onLogin();
+    else navigate("/customer-login");
+  };
+
   return (
     <footer
       className="w-full text-white pt-10 pb-8 mt-auto relative overflow-hidden"
@@ -88,62 +100,27 @@ export default function Footer() {
             {/* Links Grid - 3 cols on sm+, 1 col stacked on xs */}
             <div className="grid grid-cols-3 xs:grid-cols-3 gap-4 sm:gap-8">
 
-              {/* Quick Links */}
+              {/* Quick Links — Register & Login use navigate(), others use Link */}
               <div>
                 <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
                   <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
                   <span className="font-bold">Quick Links</span>
                 </h4>
                 <ul className="space-y-1.5 sm:space-y-2">
-                  {footerLinks.quick.map((link) => (
-                    <li key={link.path}>
-                      <Link
-                        to={link.path}
-                        className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
-                      >
-                        <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
-                        <span className="font-bold">{link.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Premium */}
-              <div>
-                <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
-                  <span className="font-bold">Premium</span>
-                </h4>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  {[
-                    { label: "Silver", path: "/premium/silver" },
-                    { label: "Gold", path: "/premium/gold" },
-                    { label: "Diamond", path: "/premium/diamond" },
-                    { label: "Help & Support", path: "/help-support" },
-                  ].map((link) => (
-                    <li key={link.path}>
-                      <Link
-                        to={link.path}
-                        className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
-                      >
-                        <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
-                        <span className="font-bold">{link.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Company */}
-              <div>
-                <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
-                  <span className="font-bold">Company</span>
-                </h4>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  {footerLinks.company.map((link) => {
-                    if (link.label === "Careers") return null;
+                  {footerLinks.quick.map((link, index) => {
+                    if (link.action === "register" || link.action === "login") {
+                      return (
+                        <li key={index}>
+                          <button
+                            onClick={link.action === "register" ? handleRegister : handleLogin}
+                            className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold w-full text-left"
+                          >
+                            <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                            <span className="font-bold">{link.label}</span>
+                          </button>
+                        </li>
+                      );
+                    }
                     return (
                       <li key={link.path}>
                         <Link
@@ -156,15 +133,53 @@ export default function Footer() {
                       </li>
                     );
                   })}
-                  <li>
-                    <Link
-                      to="/faq"
-                      className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
-                    >
-                      <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
-                      <span className="font-bold">FAQ</span>
-                    </Link>
-                  </li>
+                </ul>
+              </div>
+
+              {/* Premium — all three tiers link to /upgrade */}
+              <div>
+                <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
+                  <span className="font-bold">Premium</span>
+                </h4>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  {[
+                    { label: "Silver", path: "/upgrade" },
+                    { label: "Gold", path: "/upgrade" },
+                    { label: "Diamond", path: "/upgrade" },
+                    { label: "Help & Support", path: "/help-support" },
+                  ].map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        to={link.path}
+                        className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
+                      >
+                        <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                        <span className="font-bold">{link.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Company — About Us, Privacy Policy, Terms, FAQ */}
+              <div>
+                <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
+                  <span className="font-bold">Company</span>
+                </h4>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  {footerLinks.company.map((link) => (
+                    <li key={link.path}>
+                      <Link
+                        to={link.path}
+                        className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
+                      >
+                        <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                        <span className="font-bold">{link.label}</span>
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -227,7 +242,7 @@ export default function Footer() {
               <span className="font-bold text-center md:text-left">&copy; {new Date().getFullYear()} Eliteinova Matrimony. All rights reserved.</span>
               <div className="hidden md:flex items-center space-x-4">
                 <Link to="/privacypolicy" className="hover:text-white transition-colors font-bold">Privacy Policy</Link>
-                <Link to="/terms" className="hover:text-white transition-colors font-bold">Terms of Service</Link>
+                <Link to="/terms&conditions" className="hover:text-white transition-colors font-bold">Terms of Service</Link>
                 <Link to="/cookies" className="hover:text-white transition-colors font-bold">Cookie Policy</Link>
                 <a
                   href="https://www.eliteinovatechpvtltd.com/"
@@ -235,42 +250,22 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors font-bold"
                 >
-                  Digital Partner
-                </a>
-                <span className="text-white/50 font-bold">|</span>
-                <a
-                  href="https://www.eliteinovatechpvtltd.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors font-bold"
-                >
-                  Eliteinova.tech.pvt.ltd
+                  Digital Partner by Eliteinova.Tech.Pvt.Ltd
                 </a>
               </div>
               {/* Mobile only bottom links */}
               <div className="flex md:hidden flex-wrap justify-center gap-x-3 gap-y-1 mt-1">
-  <Link to="/privacypolicy" className="hover:text-white transition-colors font-bold text-xs">Privacy Policy</Link>
-  <Link to="/terms" className="hover:text-white transition-colors font-bold text-xs">Terms of Service</Link>
-  <Link to="/cookies" className="hover:text-white transition-colors font-bold text-xs">Cookie Policy</Link>
-  <span className="text-white/50 text-xs">|</span>
-  
-   <a href="https://www.eliteinovatechpvtltd.com/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="hover:text-white transition-colors font-bold text-xs"
-  >
-    Digital Partner
-  </a>
-  <span className="text-white/50 text-xs">|</span>
-  
-    <a href="https://www.eliteinovatechpvtltd.com/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="hover:text-white transition-colors font-bold text-xs"
-  >
-    Eliteinova.tech.pvt.ltd
-  </a>
-</div>
+                <Link to="/privacypolicy" className="hover:text-white transition-colors font-bold text-xs">Privacy Policy</Link>
+                <Link to="/terms&conditions" className="hover:text-white transition-colors font-bold text-xs">Terms of Service</Link>
+                <Link to="/cookies" className="hover:text-white transition-colors font-bold text-xs">Cookie Policy</Link>
+                <a href="https://www.eliteinovatechpvtltd.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors font-bold text-xs"
+                >
+                  Digital Partner by Eliteinova.Tech.Pvt.Ltd
+                </a>
+              </div>
             </div>
             <div className="flex items-center space-x-2 text-white/75 whitespace-nowrap">
               <span>Made with</span>

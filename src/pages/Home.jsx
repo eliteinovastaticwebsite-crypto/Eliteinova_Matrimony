@@ -10,10 +10,11 @@ import FAQSection from "../components/common/FAQSection";
 import Banner from "../components/common/Banner";
 import MobilAppSection from "../components/common/MobilAppSection";
 
-import BannerImage3 from "../assets/BannerImage3.jpg";
-import BannerImage4 from "../assets/BannerImage4.png";
+import BannerImage3 from "../assets/BannerImage6.png";
+import BannerImage4 from "../assets/BannerImage7.png";
+import BannerImage5 from "../assets/BannerImage8.png";
 
-const homeBannerImages = [BannerImage3, BannerImage4];
+const homeBannerImages = [BannerImage3, BannerImage4, BannerImage5];
 
 const homeBannerTexts = [
   {

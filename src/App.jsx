@@ -331,7 +331,10 @@ function AppContent() {
       {/* Only show Footer and other components for non-admin routes */}
       {!window.location.pathname.startsWith('/admin') && (
         <>
-          <Footer />
+         <Footer
+  onRegister={openRegisterModal}
+  onLogin={openLoginModal}
+/>
           <FloatingActions
             whatsappNumber="+919940200736"
             phoneNumber="+919940200736"

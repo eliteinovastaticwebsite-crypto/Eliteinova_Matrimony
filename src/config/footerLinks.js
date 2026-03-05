@@ -16,8 +16,8 @@ export const navLinks = [
 export const footerLinks = {
   quick: [
     { path: "/", label: "Home" },
-    { path: "register", label: "Register" },
-    { path: "login", label: "Login" },
+    { action: "register", label: "Register" },  // opens register modal
+    { action: "login",    label: "Login" },     // opens login modal
     { path: "/contact", label: "Contact Us" },
   ],
   services: [
@@ -27,10 +27,10 @@ export const footerLinks = {
     { path: "/support", label: "Help & Support" },
   ],
   company: [
-    { path: "/about", label: "About Us" },
-    { path: "/careers", label: "Careers" },
+    { path: "/aboutus", label: "About Us" },
     { path: "/privacypolicy", label: "Privacy Policy" },
     { path: "/terms&conditions", label: "Terms & Conditions" },
+    { path: "/faqs", label: "FAQ" },
   ],
   socials: [
     { path: "#", label: "Facebook" },
