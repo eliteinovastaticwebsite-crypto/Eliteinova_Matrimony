@@ -25,8 +25,10 @@ const publicNavLinks = [
   { path: "/services", label: "Services" },
   { path: "/upgrade", label: "Upgrade" },
   { label: "Privacy-Policy", path: "/privacypolicy" },
+  { label: "Terms & Conditions", path: "/terms&conditions" },
   { label: "Contact Us", path: "/contact" },
 ];
+
 
 const isAdminTokenPresent = () => !!localStorage.getItem("adminToken");
 const isOfficeTokenPresent = () => !!localStorage.getItem("officeToken");
@@ -143,7 +145,7 @@ export default function Navbar({ onLogin, onRegister }) {
         {/* Top decorative strip */}
         <div className="h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
 
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-2 py-2">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-2 py-4">
           {/* Logo */}
           <div className="flex items-center space-x-3 group">
             <div className="relative">
@@ -165,7 +167,7 @@ export default function Navbar({ onLogin, onRegister }) {
           </div>
 
           {/* Desktop Nav Links */}
-          <ul className="hidden lg:flex items-center space-x-3 font-semibold text-[15px] tracking-wide">
+          <ul className="hidden lg:flex items-center space-x-2 font-semibold text-[13px] tracking-wide">
             {(isAuthenticated ? navLinks : publicNavLinks).map((link) => (
               <li key={link.path} className="relative group">
                 <Link
@@ -360,33 +362,30 @@ export default function Navbar({ onLogin, onRegister }) {
               </div>
             ) : (
               <div className="flex space-x-3 items-center">
-                {/* Register Button - Now same as Login button color */}
                 <button
                   onClick={handleRegisterClick}
-                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
+                  className="px-5 py-3 text-sm bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center"
                 >
-                  <UserPlusIcon className="w-5 h-5 mr-2" />
+                  <UserPlusIcon className="w-4 h-4 mr-1.5" />
                   Register
                 </button>
 
-                {/* Login Button */}
                 <button
                   onClick={handleLoginClick}
-                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  className="px-5 py-3 text-sm bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Login
                 </button>
 
-                {/* More Dropdown (Office & Admin) */}
                 <div className="relative">
                   <button
                     onClick={() => setMoreDropdown(!moreDropdown)}
-                    className="px-4 py-3 bg-white/10 border border-yellow-400/50 text-white rounded-full font-bold hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+                    className="px-3 py-3 bg-white/10 border border-yellow-400/50 text-white rounded-full font-bold hover:bg-white/20 transition-all duration-300 flex items-center gap-1.5"
                     title="Staff Access"
                   >
-                    <Bars3Icon className="w-5 h-5" />
+                    <Bars3Icon className="w-4 h-4" />
                     <ChevronDownIcon
-                      className={`w-4 h-4 transition-transform duration-300 ${
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
                         moreDropdown ? "rotate-180" : ""
                       }`}
                     />
@@ -426,14 +425,14 @@ export default function Navbar({ onLogin, onRegister }) {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-3 rounded-xl transition-all duration-300 hover:scale-110 bg-white/10 text-white"
+            className="md:hidden p-2 rounded-lg transition-all duration-300 hover:scale-110 bg-white/10 text-white"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
             {open ? (
-              <XMarkIcon className="w-6 h-6" />
+              <XMarkIcon className="w-5 h-5" />
             ) : (
-              <Bars3Icon className="w-6 h-6" />
+              <Bars3Icon className="w-5 h-5" />
             )}
           </button>
         </div>
@@ -445,7 +444,6 @@ export default function Navbar({ onLogin, onRegister }) {
           }`}
         >
           <div className="px-6 py-6 space-y-4">
-            {/* Navigation Links */}
             {(isAuthenticated ? navLinks : publicNavLinks).map((link) => (
               <Link
                 key={link.path}
@@ -482,11 +480,6 @@ export default function Navbar({ onLogin, onRegister }) {
                 }`}
               >
                 {link.label}
-                <span
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full ${
-                    location.pathname === link.path ? "w-full" : ""
-                  }`}
-                ></span>
               </Link>
             ))}
 
@@ -506,7 +499,6 @@ export default function Navbar({ onLogin, onRegister }) {
               </button>
             )}
 
-            {/* User Info if logged in */}
             {isAuthenticated && (
               <div className="pt-6 border-t border-white/20">
                 <div className="flex items-center space-x-4 p-4 bg-white/10 rounded-2xl">
@@ -536,7 +528,6 @@ export default function Navbar({ onLogin, onRegister }) {
               </div>
             )}
 
-            {/* Mobile Buttons */}
             <div className="pt-6 border-t border-white/20 space-y-4">
               {isAuthenticated ? (
                 <>
@@ -598,51 +589,36 @@ export default function Navbar({ onLogin, onRegister }) {
                     <p className="text-sm">Start your journey today</p>
                   </div>
 
-                  {/* Register Button - Mobile */}
                   <button
-                    onClick={() => {
-                      handleRegisterClick();
-                      setOpen(false);
-                    }}
+                    onClick={() => { handleRegisterClick(); setOpen(false); }}
                     className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
                   >
                     <UserPlusIcon className="w-5 h-5" />
                     Register Now
                   </button>
 
-                  {/* Login Button - Mobile */}
                   <button
-                    onClick={() => {
-                      handleLoginClick();
-                      setOpen(false);
-                    }}
+                    onClick={() => { handleLoginClick(); setOpen(false); }}
                     className="w-full px-4 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
                   >
                     <ArrowRightOnRectangleIcon className="w-5 h-5" />
                     Login
                   </button>
 
-                  {/* Staff Access */}
                   <div className="border-t border-white/20 pt-4">
                     <p className="text-white/60 text-xs text-center mb-3 uppercase tracking-wider">
                       Staff Access
                     </p>
                     <div className="grid grid-cols-2 gap-3">
                       <button
-                        onClick={() => {
-                          navigate("/office-login");
-                          setOpen(false);
-                        }}
+                        onClick={() => { navigate("/office-login"); setOpen(false); }}
                         className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         <ShieldCheckIcon className="w-5 h-5" />
                         Office
                       </button>
                       <button
-                        onClick={() => {
-                          navigate("/admin-login");
-                          setOpen(false);
-                        }}
+                        onClick={() => { navigate("/admin-login"); setOpen(false); }}
                         className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         <ShieldCheckIcon className="w-5 h-5" />
@@ -657,24 +633,18 @@ export default function Navbar({ onLogin, onRegister }) {
         </div>
       </nav>
 
-      {/* Spacer for fixed navbar */}
       <div className={spacerHeight}></div>
 
-      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         initialMode={authModalMode}
       />
 
-      {/* Close dropdowns when clicking outside */}
       {(userDropdown || moreDropdown) && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => {
-            setUserDropdown(false);
-            setMoreDropdown(false);
-          }}
+          onClick={() => { setUserDropdown(false); setMoreDropdown(false); }}
         ></div>
       )}
 

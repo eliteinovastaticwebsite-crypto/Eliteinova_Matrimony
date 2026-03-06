@@ -14,23 +14,25 @@ export const navLinks = [
 
 // Footer links
 export const footerLinks = {
+  // renamed from "quick" — heading: "Eliteinova Matrimonial Services"
   quick: [
-    { path: "/", label: "Home" },
-    { action: "register", label: "Register" },  // opens register modal
-    { action: "login",    label: "Login" },     // opens login modal
+    { path: "/services#our-categories",    label: "Our Categories" },
+    { path: "/services#portal-access",     label: "Portal Access" },
+    { path: "/services#key-services",      label: "Our Key Services" },
+    { path: "/services#why-choose",        label: "Why Choose Eliteinova" },
+  ],
+  // Premium section — "Help & Support" replaced with "Contact Us"
+  premium: [
+    { path: "/upgrade", label: "Silver" },
+    { path: "/upgrade", label: "Gold" },
+    { path: "/upgrade", label: "Diamond" },
     { path: "/contact", label: "Contact Us" },
   ],
-  services: [
-    { path: "/search?type=brides", label: "Brides" },
-    { path: "/search?type=grooms", label: "Grooms" },
-    { path: "/upgrade", label: "Premium Plans" },
-    { path: "/support", label: "Help & Support" },
-  ],
   company: [
-    { path: "/aboutus", label: "About Us" },
-    { path: "/privacypolicy", label: "Privacy Policy" },
-    { path: "/terms&conditions", label: "Terms & Conditions" },
-    { path: "/faqs", label: "FAQ" },
+    { path: "/aboutus",           label: "About Us" },
+    { path: "/privacypolicy",     label: "Privacy Policy" },
+    { path: "/terms&conditions",  label: "Terms & Conditions" },
+    { path: "/faqs",              label: "FAQ" },
   ],
   socials: [
     { path: "#", label: "Facebook" },

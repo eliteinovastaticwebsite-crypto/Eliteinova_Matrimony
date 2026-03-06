@@ -1,8 +1,7 @@
-// src/pages/Home.jsx - FIXED VERSION WITH ID ATTRIBUTES
-import React, { useState, useEffect, useCallback } from "react";
+// src/pages/Home.jsx - FIXED VERSION WITH AUTO-SCROLL NAV BARS
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/auth/LoginCard";
-import CategoryNav from "../components/common/CategoryNav";
 import { useAuth } from "../context/AuthContext"; 
 import ProfileService from "../services/profileService";
 import AuthModal from "../components/auth/AuthModal";
@@ -27,6 +26,8 @@ const homeBannerTexts = [
 export default function Home({ onOpenAuthModal }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("register");
+  const [showServiceConfirmation, setShowServiceConfirmation] = useState(false);
+  const [serviceUrl, setServiceUrl] = useState("");
   const [stats, setStats] = useState({
     profiles: 400,
     marriages: 100,
@@ -39,6 +40,18 @@ export default function Home({ onOpenAuthModal }) {
     communityStats: true,
     banners: false,
   });
+
+  // Auto-scroll refs and states
+  const scrollRef = useRef(null);
+  const animRef = useRef(null);
+  const posRef = useRef(0);
+  const [hovered, setHovered] = useState(false);
+
+  // Second bar for Communities
+  const scrollRef2 = useRef(null);
+  const animRef2 = useRef(null);
+  const posRef2 = useRef(0);
+  const [hovered2, setHovered2] = useState(false);
 
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth(); // ✅ Now using real AuthContext
@@ -62,6 +75,46 @@ export default function Home({ onOpenAuthModal }) {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Auto-scroll effect for first nav bar
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const step = () => {
+      if (!hovered) {
+        posRef.current += 0.6;
+        if (posRef.current >= el.scrollWidth / 2) {
+          posRef.current = 0;
+        }
+        el.scrollLeft = posRef.current;
+      }
+      animRef.current = requestAnimationFrame(step);
+    };
+
+    animRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animRef.current);
+  }, [hovered]);
+
+  // Auto-scroll effect for second nav bar (communities)
+  useEffect(() => {
+    const el = scrollRef2.current;
+    if (!el) return;
+
+    const step = () => {
+      if (!hovered2) {
+        posRef2.current += 0.5;
+        if (posRef2.current >= el.scrollWidth / 2) {
+          posRef2.current = 0;
+        }
+        el.scrollLeft = posRef2.current;
+      }
+      animRef2.current = requestAnimationFrame(step);
+    };
+
+    animRef2.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animRef2.current);
+  }, [hovered2]);
 
   const loadHomePageData = async () => {
     try {
@@ -152,6 +205,22 @@ export default function Home({ onOpenAuthModal }) {
     }
   }, [isAuthenticated, navigate]);
 
+  const handleServicePageClick = (e, url) => {
+    e.preventDefault();
+    setServiceUrl(url);
+    setShowServiceConfirmation(true);
+  };
+
+  const confirmServiceNavigation = () => {
+    setShowServiceConfirmation(false);
+    window.open(serviceUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const cancelServiceNavigation = () => {
+    setShowServiceConfirmation(false);
+    setServiceUrl("");
+  };
+
   // Get default featured profiles for fallback
   const getDefaultFeaturedProfiles = useCallback(() => {
     return [
@@ -232,93 +301,158 @@ export default function Home({ onOpenAuthModal }) {
 
       {/* Launch Offer Banner - Prominent Display */}
 {!isAuthenticated && (
-  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-6 px-4 relative overflow-hidden shadow-2xl">
-    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-    <div className="container mx-auto relative z-10">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Left: Register Now */}
-        <div className="text-center md:text-left">
-          <h3 className="text-white font-bold text-2xl md:text-3xl mb-2 animate-bounce">
-            🎉 Register Now! 🎉
-          </h3>
-          <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-            <span className="text-white/90 text-sm md:text-base">Silver ₹299</span>
-            <span className="text-white font-bold">|</span>
-            <span className="text-white/90 text-sm md:text-base">Gold ₹499</span>
-            <span className="text-white font-bold">|</span>
-            <span className="text-white/90 text-sm md:text-base">Diamond ₹749</span>
-          </div>
-        </div>
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-4 sm:py-5 px-4 relative overflow-hidden shadow-2xl">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse" />
 
-        {/* Middle: EliteInova Matrimonial Services */}
-        <div className="text-center flex flex-col items-center gap-2 border-l border-r border-white/30 px-6 md:px-10">
-          <h3 className="text-white font-bold text-xl md:text-2xl drop-shadow-md whitespace-nowrap">
-            💍 EliteInova Matrimonial Services
+    <div className="container mx-auto relative z-10">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+
+        {/* LEFT — Matrimonial Services */}
+        <div className="flex flex-col items-center sm:items-start gap-2 sm:border-r border-white/30 sm:pr-6 md:pr-10">
+          <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
+            <span>💍</span> EliteInova Matrimonial Services
           </h3>
           
-           <a href="https://matrimonial-services.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white text-orange-600 px-5 py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm md:text-base shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap"
+           <a 
+            href="https://matrimonial-services.vercel.app/"
+            onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
+            className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap"
           >
             Visit Our Service Page →
           </a>
         </div>
 
-        {/* Right: Register Now Button */}
+        {/* MIDDLE — Register Now heading + prices */}
+        <div className="text-center flex-1">
+          <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl animate-bounce flex items-center justify-center gap-2">
+            <span>🎉</span> Register Now! <span>🎉</span>
+          </h3>
+          <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <span className="text-white/90 text-sm sm:text-base">Silver ₹299</span>
+            <span className="text-white font-bold">|</span>
+            <span className="text-white/90 text-sm sm:text-base">Gold ₹499</span>
+            <span className="text-white font-bold">|</span>
+            <span className="text-white/90 text-sm sm:text-base">Diamond ₹749</span>
+          </div>
+        </div>
+
+        {/* RIGHT — Register Now Button */}
         <button
           onClick={handleRegisterFromCard}
-          className="bg-white text-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center space-x-2 whitespace-nowrap"
+          className="bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center gap-2 whitespace-nowrap flex-shrink-0"
         >
           <span>Register Now</span>
-          <span className="text-2xl">👉</span>
+          <span className="text-xl sm:text-2xl">👉</span>
         </button>
+
       </div>
     </div>
   </div>
 )}
 
-      {/* Category Navigation at the top */}
-      <CategoryNav onSelect={handleCategorySelect} />
+      {/* Communities Auto-Scroll Bar - Unified for mobile and desktop */}
+      <div className="bg-white border-b border-gray-100 shadow-sm">
+        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-2.5">
+          <div className="flex items-center gap-1 sm:gap-2">
 
-      {/* Quick Navigation Bar */}
-<div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm overflow-x-auto">
-  <div className="container mx-auto px-4 py-3">
-    <div className="flex items-center space-x-2 min-w-max">
-      {[
-        { label: "Premium Plans",              id: "premium-plans" },
-        { label: "Matrimonial Services",       id: "matrimonial-services" },
-        { label: "Find by Profession",         id: "find-by-profession" },
-        { label: "Matrimony Mobile App",       id: "mobile-app" },
-        { label: "Trustful Services",          id: "trusted-matrimony" },
-        { label: "Why Eliteinova",             id: "why-eliteinova" },
-        { label: "Horoscope Matching",         id: "horoscope-matching" },
-        { label: "Success Stories",            id: "success-stories" },
-      ].map((link, i) => (
-        <button
-          key={i}
-          onClick={() => {
-            const element = document.getElementById(link.id);
-            if (element) {
-              const headerOffset = 100; // Height of the sticky header plus some padding
-              const elementPosition = element.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-              
-              window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-              });
-            }
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50/50 text-red-600 text-xs sm:text-sm font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 whitespace-nowrap"
-        >
-          <span className="w-1.5 h-1.5 bg-red-400 rounded-full group-hover:bg-white"></span>
-          {link.label}
-        </button>
-      ))}
-    </div>
-  </div>
-</div>
+            {/* LEFT FIXED — Communities label */}
+            <div className="flex-shrink-0">
+              <button className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-red-200 bg-red-50 text-red-600 text-[10px] sm:text-sm font-semibold whitespace-nowrap">
+                <span>🔀</span>
+                <span className="hidden xs:inline sm:inline">Communities</span>
+                <span className="sm:hidden">Comm.</span>
+              </button>
+            </div>
+
+            {/* LEFT fade */}
+            <div className="flex-shrink-0 w-3 sm:w-6 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+
+            {/* MIDDLE SCROLLING — single ref, works on all screen sizes */}
+            <div
+              ref={scrollRef2}
+              className="flex items-center gap-1 sm:gap-2 overflow-hidden select-none flex-1"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              onMouseEnter={() => setHovered2(true)}
+              onMouseLeave={() => setHovered2(false)}
+              onTouchStart={() => setHovered2(true)}
+              onTouchEnd={() => setTimeout(() => setHovered2(false), 1000)}
+            >
+              {[...Array(2)].flatMap(() => [
+                "Vanniyar", "Gounder", "Thevar", "Nadar", "Vellalar",
+                "Kongu Vellalar", "Iyer", "Iyengar", "Chettiar", "Mudaliar",
+                "Pillai", "Naidu", "Reddy", "Brahmin", "Maravar", "Kallar",
+                "Agamudayar", "Nair", "Ezhava", "Viswakarma", "Kamma",
+                "Balija", "Kshatriya", "Bestha", "Boyer", "Chakkiliyar", "Naicker",
+              ]).map((label, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleCategorySelect(label)}
+                  className="inline-flex items-center px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-gray-200 bg-white text-gray-700 text-[10px] sm:text-sm font-medium whitespace-nowrap hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 cursor-pointer flex-shrink-0"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* RIGHT fade */}
+            <div className="flex-shrink-0 w-3 sm:w-6 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+
+            {/* RIGHT FIXED — 27 communities */}
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => handleCategorySelect("")}
+                className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-red-200 bg-red-50 text-red-600 text-[10px] sm:text-sm font-semibold whitespace-nowrap hover:bg-red-100 transition-all"
+              >
+                27 communities
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Navigation Bar — auto-scrolling */}
+      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm overflow-hidden">
+        <div className="container mx-auto px-4 py-3">
+          <div
+            ref={scrollRef}
+            className="flex items-center space-x-2 overflow-hidden select-none"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            onTouchStart={() => setHovered(true)}
+            onTouchEnd={() => setTimeout(() => setHovered(false), 1000)}
+          >
+            {[...Array(2)].flatMap(() => [
+              { label: "Premium Plans",        id: "premium-plans" },
+              { label: "Matrimonial Services", id: "matrimonial-services" },
+              { label: "Find by Profession",   id: "find-by-profession" },
+              { label: "Matrimony Mobile App", id: "mobile-app" },
+              { label: "Trustful Services",    id: "trusted-matrimony" },
+              { label: "Why Eliteinova",       id: "why-eliteinova" },
+              { label: "Horoscope Matching",   id: "horoscope-matching" },
+              { label: "Success Stories",      id: "success-stories" },
+            ]).map((link, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  const element = document.getElementById(link.id);
+                  if (element) {
+                    const offsetPosition =
+                      element.getBoundingClientRect().top + window.pageYOffset - 100;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50/50 text-red-600 text-xs sm:text-sm font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 whitespace-nowrap"
+              >
+                <span className="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
+                {link.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="relative max-w-5xl mx-auto">
       {/* Section Heading */}
           <div className="text-center mb-10 md:mb-14">
@@ -647,11 +781,9 @@ export default function Home({ onOpenAuthModal }) {
         
         <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 text-center flex flex-col items-center justify-center">
           
-          <div className="text-4xl mb-2 animate-bounce">💍</div>
-
-          <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
-            Start Your Journey Today
-          </h3>
+          <div className="text-4xl mb-2 animate-bounce"> <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
+            💍Start Your Journey Today
+          </h3></div>
 
           <p className="text-white/90 text-xs sm:text-sm max-w-md mx-auto mb-3 leading-relaxed text-justify">
             If you are searching for a trusted Tamil matrimony service, Eliteinova Matrimony is your ideal choice. We combine tradition, technology, and trust to help you find your perfect match.
@@ -703,10 +835,9 @@ export default function Home({ onOpenAuthModal }) {
         <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 flex flex-col items-center justify-center gap-4">
           {/* Header */}
           <div className="text-center">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/20 backdrop-blur rounded-2xl mx-auto mb-2 flex items-center justify-center shadow-xl">
-              <span className="text-2xl sm:text-3xl">🛡️</span>
-            </div>
-            <h2 className="text-white font-bold text-sm sm:text-base md:text-lg">Premium &amp; Assisted Matrimony Services</h2>
+            <div className="text-4xl mb-2 animate-bounce"> <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
+            🛡️Premium &amp; Assisted Matrimony Services
+          </h3></div>
             <h3 className="text-white font-bold text-sm sm:text-base md:text-lg">Verified &amp; Genuine Profiles</h3>
             <p className="text-white/80 text-[10px] sm:text-xs">Safe · Authentic · Trusted</p>
           </div>
@@ -802,8 +933,7 @@ export default function Home({ onOpenAuthModal }) {
         <div className="pt-3 flex justify-center sm:justify-start">
           <a 
             href="https://matrimonial-services.vercel.app/" 
-            target="_blank" 
-            rel="noopener noreferrer"
+            onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
             className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
           >
             Visit Our Service Page →
@@ -1891,6 +2021,59 @@ export default function Home({ onOpenAuthModal }) {
           )}
         </div>
       </div>
+
+      {/* Service Page Confirmation Modal */}
+      {showServiceConfirmation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💍</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Matrimonial Service Page
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                This is our dedicated <span className="font-semibold text-red-600">EliteInova Matrimonial Services</span> page where you can explore:
+              </p>
+            </div>
+            
+            <div className="space-y-3 mb-6">
+              {[
+                "Vendor Portal for wedding service providers",
+                "Customer Portal for personalized assistance",
+                "Matrimony Portal with advanced search features",
+                "Premium matchmaking services and plans",
+                "Wedding planning and support services"
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-green-500 text-sm mt-0.5">✓</span>
+                  <span className="text-gray-700 text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-gray-600 text-sm mb-6 text-center">
+              Are you a bride or groom looking for wedding services? Click OK to visit our service page.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={cancelServiceNavigation}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmServiceNavigation}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+              >
+                OK, Visit Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal for Registration */}
       <AuthModal

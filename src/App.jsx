@@ -13,12 +13,11 @@ import AdminDashboard from "./components/admin/AdminDashBoard";
 import ProfilesList from "./components/profiles/ProfilesList";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
+import TermsAndConditions from "./pages/TermsAndConditions"; // ✅ NEW
 import "./index.css";
-import { AuthProvider, useAuth } from "./context/AuthContext"; // ✅ CHANGED: Real AuthContext
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import MyProfile from "./pages/MyProfile";
-// ❌ OLD: Dashboard import - commented out, dashboard removed
-// import Dashboard from "./components/common/Dashboard";
 import Matches from "./components/common/Matches";
 import Messages from "./components/common/Messages";
 import ScrollToTop from "./components/common/ScrollToTop";
@@ -39,10 +38,9 @@ import RegistrationCompletion from "./pages/RegistrationCompletion";
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const { user, login, register, logout, isAuthenticated, loading } = useAuth(); // ✅ CHANGED: Real auth context
+  const { user, login, register, logout, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (showLogin || showRegister) {
       document.body.style.overflow = 'hidden';
@@ -67,27 +65,19 @@ function AppContent() {
   const handleLoginSuccess = async (credentials) => {
     try {
       console.log("🚀 App: Attempting login with credentials:", credentials);
-      
       const result = await login(credentials.email, credentials.password);
       console.log("✅ App: Login result:", result);
-      
       if (result && result.success) {
         setShowLogin(false);
         setShowRegister(false);
-        // ✅ CHANGED: Navigate directly to profiles page (dashboard removed)
-        // navigate("/dashboard"); // ❌ OLD: Commented out - dashboard removed
-        navigate("/profiles"); // ✅ NEW: Navigate directly to profiles page
+        navigate("/profiles");
       } else {
-        // This should not happen if AuthContext throws errors, but keep as fallback
         const error = new Error(result?.error || "Login failed");
         error.error = result?.error || "Login failed";
         throw error;
       }
     } catch (error) {
       console.error("❌ App: Login error:", error);
-      console.error("❌ App: Error message:", error.message);
-      console.error("❌ App: Error object:", error);
-      // Re-throw error so LoginForm can catch and display it
       throw error;
     }
   };
@@ -95,20 +85,11 @@ function AppContent() {
   const handleRegisterSuccess = async (userData) => {
     try {
       console.log("🚀 App: Attempting registration with data:", userData);
-      
-      // ✅ FIX: Use the real register function that handles multi-step registration
       const result = await register(userData);
       console.log("✅ App: Registration result:", result);
-      
       if (result.success) {
         setShowLogin(false);
         setShowRegister(false);
-        // ✅ CHANGED: Navigate directly to profiles page (skip dashboard/registration completion)
-        // ❌ OLD: Was navigating to registration completion page, then dashboard
-        // const membershipType = userData.membershipType || "SILVER";
-        // navigate(`/registration-completion?membershipType=${membershipType}`, { replace: true });
-        
-        // ✅ NEW: Navigate directly to profiles page (same as login)
         navigate("/profiles", { replace: true });
       } else {
         alert(result.error || "Registration failed");
@@ -119,7 +100,6 @@ function AppContent() {
     }
   };
 
-  // Show loading while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
@@ -133,8 +113,7 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      
-      {/* Only show Navbar and Footer for non-admin routes */}
+
       {!window.location.pathname.startsWith('/admin') && (
         <>
           <Navbar
@@ -158,8 +137,7 @@ function AppContent() {
               </MainLayout>
             }
           />
-          
-          {/* Protected Routes - Require Payment */}
+
           <Route
             path="/profiles"
             element={
@@ -170,37 +148,27 @@ function AppContent() {
               </PaymentProtectedRoute>
             }
           />
-          
-          {/* ❌ OLD: Dashboard route - commented out, users go directly to profiles */}
-          {/* <Route 
-            path="/dashboard" 
-            element={
-              <PaymentProtectedRoute>
-                <Dashboard />
-              </PaymentProtectedRoute>
-            } 
-          /> */}
-          
-          <Route 
-            path="/matches" 
+
+          <Route
+            path="/matches"
             element={
               <PaymentProtectedRoute>
                 <Matches />
               </PaymentProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/messages" 
+
+          <Route
+            path="/messages"
             element={
               <PaymentProtectedRoute>
                 <Messages />
               </PaymentProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/my-profile" 
+
+          <Route
+            path="/my-profile"
             element={
               isAuthenticated ? <MyProfile /> : (
                 <div className="flex justify-center items-center min-h-screen">
@@ -216,7 +184,7 @@ function AppContent() {
                   </div>
                 </div>
               )
-            } 
+            }
           />
 
           {/* Public Routes */}
@@ -238,24 +206,27 @@ function AppContent() {
             }
           />
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-          
-          <Route 
-            path="/notifications" 
+
+          {/* ✅ NEW: Terms & Conditions route — supports both URL variants */}
+          <Route path="/terms&conditions" element={<TermsAndConditions />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+
+          <Route
+            path="/notifications"
             element={
               <PaymentProtectedRoute>
                 <Notifications />
               </PaymentProtectedRoute>
-            }             
+            }
           />
-          
+
           <Route path="/bride-profile/:id" element={<DetailedProfilePage />} />
           <Route path="/groom-profile/:id" element={<DetailedProfilePage />} />
           <Route path="/faqs" element={<FullFAQPage onOpenRegister={openRegisterModal} />} />
-
           <Route path="/notifications/:id" element={<NotificationDetails />} />
 
-          <Route 
-            path="/registration-completion" 
+          <Route
+            path="/registration-completion"
             element={
               isAuthenticated ? (
                 <MainLayout>
@@ -264,11 +235,11 @@ function AppContent() {
               ) : (
                 <Navigate to="/" />
               )
-            } 
+            }
           />
 
-          <Route 
-            path="/payment-success" 
+          <Route
+            path="/payment-success"
             element={
               isAuthenticated ? (
                 <MainLayout>
@@ -277,21 +248,21 @@ function AppContent() {
               ) : (
                 <Navigate to="/" />
               )
-            } 
+            }
           />
 
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
           <Route path="/admin/reset-password" element={<AdminResetPassword />} />
           <Route path="/office-login" element={<OfficeLogin />} />
-<Route 
-  path="/admin/*" 
-  element={
-    <ProtectedAdminRoute>
-      <AdminDashboard />
-    </ProtectedAdminRoute>
-  } 
-/>
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboard />
+              </ProtectedAdminRoute>
+            }
+          />
 
           <Route
             path="/contact"
@@ -301,8 +272,8 @@ function AppContent() {
               </MainLayout>
             }
           />
-          
-          {/* 404 Page */}
+
+          {/* 404 */}
           <Route
             path="*"
             element={
@@ -328,13 +299,12 @@ function AppContent() {
         </Routes>
       </main>
 
-      {/* Only show Footer and other components for non-admin routes */}
       {!window.location.pathname.startsWith('/admin') && (
         <>
-         <Footer
-  onRegister={openRegisterModal}
-  onLogin={openLoginModal}
-/>
+          <Footer
+            onRegister={openRegisterModal}
+            onLogin={openLoginModal}
+          />
           <FloatingActions
             whatsappNumber="+919940200736"
             phoneNumber="+919940200736"
@@ -345,23 +315,18 @@ function AppContent() {
         </>
       )}
 
-      {/* Auth Modals - Show for all routes */}
+      {/* Login Modal */}
       {showLogin && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn p-4 overflow-hidden"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowLogin(false);
-            }
-          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowLogin(false); }}
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
-          <div 
+          <div
             className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[95vh] transform scale-100 transition-all duration-300 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-t-2xl p-5 text-white shrink-0">
               <div className="flex justify-between items-start">
                 <div>
@@ -377,19 +342,14 @@ function AppContent() {
                 </button>
               </div>
             </div>
-
-            {/* Scrollable Content */}
-            <div 
+            <div
               className="flex-1 overflow-y-auto min-h-0 overscroll-contain"
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
               <LoginForm
                 onLoginSuccess={handleLoginSuccess}
-                onRegister={() => {
-                  setShowLogin(false);
-                  setShowRegister(true);
-                }}
+                onRegister={() => { setShowLogin(false); setShowRegister(true); }}
                 isInModal={true}
               />
             </div>
@@ -397,22 +357,18 @@ function AppContent() {
         </div>
       )}
 
+      {/* Register Modal */}
       {showRegister && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center animate-fadeIn p-4 overflow-hidden"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowRegister(false);
-            }
-          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowRegister(false); }}
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
-          <div 
+          <div
             className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[95vh] transform scale-100 transition-all duration-300 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="bg-gradient-to-r from-red-600 to-red-500 rounded-t-2xl p-5 text-white shrink-0">
               <div className="flex justify-between items-start">
                 <div>
@@ -428,19 +384,14 @@ function AppContent() {
                 </button>
               </div>
             </div>
-
-            {/* Scrollable Content */}
-            <div 
+            <div
               className="flex-1 overflow-y-auto min-h-0 overscroll-contain"
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
               <RegisterForm
                 onRegisterSuccess={handleRegisterSuccess}
-                onSwitchToLogin={() => {
-                  setShowRegister(false);
-                  setShowLogin(true);
-                }}
+                onSwitchToLogin={() => { setShowRegister(false); setShowLogin(true); }}
                 onClose={() => setShowRegister(false)}
                 isInModal={true}
               />
@@ -450,12 +401,11 @@ function AppContent() {
       )}
     </div>
   );
-  
 }
 
 export default function App() {
   return (
-    <AuthProvider> {/* ✅ CHANGED: Use real AuthProvider */}
+    <AuthProvider>
       <ThemeProvider>
         <AppContent />
       </ThemeProvider>

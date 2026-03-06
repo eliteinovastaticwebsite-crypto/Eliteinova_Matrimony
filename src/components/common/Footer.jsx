@@ -97,58 +97,38 @@ export default function Footer({ onRegister, onLogin }) {
           {/* Right Column - Links + Follow Us + Stay Updated */}
           <div className="flex flex-col gap-6">
 
-            {/* Links Grid - 3 cols on sm+, 1 col stacked on xs */}
+            {/* Links Grid - 3 cols */}
             <div className="grid grid-cols-3 xs:grid-cols-3 gap-4 sm:gap-8">
 
-              {/* Quick Links — Register & Login use navigate(), others use Link */}
+              {/* ── Eliteinova Matrimonial Services (was Quick Links) ── */}
               <div>
                 <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
                   <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
-                  <span className="font-bold">Quick Links</span>
+                  <span className="font-bold">Matrimonial Services</span>
                 </h4>
                 <ul className="space-y-1.5 sm:space-y-2">
-                  {footerLinks.quick.map((link, index) => {
-                    if (link.action === "register" || link.action === "login") {
-                      return (
-                        <li key={index}>
-                          <button
-                            onClick={link.action === "register" ? handleRegister : handleLogin}
-                            className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold w-full text-left"
-                          >
-                            <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
-                            <span className="font-bold">{link.label}</span>
-                          </button>
-                        </li>
-                      );
-                    }
-                    return (
-                      <li key={link.path}>
-                        <Link
-                          to={link.path}
-                          className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
-                        >
-                          <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
-                          <span className="font-bold">{link.label}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
+                  {footerLinks.quick.map((link) => (
+                    <li key={link.path}>
+                      <Link
+                        to={link.path}
+                        className="flex items-center space-x-1.5 text-white/75 hover:text-white transition-all duration-300 hover:translate-x-1 group text-xs sm:text-sm font-bold"
+                      >
+                        <span className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"></span>
+                        <span className="font-bold">{link.label}</span>
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              {/* Premium — all three tiers link to /upgrade */}
+              {/* ── Premium — Contact Us replaces Help & Support ── */}
               <div>
                 <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
                   <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
                   <span className="font-bold">Premium</span>
                 </h4>
                 <ul className="space-y-1.5 sm:space-y-2">
-                  {[
-                    { label: "Silver", path: "/upgrade" },
-                    { label: "Gold", path: "/upgrade" },
-                    { label: "Diamond", path: "/upgrade" },
-                    { label: "Help & Support", path: "/help-support" },
-                  ].map((link) => (
+                  {footerLinks.premium.map((link) => (
                     <li key={link.label}>
                       <Link
                         to={link.path}
@@ -162,7 +142,7 @@ export default function Footer({ onRegister, onLogin }) {
                 </ul>
               </div>
 
-              {/* Company — About Us, Privacy Policy, Terms, FAQ */}
+              {/* Company — unchanged */}
               <div>
                 <h4 className="text-sm sm:text-base font-bold mb-3 sm:mb-4 text-white flex items-center space-x-2">
                   <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
