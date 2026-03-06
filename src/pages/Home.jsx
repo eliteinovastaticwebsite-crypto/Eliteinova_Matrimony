@@ -319,169 +319,306 @@ export default function Home({ onOpenAuthModal }) {
     </div>
   </div>
 </div>
-
-      {/* Premium Hero Section */}
-      <div className="relative bg-gradient-to-br from-gray-200 via-white to-gray-200 py-8 lg:py-16">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-          <div className="absolute top-10 right-10 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-red-600 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content - Premium Registration */}
-            <div className="space-y-8">
-              <div className="space-y-6">
-                {/* Trust Badge */}
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
-                  <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-                  <span className="text-red-600 text-sm font-medium uppercase">
-                    Most Trusted Matrimony Service
-                  </span>
-                </div>
-
-                {/* Main Heading */}
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Find Your{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-400">
-                    Perfect Match
-                  </span>
-                </h1>
-
-                <p className="text-xl text-gray-600 leading-relaxed text-justify">
-                  Join{" "}
-                  {/* <span className="font-semibold text-red-500">
-                    {formatNumber(stats.profiles)}+
-                  </span>{" "} */}
-                  verified members in their journey to find lifelong partners.
-                  Where tradition meets modern matchmaking.
-                </p>
+      <div className="relative max-w-5xl mx-auto">
+      {/* Section Heading */}
+          <div className="text-center mb-10 md:mb-14">
+            <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
+              ✦ With Love & Trust ✦
+            </p>
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+              style={{
+                background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontFamily: "'Georgia', 'Times New Roman', serif",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Welcome to Eliteinova Matrimony
+            </h2>
+            <div className="flex items-center justify-center gap-3">
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+              <div className="flex items-center gap-1.5">
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-red-700">
+                  <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+                </svg>
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
               </div>
-
-              {/* Quick Action Buttons */}
-              {!isAuthenticated ? (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button
-                    onClick={handleRegisterFromCard}
-                    disabled={isLoading}
-                    className="relative bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Loading...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <span>Register Now </span>
-                        <span className="text-xl transform group-hover:scale-110 transition-transform">
-                          🎯
-                        </span>
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={handleLoginFromCard}
-                    disabled={isLoading}
-                    className="bg-white text-red-600 border-2 border-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Sign In
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button
-                    onClick={handleViewAllProfiles}
-                    className="bg-gradient-to-r from-red-600 to-yellow-400 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-yellow-500 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group"
-                  >
-                    <span>Browse All Profiles</span>
-                    <span className="text-xl transform group-hover:scale-110 transition-transform">
-                      👥
-                    </span>
-                  </button>
-                  <button
-                    onClick={logout}
-                    className="bg-white text-gray-600 border-2 border-gray-200 px-8 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 font-bold text-lg hover:shadow-lg"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-
-              {/* Quick Features */}
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                {[
-                  "100% Verified Profiles",
-                  "Secure & Private",
-                  "24/7 Support",
-                  "Register Now",
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center space-x-1">
-                    <span className="text-green-500">✓</span>
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Content - Integrated Cards */}
-            <div className="space-y-6">
-              {/* User Welcome Card if logged in */}
-              {isAuthenticated && user && (
-                <div className="bg-gradient-to-br from-green-200 to-gray-300 rounded-2xl border border-gray-300 p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                      <span className="text-white font-bold text-lg">
-                        {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-900 text-lg">
-                        Welcome back, {user.name?.split(" ")[0] || "User"}!
-                      </h3>
-                      <p className="text-gray-600">
-                        Ready to find your perfect match?
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                      <div className="text-sm font-semibold text-gray-700">
-                        Profile Views
-                      </div>
-                      <div className="text-lg font-bold text-red-500">24</div>
-                    </div>
-                    <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                      <div className="text-sm font-semibold text-gray-700">
-                        Matches
-                      </div>
-                      <div className="text-lg font-bold text-red-500">12</div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleViewAllProfiles}
-                    className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors font-semibold"
-                  >
-                    Find Matches
-                  </button>
-                </div>
-              )}
-
-              {/* Login Card for quick access */}
-              {!isAuthenticated && (
-                <div className="transform hover:scale-[1.02] transition-all duration-300">
-                  <LoginCard
-                    onRegister={handleRegisterFromCard}
-                    onLoginSuccess={handleLoginSuccess}
-                  />
-                </div>
-              )}
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
             </div>
           </div>
+
+          {/* Intro card */}
+          <div
+            className="relative mb-6 md:mb-8 rounded-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #fffdf9 100%)",
+              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(185,28,28,0.1)",
+            }}
+          >
+            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+            <div className="p-6 md:p-10">
+              <div className="max-w-3xl mx-auto text-center">
+                <p className="text-gray-700 text-sm md:text-base lg:text-lg leading-relaxed mb-4" style={{ fontFamily: "'Georgia', serif" }}>
+                  Eliteinova Matrimony is a{" "}
+                  <span className="font-semibold" style={{ color: "#9b1c1c" }}>trusted and secure matchmaking platform</span>{" "}
+                  designed to help individuals and families find their perfect life partner. We combine
+                  traditional values with modern technology to create meaningful and successful marriages.
+                </p>
+                <p className="text-gray-500 text-sm md:text-base leading-relaxed">
+                  Our platform focuses on{" "}
+                  <span className="font-medium text-amber-700 border-b border-amber-300">verified profiles</span>,{" "}
+                  <span className="font-medium text-amber-700 border-b border-amber-300">privacy protection</span>, and{" "}
+                  <span className="font-medium text-amber-700 border-b border-amber-300">personalized matchmaking services</span>{" "}
+                  to ensure safe and reliable connections.
+                </p>
+              </div>
+            </div>
+            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+          </div>
+          </div>
+
+      {/* Premium Hero Section with Eliteinova Matrimony Styling */}
+<div className="relative py-16 lg:py-24 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
+  {/* Animated Background Pattern */}
+  <div className="absolute inset-0 opacity-10">
+    <div className="absolute top-10 left-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+    <div className="absolute top-10 right-10 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+    <div className="absolute bottom-10 left-1/2 w-72 h-72 bg-red-600 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+  </div>
+
+  <div className="container mx-auto px-4 relative z-10 max-w-7xl">
+    
+    {/* Section Heading with Eliteinova styling */}
+    <div className="text-center mb-12 md:mb-16">
+      <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-4">
+        ✦ With Love & Trust ✦
+      </p>
+      <h2
+        className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4"
+        style={{
+          background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          fontFamily: "'Georgia', 'Times New Roman', serif",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        Find Your Perfect Match
+      </h2>
+      <div className="flex items-center justify-center gap-3">
+        <div className="h-px w-16 md:w-28" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-red-700">
+            <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+          </svg>
+          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+        </div>
+        <div className="h-px w-16 md:w-28" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
+      </div>
+    </div>
+
+    {/* Main Content Grid */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      {/* Left Content - Premium Registration */}
+      <div className="space-y-8">
+        
+        {/* Trust Badge - Enhanced with Eliteinova style */}
+        <div className="inline-flex items-center px-5 py-2.5 rounded-full bg-red-50 border border-red-200 shadow-sm">
+          <span className="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></span>
+          <span className="text-red-600 text-sm font-medium uppercase tracking-wider">
+            Most Trusted Matrimony Service
+          </span>
+        </div>
+
+        {/* Main Heading with Eliteinova gradient */}
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          <span className="text-gray-900">Find Your </span>
+          <span 
+            className="text-transparent bg-clip-text"
+            style={{
+              background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Perfect Match
+          </span>
+        </h1>
+
+        {/* Description with Eliteinova font styling */}
+        <p className="text-lg md:text-xl text-gray-600 leading-relaxed text-justify" style={{ fontFamily: "'Georgia', serif" }}>
+          Join verified members in their journey to find lifelong partners.
+          Where tradition meets modern matchmaking.
+        </p>
+
+        {/* Quick Action Buttons */}
+        {!isAuthenticated ? (
+          <div className="flex flex-col sm:flex-row gap-4">
+  <button
+    onClick={handleRegisterFromCard}
+    disabled={isLoading}
+    className="relative bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+  >
+    {/* Shimmer sweep animation */}
+    <span className="absolute inset-0 pointer-events-none">
+      <span
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+          backgroundSize: "200% 100%",
+          animation: "shimmer-sweep 2s linear infinite",
+        }}
+      />
+    </span>
+
+    <style>{`
+      @keyframes shimmer-sweep {
+        0%   { background-position: 200% center; }
+        100% { background-position: -200% center; }
+      }
+    `}</style>
+
+    {isLoading ? (
+      <div className="flex items-center space-x-2">
+        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <span>Loading...</span>
+      </div>
+    ) : (
+      <>
+        <span>Register Now</span>
+        <span className="text-xl transform group-hover:scale-110 transition-transform">🎯</span>
+      </>
+    )}
+  </button>
+            <button
+              onClick={handleLoginFromCard}
+              disabled={isLoading}
+              className="bg-white text-red-600 border-2 border-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Sign In
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={handleViewAllProfiles}
+              className="bg-gradient-to-r from-red-600 to-yellow-400 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-yellow-500 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group"
+            >
+              <span>Browse All Profiles</span>
+              <span className="text-xl transform group-hover:scale-110 transition-transform">
+                👥
+              </span>
+            </button>
+            <button
+              onClick={logout}
+              className="bg-white text-gray-600 border-2 border-gray-200 px-8 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 font-bold text-lg hover:shadow-lg"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+
+        {/* Quick Features with Eliteinova styling */}
+        <div className="flex flex-wrap gap-4">
+          {[
+            "100% Verified Profiles",
+            "Secure & Private",
+            "24/7 Support",
+            "Register Now",
+          ].map((feature, index) => (
+            <div key={index} className="flex items-center space-x-2 px-3 py-1.5 bg-white rounded-full border border-gray-200 shadow-sm">
+              <span className="text-green-500 text-sm">✓</span>
+              <span className="text-gray-600 text-sm font-medium">{feature}</span>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Right Content - Integrated Cards */}
+      <div className="space-y-6">
+        
+        {/* User Welcome Card if logged in */}
+        {isAuthenticated && user && (
+          <div 
+            className="bg-gradient-to-br from-green-200 to-gray-300 rounded-2xl border border-gray-300 p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+            style={{
+              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(185,28,28,0.1)",
+            }}
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">
+                  {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+                </span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-lg">
+                  Welcome back, {user.name?.split(" ")[0] || "User"}!
+                </h3>
+                <p className="text-gray-600">
+                  Ready to find your perfect match?
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="text-sm font-semibold text-gray-700">
+                  Profile Views
+                </div>
+                <div className="text-lg font-bold text-red-500">24</div>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="text-sm font-semibold text-gray-700">
+                  Matches
+                </div>
+                <div className="text-lg font-bold text-red-500">12</div>
+              </div>
+            </div>
+            <button
+              onClick={handleViewAllProfiles}
+              className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors font-semibold"
+            >
+              Find Matches
+            </button>
+          </div>
+        )}
+
+        {/* Login Card for quick access */}
+        {!isAuthenticated && (
+          <div 
+            className="transform hover:scale-[1.02] transition-all duration-300"
+            style={{
+              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(185,28,28,0.1)",
+              borderRadius: "1rem",
+              overflow: "hidden",
+            }}
+          >
+            <LoginCard
+              onRegister={handleRegisterFromCard}
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Bottom decorative line */}
+    <div className="mt-16 flex justify-center">
+      <div className="w-24 h-0.5" style={{ background: "linear-gradient(to right, transparent, #b91c1c, #d97706, #b91c1c, transparent)" }} />
+    </div>
+  </div>
+</div>
 
 
       {/* ===================================================

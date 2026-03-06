@@ -173,7 +173,7 @@ export default function Upgrade({ onOpenAuthModal }) {
     { number: "5x", label: "More Responses" },
     { number: "92%", label: "Success Rate" },
     { number: "24/7", label: "Priority Support" },
-    { number: "1000+", label: "Monthly Matches" }
+    { number: "More", label: "Monthly Matches" }
   ];
 
   // FAQ data
@@ -229,53 +229,102 @@ export default function Upgrade({ onOpenAuthModal }) {
       <div className="max-w-7xl mx-auto px-6 py-16">
         
         {/* INTRO SECTION */}
-        <div className="text-center max-w-4xl mx-auto mb-16">
-          <div 
-  onClick={() => document.getElementById("diamond-benefits")?.scrollIntoView({ behavior: "smooth" })}
-  className="inline-flex items-center justify-center p-2 px-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full mb-6 cursor-pointer hover:from-purple-200 hover:to-pink-200 transition-all duration-200"
->
-  <RocketLaunchIcon className="w-5 h-5 text-purple-600 mr-2" />
-  <span className="text-purple-700 font-semibold text-sm">PREMIUM MEMBERSHIP</span>
-</div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Get <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Premium</span> Plan
-          </h1>
-          
-          <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-            Elite Connections Begin with Premium Access.
-          </p>
-          
-          <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
-            Upgrade your membership to unlock exclusive features, connect directly with serious profiles, and enjoy priority visibility.
-          </p>
-          
-          <div className="relative py-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center">
-              <span className="bg-white px-6 py-2 rounded-full text-lg font-semibold text-purple-600 border-2 border-purple-200 shadow-sm">
-                ✨ Upgrade Your Search. Upgrade Your Future. ✨
-              </span>
-            </div>
-          </div>
-          
-          <p className="text-lg text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
-            Take the next step toward a successful and meaningful marriage journey with Eliteinova Premium. 
-            Your perfect life partner could be just one premium upgrade away.
-          </p>
+<div className="text-center max-w-4xl mx-auto mb-16">
+  <div 
+    onClick={() => document.getElementById("diamond-benefits")?.scrollIntoView({ behavior: "smooth" })}
+    className="inline-flex items-center justify-center p-2 px-4 bg-red-50 rounded-full mb-6 cursor-pointer hover:bg-red-100 transition-all duration-200 border border-red-200"
+  >
+    <span className="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></span>
+    <span className="text-red-600 font-semibold text-sm uppercase tracking-wider">PREMIUM MEMBERSHIP</span>
+  </div>
+  
+  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+    style={{
+      fontFamily: "'Georgia', 'Times New Roman', serif",
+      letterSpacing: "-0.01em",
+    }}
+  >
+    Get{" "}
+    <span 
+      className="text-transparent bg-clip-text"
+      style={{
+        background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+      }}
+    >
+      Premium
+    </span>{" "}
+    Plan
+  </h1>
+  
+  <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto" style={{ fontFamily: "'Georgia', serif" }}>
+    Elite Connections Begin with Premium Access.
+  </p>
+  
+  <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+    Upgrade your membership to unlock exclusive features, connect directly with serious profiles, and enjoy priority visibility.
+  </p>
+  
+  <div className="relative py-6">
+    <div className="absolute inset-0 flex items-center">
+      <div className="w-full" style={{ 
+        background: "linear-gradient(to right, transparent, #b91c1c, #d97706, #b91c1c, transparent)",
+        height: "1px"
+      }}></div>
+    </div>
+    <div className="relative flex justify-center">
+      <span className="bg-white px-6 py-2 rounded-full text-lg font-semibold border-2 shadow-sm"
+        style={{
+          color: "#9b1c1c",
+          borderColor: "rgba(185,28,28,0.2)",
+          boxShadow: "0 2px 12px rgba(185,28,28,0.1)"
+        }}>
+        ✨ Upgrade Your Search. Upgrade Your Future. ✨
+      </span>
+    </div>
+  </div>
+  
+  <p className="text-lg text-gray-600 mt-6 max-w-3xl mx-auto leading-relaxed">
+    Take the next step toward a successful and meaningful marriage journey with Eliteinova Premium. 
+    Your perfect life partner could be just one premium upgrade away.
+  </p>
 
-          {/* Quick Stats Preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">{stat.number}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+  {/* Quick Stats Preview */}
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+    {stats.map((stat, index) => (
+      <div key={index} className="text-center group hover:transform hover:scale-105 transition-all duration-300">
+        <div 
+          className="text-3xl md:text-4xl font-bold mb-2"
+          style={{
+            background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            fontFamily: "'Georgia', 'Times New Roman', serif",
+          }}
+        >
+          {stat.number}
         </div>
+        <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+      </div>
+    ))}
+  </div>
+
+  {/* Decorative bottom line */}
+  <div className="mt-12 flex justify-center">
+    <div className="flex items-center gap-2">
+      <div className="w-12 h-px" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-red-700">
+        <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+      </svg>
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+      <div className="w-12 h-px" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
+    </div>
+  </div>
+</div>
 
         {error && (
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-6 py-4 rounded-2xl mb-8 text-center max-w-2xl mx-auto shadow-sm">

@@ -88,16 +88,6 @@ export default function Services({ onOpenAuthModal }) {
     },
     {
       number: "5",
-      title: "Secure Communication",
-      desc: "Safe and private chat options to connect comfortably with potential partners.",
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-      ),
-    },
-    {
-      number: "6",
       title: "Family-Oriented Approach",
       desc: "We believe marriage connects two families. Our platform encourages respectful and meaningful interactions.",
       icon: (
@@ -107,7 +97,7 @@ export default function Services({ onOpenAuthModal }) {
       ),
     },
     {
-      number: "7",
+      number: "6",
       title: "Dedicated Customer Support",
       desc: "Our team is always ready to assist members throughout their matchmaking journey.",
       icon: (
@@ -121,9 +111,19 @@ export default function Services({ onOpenAuthModal }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
 
-      {/* Banner */}
-      <div style={{ height: "700px", overflow: "hidden" }}>
-        <div style={{ height: "100%" }} className="[&>section]:!h-full [&>section]:!min-h-0">
+      {/* ── BANNER ──
+          - Responsive height: compact on mobile, full on desktop
+          - `[&_img]` selector forces object-position:top on mobile so
+            the top of each banner image (faces/subjects) is never cropped.
+            On sm+ screens it reverts to object-position:center (default).
+      */}
+      <div className="
+        h-[220px] sm:h-[320px] md:h-[450px] lg:h-[580px] xl:h-[700px]
+        overflow-hidden
+        [&_img]:object-top
+        sm:[&_img]:object-center
+      ">
+        <div className="h-full [&>section]:!h-full [&>section]:!min-h-0">
           <Banner
             images={ServiceBannerImages}
             autoPlayInterval={3000}
@@ -135,7 +135,8 @@ export default function Services({ onOpenAuthModal }) {
       </div>
 
       {/* Welcome + Intro Content */}
-      <main className="relative px-4 md:px-6 py-12 md:py-16 mt-0 overflow-hidden"
+      <main
+        className="relative px-4 md:px-6 py-12 md:py-16 mt-0 overflow-hidden"
         style={{
           background: "linear-gradient(135deg, #fff7f7 0%, #fffbf0 50%, #fff7f7 100%)",
         }}
@@ -157,7 +158,8 @@ export default function Services({ onOpenAuthModal }) {
             <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
               ✦ With Love & Trust ✦
             </p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
               style={{
                 background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
                 WebkitBackgroundClip: "text",
@@ -169,7 +171,6 @@ export default function Services({ onOpenAuthModal }) {
             >
               Welcome to Eliteinova Matrimony
             </h2>
-            {/* Ornamental divider */}
             <div className="flex items-center justify-center gap-3">
               <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
               <div className="flex items-center gap-1.5">
@@ -183,20 +184,19 @@ export default function Services({ onOpenAuthModal }) {
             </div>
           </div>
 
-          {/* Intro — elegant card with left accent border */}
-          <div className="relative mb-6 md:mb-8 rounded-2xl overflow-hidden"
+          {/* Intro card */}
+          <div
+            className="relative mb-6 md:mb-8 rounded-2xl overflow-hidden"
             style={{
               background: "linear-gradient(135deg, #ffffff 0%, #fffdf9 100%)",
               boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
               border: "1px solid rgba(185,28,28,0.1)",
             }}
           >
-            {/* Gold top accent line */}
             <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
             <div className="p-6 md:p-10">
               <div className="max-w-3xl mx-auto text-center">
-                <p className="text-gray-700 text-sm md:text-base lg:text-lg leading-relaxed mb-4"
-                  style={{ fontFamily: "'Georgia', serif" }}>
+                <p className="text-gray-700 text-sm md:text-base lg:text-lg leading-relaxed mb-4" style={{ fontFamily: "'Georgia', serif" }}>
                   Eliteinova Matrimony is a{" "}
                   <span className="font-semibold" style={{ color: "#9b1c1c" }}>trusted and secure matchmaking platform</span>{" "}
                   designed to help individuals and families find their perfect life partner. We combine
@@ -211,183 +211,23 @@ export default function Services({ onOpenAuthModal }) {
                 </p>
               </div>
             </div>
-            {/* Gold bottom accent line */}
             <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
-          </div>
-
-          {/* Key Services — elegant container */}
-          <div className="relative rounded-2xl overflow-hidden"
-            style={{
-              background: "linear-gradient(160deg, #ffffff 0%, #fffbf5 100%)",
-              boxShadow: "0 8px 40px rgba(185,28,28,0.1), 0 2px 8px rgba(0,0,0,0.04)",
-              border: "1px solid rgba(185,28,28,0.1)",
-            }}
-          >
-            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
-            <div className="p-6 md:p-10">
-
-              {/* Services heading */}
-              <div className="text-center mb-8 md:mb-10">
-                <p className="text-xs font-semibold tracking-[0.25em] uppercase text-amber-600 mb-2">What We Offer</p>
-                <h3 className="text-xl md:text-2xl font-bold"
-                  style={{
-                    color: "#7f1d1d",
-                    fontFamily: "'Georgia', 'Times New Roman', serif",
-                  }}
-                >
-                  🌸 Our Key Services
-                </h3>
-                <div className="mt-3 mx-auto w-16 h-0.5 rounded-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706)" }} />
-              </div>
-
-              {/* Services grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-                {keyServices.map((service, index) => (
-                  <div
-                    key={index}
-                    className="group relative rounded-xl p-4 md:p-5 transition-all duration-300 cursor-default"
-                    style={{
-                      background: "linear-gradient(135deg, #fff7f7 0%, #fffbf0 100%)",
-                      border: "1px solid rgba(185,28,28,0.12)",
-                      boxShadow: "0 2px 8px rgba(185,28,28,0.06)",
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.boxShadow = "0 8px 24px rgba(185,28,28,0.15)";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(185,28,28,0.06)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                  >
-                    {/* Number badge */}
-                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                      style={{ background: "linear-gradient(135deg, #b91c1c, #d97706)" }}>
-                      {service.number}
-                    </div>
-                    <div className="flex items-start gap-3">
-                      {/* Icon circle */}
-                      <div className="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shadow-md"
-                        style={{ background: "linear-gradient(135deg, #b91c1c 0%, #d97706 100%)" }}>
-                        {service.icon}
-                      </div>
-                      <div className="pt-0.5">
-                        <h4 className="font-bold text-sm md:text-base mb-1.5 leading-snug"
-                          style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>
-                          {service.title}
-                        </h4>
-                        <p className="text-gray-500 text-xs md:text-sm leading-relaxed">{service.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
-          </div>
-
-        </div>
-      </main>
-
-      {/* Our Categories */}
-      <section className="container mx-auto px-3 md:px-4 py-6 md:py-8 lg:py-12">
-        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-red-800 mb-6 md:mb-8 lg:mb-12">
-          Our Categories
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto">
-          {homeCategories.map((category, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <Link to={category.path} className="block group">
-                <div className="w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-full border-3 md:border-4 lg:border-[5px] border-amber-800 overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 shadow-lg hover:shadow-xl transition-all duration-300 p-0.5 md:p-1">
-                  <div className="w-full h-full rounded-full overflow-hidden">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-105 md:group-hover:scale-110 transition-transform duration-300"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
-                      }}
-                    />
-                  </div>
-                </div>
-              </Link>
-              <h3 className="mt-2 md:mt-3 lg:mt-4 text-center font-semibold text-gray-800 text-sm md:text-base lg:text-lg">
-                {category.name}
-              </h3>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Why Choose Eliteinova */}
-      <section className="container mx-auto px-3 md:px-4 py-6 md:py-8 lg:py-12">
-        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-red-800 mb-6 md:mb-8">
-          Why Choose Eliteinova?
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-
-          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-red-100 hover:shadow-xl transition-shadow duration-300">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Verified Profiles</h3>
-            <p className="text-gray-600 text-xs md:text-sm text-center">All profiles are thoroughly verified for authenticity and reliability</p>
-          </div>
-
-          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-yellow-100 hover:shadow-xl transition-shadow duration-300">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Privacy Protected</h3>
-            <p className="text-gray-600 text-xs md:text-sm text-center">Your personal data is secure with advanced encryption technology</p>
-          </div>
-
-          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-red-100 hover:shadow-xl transition-shadow duration-300">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">Expert Matchmaking</h3>
-            <p className="text-gray-600 text-xs md:text-sm text-center">Professional assistance using advanced algorithms for perfect matches</p>
-          </div>
-
-          <div className="bg-white p-4 md:p-5 lg:p-6 rounded-lg md:rounded-xl shadow-md md:shadow-lg border border-yellow-100 hover:shadow-xl transition-shadow duration-300">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center mb-3 md:mb-4 mx-auto">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 className="font-bold text-base md:text-lg text-red-700 mb-1 md:mb-2 text-center">24/7 Support</h3>
-            <p className="text-gray-600 text-xs md:text-sm text-center">Round-the-clock customer support for all your queries and concerns</p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Portal Cards */}
-      <section className="relative px-4 md:px-6 py-12 md:py-16 overflow-hidden"
+          </div> 
+        {/* Portal Cards */}
+      <section
+        className="relative px-4 md:px-6 py-12 md:py-16 overflow-hidden"
         style={{ background: "linear-gradient(160deg, #fff7f7 0%, #fffbf0 60%, #fff7f7 100%)" }}
       >
-        {/* Subtle background ornament */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
             style={{ background: "radial-gradient(circle, #b91c1c, transparent)" }} />
         </div>
 
         <div className="relative max-w-5xl mx-auto">
-          {/* Section heading */}
           <div className="text-center mb-10 md:mb-12">
-            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
-              ✦ Access Your Account ✦
-            </p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">✦ Access Your Account ✦</p>
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
               style={{
                 background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
                 WebkitBackgroundClip: "text",
@@ -411,111 +251,70 @@ export default function Services({ onOpenAuthModal }) {
             </div>
           </div>
 
-          {/* Portal cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
 
             {/* Vendor Portal */}
-            <div className="relative rounded-2xl overflow-hidden group transition-all duration-300"
-              style={{
-                background: "linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%)",
-                boxShadow: "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)",
-                border: "1px solid rgba(217,119,6,0.2)",
-              }}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%)", boxShadow: "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)", border: "1px solid rgba(217,119,6,0.2)" }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 12px 36px rgba(217,119,6,0.2), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
               onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #d97706, #f59e0b, #d97706)" }} />
               <div className="p-6 md:p-7">
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md"
-                  style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)" }}>
+                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md" style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)" }}>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg md:text-xl mb-1"
-                  style={{ color: "#78350f", fontFamily: "'Georgia', serif" }}>Vendor Portal</h3>
+                <h3 className="font-bold text-lg md:text-xl mb-1" style={{ color: "#78350f", fontFamily: "'Georgia', serif" }}>Vendor Portal</h3>
                 <p className="text-amber-700 text-xs md:text-sm mb-5 opacity-80">Partner services & business access</p>
                 <div className="flex gap-3">
-                  <Link to="/vendor-login"
-                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200"
-                    style={{ background: "linear-gradient(135deg, #d97706, #b45309)", color: "white", boxShadow: "0 2px 8px rgba(217,119,6,0.3)" }}
-                    onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 14px rgba(217,119,6,0.5)"}
-                    onMouseLeave={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(217,119,6,0.3)"}
-                  >Login</Link>
-                  <Link to="/vendor-login"
-                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200"
-                    style={{ background: "rgba(217,119,6,0.1)", color: "#92400e", border: "1px solid rgba(217,119,6,0.3)" }}
-                    onMouseEnter={e => e.currentTarget.style.background = "rgba(217,119,6,0.18)"}
-                    onMouseLeave={e => e.currentTarget.style.background = "rgba(217,119,6,0.1)"}
-                  >Register</Link>
+                  <Link to="/vendor-login" className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200" style={{ background: "linear-gradient(135deg, #d97706, #b45309)", color: "white", boxShadow: "0 2px 8px rgba(217,119,6,0.3)" }} onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 14px rgba(217,119,6,0.5)"} onMouseLeave={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(217,119,6,0.3)"}>Login</Link>
+                  <Link to="/vendor-login" className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200" style={{ background: "rgba(217,119,6,0.1)", color: "#92400e", border: "1px solid rgba(217,119,6,0.3)" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(217,119,6,0.18)"} onMouseLeave={e => e.currentTarget.style.background = "rgba(217,119,6,0.1)"}>Register</Link>
                 </div>
               </div>
             </div>
 
-            {/* Customer Portal — featured / center */}
-            <div className="relative rounded-2xl overflow-hidden group transition-all duration-300"
-              style={{
-                background: "linear-gradient(160deg, #fff5f5 0%, #fee2e2 100%)",
-                boxShadow: "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)",
-                border: "1px solid rgba(185,28,28,0.2)",
-              }}
+            {/* Customer Portal */}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fff5f5 0%, #fee2e2 100%)", boxShadow: "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)", border: "1px solid rgba(185,28,28,0.2)" }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 16px 48px rgba(185,28,28,0.24), 0 4px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
               onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #ef4444, #b91c1c)" }} />
-              {/* Featured badge */}
-              <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full text-white text-xs font-bold tracking-wide"
-                style={{ background: "linear-gradient(135deg, #b91c1c, #d97706)" }}>
-                Popular
-              </div>
+              <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full text-white text-xs font-bold tracking-wide" style={{ background: "linear-gradient(135deg, #b91c1c, #d97706)" }}>Popular</div>
               <div className="p-6 md:p-7">
-                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md"
-                  style={{ background: "linear-gradient(135deg, #b91c1c, #ef4444)" }}>
+                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md" style={{ background: "linear-gradient(135deg, #b91c1c, #ef4444)" }}>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg md:text-xl mb-1"
-                  style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>Customer Portal</h3>
+                <h3 className="font-bold text-lg md:text-xl mb-1" style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>Customer Portal</h3>
                 <p className="text-red-600 text-xs md:text-sm mb-5 opacity-80">Access your profile & matches</p>
                 <div className="flex gap-3">
-                  <Link to="/customer-login"
-                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center text-white transition-all duration-200"
-                    style={{ background: "linear-gradient(135deg, #b91c1c, #991b1b)", boxShadow: "0 2px 8px rgba(185,28,28,0.35)" }}
-                    onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(185,28,28,0.55)"}
-                    onMouseLeave={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(185,28,28,0.35)"}
-                  >Login</Link>
-                  <Link to="/customer-registration"
-                    className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200"
-                    style={{ background: "rgba(185,28,28,0.08)", color: "#991b1b", border: "1px solid rgba(185,28,28,0.25)" }}
-                    onMouseEnter={e => e.currentTarget.style.background = "rgba(185,28,28,0.15)"}
-                    onMouseLeave={e => e.currentTarget.style.background = "rgba(185,28,28,0.08)"}
-                  >Register</Link>
+                  <Link to="/customer-login" className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center text-white transition-all duration-200" style={{ background: "linear-gradient(135deg, #b91c1c, #991b1b)", boxShadow: "0 2px 8px rgba(185,28,28,0.35)" }} onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(185,28,28,0.55)"} onMouseLeave={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(185,28,28,0.35)"}>Login</Link>
+                  <Link to="/customer-registration" className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-center transition-all duration-200" style={{ background: "rgba(185,28,28,0.08)", color: "#991b1b", border: "1px solid rgba(185,28,28,0.25)" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(185,28,28,0.15)"} onMouseLeave={e => e.currentTarget.style.background = "rgba(185,28,28,0.08)"}>Register</Link>
                 </div>
               </div>
             </div>
 
             {/* Matrimony Portal */}
-            <div className="relative rounded-2xl overflow-hidden group transition-all duration-300"
-              style={{
-                background: "linear-gradient(160deg, #fff5f7 0%, #fce7f3 100%)",
-                boxShadow: "0 4px 20px rgba(219,39,119,0.1), 0 1px 4px rgba(0,0,0,0.04)",
-                border: "1px solid rgba(219,39,119,0.18)",
-              }}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fff5f7 0%, #fce7f3 100%)", boxShadow: "0 4px 20px rgba(219,39,119,0.1), 0 1px 4px rgba(0,0,0,0.04)", border: "1px solid rgba(219,39,119,0.18)" }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 12px 36px rgba(219,39,119,0.18), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
               onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(219,39,119,0.1), 0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #db2777, #ec4899, #db2777)" }} />
               <div className="p-6 md:p-7">
-                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md"
-                  style={{ background: "linear-gradient(135deg, #db2777, #ec4899)" }}>
+                <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center shadow-md" style={{ background: "linear-gradient(135deg, #db2777, #ec4899)" }}>
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-lg md:text-xl mb-1"
-                  style={{ color: "#831843", fontFamily: "'Georgia', serif" }}>Matrimony Portal</h3>
+                <h3 className="font-bold text-lg md:text-xl mb-1" style={{ color: "#831843", fontFamily: "'Georgia', serif" }}>Matrimony Portal</h3>
                 <p className="text-pink-600 text-xs md:text-sm mb-5 opacity-80">Find your perfect life partner</p>
                 <a
                   href="https://eliteinovamatrimony.com/"
@@ -534,6 +333,250 @@ export default function Services({ onOpenAuthModal }) {
           </div>
         </div>
       </section>
+
+      {/* Our Categories */}
+      <section
+        className="relative px-4 md:px-6 py-12 md:py-16 overflow-hidden"
+        style={{ background: "linear-gradient(160deg, #fff7f7 0%, #fffbf0 60%, #fff7f7 100%)" }}
+      >
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, #b91c1c, transparent)" }} />
+        </div>
+
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-10 md:mb-12">
+            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">✦ Our Collections ✦</p>
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+              style={{
+                background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontFamily: "'Georgia', 'Times New Roman', serif",
+              }}
+            >
+              Our Categories
+            </h2>
+            <div className="flex items-center justify-center gap-3">
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+              <div className="flex items-center gap-1.5">
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-red-700">
+                  <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+                </svg>
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
+              </div>
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto">
+            {homeCategories.map((category, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <Link to={category.path} className="block group">
+                  <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 border-2 md:border-3 lg:border-4 border-amber-800 overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 shadow-lg hover:shadow-xl transition-all duration-300 p-0.5 md:p-1">
+                    <div className="w-full h-full overflow-hidden">
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover group-hover:scale-105 md:group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+                        }}
+                      />
+                    </div>
+                  </div>
+                </Link>
+                <h3 className="mt-2 md:mt-3 lg:mt-4 text-center font-semibold text-gray-800 text-sm md:text-base lg:text-lg">
+                  {category.name}
+                </h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+          {/* Key Services */}
+          <div
+            className="relative rounded-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(160deg, #ffffff 0%, #fffbf5 100%)",
+              boxShadow: "0 8px 40px rgba(185,28,28,0.1), 0 2px 8px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(185,28,28,0.1)",
+            }}
+          >
+            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+            <div className="p-6 md:p-10">
+              <div className="text-center mb-8 md:mb-10">
+                <p className="text-xs font-semibold tracking-[0.25em] uppercase text-amber-600 mb-2">What We Offer</p>
+                <h3 className="text-xl md:text-2xl font-bold" style={{ color: "#7f1d1d", fontFamily: "'Georgia', 'Times New Roman', serif" }}>
+                  🌸 Our Key Services
+                </h3>
+                <div className="mt-3 mx-auto w-16 h-0.5 rounded-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706)" }} />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                {keyServices.map((service, index) => (
+                  <div
+                    key={index}
+                    className="group relative rounded-xl p-4 md:p-5 transition-all duration-300 cursor-default"
+                    style={{
+                      background: "linear-gradient(135deg, #fff7f7 0%, #fffbf0 100%)",
+                      border: "1px solid rgba(185,28,28,0.12)",
+                      boxShadow: "0 2px 8px rgba(185,28,28,0.06)",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 24px rgba(185,28,28,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(185,28,28,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                  >
+                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                      style={{ background: "linear-gradient(135deg, #b91c1c, #d97706)" }}>
+                      {service.number}
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-xl flex items-center justify-center shadow-md"
+                        style={{ background: "linear-gradient(135deg, #b91c1c 0%, #d97706 100%)" }}>
+                        {service.icon}
+                      </div>
+                      <div className="pt-0.5">
+                        <h4 className="font-bold text-sm md:text-base mb-1.5 leading-snug" style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>
+                          {service.title}
+                        </h4>
+                        <p className="text-gray-500 text-xs md:text-sm leading-relaxed">{service.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+          </div>
+
+        </div>
+      </main>
+
+      {/* Why Choose Eliteinova */}
+      <section
+        className="relative px-4 md:px-6 py-12 md:py-16 overflow-hidden"
+        style={{ background: "linear-gradient(160deg, #fff7f7 0%, #fffbf0 60%, #fff7f7 100%)" }}
+      >
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, #b91c1c, transparent)" }} />
+        </div>
+
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-10 md:mb-12">
+            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">✦ Why Choose Us ✦</p>
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+              style={{
+                background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontFamily: "'Georgia', 'Times New Roman', serif",
+              }}
+            >
+              Why Choose Eliteinova?
+            </h2>
+            <div className="flex items-center justify-center gap-3">
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+              <div className="flex items-center gap-1.5">
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-red-700">
+                  <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+                </svg>
+                <div className="w-1 h-1 rounded-full bg-amber-500" />
+              </div>
+              <div className="h-px w-12 md:w-20" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+
+            {/* Verified Profiles Card */}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%)", boxShadow: "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)", border: "1px solid rgba(217,119,6,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 12px 36px rgba(217,119,6,0.2), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #d97706, #f59e0b, #d97706)" }} />
+              <div className="p-6 md:p-7 text-center">
+                <div className="w-14 h-14 rounded-xl mb-4 flex items-center justify-center shadow-md mx-auto" style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)" }}>
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg md:text-xl mb-2" style={{ color: "#78350f", fontFamily: "'Georgia', serif" }}>Verified Profiles</h3>
+                <p className="text-amber-700 text-xs md:text-sm opacity-80">All profiles are thoroughly verified for authenticity and reliability</p>
+              </div>
+            </div>
+
+            {/* Privacy Protected Card */}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fff5f5 0%, #fee2e2 100%)", boxShadow: "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)", border: "1px solid rgba(185,28,28,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 16px 48px rgba(185,28,28,0.24), 0 4px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #ef4444, #b91c1c)" }} />
+              <div className="p-6 md:p-7 text-center">
+                <div className="w-14 h-14 rounded-xl mb-4 flex items-center justify-center shadow-md mx-auto" style={{ background: "linear-gradient(135deg, #b91c1c, #ef4444)" }}>
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg md:text-xl mb-2" style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>Privacy Protected</h3>
+                <p className="text-red-600 text-xs md:text-sm opacity-80">Your personal data is secure with advanced encryption technology</p>
+              </div>
+            </div>
+
+            {/* Expert Matchmaking Card */}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%)", boxShadow: "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)", border: "1px solid rgba(217,119,6,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 12px 36px rgba(217,119,6,0.2), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 20px rgba(217,119,6,0.12), 0 1px 4px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #d97706, #f59e0b, #d97706)" }} />
+              <div className="p-6 md:p-7 text-center">
+                <div className="w-14 h-14 rounded-xl mb-4 flex items-center justify-center shadow-md mx-auto" style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)" }}>
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg md:text-xl mb-2" style={{ color: "#78350f", fontFamily: "'Georgia', serif" }}>Expert Matchmaking</h3>
+                <p className="text-amber-700 text-xs md:text-sm opacity-80">Professional assistance using advanced algorithms for perfect matches</p>
+              </div>
+            </div>
+
+            {/* 24/7 Support Card */}
+            <div
+              className="relative rounded-2xl overflow-hidden group transition-all duration-300"
+              style={{ background: "linear-gradient(160deg, #fff5f5 0%, #fee2e2 100%)", boxShadow: "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)", border: "1px solid rgba(185,28,28,0.2)" }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 16px 48px rgba(185,28,28,0.24), 0 4px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(185,28,28,0.16), 0 2px 8px rgba(0,0,0,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <div className="h-1 w-full" style={{ background: "linear-gradient(to right, #b91c1c, #ef4444, #b91c1c)" }} />
+              <div className="p-6 md:p-7 text-center">
+                <div className="w-14 h-14 rounded-xl mb-4 flex items-center justify-center shadow-md mx-auto" style={{ background: "linear-gradient(135deg, #b91c1c, #ef4444)" }}>
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg md:text-xl mb-2" style={{ color: "#7f1d1d", fontFamily: "'Georgia', serif" }}>24/7 Support</h3>
+                <p className="text-red-600 text-xs md:text-sm opacity-80">Round-the-clock customer support for all your queries and concerns</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      
 
       <AuthModal
         isOpen={showAuthModal}
