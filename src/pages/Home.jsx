@@ -406,7 +406,7 @@ export default function Home({ onOpenAuthModal }) {
         {/* RIGHT — Matrimonial Services */}
         <div className="flex flex-col items-center lg:items-center gap-2 lg:pl-6 xl:pl-10 w-full lg:w-auto lg:border-l border-white/30">
           <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
-            <span>💍</span> EliteInova Matrimonial Services
+            <span>💍</span> Eliteinova Wedding Services
           </h3>
           <a 
             href="https://matrimonial-services.vercel.app/"
@@ -602,7 +602,7 @@ export default function Home({ onOpenAuthModal }) {
     <div className="flex justify-start mb-6">
       <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
         <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-        <span className="text-red-600 text-sm font-medium uppercase tracking-wide">Most Trusted Matrimony Service</span>
+        <span className="text-red-600 text-sm font-medium uppercase tracking-wide">Demo Video</span>
       </div>
     </div>
 
@@ -941,7 +941,7 @@ export default function Home({ onOpenAuthModal }) {
     <div className="flex justify-start mb-3">
   <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
     <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-    <span className="text-red-600 text-sm font-medium uppercase">Eliteinova Matrimonial Services</span>
+    <span className="text-red-600 text-sm font-medium uppercase">Eliteinova Wedding Services</span>
   </div>
 </div>
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
@@ -950,7 +950,7 @@ export default function Home({ onOpenAuthModal }) {
       <div className="space-y-4 px-4 sm:px-0">
         {/* Main Heading - Much Bigger */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimonial Services</span>
+          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Wedding Services</span>
         </h1>
 
         {/* Two-line Description - Bigger */}
@@ -2024,7 +2024,7 @@ export default function Home({ onOpenAuthModal }) {
                 Matrimonial Service Page
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                This is our dedicated <span className="font-semibold text-red-600">EliteInova Matrimonial Services</span> page where you can explore:
+                This is our dedicated <span className="font-semibold text-red-600">Eliteinova Wedding Services</span> page where you can explore:
               </p>
             </div>
             

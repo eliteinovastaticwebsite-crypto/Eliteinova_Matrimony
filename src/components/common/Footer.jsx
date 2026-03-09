@@ -72,7 +72,7 @@ export default function Footer({ onRegister, onLogin }) {
               </div>
               <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 sm:px-4 py-2 border border-white/30">
                 <FaUsers className="text-white text-sm flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-bold text-white">500+ Success Stories</span>
+                <span className="text-xs sm:text-sm font-bold text-white">More Success Stories</span>
               </div>
             </div>
 
@@ -98,7 +98,7 @@ export default function Footer({ onRegister, onLogin }) {
           <div className="flex flex-col gap-6">
 
             {/* Links Grid - 3 cols */}
-            <div className="grid grid-cols-3 xs:grid-cols-3 gap-4 sm:gap-8">
+            <div className="grid grid-cols-3 xs:grid-cols-3 gap-2 sm:gap-2">
 
               {/* ── Eliteinova Matrimonial Services (was Quick Links) ── */}
               <div>
@@ -173,22 +173,22 @@ export default function Footer({ onRegister, onLogin }) {
                 <span className="text-white font-bold text-sm whitespace-nowrap">Follow Us:</span>
                 <div className="flex gap-2 sm:gap-3">
                   {[
-                    { icon: FaFacebookF, label: "Facebook" },
-                    { icon: FaTwitter, label: "Twitter" },
-                    { icon: FaInstagram, label: "Instagram" },
-                    { icon: FaLinkedinIn, label: "LinkedIn" }
-                  ].map((social, index) => (
-                    <a
-                      key={index}
-                      href="#"
-                      aria-label={social.label}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 rounded-lg flex items-center justify-center text-white hover:bg-white hover:text-orange-500 transition-all duration-300 hover:scale-110 border border-white/30"
-                    >
-                      <social.icon className="text-xs sm:text-sm" />
-                    </a>
-                  ))}
+  { icon: FaFacebookF,   label: "Facebook",  href: "https://www.facebook.com/profile.php?id=61584991709336" },
+  { icon: FaTwitter,     label: "Twitter",   href: "https://x.com/Eliteinova" },
+  { icon: FaInstagram,   label: "Instagram", href: "https://www.instagram.com/eliteinovamatrimony2.0/" },
+  { icon: FaLinkedinIn,  label: "LinkedIn",  href: "https://www.linkedin.com/in/eliteinova-matrimony-171ab5393" }
+].map((social, index) => (
+  <a
+    key={index}
+    href={social.href}
+    aria-label={social.label}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 rounded-lg flex items-center justify-center text-white hover:bg-white hover:text-orange-500 transition-all duration-300 hover:scale-110 border border-white/30"
+  >
+    <social.icon className="text-xs sm:text-sm" />
+  </a>
+))}
                 </div>
               </div>
 
@@ -269,3 +269,4 @@ export default function Footer({ onRegister, onLogin }) {
     </footer>
   );
 }
+

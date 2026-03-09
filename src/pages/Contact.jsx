@@ -1,4 +1,4 @@
-// src/pages/Contact.jsx - UPDATED (Clickable Cards)
+// src/pages/Contact.jsx - UPDATED (Clickable Cards + Real Map Location)
 import React, { useState } from "react";
 import { contactService } from "../services/contactService";
 import Input from "../components/ui/Input";
@@ -55,7 +55,7 @@ export default function Contact() {
       details: "+91 9940200736",
       subtitle: "Monday – Friday: 09.30 AM - 06.30 PM\nSaturday: 09.30 AM - 03.00 PM",
       color: "green",
-      link: "tel:+91784554882",
+      link: "tel:+919940200736",
     },
     {
       icon: EnvelopeIcon,
@@ -76,14 +76,15 @@ export default function Contact() {
       details: "+91 9940200736",
       subtitle: "Instant Support Available",
       color: "green",
-      link: "https://api.whatsapp.com/send?phone=91784554882",
+      link: "https://api.whatsapp.com/send?phone=919940200736",
     },
     {
       icon: MapPinIcon,
       title: "Visit Us",
-      details: "78, 1st street, Kumaran Colony, Vadapalani, Chennai-26, Tamil Nadi, India",
+      details: "78, 1st street, Kumaran Colony, Vadapalani, Chennai-26, Tamil Nadu, India",
       subtitle: "Come say hello!",
       color: "red",
+      link: "https://www.google.com/maps/place/Eliteinova+Matrimony/@13.0514755,80.20481,17z",
     },
     {
       icon: ClockIcon,
@@ -165,7 +166,7 @@ export default function Contact() {
                 <span>Why Choose Us?</span>
               </h3>
               <div className="space-y-3">
-                {[  //   "500+ Successful Matches",
+                {[
                   "24/7 Customer Support",
                   "Verified Profiles Only",
                   "Secure & Private",
@@ -267,24 +268,39 @@ export default function Contact() {
               </form>
             </div>
 
-            {/* Map Section */}
+            {/* ── Map Section — Eliteinova Matrimony real location ── */}
             <div className="mt-8 bg-white rounded-3xl shadow-lg p-6 border border-gray-100">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-                <MapPinIcon className="w-5 h-5 text-red-600" />
-                <span>Find Us Here</span>
-              </h3>
-              <div className="rounded-2xl overflow-hidden border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                  <MapPinIcon className="w-5 h-5 text-red-600" />
+                  <span>Find Us Here</span>
+                </h3>
+                <a
+                  href="https://www.google.com/maps/place/Eliteinova+Matrimony/@13.0514755,80.20481,17z/data=!3m1!4b1!4m6!3m5!1s0x3a5267b00971c789:0x2083ff0fe84a93b!8m2!3d13.0514703!4d80.2073849!16s%2Fg%2F11yq5_ywl3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1 hover:underline transition-all"
+                >
+                  Open in Google Maps →
+                </a>
+              </div>
+              <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
                 <iframe
-                  title="Company Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.31349991532!2d80.2707!3d13.0827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDA0JzU3LjciTiA4MMKwMTYnMTQuNiJF!5e0!3m2!1sen!2sin!4v1688567890000!5m2!1sen!2sin"
+                  title="Eliteinova Matrimony Location"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.5623!2d80.2047351!3d13.0514703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267b00971c789%3A0x2083ff0fe84a93b!2sEliteinova%20Matrimony!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin"
                   width="100%"
-                  height="250"
+                  height="300"
                   style={{ border: 0 }}
                   allowFullScreen=""
                   loading="lazy"
-                  className="rounded-xl"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-xl w-full"
                 ></iframe>
               </div>
+              <p className="text-sm text-gray-500 mt-3 flex items-center gap-1">
+                <MapPinIcon className="w-4 h-4 text-red-400 flex-shrink-0" />
+                78, 1st Street, Kumaran Colony, Vadapalani, Chennai - 600026, Tamil Nadu, India
+              </p>
             </div>
           </div>
         </div>

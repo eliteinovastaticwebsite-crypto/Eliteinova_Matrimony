@@ -11,13 +11,13 @@ const FAQSection = () => {
   const faqs = [
     { question: "How do I register on the matrimony website?", answer: "You can register by clicking the \"Register\" or \"Create Profile\" button and filling in your details such as name, age, gender, religion, mother tongue, education, profession, and contact information." },
     { question: "What features are available after registration?", answer: "After registration, you can create your profile, browse matches, and access basic features. Premium features (like viewing contact details or sending unlimited messages) are available with paid membership plans." },
-    { question: "Can I create a profile for someone else (like my son, daughter, or sibling)?", answer: "Yes, many matrimony sites allow you to create a profile on behalf of a family member or friend." },
-    { question: "What information do I need to create a profile?", answer: "Basic details (personal info, education, occupation), family background, lifestyle preferences, and partner preferences." },
+    { question: "Can I create a profile for someone else (like my son, daughter, or sibling)?", answer: "Yes, Eliteinova matrimony sites allow you to create a profile on behalf of a family member or friend." },
+    { question: "What information do I need to create a profile?", answer: "Basic details (personal info, education, occupation), family background, and partner preferences." },
     { question: "Can I edit my profile after registration?", answer: "Yes, you can log in anytime to update or modify your information and upload new photos." },
     { question: "How does the matchmaking system work?", answer: "Matches are generated based on your preferences (age, location, religion, caste, profession, etc.) and the information provided by other members." },
-    { question: "Can I search for matches manually?", answer: "Yes, most sites allow advanced filters so you can search by education, income, city, community, etc." },
-    { question: "What is “Daily Matches” or “Recommended Matches”?", answer: "These are auto-suggested profiles sent to you daily by the system based on your preferences." },
-    { question: "Can I hide my profile from public searches?", answer: "Yes, privacy settings let you limit visibility to specific users or make your profile invisible." },
+    { question: "Can I search for matches manually?", answer: "Yes, Eliteinova Matrimony site allow advanced filters so you can search by education, income, city, community, etc." },
+    { question: "What is “Daily Matches” or “Recommended Matches”?", answer: "These are auto-suggested profiles sent Matches by the system based on your preferences." },
+    { question: "Can I hide my profile from public searches?", answer: "Yes, privacy settings let limit visibility to specific users or make your profile invisible." },
     { question: "How can I contact another member?", answer: "After expressing interest or purchasing a premium plan, you can message or call verified members directly through the site." },
   ];
 
