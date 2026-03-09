@@ -3,6 +3,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== ADD THIS BLOCK RIGHT HERE ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+/* ===== END OF NEW BLOCK ===== */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -71,7 +97,7 @@
 
 @layer base {
   html, body {
-    @apply scrollbar-hide;
+     @apply scrollbar-hide w-full overflow-x-hidden;
   }
 }
 

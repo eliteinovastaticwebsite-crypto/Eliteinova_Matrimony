@@ -1,4 +1,4 @@
-// src/pages/Home.jsx - FIXED VERSION WITH AUTO-SCROLL NAV BARS
+// src/pages/Home.jsx - FIXED VERSION WITH AUTO-SCROLL NAV BARS AND ANIMATED CTA BANNER
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/auth/LoginCard";
@@ -12,6 +12,78 @@ import MobilAppSection from "../components/common/MobilAppSection";
 import BannerImage3 from "../assets/BannerImage6.png";
 import BannerImage4 from "../assets/BannerImage7.png";
 import BannerImage5 from "../assets/BannerImage8.png";
+
+// Import carousel images from assets
+import wedding1 from "../assets/Service4.png";
+import wedding2 from "../assets/Service2.png";
+import wedding3 from "../assets/Service3.png";
+import wedding4 from "../assets/Service1.png";
+
+// Carousel Component for Matrimonial Services Section
+const MatrimonialCarousel = () => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  
+  const carouselImages = [
+    wedding1,
+    wedding2,
+    wedding3,
+    wedding4,
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIdx(prev => (prev + 1) % carouselImages.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
+
+  return (
+    <div className="relative bg-white rounded-xl overflow-hidden border-2 border-red-200 mb-1"
+      style={{ minHeight: '200px', maxHeight: '250px' }}>
+
+      {/* Images */}
+      {carouselImages.map((src, idx) => (
+        <img
+          key={idx}
+          src={src}
+          alt={`Wedding ${idx + 1}`}
+          className="absolute inset-0 w-full h-full object-fit transition-opacity duration-700"
+          style={{ opacity: idx === activeIdx ? 1 : 0 }}
+        />
+      ))}
+
+      {/* Dot indicators */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+        {carouselImages.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveIdx(idx)}
+            className="transition-all duration-300 rounded-full border border-white/60"
+            style={{
+              width: idx === activeIdx ? '18px' : '7px',
+              height: '7px',
+              background: idx === activeIdx ? '#ef4444' : 'rgba(255,255,255,0.7)',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Left / Right arrows */}
+      <button
+        onClick={() => setActiveIdx(prev => (prev - 1 + carouselImages.length) % carouselImages.length)}
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => setActiveIdx(prev => (prev + 1) % carouselImages.length)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition"
+      >
+        ›
+      </button>
+    </div>
+  );
+};
 
 const homeBannerImages = [BannerImage3, BannerImage4, BannerImage5];
 
@@ -291,7 +363,7 @@ export default function Home({ onOpenAuthModal }) {
   const isLoading = loadingStates.featuredProfiles || loadingStates.communityStats;
 
   return (
-    <div className="w-full flex flex-col relative overflow-hidden min-h-screen bg-white">
+    <div className="w-full max-w-full flex flex-col relative overflow-x-hidden min-h-screen bg-white">
       <Banner
         images={homeBannerImages}
         texts={homeBannerTexts}
@@ -305,46 +377,45 @@ export default function Home({ onOpenAuthModal }) {
     <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse" />
 
     <div className="container mx-auto relative z-10">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-
-        {/* LEFT — Matrimonial Services */}
-        <div className="flex flex-col items-center sm:items-start gap-2 sm:border-r border-white/30 sm:pr-6 md:pr-10">
-          <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
-            <span>💍</span> EliteInova Matrimonial Services
-          </h3>
-          
-           <a 
-            href="https://matrimonial-services.vercel.app/"
-            onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
-            className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap"
-          >
-            Visit Our Service Page →
-          </a>
-        </div>
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+        
 
         {/* MIDDLE — Register Now heading + prices */}
-        <div className="text-center flex-1">
+        <div className="text-center flex-1 w-full lg:w-auto px-2">
           <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl animate-bounce flex items-center justify-center gap-2">
             <span>🎉</span> Register Now! <span>🎉</span>
           </h3>
           <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <span className="text-white/90 text-sm sm:text-base">Silver ₹299</span>
-            <span className="text-white font-bold">|</span>
-            <span className="text-white/90 text-sm sm:text-base">Gold ₹499</span>
-            <span className="text-white font-bold">|</span>
-            <span className="text-white/90 text-sm sm:text-base">Diamond ₹749</span>
+            <span className="text-white/90 text-sm sm:text-base font-medium">Silver ₹299</span>
+            <span className="text-white font-bold text-lg">|</span>
+            <span className="text-white/90 text-sm sm:text-base font-medium">Gold ₹499</span>
+            <span className="text-white font-bold text-lg">|</span>
+            <span className="text-white/90 text-sm sm:text-base font-medium">Diamond ₹749</span>
           </div>
         </div>
 
-        {/* RIGHT — Register Now Button */}
+        {/* LEFT — Register Now Button */}
         <button
           onClick={handleRegisterFromCard}
-          className="bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center gap-2 whitespace-nowrap flex-shrink-0"
+          className="bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center gap-2 whitespace-nowrap flex-shrink-0 w-full lg:w-auto justify-center lg:justify-start"
         >
           <span>Register Now</span>
           <span className="text-xl sm:text-2xl">👉</span>
         </button>
 
+        {/* RIGHT — Matrimonial Services */}
+        <div className="flex flex-col items-center lg:items-center gap-2 lg:pl-6 xl:pl-10 w-full lg:w-auto lg:border-l border-white/30">
+          <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
+            <span>💍</span> EliteInova Matrimonial Services
+          </h3>
+          <a 
+            href="https://matrimonial-services.vercel.app/"
+            onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
+            className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap text-center w-full lg:w-auto"
+          >
+            Visit Our Service Page →
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -453,7 +524,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div>
 
-      <div className="relative max-w-5xl mx-auto">
+      <div className="relative max-w-5xl mx-auto w-full px-4">
       {/* Section Heading */}
           <div className="text-center mb-10 md:mb-14">
             <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
@@ -516,7 +587,7 @@ export default function Home({ onOpenAuthModal }) {
           </div>
           </div>
 
-      {/* Premium Hero Section with Eliteinova Matrimony Styling */}
+     {/* Premium Hero Section with Eliteinova Matrimony Styling */}
 <div className="relative py-16 lg:py-24 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
   {/* Animated Background Pattern */}
   <div className="absolute inset-0 opacity-10">
@@ -526,7 +597,15 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 
   <div className="container mx-auto px-4 relative z-10 max-w-7xl">
-    
+
+    {/* ── MOST TRUSTED BADGE — top of section, same style as other section badges ── */}
+    <div className="flex justify-start mb-6">
+      <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
+        <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+        <span className="text-red-600 text-sm font-medium uppercase tracking-wide">Most Trusted Matrimony Service</span>
+      </div>
+    </div>
+
     {/* Section Heading with Eliteinova styling */}
     <div className="text-center mb-12 md:mb-16">
       <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-4">
@@ -560,129 +639,33 @@ export default function Home({ onOpenAuthModal }) {
 
     {/* Main Content Grid */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-      
-      {/* Left Content - Premium Registration */}
-      <div className="space-y-8">
-        
-        {/* Trust Badge - Enhanced with Eliteinova style */}
-        <div className="inline-flex items-center px-5 py-2.5 rounded-full bg-red-50 border border-red-200 shadow-sm">
-          <span className="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></span>
-          <span className="text-red-600 text-sm font-medium uppercase tracking-wider">
-            Most Trusted Matrimony Service
-          </span>
-        </div>
 
-        {/* Main Heading with Eliteinova gradient */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-          <span className="text-gray-900">Find Your </span>
-          <span 
-            className="text-transparent bg-clip-text"
-            style={{
-              background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Perfect Match
-          </span>
-        </h1>
-
-        {/* Description with Eliteinova font styling */}
-        <p className="text-lg md:text-xl text-gray-600 leading-relaxed text-justify" style={{ fontFamily: "'Georgia', serif" }}>
-          Join verified members in their journey to find lifelong partners.
-          Where tradition meets modern matchmaking.
-        </p>
-
-        {/* Quick Action Buttons */}
-        {!isAuthenticated ? (
-          <div className="flex flex-col sm:flex-row gap-4">
-  <button
-    onClick={handleRegisterFromCard}
-    disabled={isLoading}
-    className="relative bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-  >
-    {/* Shimmer sweep animation */}
-    <span className="absolute inset-0 pointer-events-none">
-      <span
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
-          backgroundSize: "200% 100%",
-          animation: "shimmer-sweep 2s linear infinite",
-        }}
-      />
-    </span>
-
-    <style>{`
-      @keyframes shimmer-sweep {
-        0%   { background-position: 200% center; }
-        100% { background-position: -200% center; }
-      }
-    `}</style>
-
-    {isLoading ? (
-      <div className="flex items-center space-x-2">
-        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-        <span>Loading...</span>
-      </div>
-    ) : (
-      <>
-        <span>Register Now</span>
-        <span className="text-xl transform group-hover:scale-110 transition-transform">🎯</span>
-      </>
-    )}
-  </button>
-            <button
-              onClick={handleLoginFromCard}
-              disabled={isLoading}
-              className="bg-white text-red-600 border-2 border-red-600 px-8 py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-lg hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Sign In
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={handleViewAllProfiles}
-              className="bg-gradient-to-r from-red-600 to-yellow-400 text-white px-8 py-4 rounded-xl hover:from-red-700 hover:to-yellow-500 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 group"
-            >
-              <span>Browse All Profiles</span>
-              <span className="text-xl transform group-hover:scale-110 transition-transform">
-                👥
-              </span>
-            </button>
-            <button
-              onClick={logout}
-              className="bg-white text-gray-600 border-2 border-gray-200 px-8 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 font-bold text-lg hover:shadow-lg"
-            >
-              Logout
-            </button>
-          </div>
-        )}
-
-        {/* Quick Features with Eliteinova styling */}
-        <div className="flex flex-wrap gap-4">
-          {[
-            "100% Verified Profiles",
-            "Secure & Private",
-            "24/7 Support",
-            "Register Now",
-          ].map((feature, index) => (
-            <div key={index} className="flex items-center space-x-2 px-3 py-1.5 bg-white rounded-full border border-gray-200 shadow-sm">
-              <span className="text-green-500 text-sm">✓</span>
-              <span className="text-gray-600 text-sm font-medium">{feature}</span>
-            </div>
-          ))}
+      {/* LEFT — YouTube Video */}
+      <div className="flex flex-col items-center justify-center">
+        <div
+          className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
+          style={{ aspectRatio: "16/9" }}
+        >
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/iDBuFPltT08?si=HRIN8UWimh-TXS_G"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ display: "block", width: "100%", height: "100%" }}
+          />
         </div>
       </div>
 
-      {/* Right Content - Integrated Cards */}
+      {/* RIGHT — Login Card + Register Now button */}
       <div className="space-y-6">
-        
-        {/* User Welcome Card if logged in */}
+
+        {/* If logged in: Welcome card */}
         {isAuthenticated && user && (
-          <div 
+          <div
             className="bg-gradient-to-br from-green-200 to-gray-300 rounded-2xl border border-gray-300 p-6 shadow-lg hover:shadow-xl transition-all duration-300"
             style={{
               boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
@@ -699,22 +682,16 @@ export default function Home({ onOpenAuthModal }) {
                 <h3 className="font-bold text-gray-900 text-lg">
                   Welcome back, {user.name?.split(" ")[0] || "User"}!
                 </h3>
-                <p className="text-gray-600">
-                  Ready to find your perfect match?
-                </p>
+                <p className="text-gray-600">Ready to find your perfect match?</p>
               </div>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="text-sm font-semibold text-gray-700">
-                  Profile Views
-                </div>
+                <div className="text-sm font-semibold text-gray-700">Profile Views</div>
                 <div className="text-lg font-bold text-red-500">24</div>
               </div>
               <div className="text-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="text-sm font-semibold text-gray-700">
-                  Matches
-                </div>
+                <div className="text-sm font-semibold text-gray-700">Matches</div>
                 <div className="text-lg font-bold text-red-500">12</div>
               </div>
             </div>
@@ -727,23 +704,53 @@ export default function Home({ onOpenAuthModal }) {
           </div>
         )}
 
-        {/* Login Card for quick access */}
+        {/* If NOT logged in: Inline login form with two buttons */}
         {!isAuthenticated && (
-          <div 
-            className="transform hover:scale-[1.02] transition-all duration-300"
+          <div
+            className="bg-white rounded-2xl shadow-xl p-6"
             style={{
-              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
-              border: "1px solid rgba(185,28,28,0.1)",
-              borderRadius: "1rem",
-              overflow: "hidden",
+              boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
+              border: "1px solid rgba(185,28,28,0.12)",
             }}
           >
-            <LoginCard
-              onRegister={handleRegisterFromCard}
-              onLoginSuccess={handleLoginSuccess}
-            />
+            <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
+              Login To Get Started
+            </h3>
+
+            <div className="mb-3">
+              <input
+                type="email"
+                placeholder="Email address"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+              />
+            </div>
+
+            {/* Login Now + Register Now side by side */}
+            <div className="flex gap-3">
+              <button
+                onClick={handleLoginFromCard}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
+              >
+                Login Now
+              </button>
+              <button
+                onClick={handleRegisterFromCard}
+                className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
+              >
+                Register Now
+              </button>
+            </div>
           </div>
         )}
+
       </div>
     </div>
 
@@ -756,7 +763,7 @@ export default function Home({ onOpenAuthModal }) {
 
 
       {/* ===================================================
-    BOTTOM CTA BANNER - SEPARATE SECTION
+    BOTTOM CTA BANNER - SEPARATE SECTION WITH ANIMATED CARDS AND UPGRADE BUTTON
     =================================================== */}
 
 <section id="premium-plans" className="py-6 bg-gradient-to-b from-white via-gray-50 to-white">
@@ -793,18 +800,27 @@ export default function Home({ onOpenAuthModal }) {
             <span>Register today and begin your beautiful marriage journey with Eliteinova Matrimony.</span>
           </p>
 
-          {/* Pricing Cards */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+          {/* ANIMATED PRICING CARDS - Silver, Gold, Diamond with shimmer effects */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-4">
             {[
-              { name: "Silver",  price: "₹299", featured: false },
-              { name: "Gold",    price: "₹499", featured: true  },
-              { name: "Diamond", price: "₹749", featured: false },
+              { name: "Silver", price: "₹299", featured: false, color: "from-gray-400 to-gray-300", textColor: "text-gray-700" },
+              { name: "Gold", price: "₹499", featured: true, color: "from-red-600 to-yellow-400", textColor: "text-yellow-900" },
+              { name: "Diamond", price: "₹749", featured: false, color: "from-purple-500 to-pink-400", textColor: "text-purple-900" },
             ].map((plan, i) => (
               <div key={i}
-                className={`bg-white/10 backdrop-blur rounded-xl px-3 sm:px-5 py-1.5 sm:py-2 text-center border border-white/30 hover:scale-105 transition-all duration-300
-                  ${plan.featured ? "ring-2 ring-yellow-300 scale-105 shadow-xl bg-white/20" : ""}`}>
-                <div className="text-white font-bold text-xs sm:text-base">{plan.name}</div>
-                <div className="text-white/80 text-[10px] sm:text-xs">{plan.price}</div>
+                className={`relative bg-gradient-to-b ${plan.color} rounded-2xl px-5 sm:px-7 py-3 sm:py-4 text-center border-2 border-white/50 transition-all duration-300 cursor-pointer
+                  ${plan.featured 
+                    ? "ring-4 ring-yellow-300 ring-offset-2 ring-offset-transparent scale-110 shadow-2xl animate-pulse" 
+                    : "hover:scale-110 hover:shadow-xl"
+                  }`}
+                style={plan.featured ? {
+                  animation: "goldGlow 2s ease-in-out infinite"
+                } : {
+                  animation: `cardFloat ${1.5 + i * 0.3}s ease-in-out infinite alternate`
+                }}
+              >
+                <div className={`font-extrabold text-sm sm:text-lg ${plan.textColor}`}>{plan.name}</div>
+                <div className={`font-bold text-base sm:text-xl ${plan.textColor}`}>{plan.price}</div>
               </div>
             ))}
           </div>
@@ -835,9 +851,26 @@ export default function Home({ onOpenAuthModal }) {
         <div className="flex-1 px-4 sm:px-6 md:px-8 py-6 flex flex-col items-center justify-center gap-4">
           {/* Header */}
           <div className="text-center">
-            <div className="text-4xl mb-2 animate-bounce"> <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
-            🛡️Premium &amp; Assisted Matrimony Services
-          </h3></div>
+            <div className="text-4xl mb-2 animate-bounce">
+              <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl mb-2">
+                🛡️Premium &amp; Assisted Matrimony Services
+              </h3>
+            </div>
+            
+            {/* ANIMATED UPGRADE NOW BUTTON - Added above Verified & Genuine Profiles */}
+            <button
+              onClick={() => navigate("/upgrade")}
+              className="relative overflow-hidden bg-gradient-to-r from-red-600 via-orange-500 to-Yellow-400 text-white font-extrabold text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3 rounded-full shadow-2xl border-2 border-yellow-200 transition-all duration-300 hover:scale-110 hover:shadow-yellow-400/60 hover:shadow-2xl mb-3"
+              style={{ animation: "upgradeGlow 1.8s ease-in-out infinite" }}
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <span className="animate-bounce">🚀</span>
+                Upgrade Now
+                <span className="animate-bounce">✨</span>
+              </span>
+              <div className="absolute inset-0 bg-white/20 animate-ping rounded-full opacity-30" />
+            </button>
+            
             <h3 className="text-white font-bold text-sm sm:text-base md:text-lg">Verified &amp; Genuine Profiles</h3>
             <p className="text-white/80 text-[10px] sm:text-xs">Safe · Authentic · Trusted</p>
           </div>
@@ -882,9 +915,25 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 </section>
 
+{/* Animation styles for the CTA banner */}
+<style>{`
+  @keyframes goldGlow {
+    0%, 100% { box-shadow: 0 0 15px 4px rgba(234,179,8,0.7); }
+    50% { box-shadow: 0 0 30px 10px rgba(234,179,8,1); }
+  }
+  @keyframes cardFloat {
+    from { transform: translateY(0px) scale(1); }
+    to { transform: translateY(-5px) scale(1.04); }
+  }
+  @keyframes upgradeGlow {
+    0%, 100% { box-shadow: 0 0 12px 3px rgba(251,191,36,0.6); }
+    50% { box-shadow: 0 0 28px 10px rgba(251,191,36,1); }
+  }
+`}</style>
+
 
       {/* ===================================================
-    MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE
+    MATRIMONIAL SERVICES SECTION - BIGGER FONTS + WIDER IMAGE WITH CAROUSEL
     =================================================== */}
 
 <section id="matrimonial-services" className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
@@ -941,48 +990,32 @@ export default function Home({ onOpenAuthModal }) {
         </div>
       </div>
 
-      {/* RIGHT SIDE - IMAGE - WIDER TO MATCH SPACE */}
+      {/* RIGHT SIDE - IMAGE CAROUSEL - auto-scrolls every 3s */}
       <div className="lg:justify-self-end w-full flex justify-center px-4 sm:px-0">
-  <div 
-    className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-3 border border-red-200 shadow-xl hover:shadow-2xl transition-all"
-    style={{
-      width: '100%',
-      maxWidth: '500px',
-      margin: '0 auto'
-    }}
-  >
-          
-          {/* Main Image - CUSTOM WIDTH AND HEIGHT */}
-          <div className="bg-white rounded-xl overflow-hidden border-2 border-red-200 mb-1">
-            <img 
-              src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-              alt="Indian Wedding Couple"
-              className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
-              style={{
-                width: '100%',
-                height: 'auto',
-                minHeight: '160px',
-                maxHeight: '190px',
-                objectFit: 'cover'
-              }}
-            />
-          </div>
-          
-          {/* Image Caption */}
-          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 mb-1">Matrimony • Vendor • Customer Portals</p>
-          
-          {/* Additional Content Below Image */}
+        <div
+          className="bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-3 border border-red-200 shadow-xl hover:shadow-2xl transition-all"
+          style={{ width: '100%', maxWidth: '500px', margin: '0 auto' }}
+        >
+          {/* ── CAROUSEL ── */}
+          <MatrimonialCarousel />
+
+          {/* Caption */}
+          <p className="text-center text-xs sm:text-sm font-medium text-gray-700 mb-1 mt-1">
+            Matrimony • Vendor • Customer Portals
+          </p>
+
+          {/* Stats */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="text-center bg-white/80 p-1 sm:p-0.5 rounded-lg">
-              <div className="text-base sm:text-lg font-bold text-red-600">500+</div>
+            <div className="text-center bg-white/80 p-1 sm:p-1.5 rounded-lg">
+              <div className="text-base sm:text-lg font-bold text-red-600">100% Verified</div>
               <div className="text-[10px] sm:text-xs text-gray-600">Wedding Vendors</div>
             </div>
-            <div className="text-center bg-white/80 p-1 sm:p-0.5 rounded-lg">
-              <div className="text-base sm:text-lg font-bold text-red-600">1000+</div>
+            <div className="text-center bg-white/80 p-1 sm:p-1.5 rounded-lg">
+              <div className="text-base sm:text-lg font-bold text-red-600">More</div>
               <div className="text-[10px] sm:text-xs text-gray-600">Happy Couples</div>
             </div>
           </div>
-          
+
           {/* Trust Badge */}
           <div className="flex items-center justify-center gap-2 bg-green-50 p-1.5 sm:p-2 rounded-lg border border-green-100 mt-2 sm:mt-3">
             <span className="text-green-600 text-xs sm:text-sm">✓</span>
@@ -1463,7 +1496,7 @@ export default function Home({ onOpenAuthModal }) {
       {/* RIGHT: Stats / Highlights */}
       <div className="grid grid-cols-2 gap-4">
         {[
-          { value: "More", label: "Happy Couples", icon: "💑" },
+          { value: "1000+", label: "Happy Couples", icon: "💑" },
           { value: "98%",     label: "Success Rate",  icon: "⭐" },
           { value: "27+",     label: "Communities",   icon: "🏘️" },
           { value: "24/7",    label: "Support",       icon: "🤝" },
@@ -1647,29 +1680,6 @@ export default function Home({ onOpenAuthModal }) {
               </div>
             </div>
           </div>
-
-          {/* CTA Section */}
-          {/* <div className="text-center mt-20 pt-8 border-t border-gray-100">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900">
-                Ready to Begin Your Journey?
-              </h3>
-              <p className="text-gray-600 max-w-md mx-auto text-sm font-light">
-                Join thousands of successful matches who found their life partners through our platform
-              </p>
-              <div className="space-y-4">
-                <button 
-                  onClick={handleCreateProfile}
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-8 rounded-lg shadow-sm hover:shadow transition-all duration-300 transform hover:-translate-y-0.5"
-                >
-                  Create Your Profile
-                </button>
-                <div className="text-xs text-gray-500">
-                  Verified profiles • Secure platform
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
 
@@ -1917,26 +1927,6 @@ export default function Home({ onOpenAuthModal }) {
               </div>
             ))}
           </div>
-
-          {/* Stats */}
-          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
-            {[
-              { number: "10,000+", label: "Success Stories" },
-              { number: "95%", label: "Satisfaction Rate" },
-              { number: "50+", label: "Cities" },
-              { number: "4.9/5", label: "Rating" },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-white"
-              >
-                <div className="text-2xl font-bold text-red-500 mb-1">
-                  {stat.number}
-                </div>
-                <div className="text-gray-600 text-sm">{stat.label}</div>
-              </div>
-            ))}
-          </div> */}
         </div>
       </div>
 

@@ -141,11 +141,11 @@ export default function Navbar({ onLogin, onRegister }) {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-md">
+      <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white shadow-md overflow-x-hidden">
         {/* Top decorative strip */}
-        <div className="h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
+        <div className="h-1 w-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
 
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-2 py-4">
+        <div className="w-full max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
           {/* Logo */}
           <div className="flex items-center space-x-3 group">
             <div className="relative">

@@ -112,7 +112,7 @@ function AppContent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full max-w-full overflow-x-hidden">
 
       {!window.location.pathname.startsWith('/admin') && (
         <>
