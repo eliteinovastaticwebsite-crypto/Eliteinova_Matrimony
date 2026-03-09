@@ -1,5 +1,5 @@
 import React from "react";
-import MabileApp from "../../assets/MabileApp.avif";
+import MabileApp from "../../assets/mobileapp.jpeg";
 
 const MobilAppSection = ({ onRegister }) => {
   return (
