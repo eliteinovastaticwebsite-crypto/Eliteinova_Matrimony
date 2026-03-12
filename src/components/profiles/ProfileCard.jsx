@@ -397,6 +397,7 @@ export default function ProfileCard({
   </div>
 )}
 
+
 <div className="relative h-48 bg-gray-100">
         {hasImage ? (
           <>
@@ -487,6 +488,40 @@ export default function ProfileCard({
       ))}
     </div>
   )}
+  {/* ── Gold falling sparkles — always on, scoped to card content only ── */}
+{theme === "gold" && (
+  <div
+    className="absolute inset-0 pointer-events-none overflow-hidden"
+    style={{ zIndex: 5 }}
+  >
+    {[...Array(16)].map((_, i) => (
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          left: `${[4, 10, 18, 26, 34, 42, 50, 58, 66, 74, 82, 90, 14, 46, 70, 88][i]}%`,
+          top: "-10px",
+          animation: `goldFall ${1.8 + (i * 0.22)}s linear infinite`,
+          animationDelay: `${i * 0.15}s`,
+          fontSize: `${i % 3 === 0 ? "13px" : i % 3 === 1 ? "9px" : "6px"}`,
+          color: i % 4 === 0 ? "#fbbf24"
+               : i % 4 === 1 ? "#fcd34d"
+               : i % 4 === 2 ? "#ffffff"
+               : "#f59e0b",
+          textShadow: "0 0 4px rgba(251,191,36,0.95)",
+          filter: "drop-shadow(0 0 2px rgba(180,120,0,0.8))",
+          pointerEvents: "none",
+        }}
+      >
+        {i % 5 === 0 ? "✦"
+       : i % 5 === 1 ? "★"
+       : i % 5 === 2 ? "✧"
+       : i % 5 === 3 ? "⋆"
+       : "·"}
+      </div>
+    ))}
+  </div>
+)}
         {/* Name + Gender + Location */}
         <div className="text-center mb-4">
           <h3 className="text-lg font-bold text-gray-800 truncate">
@@ -624,6 +659,12 @@ export default function ProfileCard({
     75%       { transform: translate(-4px,-6px) scale(0.9); opacity: 0.8; color: #d1d5db; }
   }
     @keyframes sparkFall {
+  0%   { transform: translateY(-10px) rotate(0deg);   opacity: 0;   }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { transform: translateY(220px) rotate(360deg); opacity: 0; }
+}
+  @keyframes goldFall {
   0%   { transform: translateY(-10px) rotate(0deg);   opacity: 0;   }
   10%  { opacity: 1; }
   90%  { opacity: 0.8; }

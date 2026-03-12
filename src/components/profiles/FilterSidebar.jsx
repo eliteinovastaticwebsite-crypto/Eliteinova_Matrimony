@@ -18,44 +18,56 @@ if (typeof document !== "undefined") {
 // Theme configurations for FilterSidebar
 const filterThemes = {
   silver: {
-    primary: "#6B7280",
-    background: "bg-white",
-    border: "border border-gray-100",
-    icon: "text-gray-500",
-    button: "text-gray-600 hover:text-gray-700",
-    boxBackground: "bg-gray-50/50 border-gray-100",
-    boxTitle: "text-gray-700",
-    focus: "focus:ring-gray-400 focus:border-gray-300",
+    primary: "#DC2626",
+    sidebarBg: "rgba(255,255,255,0.98)",
+    sidebarBorder: "#FCA5A5",
+    headerBorder: "#FEE2E2",
+    filterBoxBg: "rgba(254,242,242,0.5)",
+    filterBoxBorder: "#FECACA",
+    filterBoxTitle: "#B91C1C",
+    inputBorder: "#FCA5A5",
+    inputFocus: "#EF4444",
+    resetColor: "#DC2626",
+    submitBtn: "background: linear-gradient(to right, #DC2626, #B91C1C)",
   },
   gold: {
-    primary: "#D97706",
-    background: "bg-white",
-    border: "border border-amber-100",
-    icon: "text-amber-500",
-    button: "text-amber-600 hover:text-amber-700",
-    boxBackground: "bg-amber-50/50 border-amber-100",
-    boxTitle: "text-amber-700",
-    focus: "focus:ring-amber-400 focus:border-amber-300",
+    primary: "#B45309",
+    sidebarBg: "linear-gradient(to bottom, rgba(254,243,199,0.4), rgba(255,251,235,0.98))",
+    sidebarBorder: "#FCD34D",
+    headerBorder: "#FDE68A",
+    filterBoxBg: "rgba(255,251,235,0.6)",
+    filterBoxBorder: "#FDE68A",
+    filterBoxTitle: "#92400E",
+    inputBorder: "#FCD34D",
+    inputFocus: "#D97706",
+    resetColor: "#B45309",
+    submitBtn: "background: linear-gradient(to right, #D97706, #B45309)",
   },
   diamond: {
-    primary: "#0EA5E9",
-    background: "bg-white",
-    border: "border border-blue-100",
-    icon: "text-blue-500",
-    button: "text-blue-600 hover:text-blue-700",
-    boxBackground: "bg-blue-50/50 border-blue-100",
-    boxTitle: "text-blue-700",
-    focus: "focus:ring-blue-400 focus:border-blue-300",
+    primary: "#E879A0",
+    sidebarBg: "linear-gradient(to bottom, rgba(253,242,248,0.4), rgba(255,250,253,0.98))",
+    sidebarBorder: "#F9A8D4",
+    headerBorder: "#FBCFE8",
+    filterBoxBg: "rgba(253,242,248,0.6)",
+    filterBoxBorder: "#FBCFE8",
+    filterBoxTitle: "#9D174D",
+    inputBorder: "#F9A8D4",
+    inputFocus: "#EC4899",
+    resetColor: "#BE185D",
+    submitBtn: "background: linear-gradient(to right, #EC4899, #BE185D)",
   },
   default: {
-    primary: "#EC4899",
-    background: "bg-white",
-    border: "border border-gray-100",
-    icon: "text-pink-500",
-    button: "text-pink-600 hover:text-pink-700",
-    boxBackground: "bg-pink-50/50 border-pink-100",
-    boxTitle: "text-pink-700",
-    focus: "focus:ring-pink-400 focus:border-pink-300",
+    primary: "#DC2626",
+    sidebarBg: "rgba(255,255,255,0.98)",
+    sidebarBorder: "#FCA5A5",
+    headerBorder: "#FEE2E2",
+    filterBoxBg: "rgba(254,242,242,0.5)",
+    filterBoxBorder: "#FECACA",
+    filterBoxTitle: "#B91C1C",
+    inputBorder: "#FCA5A5",
+    inputFocus: "#EF4444",
+    resetColor: "#DC2626",
+    submitBtn: "background: linear-gradient(to right, #DC2626, #B91C1C)",
   },
 };
 
@@ -970,6 +982,12 @@ export default function FilterSidebar({
     ? indianStates.filter(state => getStatesByRegion(filters.region).includes(state))
     : indianStates;
 
+  const tColor = currentTheme.filterBoxTitle;
+const tBg    = currentTheme.filterBoxBg;
+const tBorder = currentTheme.filterBoxBorder;
+const tInput  = currentTheme.inputBorder;
+const tPrimary = currentTheme.primary;
+
   return (
     <>
       {showReportModal && <ReportModal onClose={() => setShowReportModal(false)} />}
@@ -978,33 +996,93 @@ export default function FilterSidebar({
   className="filter-sidebar-aside w-full md:w-80 sticky top-24 flex flex-col"
   style={{ minWidth: 0 }}
 >
-        {/* ── Eliteinova Wedding Services — compact like report box ── */}
-<div className="flex-shrink-0 mb-2">
-  <div className="bg-white border border-red-200 rounded-lg shadow-sm px-3 py-2 flex items-center justify-between">
-    <div className="flex items-center gap-2">
-      <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-        E
-      </div>
-      <div>
-        <span className="text-sm font-black text-red-600 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-  Eliteinova Wedding Services
-</span>
-<p className="text-[10px] text-yellow-500 font-semibold leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-  Your Complete Wedding Partner
-</p>
-      </div>
-    </div>
-    <a
-      href="https://matrimonial-services.vercel.app/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex-shrink-0 text-[11px] font-bold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 px-3 py-1.5 rounded-lg transition-all shadow-sm"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-    >
-      Register →
-    </a>
-  </div>
-</div>
+        {/* ── Eliteinova Wedding Services Banner — image-2 style ── */}
+        <div className="flex-shrink-0 mb-2">
+          <div
+            className="rounded-xl overflow-hidden shadow-lg relative"
+            style={{
+              background: "linear-gradient(135deg, #f97316 0%, #fb923c 30%, #fbbf24 70%, #f59e0b 100%)",
+            }}
+          >
+            {/* Floating sparkle decorations */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {["✦","🌸","✧","💫","✦","🌼","⋆"].map((s, i) => (
+                <span key={i} style={{
+                  position: "absolute",
+                  fontSize: i % 2 === 0 ? "13px" : "10px",
+                  left: `${[5, 15, 28, 42, 58, 72, 88][i]}%`,
+                  top: `${[8, 15, 5, 18, 8, 12, 6][i]}%`,
+                  animation: `bannerFloat ${1.8 + i * 0.3}s ease-in-out infinite alternate`,
+                  animationDelay: `${i * 0.2}s`,
+                  opacity: 0.9,
+                  color: i % 3 === 0 ? "#fff" : i % 3 === 1 ? "#fef3c7" : "#fed7aa",
+                  textShadow: "0 0 6px rgba(255,200,50,0.8)",
+                }}>{s}</span>
+              ))}
+            </div>
+
+            {/* Content */}
+            <div className="relative px-4 py-3 text-center">
+              {/* Dancing title */}
+              <h2
+                className="font-black text-white leading-tight mb-0.5"
+                style={{
+                  fontFamily: "'Pacifico', cursive",
+                  fontSize: "15px",
+                  animation: "titleDance 2s ease-in-out infinite",
+                  display: "inline-block",
+                  textShadow: "0 2px 8px rgba(180,60,0,0.35)",
+                }}
+              >
+                Eliteinova Wedding Services
+              </h2>
+
+              {/* Subtitle */}
+              <p
+                className="text-[11px] font-semibold mb-2.5 mt-0.5"
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  color: "#fef3c7",
+                  textShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                }}
+              >
+                ✨ Your Complete Wedding Partner ✨
+              </p>
+
+              {/* CTA Button */}
+              
+                <a href="https://matrimonial-services.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center font-black text-sm text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  background: "linear-gradient(135deg, #dc2626, #b91c1c)",
+                  padding: "7px 24px",
+                  letterSpacing: "0.02em",
+                  boxShadow: "0 4px 15px rgba(185,28,28,0.5)",
+                }}
+              >
+                Register Now
+              </a>
+            </div>
+
+            {/* Keyframes injected here */}
+            <style>{`
+              @keyframes bannerFloat {
+                0%   { transform: translateY(0px) rotate(-5deg); }
+                100% { transform: translateY(-5px) rotate(5deg); }
+              }
+              @keyframes titleDance {
+                0%   { transform: scale(1)    rotate(-1deg); }
+                25%  { transform: scale(1.04) rotate(1deg);  }
+                50%  { transform: scale(1)    rotate(-0.5deg); }
+                75%  { transform: scale(1.02) rotate(0.5deg); }
+                100% { transform: scale(1)    rotate(-1deg); }
+              }
+            `}</style>
+          </div>
+        </div>
 
         {/* ── Report Profile — full width single row ── */}
         <div className="flex-shrink-0 mb-2">
@@ -1034,30 +1112,86 @@ export default function FilterSidebar({
         <SuccessStorySection />
 
         {/* ── Filter Panel — frozen header + scrollable body ── */}
-        <div className="flex flex-col bg-white rounded-lg shadow-lg border border-red-200">
+<div
+  className="flex flex-col rounded-lg shadow-lg relative overflow-hidden"
+  style={{
+    background: currentTheme.sidebarBg,
+    border: `1.5px solid ${currentTheme.sidebarBorder}`,
+  }}
+>
+  {/* ── Gold falling sparkles ── */}
+  {theme === "gold" && (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }}>
+      {[...Array(14)].map((_, i) => (
+        <div key={i} style={{
+          position: "absolute",
+          left: `${[4,10,18,26,34,42,50,58,66,74,82,90,14,70][i]}%`,
+          top: "-10px",
+          animation: `goldFilterFall ${2.0 + (i * 0.25)}s linear infinite`,
+          animationDelay: `${i * 0.18}s`,
+          fontSize: `${i % 3 === 0 ? "12px" : i % 3 === 1 ? "8px" : "6px"}`,
+          color: i % 4 === 0 ? "#fbbf24" : i % 4 === 1 ? "#fcd34d" : i % 4 === 2 ? "#ffffff" : "#f59e0b",
+          textShadow: "0 0 4px rgba(251,191,36,0.95)",
+          filter: "drop-shadow(0 0 2px rgba(180,120,0,0.8))",
+          pointerEvents: "none",
+        }}>
+          {i % 5 === 0 ? "✦" : i % 5 === 1 ? "★" : i % 5 === 2 ? "✧" : i % 5 === 3 ? "⋆" : "·"}
+        </div>
+      ))}
+    </div>
+  )}
+
+  {/* ── Diamond pink falling sparkles ── */}
+  {theme === "diamond" && (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }}>
+      {[...Array(14)].map((_, i) => (
+        <div key={i} style={{
+          position: "absolute",
+          left: `${[4,10,18,26,34,42,50,58,66,74,82,90,14,70][i]}%`,
+          top: "-10px",
+          animation: `pinkFilterFall ${2.0 + (i * 0.25)}s linear infinite`,
+          animationDelay: `${i * 0.18}s`,
+          fontSize: `${i % 3 === 0 ? "12px" : i % 3 === 1 ? "8px" : "6px"}`,
+          color: i % 4 === 0 ? "#f9a8d4" : i % 4 === 1 ? "#fbcfe8" : i % 4 === 2 ? "#ffffff" : "#fce7f3",
+          textShadow: "0 0 4px rgba(249,168,212,0.95)",
+          filter: "drop-shadow(0 0 2px rgba(236,72,153,0.7))",
+          pointerEvents: "none",
+        }}>
+          {i % 5 === 0 ? "✦" : i % 5 === 1 ? "✧" : i % 5 === 2 ? "❋" : i % 5 === 3 ? "✿" : "⋆"}
+        </div>
+      ))}
+    </div>
+  )}
 
           {/* 🔒 FROZEN header */}
-          <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 md:px-5 md:py-3.5 border-b border-red-100 bg-white">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="text-red-500" size={20} />
-              <h2 className="text-base md:text-lg font-semibold text-gray-800" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                Search Filters
-              </h2>
-            </div>
-            <button
-              onClick={resetFilters}
-              className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 transition-all"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              <RotateCcw size={16} /> Reset
-            </button>
-          </div>
+<div
+  className="flex-shrink-0 flex items-center justify-between px-4 py-3 md:px-5 md:py-3.5 relative"
+  style={{
+    borderBottom: `1px solid ${currentTheme.headerBorder}`,
+    background: currentTheme.sidebarBg,
+    zIndex: 3,
+  }}
+>
+  <div className="flex items-center gap-2">
+    <SlidersHorizontal size={20} style={{ color: currentTheme.primary }} />
+    <h2 className="text-base md:text-lg font-semibold text-gray-800" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      Search Filters
+    </h2>
+  </div>
+  <button
+    onClick={resetFilters}
+    className="flex items-center gap-1 text-sm font-semibold transition-all"
+    style={{ color: currentTheme.resetColor, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+  >
+    <RotateCcw size={16} /> Reset
+  </button>
+</div>
 
           {/* 📜 Scrollable filter content */}
           <div className="p-4 md:p-5">
             <div className="space-y-5">
               {/* PERSONAL DETAILS */}
-              <FilterBox title="Personal Details">
+              <FilterBox title="Personal Details"        bg={tBg} border={tBorder} titleColor={tColor}>
                 {/* <Select
                   value={filters.gender || ""}
                   onChange={(e) => handleChange("gender", e.target.value)}
@@ -1347,35 +1481,54 @@ export default function FilterSidebar({
 
         {/* Styles: story animation + mobile sidebar */}
         <style>{`
-          @keyframes storyFade {
-            from { opacity: 0; transform: translateY(4px); }
-            to   { opacity: 1; transform: translateY(0); }
-          }
+  @keyframes storyFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-          /* Mobile: half-height filter bar with frozen header that still works */
-          @media (max-width: 767px) {
-            .filter-sidebar-aside {
-              position: relative !important;
-              top: 0 !important;
-              max-height: none !important;
-            }
-            /* Give the filter panel a fixed half-viewport height on mobile */
-            .filter-sidebar-aside .filter-panel-mobile {
-              height: 50vh !important;
-              min-height: 300px !important;
-            }
-          }
-        `}</style>
+  @keyframes goldFilterFall {
+    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes pinkFilterFall {
+    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    .filter-sidebar-aside {
+      position: relative !important;
+      top: 0 !important;
+      max-height: none !important;
+    }
+    .filter-sidebar-aside .filter-panel-mobile {
+      height: 50vh !important;
+      min-height: 300px !important;
+    }
+  }
+`}</style>
       </aside>
     </>
   );
 }
 
 /* 🔹 Reusable Box Component — red/gold theme */
-function FilterBox({ title, children }) {
+function FilterBox({ title, children, bg, border, titleColor }) {
   return (
-    <div className="bg-red-50/50 border border-red-100 rounded-xl p-4 hover:shadow-md transition-all duration-200">
-      <h3 className="text-md font-semibold text-red-700 mb-3" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <div
+      className="rounded-xl p-4 hover:shadow-md transition-all duration-200"
+      style={{ backgroundColor: bg, border: `1px solid ${border}` }}
+    >
+      <h3
+        className="text-md font-semibold mb-3"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: titleColor }}
+      >
         {title}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -1451,7 +1604,7 @@ function FeedbackForm() {
 }
 
 /* 🔹 Styled Input Component */
-function Input({ placeholder, label, ...props }) {
+function Input({ placeholder, label, borderColor = "#FCA5A5", ...props }) {
   return (
     <div>
       {label && (
@@ -1461,7 +1614,8 @@ function Input({ placeholder, label, ...props }) {
       )}
       <input
         {...props}
-        className="w-full min-w-0 border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400"
+        className="w-full min-w-0 rounded-lg px-3 py-2 text-gray-700 transition-all placeholder-gray-400"
+        style={{ border: `1px solid ${borderColor}` }}
         placeholder={placeholder}
       />
     </div>
@@ -1469,7 +1623,7 @@ function Input({ placeholder, label, ...props }) {
 }
 
 /* 🔹 Styled Select Component */
-function CustomSelect({ value, onChange, options, disabled, label }) {
+function CustomSelect({ value, onChange, options, disabled, label, borderColor = "#FCA5A5" }) {
   return (
     <div>
       {label && (
@@ -1477,13 +1631,44 @@ function CustomSelect({ value, onChange, options, disabled, label }) {
           {label}
         </label>
       )}
-      <select value={value} onChange={onChange} disabled={disabled}
-        className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all disabled:bg-gray-100 disabled:text-gray-500"
+      <select
+        value={value} onChange={onChange} disabled={disabled}
+        className="w-full rounded-lg px-3 py-2 text-gray-700 transition-all disabled:bg-gray-100 disabled:text-gray-500"
+        style={{ border: `1px solid ${borderColor}` }}
       >
         {options.map((opt) => (
           <option key={String(opt.value)} value={opt.value}>{opt.label}</option>
         ))}
       </select>
+      <style>{`
+  @keyframes storyFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes goldFilterFall {
+    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
+  }
+  @keyframes pinkFilterFall {
+    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
+  }
+  @media (max-width: 767px) {
+    .filter-sidebar-aside {
+      position: relative !important;
+      top: 0 !important;
+      max-height: none !important;
+    }
+    .filter-sidebar-aside .filter-panel-mobile {
+      height: 50vh !important;
+      min-height: 300px !important;
+    }
+  }
+`}</style>
     </div>
   );
 }

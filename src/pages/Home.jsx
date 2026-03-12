@@ -377,46 +377,49 @@ export default function Home({ onOpenAuthModal }) {
     <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse" />
 
     <div className="container mx-auto relative z-10">
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-4 lg:gap-0">
 
-        {/* MIDDLE — Register Now heading + prices */}
-        <div className="text-center flex-1 w-full lg:w-auto px-2">
-          <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl animate-bounce flex items-center justify-center gap-2">
-            <span>🎉</span> Register Now! <span>🎉</span>
-          </h3>
-          <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <span className="text-white/90 text-sm sm:text-base font-medium">Silver ₹299</span>
-            <span className="text-white font-bold text-lg">|</span>
-            <span className="text-white/90 text-sm sm:text-base font-medium">Gold ₹499</span>
-            <span className="text-white font-bold text-lg">|</span>
-            <span className="text-white/90 text-sm sm:text-base font-medium">Diamond ₹749</span>
-          </div>
-        </div>
+  {/* COL 2 — Register Now heading + prices (CENTER) */}
+  <div className="text-center px-2">
+    <h3 className="text-white font-bold text-xl sm:text-2xl md:text-3xl animate-bounce flex items-center justify-center gap-2">
+      <span>🎉</span> Register Now! <span>🎉</span>
+    </h3>
+    <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+      <span className="text-white/90 text-sm sm:text-base font-medium">Silver ₹299</span>
+      <span className="text-white font-bold text-lg">|</span>
+      <span className="text-white/90 text-sm sm:text-base font-medium">Gold ₹499</span>
+      <span className="text-white font-bold text-lg">|</span>
+      <span className="text-white/90 text-sm sm:text-base font-medium">Diamond ₹749</span>
+    </div>
+  </div>
 
-        {/* LEFT — Register Now Button */}
-        <button
-          onClick={handleRegisterFromCard}
-          className="bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center gap-2 whitespace-nowrap flex-shrink-0 w-full lg:w-auto justify-center lg:justify-start"
-        >
-          <span>Register Now</span>
-          <span className="text-xl sm:text-2xl">👉</span>
-        </button>
+  {/* COL 1 — Register Now Button */}
+  <div className="flex justify-center lg:justify-center">
+    <button
+      onClick={handleRegisterFromCard}
+      className="bg-white text-red-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl hover:scale-110 transform flex items-center gap-2 whitespace-nowrap"
+    >
+      <span>Register Now</span>
+      <span className="text-xl sm:text-2xl">👉</span>
+    </button>
+  </div>
 
-        {/* RIGHT — Matrimonial Services */}
-        <div className="flex flex-col items-center lg:items-center gap-2 lg:pl-6 xl:pl-10 w-full lg:w-auto lg:border-l border-white/30">
-          <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
-            <span>💍</span> Eliteinova Wedding Services
-          </h3>
-          <a 
-            href="https://matrimonial-services.vercel.app/"
-            onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
-            className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap text-center w-full lg:w-auto"
-          >
-            Visit Our Service Page →
-          </a>
-        </div>
-      </div>
+
+  {/* COL 3 — Matrimonial Services (RIGHT) */}
+  <div className="flex flex-col items-center gap-2 lg:border-l border-white/30 lg:pl-6">
+    <h3 className="text-white font-bold text-base sm:text-lg md:text-xl drop-shadow-md whitespace-nowrap flex items-center gap-2">
+      <span>💍</span> Eliteinova Wedding Services
+    </h3>
+    
+      <a href="https://matrimonial-services.vercel.app/"
+      onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
+      className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap text-center w-full lg:w-auto"
+    >
+      Visit Our Service Page →
+    </a>
+  </div>
+
+</div>
     </div>
   </div>
 )}
