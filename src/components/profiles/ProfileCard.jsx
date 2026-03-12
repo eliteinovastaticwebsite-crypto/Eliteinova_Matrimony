@@ -35,18 +35,18 @@ const themes = {
     shadow: "shadow-lg hover:shadow-amber-400/70 hover:shadow-2xl",
   },
  diamond: {
-  primary: "#9CA3AF",
-  secondary: "#E5E7EB",
-  accent: "#6B7280",
+  primary: "#E879A0",
+  secondary: "#F9A8C9",
+  accent: "#BE185D",
   background: "bg-white",
-  border: "border-2 border-gray-300 hover:border-white",
-  buttonPrimary: "bg-gradient-to-r from-gray-700 via-gray-600 to-gray-800 hover:from-gray-600 hover:via-gray-500 hover:to-gray-700 text-white font-bold",
-  buttonSecondary: "border-2 border-gray-600 text-gray-800 bg-gray-100 hover:bg-gradient-to-r hover:from-gray-600 hover:to-gray-500 hover:text-white hover:border-gray-400 font-bold",
-  badge: "bg-gradient-to-r from-gray-200 via-white to-gray-300 text-gray-800 border border-gray-400 shadow shadow-gray-300",
-  genderFemale: "bg-gray-100 text-gray-700",
-  genderMale: "bg-gray-100 text-gray-700",
-  loading: "border-gray-400",
-  shadow: "shadow-xl hover:shadow-gray-300/90 hover:shadow-2xl",
+  border: "border-2 border-pink-300 hover:border-pink-400",
+  buttonPrimary: "bg-gradient-to-r from-pink-400 via-rose-300 to-pink-500 hover:from-pink-300 hover:via-white hover:to-pink-400 text-white font-black",
+  buttonSecondary: "border-2 border-pink-400 text-pink-700 bg-pink-50 font-black hover:bg-gradient-to-r hover:from-pink-300 hover:to-rose-300 hover:text-white hover:border-pink-200",
+  badge: "bg-pink-100 text-pink-800",
+  genderFemale: "bg-pink-100 text-pink-700",
+  genderMale: "bg-rose-100 text-rose-700",
+  loading: "border-pink-400",
+  shadow: "shadow-xl hover:shadow-pink-300/80 hover:shadow-2xl",
 },
   default: {
     primary: "#DC2626",
@@ -314,7 +314,7 @@ export default function ProfileCard({
    case "DIAMOND":
   return {
     text: "💎 Diamond",
-    color: "bg-gradient-to-r from-gray-200 via-white to-gray-300 text-gray-800 border border-gray-400 shadow shadow-gray-300",
+    color: "bg-gradient-to-r from-pink-300 via-rose-200 to-pink-400 text-pink-900 border border-pink-300 shadow shadow-pink-200",
   };
     default:
       return {
@@ -338,14 +338,14 @@ export default function ProfileCard({
       e.currentTarget.style.transform = "translateY(-5px) scale(1.012)";
     } else if (mem === "DIAMOND") {
   e.currentTarget.style.boxShadow = [
-    "0 0 0 2px #ffffff",
-    "0 0 15px 4px rgba(255,255,255,0.9)",
-    "0 0 30px 8px rgba(220,220,220,0.7)",
-    "0 0 60px 16px rgba(200,200,200,0.4)",
-    "0 0 90px 24px rgba(180,180,180,0.2)"
+    "0 0 0 2px #f9a8d4",
+    "0 0 16px 4px rgba(249,168,212,0.7)",
+    "0 0 32px 10px rgba(244,114,182,0.5)",
+    "0 0 60px 18px rgba(236,72,153,0.25)",
+    "0 0 90px 28px rgba(255,192,203,0.15)"
   ].join(", ");
-  e.currentTarget.style.transform = "translateY(-7px) scale(1.015)";
-  e.currentTarget.style.filter = "brightness(1.08) contrast(1.05)";
+  e.currentTarget.style.transform = "translateY(-6px) scale(1.015)";
+  e.currentTarget.style.filter = "brightness(1.06) saturate(1.2)";
 }else {
       // Silver = navbar red glow
       e.currentTarget.style.boxShadow = "0 0 0 2px #ef4444, 0 0 20px 6px rgba(220,38,38,0.45), 0 0 40px 10px rgba(202,138,4,0.15)";
@@ -359,24 +359,39 @@ export default function ProfileCard({
 }}
   onClick={handleCardClick}
 >
-      {/* Profile Image - Smart Background */}
-      {/* Diamond sparkle particles overlay */}
+      {/* Diamond pink satin sparkle overlay */}
 {theme === "diamond" && (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl" style={{ zIndex: 20 }}>
-    {[...Array(12)].map((_, i) => (
+  <div
+    className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl"
+    style={{ zIndex: 20 }}
+  >
+    {/* Satin sheen sweep - only on hover */}
+    <div
+      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+      style={{
+        background: "linear-gradient(135deg, transparent 0%, rgba(255,182,213,0.25) 30%, rgba(255,255,255,0.35) 50%, rgba(255,182,213,0.2) 70%, transparent 100%)",
+        backgroundSize: "200% 200%",
+        animation: "satinSheen 2.5s ease-in-out infinite",
+      }}
+    />
+    {/* Sparkles — always visible, floating continuously */}
+    {[...Array(14)].map((_, i) => (
       <div
         key={i}
-        className="absolute opacity-0 group-hover:opacity-100"
         style={{
-          left: `${[8, 20, 35, 50, 65, 80, 92, 15, 45, 70, 25, 85][i]}%`,
-          top: `${[10, 25, 8, 40, 15, 30, 10, 60, 70, 55, 80, 75][i]}%`,
-          animation: `sparkleFloat${(i % 4) + 1} ${1.2 + (i * 0.15)}s ease-in-out infinite`,
-          animationDelay: `${i * 0.12}s`,
-          fontSize: `${i % 3 === 0 ? "16px" : i % 3 === 1 ? "11px" : "8px"}`,
-          transition: "opacity 0.3s ease",
+          position: "absolute",
+          left: `${[5, 18, 32, 48, 62, 78, 90, 12, 38, 55, 72, 85, 25, 68][i]}%`,
+          top:  `${[8, 22, 5, 35, 12, 28, 8, 55, 65, 48, 72, 60, 82, 18][i]}%`,
+          animation: `pinkSparkle${(i % 4) + 1} ${1.0 + (i * 0.18)}s ease-in-out infinite`,
+          animationDelay: `${i * 0.1}s`,
+          fontSize: `${i % 3 === 0 ? "14px" : i % 3 === 1 ? "10px" : "7px"}`,
+          color: i % 3 === 0 ? "#f9a8d4" : i % 3 === 1 ? "#fbcfe8" : "#ffffff",
+          textShadow: "0 0 6px rgba(249,168,212,0.9)",
+          filter: "drop-shadow(0 0 3px rgba(236,72,153,0.6))",
+          pointerEvents: "none",
         }}
       >
-        {i % 4 === 0 ? "✦" : i % 4 === 1 ? "✧" : i % 4 === 2 ? "⋆" : "·"}
+        {i % 5 === 0 ? "✦" : i % 5 === 1 ? "✧" : i % 5 === 2 ? "❋" : i % 5 === 3 ? "✿" : "⋆"}
       </div>
     ))}
   </div>
@@ -437,7 +452,41 @@ export default function ProfileCard({
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 relative overflow-hidden">
+  {/* ── Diamond falling sparkles — always on, scoped to card content only ── */}
+  {theme === "diamond" && (
+    <div
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 5 }}
+    >
+      {[...Array(16)].map((_, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: `${[4, 10, 18, 26, 34, 42, 50, 58, 66, 74, 82, 90, 14, 46, 70, 88][i]}%`,
+            top: "-10px",
+            animation: `sparkFall ${1.8 + (i * 0.22)}s linear infinite`,
+            animationDelay: `${i * 0.15}s`,
+            fontSize: `${i % 3 === 0 ? "13px" : i % 3 === 1 ? "9px" : "6px"}`,
+            color: i % 4 === 0 ? "#f9a8d4"
+                 : i % 4 === 1 ? "#fbcfe8"
+                 : i % 4 === 2 ? "#ffffff"
+                 : "#fce7f3",
+            textShadow: "0 0 4px rgba(249,168,212,0.95)",
+            filter: "drop-shadow(0 0 2px rgba(236,72,153,0.7))",
+            pointerEvents: "none",
+          }}
+        >
+          {i % 5 === 0 ? "✦"
+         : i % 5 === 1 ? "✧"
+         : i % 5 === 2 ? "❋"
+         : i % 5 === 3 ? "✿"
+         : "⋆"}
+        </div>
+      ))}
+    </div>
+  )}
         {/* Name + Gender + Location */}
         <div className="text-center mb-4">
           <h3 className="text-lg font-bold text-gray-800 truncate">
@@ -511,15 +560,15 @@ export default function ProfileCard({
   disabled={loading}
   className={`flex-1 ${currentTheme.buttonPrimary} py-2 rounded-lg text-sm disabled:opacity-50 flex items-center justify-center overflow-hidden`}
   style={theme === "diamond" ? {
-    background: "linear-gradient(135deg, #c0c0c0 0%, #ffffff 30%, #a8a8a8 50%, #ffffff 70%, #c0c0c0 100%)",
-    backgroundSize: "200% 200%",
-    animation: "diamondButtonShimmer 2s ease infinite",
-    color: "#1a1a1a",
-    fontWeight: "800",
-    textShadow: "0 1px 2px rgba(255,255,255,0.8)",
-    border: "2px solid #e5e7eb",
-    boxShadow: "0 0 8px rgba(255,255,255,0.6), inset 0 1px 1px rgba(255,255,255,0.9)"
-  } : {}}
+  background: "linear-gradient(135deg, #ec4899 0%, #f472b6 40%, #e879a0 70%, #db2777 100%)",
+  backgroundSize: "200% 200%",
+  animation: "diamondButtonShimmer 2s ease infinite",
+  color: "#ffffff",
+  fontWeight: "900",
+  textShadow: "0 1px 3px rgba(157,23,77,0.5)",
+  border: "2px solid #f9a8d4",
+  boxShadow: "0 0 12px rgba(236,72,153,0.5), inset 0 1px 1px rgba(255,255,255,0.3)"
+} : {}}
 >
             {loading ? (
               <div className="flex items-center gap-2">
@@ -535,15 +584,15 @@ export default function ProfileCard({
   onClick={handleViewProfile}
   className={`flex-1 ${currentTheme.buttonSecondary} py-2 rounded-lg transition-all duration-200 font-semibold text-sm shadow-md hover:shadow-lg`}
   style={theme === "diamond" ? {
-    background: "linear-gradient(135deg, #e8e8e8 0%, #ffffff 40%, #d0d0d0 60%, #ffffff 100%)",
-    backgroundSize: "200% 200%",
-    animation: "diamondButtonShimmer 2.5s ease infinite reverse",
-    color: "#1a1a1a",
-    fontWeight: "800",
-    textShadow: "0 1px 2px rgba(255,255,255,0.8)",
-    border: "2px solid #d1d5db",
-    boxShadow: "0 0 6px rgba(255,255,255,0.5)"
-  } : {}}
+  background: "linear-gradient(135deg, #fce7f3 0%, #ffffff 40%, #fce7f3 100%)",
+  backgroundSize: "200% 200%",
+  animation: "diamondButtonShimmer 2.5s ease infinite reverse",
+  color: "#be185d",
+  fontWeight: "900",
+  textShadow: "0 1px 2px rgba(255,255,255,0.8)",
+  border: "2px solid #f9a8d4",
+  boxShadow: "0 0 8px rgba(236,72,153,0.3)"
+} : {}}
 >
             View Profile
           </button>
@@ -574,6 +623,12 @@ export default function ProfileCard({
     25%       { transform: translate(4px,-8px) scale(1.2); opacity: 1; color: #ffffff; }
     75%       { transform: translate(-4px,-6px) scale(0.9); opacity: 0.8; color: #d1d5db; }
   }
+    @keyframes sparkFall {
+  0%   { transform: translateY(-10px) rotate(0deg);   opacity: 0;   }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { transform: translateY(220px) rotate(360deg); opacity: 0; }
+}
 `}</style>
     </div>
   );
