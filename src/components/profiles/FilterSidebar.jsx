@@ -1024,22 +1024,21 @@ const tPrimary = currentTheme.primary;
             {/* Content */}
             <div className="relative px-4 py-3 text-center">
               {/* Dancing title */}
-              <h2
-                className="font-black text-white leading-tight mb-0.5"
-                style={{
-                  fontFamily: "'Pacifico', cursive",
-                  fontSize: "15px",
-                  animation: "titleDance 2s ease-in-out infinite",
-                  display: "inline-block",
-                  textShadow: "0 2px 8px rgba(180,60,0,0.35)",
-                }}
-              >
-                Eliteinova Wedding Services
-              </h2>
-
+<h2
+  className="font-black leading-tight mb-0.5 animate-bounce"
+  style={{
+    fontFamily: "'Pacifico', cursive",
+    fontSize: "24px",
+    display: "inline-block",
+    color: "#df1717",
+    textShadow: "0 2px 8px rgba(185,28,28,0.25), 0 1px 0 rgba(255,255,255,0.4)",
+  }}
+>
+  Eliteinova Wedding Services
+</h2>
               {/* Subtitle */}
               <p
-                className="text-[11px] font-semibold mb-2.5 mt-0.5"
+                className="text-[15px] font-semibold mb-2.5 mt-0.5"
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   color: "#fef3c7",
