@@ -821,6 +821,9 @@ function ShareStoryModal({ onClose, onSubmitted }) {
 // ─────────────────────────────────────────────
 // Success Story Section
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// Success Story Section
+// ─────────────────────────────────────────────
 function SuccessStorySection() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -859,113 +862,30 @@ function SuccessStorySection() {
 
   return (
     <div className="flex-shrink-0 mb-2">
-      <div className="bg-white border border-pink-200 rounded-lg shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-pink-100 bg-pink-50/40">
-          <div className="flex items-center gap-1.5">
-            <Heart size={13} fill="#EC4899" className="text-pink-500" />
-            <span className="text-xs font-bold text-pink-600" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              Success Stories
-            </span>
+      <div className="bg-white border border-pink-200 rounded-lg shadow-sm px-3 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Heart size={13} fill="#EC4899" className="text-pink-500 flex-shrink-0" />
+          <div>
+           <span className="text-sm font-black text-pink-600 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Success Stories
+</span>
+<p className="text-[11px] text-gray-400 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Share Your Success Stories Here!
+</p>
+{!loading && stories.length > 0 && (
+  <p className="text-[11px] text-gray-400 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    {stories.length} stories shared
+  </p>
+)}
           </div>
-          <button
-            onClick={() => setShowShareForm(true)}
-            className="text-[10px] font-semibold text-pink-500 hover:text-pink-700 border border-pink-200 rounded-full px-2 py-0.5 hover:bg-pink-50 transition-all"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
-            + Share Yours
-          </button>
         </div>
-
-        {/* Body */}
-        {loading ? (
-          <div className="flex items-center justify-center py-6">
-            <div className="w-4 h-4 border-2 border-pink-300 border-t-pink-600 rounded-full animate-spin" />
-          </div>
-        ) : stories.length === 0 ? (
-          <div className="text-center py-5 px-3">
-            <div className="text-2xl mb-1">💑</div>
-            <p className="text-xs text-gray-500 mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              Share Your Success Story Here with us!
-            </p>
-            <button
-              onClick={() => setShowShareForm(true)}
-              className="text-xs font-bold text-white bg-gradient-to-r from-pink-500 to-red-500 px-3 py-1.5 rounded-full hover:from-pink-600 hover:to-red-600 transition-all shadow-sm"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              Share Your Story 💍
-            </button>
-          </div>
-        ) : (
-          <div className="p-3">
-            <div className="flex gap-2 mb-2" key={story.id} style={{ animation: "storyFade 0.4s ease" }}>
-              {/* Photo 1 */}
-              <div className="flex-1 relative">
-                <img
-                  src={story.photo1Url}
-                  alt={story.groomName}
-                  className="w-full h-24 object-cover rounded-lg border-2 border-pink-100"
-                  onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150x150/FFF0F5/EC4899?text=Photo"; }}
-                />
-                <span className="absolute bottom-1 left-1 bg-black/50 text-white text-[9px] font-bold rounded px-1 py-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  {story.groomName}
-                </span>
-              </div>
-              {/* Heart divider */}
-              <div className="flex items-center justify-center flex-shrink-0">
-                <div className="flex flex-col items-center gap-0.5">
-                  <Heart size={14} fill="#EC4899" className="text-pink-500" />
-                  {story.marriageDate && (
-                    <span className="text-[8px] text-gray-400 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      {new Date(story.marriageDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
-                    </span>
-                  )}
-                </div>
-              </div>
-              {/* Photo 2 */}
-              <div className="flex-1 relative">
-                <img
-                  src={story.photo2Url}
-                  alt={story.brideName}
-                  className="w-full h-24 object-cover rounded-lg border-2 border-pink-100"
-                  onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150x150/FFF0F5/EC4899?text=Photo"; }}
-                />
-                <span className="absolute bottom-1 right-1 bg-black/50 text-white text-[9px] font-bold rounded px-1 py-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  {story.brideName}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-xs font-bold text-gray-800 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              {story.groomName} & {story.brideName}
-            </p>
-            {story.message && (
-              <p
-                className="text-[10px] text-gray-500 text-center mt-0.5 leading-tight"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-              >
-                "{story.message}"
-              </p>
-            )}
-
-            {stories.length > 1 && (
-              <div className="flex items-center justify-between mt-2">
-                <button onClick={prev} className="text-pink-300 hover:text-pink-500 transition-colors">
-                  <ChevronLeft size={16} />
-                </button>
-                <div className="flex gap-1">
-                  {stories.map((_, i) => (
-                    <button key={i} onClick={() => setActiveIndex(i)} className="rounded-full transition-all duration-300"
-                      style={{ backgroundColor: i === activeIndex ? "#EC4899" : "#FBCFE8", width: i === activeIndex ? "14px" : "6px", height: "6px" }} />
-                  ))}
-                </div>
-                <button onClick={next} className="text-pink-300 hover:text-pink-500 transition-colors">
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        <button
+          onClick={() => setShowShareForm(true)}
+          className="flex-shrink-0 text-[11px] font-bold text-white bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 px-3 py-1.5 rounded-lg transition-all shadow-sm"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
+          Share →
+        </button>
       </div>
 
       {showShareForm && (
@@ -1055,51 +975,36 @@ export default function FilterSidebar({
       {showReportModal && <ReportModal onClose={() => setShowReportModal(false)} />}
 
       <aside
-        className="filter-sidebar-aside w-full md:w-80 sticky top-24 flex flex-col"
-        style={{ maxHeight: "calc(100vh - 6rem)", minWidth: 0 }}
-      >
-        {/* ── Matrimony Registration Card ── */}
-        <div className="flex-shrink-0 mb-2">
-          <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
-            <div className="flex items-stretch">
-              <div className="w-28 flex-shrink-0 overflow-hidden">
-                <img
-                  src={banner1}
-                  alt="Eliteinova Matrimony"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80";
-                  }}
-                />
-              </div>
-              <div className="flex-1 px-2 py-1 flex flex-col justify-center">
-                <h2 className="text-ml font-bold text-red-600 leading-tight mb-0.1" style={{ fontFamily: "'Pacifico', cursive" }}>
-                  Eliteinova Wedding Services
-                </h2>
-                <p className="text-xs font-bold text-yellow-500 mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Your Complete Wedding Partner
-                </p>
-                <a
-                  href="https://matrimonial-services.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white py-1.5 px-3 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md text-xs"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                >
-                  <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                  </svg>
-                  Register Now
-                </a>
-                <p className="text-gray-400 text-[9px] mt-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Redirects to eliteinovaweddingservices.com
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+  className="filter-sidebar-aside w-full md:w-80 sticky top-24 flex flex-col"
+  style={{ minWidth: 0 }}
+>
+        {/* ── Eliteinova Wedding Services — compact like report box ── */}
+<div className="flex-shrink-0 mb-2">
+  <div className="bg-white border border-red-200 rounded-lg shadow-sm px-3 py-2 flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+        E
+      </div>
+      <div>
+        <span className="text-sm font-black text-red-600 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Eliteinova Wedding Services
+</span>
+<p className="text-[10px] text-yellow-500 font-semibold leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Your Complete Wedding Partner
+</p>
+      </div>
+    </div>
+    <a
+      href="https://matrimonial-services.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex-shrink-0 text-[11px] font-bold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 px-3 py-1.5 rounded-lg transition-all shadow-sm"
+      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+    >
+      Register →
+    </a>
+  </div>
+</div>
 
         {/* ── Report Profile — full width single row ── */}
         <div className="flex-shrink-0 mb-2">
@@ -1107,12 +1012,12 @@ export default function FilterSidebar({
             <div className="flex items-center gap-2">
               <Flag size={13} className="text-orange-500 flex-shrink-0" />
               <div>
-                <span className="text-xs font-bold text-orange-600 leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Report a Profile
-                </span>
-                <p className="text-[10px] text-gray-400 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Fake, suspicious or inappropriate?
-                </p>
+               <span className="text-sm font-black text-orange-600 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Report a Profile
+</span>
+<p className="text-[11px] text-gray-400 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+  Fake, suspicious or inappropriate?
+</p>
               </div>
             </div>
             <button
@@ -1129,7 +1034,7 @@ export default function FilterSidebar({
         <SuccessStorySection />
 
         {/* ── Filter Panel — frozen header + scrollable body ── */}
-        <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-lg shadow-lg border border-red-200">
+        <div className="flex flex-col bg-white rounded-lg shadow-lg border border-red-200">
 
           {/* 🔒 FROZEN header */}
           <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 md:px-5 md:py-3.5 border-b border-red-100 bg-white">
@@ -1149,7 +1054,7 @@ export default function FilterSidebar({
           </div>
 
           {/* 📜 Scrollable filter content */}
-          <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-red-200 scrollbar-track-gray-100 p-4 md:p-5">
+          <div className="p-4 md:p-5">
             <div className="space-y-5">
               {/* PERSONAL DETAILS */}
               <FilterBox title="Personal Details">

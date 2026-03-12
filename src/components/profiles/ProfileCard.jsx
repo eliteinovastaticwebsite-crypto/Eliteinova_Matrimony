@@ -7,52 +7,46 @@ import { buildImageUrl, buildApiUrl } from "../../config/api";
 // Theme configurations (unchanged)
 const themes = {
   silver: {
-    primary: "#6B7280",
-    secondary: "#9CA3AF",
-    accent: "#374151",
+    primary: "#DC2626",
+    secondary: "#EF4444",
+    accent: "#B91C1C",
     background: "bg-white",
-    border: "border border-gray-200 hover:border-gray-300",
-    buttonPrimary:
-      "bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800",
-    buttonSecondary:
-      "border-2 border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white",
-    badge: "bg-gray-100 text-gray-800",
-    genderFemale: "bg-gray-100 text-gray-700",
-    genderMale: "bg-gray-100 text-gray-700",
-    loading: "border-gray-600",
-    shadow: "shadow-lg hover:shadow-xl",
+    border: "border-2 border-red-500 hover:border-yellow-400",
+    buttonPrimary: "bg-gradient-to-r from-red-700 via-red-600 to-red-500 hover:from-red-800 hover:via-yellow-600 hover:to-red-700",
+    buttonSecondary: "border-2 border-red-600 text-red-700 hover:bg-gradient-to-r hover:from-red-700 hover:to-yellow-500 hover:text-white hover:border-yellow-400",
+    badge: "bg-red-100 text-red-800",
+    genderFemale: "bg-red-100 text-red-700",
+    genderMale: "bg-yellow-100 text-yellow-800",
+    loading: "border-red-600",
+    shadow: "shadow-lg hover:shadow-red-400/50 hover:shadow-xl",
   },
   gold: {
-    primary: "#D97706",
-    secondary: "#F59E0B",
-    accent: "#B45309",
+    primary: "#B7791F",
+    secondary: "#D69E2E",
+    accent: "#92400E",
     background: "bg-white",
-    border: "border border-amber-200 hover:border-amber-300",
-    buttonPrimary:
-      "bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800",
-    buttonSecondary:
-      "border-2 border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white",
-    badge: "bg-amber-100 text-amber-800",
+    border: "border-2 border-amber-400 hover:border-yellow-300",
+    buttonPrimary: "bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 hover:from-yellow-500 hover:via-amber-300 hover:to-yellow-500",
+    buttonSecondary: "border-2 border-amber-500 text-amber-800 hover:bg-gradient-to-r hover:from-yellow-500 hover:to-amber-400 hover:text-white hover:border-yellow-300",
+    badge: "bg-amber-100 text-amber-900",
     genderFemale: "bg-amber-100 text-amber-700",
-    genderMale: "bg-amber-100 text-amber-700",
-    loading: "border-amber-600",
-    shadow: "shadow-lg hover:shadow-xl",
+    genderMale: "bg-yellow-100 text-yellow-800",
+    loading: "border-amber-500",
+    shadow: "shadow-lg hover:shadow-amber-400/70 hover:shadow-2xl",
   },
   diamond: {
     primary: "#0EA5E9",
     secondary: "#38BDF8",
     accent: "#0369A1",
     background: "bg-white",
-    border: "border border-blue-200 hover:border-blue-300",
-    buttonPrimary:
-      "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-    buttonSecondary:
-      "border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
-    badge: "bg-blue-100 text-blue-800",
-    genderFemale: "bg-blue-100 text-blue-700",
+    border: "border-2 border-cyan-400 hover:border-white",
+    buttonPrimary: "bg-gradient-to-r from-cyan-500 via-blue-400 to-indigo-500 hover:from-cyan-300 hover:via-white hover:to-cyan-300",
+    buttonSecondary: "border-2 border-cyan-500 text-cyan-700 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-blue-400 hover:text-white hover:border-white",
+    badge: "bg-cyan-100 text-blue-900",
+    genderFemale: "bg-cyan-100 text-cyan-700",
     genderMale: "bg-blue-100 text-blue-700",
-    loading: "border-blue-600",
-    shadow: "shadow-xl hover:shadow-2xl",
+    loading: "border-cyan-400",
+    shadow: "shadow-xl hover:shadow-cyan-300/80 hover:shadow-2xl",
   },
   default: {
     primary: "#DC2626",
@@ -60,10 +54,8 @@ const themes = {
     accent: "#B91C1C",
     background: "bg-white",
     border: "border border-gray-200 hover:border-red-200",
-    buttonPrimary:
-      "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800",
-    buttonSecondary:
-      "border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white",
+    buttonPrimary: "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800",
+    buttonSecondary: "border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white",
     badge: "bg-red-100 text-red-800",
     genderFemale: "bg-pink-100 text-pink-700",
     genderMale: "bg-blue-100 text-blue-700",
@@ -300,27 +292,65 @@ export default function ProfileCard({
   };
 
   // Get membership badge based on theme
-  const getMembershipBadge = () => {
-    switch (theme) {
-      case "silver":
-        return { text: "🥈 Silver", color: "bg-gray-100 text-gray-800" };
-      case "gold":
-        return { text: "🥇 Gold", color: "bg-amber-100 text-amber-800" };
-      case "diamond":
-        return { text: "💎 Diamond", color: "bg-blue-100 text-blue-800" };
-      default:
-        return { text: "⭐ Premium", color: "bg-yellow-100 text-yellow-800" };
-    }
-  };
+ const getMembershipBadge = () => {
+  const mem = (
+    profile?.membershipType ||
+    profile?.user?.membership ||
+    profile?.membership ||
+    theme
+  ).toUpperCase();
+
+  switch (mem) {
+    case "SILVER":
+      return {
+        text: "🥈 Silver",
+        color: "bg-gradient-to-r from-red-600 to-red-500 text-white border border-yellow-400 shadow shadow-red-300",
+      };
+    case "GOLD":
+      return {
+        text: "✨ Gold",
+        color: "bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 text-amber-900 border border-yellow-300 shadow shadow-amber-300",
+      };
+    case "DIAMOND":
+      return {
+        text: "💎 Diamond",
+        color: "bg-gradient-to-r from-cyan-400 via-blue-300 to-cyan-400 text-blue-900 border border-cyan-200 shadow shadow-cyan-300",
+      };
+    default:
+      return {
+        text: "🥈 Silver",
+        color: "bg-gradient-to-r from-red-600 to-red-500 text-white border border-yellow-400",
+      };
+  }
+};
 
   const membershipBadge = getMembershipBadge();
 
   // ======== Render Card ========
   return (
     <div
-      className={`${currentTheme.background} ${currentTheme.shadow} rounded-xl overflow-hidden transition-all duration-300 ${currentTheme.border} group cursor-pointer`}
-      onClick={handleCardClick}
-    >
+  className={`${currentTheme.background} ${currentTheme.shadow} rounded-xl overflow-hidden transition-all duration-500 ${currentTheme.border} group cursor-pointer`}
+  style={{ transition: "box-shadow 0.4s ease, transform 0.3s ease, border-color 0.3s ease" }}
+  onMouseEnter={(e) => {
+    const mem = (profile?.membershipType || profile?.user?.membership || profile?.membership || theme || "silver").toUpperCase();
+    if (mem === "GOLD") {
+      e.currentTarget.style.boxShadow = "0 0 0 2px #fbbf24, 0 0 28px 8px rgba(251,191,36,0.6), 0 0 60px 16px rgba(180,120,0,0.2)";
+      e.currentTarget.style.transform = "translateY(-5px) scale(1.012)";
+    } else if (mem === "DIAMOND") {
+      e.currentTarget.style.boxShadow = "0 0 0 2px #67e8f9, 0 0 32px 10px rgba(34,211,238,0.65), 0 0 70px 20px rgba(99,102,241,0.3)";
+      e.currentTarget.style.transform = "translateY(-7px) scale(1.015)";
+    } else {
+      // Silver = navbar red glow
+      e.currentTarget.style.boxShadow = "0 0 0 2px #ef4444, 0 0 20px 6px rgba(220,38,38,0.45), 0 0 40px 10px rgba(202,138,4,0.15)";
+      e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
+    }
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = "";
+    e.currentTarget.style.transform = "";
+  }}
+  onClick={handleCardClick}
+>
       {/* Profile Image - Smart Background */}
       <div className="relative h-48 bg-gray-100">
         {hasImage ? (

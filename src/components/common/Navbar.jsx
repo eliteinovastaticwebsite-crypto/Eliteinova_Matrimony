@@ -164,7 +164,7 @@ export default function Navbar({ onLogin, onRegister }) {
               className="text-xl tracking-tight bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent"
             >
               <span className="font-pacifico text-3xl">Elite</span>
-              <span className="font-pacifico text-xl">inova</span>{" "}
+              <span className="font-pacifico text-3xl">inova</span>{" "}
               <span className="font-pacifico text-xl">Matrimony</span>
               <br />
               <span className="text-base font-normal">Eliteinova Tech Pvt Ltd</span>

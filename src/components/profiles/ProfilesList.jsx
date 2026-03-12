@@ -13,6 +13,7 @@ import BannerImage2 from "../../assets/BannerImage2.png";
 import silverBanner from "../../assets/membershipBanner/silver.png";
 import goldBanner from "../../assets/membershipBanner/gold.png";
 import diamondBanner from "../../assets/membershipBanner/diamond.png";
+import { mockProfiles } from "../../config/mockData"; // ADD THIS LINE
 
 const ProfileBannerTexts = [
   {
@@ -83,7 +84,11 @@ export default function ProfilesList({onOpenAuthModal}) {
     console.error("❌ Error checking database:", err);
   }
 };
-
+  // Fallback mock data filtered by user's membership type
+const getMockProfiles = () => {
+  const userMembership = user?.membership || user?.membershipType || "SILVER";
+  return mockProfiles.filter(p => p.membershipType === userMembership.toUpperCase());
+};
   const fetchAllProfiles = async (page = 0, size = 12) => {
     setLoading(true);
     setError("");
@@ -410,15 +415,21 @@ const performSearch = async (searchFilters) => {
   return (
     <div 
       className="min-h-screen relative"
-      style={{ 
-        backgroundImage: `url(${membershipBannerImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        minHeight: '100vh',
-        position: 'relative'
-      }}
+     style={{
+  backgroundImage: `url(${membershipBannerImage})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundAttachment: 'fixed',
+  minHeight: '100vh',
+  position: 'relative',
+  animation: (() => {
+    const mem = (membershipType || user?.membership || user?.membershipType || "SILVER").toUpperCase();
+    if (mem === "DIAMOND") return "diamondSparkle 2.5s ease-in-out infinite";
+    if (mem === "GOLD")    return "goldShimmer 3.5s ease-in-out infinite";
+    return "silverPulse 4s ease-in-out infinite";
+  })(),
+}}
     >
       {/* Banner Section */}
       <div className="relative" style={{ zIndex: 1 }}>
@@ -528,28 +539,33 @@ const performSearch = async (searchFilters) => {
           <div className={isAuthenticated ? "lg:w-3/4" : "lg:w-full"}>
             {/* Header Stats - Membership-based styling */}
             <div 
-              className={`${classes.cardBg} rounded-lg shadow-sm border p-6 mb-6`}
-              style={{ borderColor: `${colors.accent}40` }}
-            >
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h1 className={`${isAuthenticated && user?.membership ? 'text-xl' : 'text-2xl'} font-bold ${classes.textColor}`}>
-                      Find Your Perfect Match
-                    </h1>
+  className="rounded-xl shadow-md border-2 p-6 mb-6"
+  style={{ 
+    backgroundColor: "rgba(255,255,255,0.97)",
+    borderColor: "#DC2626",
+    backdropFilter: "blur(8px)"
+  }}
+>
+  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <div className="flex items-center gap-3 mb-2">
+        <h1 className={`${isAuthenticated && user?.membership ? 'text-xl' : 'text-2xl'} font-bold text-gray-900`}>
+          Find Your Perfect Match
+        </h1>
                     {membershipType && (
                       <span 
-                        className="px-3 py-1 rounded-full text-xs font-bold uppercase"
-                        style={{
-                          backgroundColor: colors.accentLight,
-                          color: colors.accent
-                        }}
-                      >
-                        {membershipType} Member
-                      </span>
+  className="px-3 py-1 rounded-full text-xs font-bold uppercase"
+  style={{
+    background: "linear-gradient(135deg, #DC2626, #B45309)",
+    color: "#ffffff",
+    boxShadow: "0 2px 8px rgba(220,38,38,0.4)"
+  }}
+>
+  {membershipType} Member
+</span>
                     )}
                   </div>
-                  <p className={`${classes.textColor} opacity-70 ${isAuthenticated && user?.membership ? 'text-sm' : ''}`}>
+                  <p className={`text-gray-700 font-medium ${isAuthenticated && user?.membership ? 'text-sm' : ''}`}>
                     {searchResults || hasQuickFilters ? (
                       <>Found <span className="font-semibold" style={{ color: colors.accent }}>{filteredProfiles.length}</span> profiles matching your criteria</>
                     ) : (
@@ -608,15 +624,19 @@ const performSearch = async (searchFilters) => {
 
             {/* Quick Filter Buttons - Membership-based styling */}
             <div 
-              className={`${classes.cardBg} rounded-lg shadow-sm border p-6 mb-6`}
-              style={{ borderColor: `${colors.accent}40` }}
-            >
-              <div className="mb-4">
-                <h3 className={`${isAuthenticated && user?.membership ? 'text-base' : 'text-lg'} font-semibold ${classes.textColor} mb-3`}>Quick Filters</h3>
+  className="rounded-xl shadow-md border-2 p-6 mb-6"
+  style={{ 
+    backgroundColor: "rgba(255,255,255,0.97)",
+    borderColor: "#DC2626",
+    backdropFilter: "blur(8px)"
+  }}
+>
+  <div className="mb-4">
+    <h3 className={`${isAuthenticated && user?.membership ? 'text-base' : 'text-lg'} font-semibold text-gray-900 mb-3`}>Quick Filters</h3>
 
                 {/* Religion Filter */}
                 <div>
-                  <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium ${classes.textColor} mb-2`}>Religion:</label>
+                  <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-semibold text-gray-800 mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
                     {["Hindu", "Muslim", "Christian"].map((religion) => {
                       const isActive = religionFilter === (religion === "all" ? "all" : religion);
@@ -627,7 +647,7 @@ const performSearch = async (searchFilters) => {
                           className={`px-4 py-2 rounded-md ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium transition ${
                             isActive
                               ? "text-white shadow"
-                              : `${classes.textColor} opacity-70 hover:opacity-100`
+                              : `text-gray-700 font-medium border border-gray-300`
                           }`}
                           style={isActive ? {
                             backgroundColor: colors.accent
@@ -746,11 +766,15 @@ const performSearch = async (searchFilters) => {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {filteredProfiles.map((profile) => (
-                    <ProfileCard 
-                      key={profile.id} 
-                      profile={profile} 
-                    />
-                  ))}
+  <ProfileCard 
+    key={profile.id} 
+    profile={profile}
+    theme={(() => {
+      const mem = profile.membershipType || profile.user?.membership || profile.membership || membershipType || "SILVER";
+      return mem.toLowerCase();
+    })()}
+  />
+))}
                 </div>
                 
                 {/* Load More Button */}
@@ -784,6 +808,32 @@ const performSearch = async (searchFilters) => {
           </div>
         </div>
       </div>
+      {/* Per-membership page glow styles */}
+      <style>{`
+  /* ── Silver: navbar red pulse ── */
+  @keyframes silverPulse {
+    0%, 100% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.04) saturate(1.1); }
+  }
+
+  /* ── Gold: elegant shimmer sweep ── */
+  @keyframes goldShimmer {
+    0%   { filter: brightness(1) saturate(1.1) sepia(0.1); }
+    30%  { filter: brightness(1.07) saturate(1.4) sepia(0.2); }
+    60%  { filter: brightness(1.12) saturate(1.5) sepia(0.25); }
+    100% { filter: brightness(1) saturate(1.1) sepia(0.1); }
+  }
+
+  /* ── Diamond: electric sparkle flicker ── */
+  @keyframes diamondSparkle {
+    0%   { filter: brightness(1) saturate(1) hue-rotate(0deg); }
+    20%  { filter: brightness(1.1) saturate(1.4) hue-rotate(10deg); }
+    40%  { filter: brightness(1.18) saturate(1.6) hue-rotate(-8deg); }
+    60%  { filter: brightness(1.08) saturate(1.3) hue-rotate(6deg); }
+    80%  { filter: brightness(1.15) saturate(1.5) hue-rotate(-5deg); }
+    100% { filter: brightness(1) saturate(1) hue-rotate(0deg); }
+  }
+`}</style>
     </div>
   );
 }
