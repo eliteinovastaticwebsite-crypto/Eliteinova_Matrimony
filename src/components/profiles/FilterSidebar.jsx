@@ -1,6 +1,7 @@
 // src/components/profiles/FilterSidebar.jsx
 import React, { useState, useEffect } from "react";
-import { RotateCcw, SlidersHorizontal } from "lucide-react";
+import ReactDOM from "react-dom";
+import { RotateCcw, SlidersHorizontal, Flag, Heart, ChevronLeft, ChevronRight, X, Send } from "lucide-react";
 import Select from "react-select";
 import profileService from "../../services/profileService";
 import banner1 from "../../assets/banner1.png";
@@ -135,7 +136,7 @@ const districtsByState = {
     "Dharmapuri",
     "Nilgiris",
     "Kallakurichi",
-    "Ariyalur", 
+    "Ariyalur",
   ],
   Kerala: [
     "Thiruvananthapuram",
@@ -314,15 +315,15 @@ const communityCasteData = {
 // 📘 Indian Regions mapping (states grouped by regions)
 const regionMapping = {
   "North": [
-    "Jammu and Kashmir", "Himachal Pradesh", "Punjab", "Haryana", 
+    "Jammu and Kashmir", "Himachal Pradesh", "Punjab", "Haryana",
     "Uttarakhand", "Delhi", "Chandigarh", "Ladakh"
   ],
   "South": [
-    "Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh", 
+    "Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh",
     "Telangana", "Puducherry", "Lakshadweep", "Andaman and Nicobar Islands"
   ],
   "East": [
-    "West Bengal", "Odisha", "Bihar", "Jharkhand", 
+    "West Bengal", "Odisha", "Bihar", "Jharkhand",
     "Sikkim", "Assam", "Tripura", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Arunachal Pradesh"
   ],
   "West": [
@@ -442,17 +443,559 @@ const professionOptions = [
   { value: "Other", label: "Other" },
 ];
 
+// ─────────────────────────────────────────────
+// ModalOverlay — uses ReactDOM.createPortal to render at document.body
+// This is the ONLY reliable fix: escape the aside's stacking context entirely
+// Same pattern as AuthModal which is why LoginForm has no bleed-through
+// ─────────────────────────────────────────────
+function ModalOverlay({ onClose, children }) {
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
+  const overlay = (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 99999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        backgroundColor: "rgba(0, 0, 0, 0.75)",
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          position: "relative",
+          backgroundColor: "#ffffff",
+          borderRadius: "16px",
+          width: "100%",
+          maxWidth: "400px",
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+          overflow: "hidden",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
+
+  // Portal to document.body — completely outside the aside's stacking context
+  return ReactDOM.createPortal(overlay, document.body);
+}
+
+// ─────────────────────────────────────────────
+// Report Modal
+// ─────────────────────────────────────────────
+function ReportModal({ onClose }) {
+  const [reason, setReason] = useState("");
+  const [details, setDetails] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const reportReasons = [
+    "Fake / Duplicate Profile",
+    "Inappropriate Content",
+    "Harassment / Abuse",
+    "Misleading Information",
+    "Spam",
+    "Other",
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!reason) return;
+    setIsSubmitting(true);
+    try {
+      await profileService.submitReport({ reason, details });
+      setSubmitted(true);
+      setTimeout(() => onClose(), 2000);
+    } catch (err) {
+      setSubmitted(true);
+      setTimeout(() => onClose(), 2000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <ModalOverlay onClose={onClose}>
+      {/* Sticky header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #f3f4f6", backgroundColor: "#ffffff", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Flag size={16} className="text-orange-500" />
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#1f2937", margin: 0 }}>
+            Report a Profile
+          </h3>
+        </div>
+        <button onClick={onClose} style={{ color: "#9ca3af", background: "none", border: "none", cursor: "pointer", padding: "4px", display: "flex" }}>
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Scrollable body */}
+      <div style={{ overflowY: "auto", backgroundColor: "#ffffff", flex: 1 }}>
+        {submitted ? (
+          <div className="text-center py-10 px-5">
+            <div className="text-5xl mb-3">✅</div>
+            <p className="text-green-600 font-bold text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Report submitted. Thank you!
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Reason *
+              </label>
+              <select
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                required
+                className="w-full border border-orange-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-300"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                <option value="">Select a reason</option>
+                {reportReasons.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Additional Details <span className="font-normal text-gray-400">(optional)</span>
+              </label>
+              <textarea
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+                placeholder="Describe the issue..."
+                rows={3}
+                className="w-full border border-orange-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white resize-none focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-300 placeholder-gray-400"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting || !reason}
+              className="w-full py-2.5 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              {isSubmitting ? "Submitting..." : "Submit Report"}
+            </button>
+          </form>
+        )}
+      </div>
+    </ModalOverlay>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Share Story Modal — same structure as ReportModal
+// ─────────────────────────────────────────────
+function ShareStoryModal({ onClose, onSubmitted }) {
+  const [groomName, setGroomName] = useState("");
+  const [brideName, setBrideName] = useState("");
+  const [message, setMessage] = useState("");
+  const [photo1, setPhoto1] = useState(null);
+  const [photo2, setPhoto2] = useState(null);
+  const [photo1Preview, setPhoto1Preview] = useState(null);
+  const [photo2Preview, setPhoto2Preview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handlePhotoChange = (e, setPhoto, setPreview) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setPhoto(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!groomName || !brideName || !photo1) {
+      setError("Please fill both names and upload at least 1 couple photo.");
+      return;
+    }
+    setIsSubmitting(true);
+    setError("");
+    try {
+      const formData = new FormData();
+      formData.append("groomName", groomName);
+      formData.append("brideName", brideName);
+      formData.append("message", message);
+      formData.append("photo1", photo1);
+      if (photo2) formData.append("photo2", photo2);
+      await profileService.submitSuccessStory(formData);
+      setSubmitted(true);
+      setTimeout(() => onSubmitted(), 2000);
+    } catch (err) {
+      setError(err.message || "Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <ModalOverlay onClose={onClose}>
+      {/* Sticky header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #f3f4f6", backgroundColor: "#ffffff", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Heart size={16} fill="#EC4899" className="text-pink-500" />
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: "14px", color: "#1f2937", margin: 0 }}>
+            Share Your Success Story
+          </h3>
+        </div>
+        <button onClick={onClose} style={{ color: "#9ca3af", background: "none", border: "none", cursor: "pointer", padding: "4px", display: "flex" }}>
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Scrollable body */}
+      <div style={{ overflowY: "auto", backgroundColor: "#ffffff", flex: 1 }}>
+        {submitted ? (
+          <div className="text-center py-10 px-5">
+            <div className="text-5xl mb-3">💑</div>
+            <p className="text-pink-600 font-bold text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Story submitted! Thank you for sharing 💍
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            {/* Names */}
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Groom's Name *
+                </label>
+                <input
+                  value={groomName}
+                  onChange={(e) => setGroomName(e.target.value)}
+                  placeholder="Groom's name"
+                  className="w-full border border-pink-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-300 placeholder-gray-400"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Bride's Name *
+                </label>
+                <input
+                  value={brideName}
+                  onChange={(e) => setBrideName(e.target.value)}
+                  placeholder="Bride's name"
+                  className="w-full border border-pink-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-300 placeholder-gray-400"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                />
+              </div>
+            </div>
+
+            {/* Couple Photos */}
+            <div>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Couple Photos *{" "}
+                <span className="font-normal text-gray-400">(up to 2 wedding photos)</span>
+              </label>
+              <div className="flex gap-3">
+                {/* Photo 1 */}
+                <label className="flex-1 block cursor-pointer">
+                  <div
+                    className="border-2 border-dashed rounded-xl overflow-hidden flex flex-col items-center justify-center bg-white transition-colors"
+                    style={{
+                      height: "100px",
+                      borderColor: photo1Preview ? "#EC4899" : "#FBCFE8",
+                    }}
+                  >
+                    {photo1Preview ? (
+                      <div className="relative w-full h-full">
+                        <img src={photo1Preview} alt="couple photo 1" className="w-full h-full object-cover" />
+                        <span
+                          className="absolute bottom-0 left-0 right-0 text-center text-[9px] text-white font-bold py-0.5"
+                          style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
+                        >
+                          Photo 1 ✓
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1 px-2 py-3">
+                        <span className="text-2xl">📷</span>
+                        <span className="text-[10px] text-gray-400 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                          Couple Photo 1
+                        </span>
+                        <span className="text-[9px] text-pink-400 font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                          Required
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" className="hidden"
+                    onChange={(e) => handlePhotoChange(e, setPhoto1, setPhoto1Preview)} />
+                </label>
+
+                {/* Photo 2 */}
+                <label className="flex-1 block cursor-pointer">
+                  <div
+                    className="border-2 border-dashed rounded-xl overflow-hidden flex flex-col items-center justify-center bg-white transition-colors"
+                    style={{
+                      height: "100px",
+                      borderColor: photo2Preview ? "#EC4899" : "#FBCFE8",
+                    }}
+                  >
+                    {photo2Preview ? (
+                      <div className="relative w-full h-full">
+                        <img src={photo2Preview} alt="couple photo 2" className="w-full h-full object-cover" />
+                        <span
+                          className="absolute bottom-0 left-0 right-0 text-center text-[9px] text-white font-bold py-0.5"
+                          style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
+                        >
+                          Photo 2 ✓
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1 px-2 py-3">
+                        <span className="text-2xl">📷</span>
+                        <span className="text-[10px] text-gray-400 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                          Couple Photo 2
+                        </span>
+                        <span className="text-[9px] text-gray-300 font-semibold" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                          Optional
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" className="hidden"
+                    onChange={(e) => handlePhotoChange(e, setPhoto2, setPhoto2Preview)} />
+                </label>
+              </div>
+            </div>
+
+            {/* Message */}
+            <div>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Your Message
+              </label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Share a few words about your journey..."
+                rows={3}
+                className="w-full border border-pink-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 bg-white resize-none focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-300 placeholder-gray-400"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              />
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-500 bg-red-50 border border-red-100 p-2.5 rounded-lg" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-2.5 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              <Send size={14} />
+              {isSubmitting ? "Submitting..." : "Submit Story"}
+            </button>
+          </form>
+        )}
+      </div>
+    </ModalOverlay>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Success Story Section
+// ─────────────────────────────────────────────
+function SuccessStorySection() {
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showShareForm, setShowShareForm] = useState(false);
+
+  const fetchStories = async () => {
+    try {
+      const response = await profileService.getSuccessStories();
+      if (response.success && response.stories && response.stories.length > 0) {
+        setStories(response.stories);
+      } else {
+        setStories([]);
+      }
+    } catch (err) {
+      console.error("Error fetching success stories:", err);
+      setStories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchStories(); }, []);
+
+  useEffect(() => {
+    if (stories.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % stories.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [stories.length]);
+
+  const prev = () => setActiveIndex((i) => (i - 1 + stories.length) % stories.length);
+  const next = () => setActiveIndex((i) => (i + 1) % stories.length);
+  const story = stories[activeIndex];
+
+  return (
+    <div className="flex-shrink-0 mb-2">
+      <div className="bg-white border border-pink-200 rounded-lg shadow-sm overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-3 py-2 border-b border-pink-100 bg-pink-50/40">
+          <div className="flex items-center gap-1.5">
+            <Heart size={13} fill="#EC4899" className="text-pink-500" />
+            <span className="text-xs font-bold text-pink-600" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Success Stories
+            </span>
+          </div>
+          <button
+            onClick={() => setShowShareForm(true)}
+            className="text-[10px] font-semibold text-pink-500 hover:text-pink-700 border border-pink-200 rounded-full px-2 py-0.5 hover:bg-pink-50 transition-all"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            + Share Yours
+          </button>
+        </div>
+
+        {/* Body */}
+        {loading ? (
+          <div className="flex items-center justify-center py-6">
+            <div className="w-4 h-4 border-2 border-pink-300 border-t-pink-600 rounded-full animate-spin" />
+          </div>
+        ) : stories.length === 0 ? (
+          <div className="text-center py-5 px-3">
+            <div className="text-2xl mb-1">💑</div>
+            <p className="text-xs text-gray-500 mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Share Your Success Story Here with us!
+            </p>
+            <button
+              onClick={() => setShowShareForm(true)}
+              className="text-xs font-bold text-white bg-gradient-to-r from-pink-500 to-red-500 px-3 py-1.5 rounded-full hover:from-pink-600 hover:to-red-600 transition-all shadow-sm"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Share Your Story 💍
+            </button>
+          </div>
+        ) : (
+          <div className="p-3">
+            <div className="flex gap-2 mb-2" key={story.id} style={{ animation: "storyFade 0.4s ease" }}>
+              {/* Photo 1 */}
+              <div className="flex-1 relative">
+                <img
+                  src={story.photo1Url}
+                  alt={story.groomName}
+                  className="w-full h-24 object-cover rounded-lg border-2 border-pink-100"
+                  onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150x150/FFF0F5/EC4899?text=Photo"; }}
+                />
+                <span className="absolute bottom-1 left-1 bg-black/50 text-white text-[9px] font-bold rounded px-1 py-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {story.groomName}
+                </span>
+              </div>
+              {/* Heart divider */}
+              <div className="flex items-center justify-center flex-shrink-0">
+                <div className="flex flex-col items-center gap-0.5">
+                  <Heart size={14} fill="#EC4899" className="text-pink-500" />
+                  {story.marriageDate && (
+                    <span className="text-[8px] text-gray-400 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {new Date(story.marriageDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
+                    </span>
+                  )}
+                </div>
+              </div>
+              {/* Photo 2 */}
+              <div className="flex-1 relative">
+                <img
+                  src={story.photo2Url}
+                  alt={story.brideName}
+                  className="w-full h-24 object-cover rounded-lg border-2 border-pink-100"
+                  onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/150x150/FFF0F5/EC4899?text=Photo"; }}
+                />
+                <span className="absolute bottom-1 right-1 bg-black/50 text-white text-[9px] font-bold rounded px-1 py-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {story.brideName}
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs font-bold text-gray-800 text-center leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              {story.groomName} & {story.brideName}
+            </p>
+            {story.message && (
+              <p
+                className="text-[10px] text-gray-500 text-center mt-0.5 leading-tight"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+              >
+                "{story.message}"
+              </p>
+            )}
+
+            {stories.length > 1 && (
+              <div className="flex items-center justify-between mt-2">
+                <button onClick={prev} className="text-pink-300 hover:text-pink-500 transition-colors">
+                  <ChevronLeft size={16} />
+                </button>
+                <div className="flex gap-1">
+                  {stories.map((_, i) => (
+                    <button key={i} onClick={() => setActiveIndex(i)} className="rounded-full transition-all duration-300"
+                      style={{ backgroundColor: i === activeIndex ? "#EC4899" : "#FBCFE8", width: i === activeIndex ? "14px" : "6px", height: "6px" }} />
+                  ))}
+                </div>
+                <button onClick={next} className="text-pink-300 hover:text-pink-500 transition-colors">
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {showShareForm && (
+        <ShareStoryModal
+          onClose={() => setShowShareForm(false)}
+          onSubmitted={() => {
+            setShowShareForm(false);
+            setLoading(true);
+            fetchStories();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Main FilterSidebar
+// ─────────────────────────────────────────────
 export default function FilterSidebar({
   filters = {},
   onFilterChange,
   theme = "default",
-  membershipType = "SILVER", // Add membershipType prop
+  membershipType = "SILVER",
 }) {
   const currentTheme = filterThemes[theme] || filterThemes.default;
-  const [availableCategories, setAvailableCategories] = useState(communityCategories); // Default to hardcoded list
+  const [availableCategories, setAvailableCategories] = useState(communityCategories);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [showReportModal, setShowReportModal] = useState(false);
 
-  // Fetch categories from backend on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -467,23 +1010,19 @@ export default function FilterSidebar({
         }
       } catch (error) {
         console.error("❌ Error fetching categories:", error);
-        setAvailableCategories(communityCategories); // Fallback to default
+        setAvailableCategories(communityCategories);
       } finally {
         setCategoriesLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
   const handleChange = (field, value) => {
     const newFilters = { ...filters, [field]: value };
-    // Clear custom "Other" value when field changes away from "Other"
     if (value !== "Other" && value !== "Others") {
       const otherField = `${field}Other`;
-      if (newFilters[otherField]) {
-        delete newFilters[otherField];
-      }
+      if (newFilters[otherField]) delete newFilters[otherField];
     }
     onFilterChange(newFilters);
   };
@@ -494,142 +1033,109 @@ export default function FilterSidebar({
 
   const resetFilters = () => {
     onFilterChange({
-      // Personal Details
-      gender: "",
-      minAge: "",
-      maxAge: "",
-      religion: "",
-      religionOther: "",
-      community: "",
-      caste: "",
-      casteOther: "",
-      subCaste: "",
-      dosham: "",
-      maritalStatus: "",
-
-      // Profile Information
-      region: "",
-
-      // Professional Details
-      education: "",
-      educationOther: "",
-      educationalQualification: "",
-      educationalQualificationOther: "",
-      certificateCourses: "",
-      profession: "",
-      occupation: "",
-      occupationOther: "",
-      employedIn: "",
-      annualIncome: "",
-      
-      // Personal Details - Additional
-      physicallyChallenged: "",
-
-      // Location Details
-      location: "",
-      country: "India",
-      countryOther: "",
-      state: "",
-      district: "",
+      gender: "", minAge: "", maxAge: "", religion: "", religionOther: "",
+      community: "", caste: "", casteOther: "", subCaste: "", dosham: "",
+      maritalStatus: "", region: "", education: "", educationOther: "",
+      educationalQualification: "", educationalQualificationOther: "",
+      certificateCourses: "", profession: "", occupation: "", occupationOther: "",
+      employedIn: "", annualIncome: "", physicallyChallenged: "",
+      location: "", country: "India", countryOther: "", state: "", district: "",
     });
   };
 
-  // Determine available options based on selected community
-  const availableCastes = filters.community && filters.community !== "Other" ? (communityCasteData[filters.community] || []) : [];
+  const availableCastes = filters.community && filters.community !== "Other"
+    ? (communityCasteData[filters.community] || []) : [];
   const districtOptions = districtsByState[filters.state] || [];
-  
-  // Filter states by region if region is selected
-  const availableStates = filters.region 
+  const availableStates = filters.region
     ? indianStates.filter(state => getStatesByRegion(filters.region).includes(state))
     : indianStates;
 
   return (
-    /*
-     * The outer <aside> is sticky and takes up the full viewport height minus the top offset.
-     * It uses flex-col so the two children (matrimony card + filter panel) stack vertically.
-     * The matrimony card is flex-shrink-0 — it never scrolls.
-     * The filter panel is flex-1 + overflow-y-auto — it scrolls independently inside the remaining space.
-     */
-    <aside
-      className="w-full md:w-80 sticky top-24 flex flex-col"
-      style={{ maxHeight: "calc(100vh - 6rem)" }}
-    >
+    <>
+      {showReportModal && <ReportModal onClose={() => setShowReportModal(false)} />}
 
-     {/* ── Matrimony Registration Card — NOT scrollable, fixed height ── */}
-<div className="flex-shrink-0 mb-3">
-  <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
-    <div className="flex items-stretch">
-      {/* Left — banner image */}
-      <div className="w-28 flex-shrink-0 overflow-hidden">
-        <img
-          src={banner1}
-          alt="Eliteinova Matrimony"
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
-              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80";
-          }}
-        />
-      </div>
+      <aside
+        className="filter-sidebar-aside w-full md:w-80 sticky top-24 flex flex-col"
+        style={{ maxHeight: "calc(100vh - 6rem)", minWidth: 0 }}
+      >
+        {/* ── Matrimony Registration Card ── */}
+        <div className="flex-shrink-0 mb-2">
+          <div className="bg-white rounded-lg shadow-lg border-2 border-red-300 overflow-hidden">
+            <div className="flex items-stretch">
+              <div className="w-28 flex-shrink-0 overflow-hidden">
+                <img
+                  src={banner1}
+                  alt="Eliteinova Matrimony"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80";
+                  }}
+                />
+              </div>
+              <div className="flex-1 px-2 py-1 flex flex-col justify-center">
+                <h2 className="text-ml font-bold text-red-600 leading-tight mb-0.1" style={{ fontFamily: "'Pacifico', cursive" }}>
+                  Eliteinova Wedding Services
+                </h2>
+                <p className="text-xs font-bold text-yellow-500 mb-2" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Your Complete Wedding Partner
+                </p>
+                <a
+                  href="https://matrimonial-services.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white py-1.5 px-3 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md text-xs"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                >
+                  <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                  Register Now
+                </a>
+                <p className="text-gray-400 text-[9px] mt-0.5" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Redirects to eliteinovaweddingservices.com
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {/* Right — text + button */}
-      <div className="flex-1 px-3 py-2 flex flex-col justify-center">
-        <h2
-          className="text-lg font-bold text-red-600 leading-tight mb-0.5"
-          style={{ fontFamily: "'Pacifico', cursive" }}
-        >
-          Eliteinova Matrimonial Services
-        </h2>
-        <p
-          className="text-xs font-bold text-yellow-500 mb-2"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-        >
-          Your Complete Wedding Partner
-        </p>
-        
-          <a href="https://matrimonial-services.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white py-1.5 px-3 rounded-md font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-md text-xs"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-        >
-          <svg
-            className="w-3 h-3 mr-1.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-            />
-          </svg>
-          Register Now
-        </a>
-        <p
-          className="text-gray-400 text-[9px] mt-1"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-        >
-          Redirects to eliteinovamatrimonialservices.com
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-      {/* ── Filter Panel — scrollable independently below the card ── */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-red-200 scrollbar-track-gray-100">
-        <div className="bg-white rounded-lg shadow-lg border border-red-200 p-5">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-5">
+        {/* ── Report Profile — full width single row ── */}
+        <div className="flex-shrink-0 mb-2">
+          <div className="bg-white border border-orange-200 rounded-lg shadow-sm px-3 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Flag size={13} className="text-orange-500 flex-shrink-0" />
+              <div>
+                <span className="text-xs font-bold text-orange-600 leading-none" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Report a Profile
+                </span>
+                <p className="text-[10px] text-gray-400 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Fake, suspicious or inappropriate?
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="flex-shrink-0 text-[11px] font-bold text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 px-3 py-1.5 rounded-lg transition-all shadow-sm"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Report →
+            </button>
+          </div>
+        </div>
+
+        {/* ── Success Stories ── */}
+        <SuccessStorySection />
+
+        {/* ── Filter Panel — frozen header + scrollable body ── */}
+        <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-lg shadow-lg border border-red-200">
+
+          {/* 🔒 FROZEN header */}
+          <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 md:px-5 md:py-3.5 border-b border-red-100 bg-white">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="text-red-500" size={20} />
-              <h2
-                className="text-lg font-semibold text-gray-800"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
+              <h2 className="text-base md:text-lg font-semibold text-gray-800" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 Search Filters
               </h2>
             </div>
@@ -642,447 +1148,321 @@ export default function FilterSidebar({
             </button>
           </div>
 
-          <div className="space-y-5">
-            {/* PERSONAL DETAILS */}
-            <FilterBox title="Personal Details">
-              {/* <Select
-                value={filters.gender || ""}
-                onChange={(e) => handleChange("gender", e.target.value)}
-                options={[
-                  { value: "", label: "Looking for" },
-                  { value: "Male", label: "Groom" },
-                  { value: "Female", label: "Bride" },
-                ]}
-                theme={currentTheme}
-              /> */}
+          {/* 📜 Scrollable filter content */}
+          <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-red-200 scrollbar-track-gray-100 p-4 md:p-5">
+            <div className="space-y-5">
+              {/* PERSONAL DETAILS */}
+              <FilterBox title="Personal Details">
+                {/* <Select
+                  value={filters.gender || ""}
+                  onChange={(e) => handleChange("gender", e.target.value)}
+                  options={[
+                    { value: "", label: "Looking for" },
+                    { value: "Male", label: "Groom" },
+                    { value: "Female", label: "Bride" },
+                  ]}
+                  theme={currentTheme}
+                /> */}
 
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Age Range
-                </label>
-                <div className="flex gap-2 w-full">
-                  <Input
-                    type="number"
-                    placeholder="Min"
-                    value={filters.minAge || ""}
-                    onChange={(e) => handleChange("minAge", e.target.value)}
-                    min="18"
-                    max="80"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Max"
-                    value={filters.maxAge || ""}
-                    onChange={(e) => handleChange("maxAge", e.target.value)}
-                    min="18"
-                    max="80"
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    Age Range
+                  </label>
+                  <div className="flex gap-2 w-full">
+                    <Input type="number" placeholder="Min" value={filters.minAge || ""}
+                      onChange={(e) => handleChange("minAge", e.target.value)} min="18" max="80" />
+                    <Input type="number" placeholder="Max" value={filters.maxAge || ""}
+                      onChange={(e) => handleChange("maxAge", e.target.value)} min="18" max="80" />
+                  </div>
+                </div>
+
+                <CustomSelect
+                  label="Religion"
+                  value={filters.religion || ""}
+                  onChange={(e) => {
+                    const newFilters = { ...filters, religion: e.target.value };
+                    if (e.target.value !== "Other") delete newFilters.religionOther;
+                    onFilterChange(newFilters);
+                  }}
+                  options={[
+                    { value: "", label: "Select Religion" },
+                    { value: "Hindu", label: "Hindu" },
+                    { value: "Muslim", label: "Muslim" },
+                    { value: "Christian", label: "Christian" },
+                    { value: "Sikh", label: "Sikh" },
+                    { value: "Jain", label: "Jain" },
+                    { value: "Other", label: "Other" },
+                  ]}
+                />
+                {filters.religion === "Other" && (
+                  <Input label="Please specify religion" placeholder="Please specify religion"
+                    value={filters.religionOther || ""} onChange={(e) => handleOtherChange("religion", e.target.value)} />
+                )}
+
+                <CustomSelect
+                  label="Community Category"
+                  value={filters.community || ""}
+                  onChange={(e) => {
+                    const newFilters = { ...filters, community: e.target.value };
+                    delete newFilters.caste; delete newFilters.subCaste;
+                    delete newFilters.casteOther; delete newFilters.communityOther;
+                    if (e.target.value !== "Other") delete newFilters.communityOther;
+                    onFilterChange(newFilters);
+                  }}
+                  options={[
+                    { value: "", label: categoriesLoading ? "Loading..." : "Select Community Category" },
+                    ...availableCategories.map((c) => ({ value: c.value || c, label: c.label || c })),
+                    { value: "Other", label: "Other" },
+                  ]}
+                  disabled={categoriesLoading}
+                />
+                {filters.community === "Other" && (
+                  <Input label="Please specify community category" placeholder="Please specify community category"
+                    value={filters.communityOther || ""} onChange={(e) => handleOtherChange("community", e.target.value)} />
+                )}
+
+                {filters.community && (
+                  <>
+                    {filters.community === "Other" ? (
+                      <Input label="Please specify caste/subcaste" placeholder="Please specify caste/subcaste"
+                        value={filters.casteOther || ""} onChange={(e) => handleOtherChange("caste", e.target.value)} />
+                    ) : (
+                      <>
+                        <CustomSelect
+                          label="Caste / Subcaste"
+                          value={filters.caste || ""}
+                          onChange={(e) => {
+                            const newFilters = { ...filters, caste: e.target.value, subCaste: e.target.value };
+                            if (e.target.value !== "Others") delete newFilters.casteOther;
+                            onFilterChange(newFilters);
+                          }}
+                          options={[
+                            { value: "", label: "Select Caste/Subcaste" },
+                            ...availableCastes.map((c) => ({ value: c, label: c })),
+                          ]}
+                        />
+                        {filters.caste === "Others" && (
+                          <Input label="Please specify caste/subcaste" placeholder="Please specify caste/subcaste"
+                            value={filters.casteOther || ""} onChange={(e) => handleOtherChange("caste", e.target.value)} />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+
+                <CustomSelect label="Dosham" value={filters.dosham || ""}
+                  onChange={(e) => handleChange("dosham", e.target.value)}
+                  options={[
+                    { value: "", label: "Dosham" }, { value: "Yes", label: "Yes" },
+                    { value: "No", label: "No" }, { value: "Doesn't Matter", label: "Doesn't Matter" },
+                  ]}
+                />
+                <CustomSelect label="Marital Status" value={filters.maritalStatus || ""}
+                  onChange={(e) => handleChange("maritalStatus", e.target.value)}
+                  options={[
+                    { value: "", label: "Marital Status" }, { value: "Never Married", label: "Never Married" },
+                    { value: "Divorced", label: "Divorced" }, { value: "Widowed", label: "Widowed" },
+                    { value: "Separated", label: "Separated" },
+                  ]}
+                />
+                <CustomSelect label="Physically Challenged" value={filters.physicallyChallenged || ""}
+                  onChange={(e) => handleChange("physicallyChallenged", e.target.value)}
+                  options={[
+                    { value: "", label: "Physically Challenged" },
+                    { value: "Yes", label: "Yes" }, { value: "No", label: "No" },
+                  ]}
+                />
+              </FilterBox>
+
+              {/* PROFESSIONAL DETAILS */}
+              <FilterBox title="Professional Details">
+                <CustomSelect label="Education" value={filters.education || ""}
+                  onChange={(e) => handleChange("education", e.target.value)}
+                  options={[
+                    { value: "", label: "Select Education" }, { value: "High School", label: "High School" },
+                    { value: "Diploma", label: "Diploma" }, { value: "Bachelor's", label: "Bachelor's" },
+                    { value: "Master's", label: "Master's" }, { value: "PhD", label: "PhD" },
+                    { value: "Vocational / ITI", label: "Vocational / ITI" }, { value: "Other", label: "Other" },
+                  ]}
+                />
+                {filters.education === "Other" && (
+                  <Input label="Please specify education" placeholder="Please specify education"
+                    value={filters.educationOther || ""} onChange={(e) => handleOtherChange("education", e.target.value)} />
+                )}
+
+                <CustomSelect label="Educational Qualification" value={filters.educationalQualification || ""}
+                  onChange={(e) => handleChange("educationalQualification", e.target.value)}
+                  options={[
+                    { value: "", label: "Educational Qualification" }, { value: "10th Pass", label: "10th Pass" },
+                    { value: "12th Pass", label: "12th Pass" }, { value: "Diploma", label: "Diploma" },
+                    { value: "Bachelor's Degree", label: "Bachelor's Degree" }, { value: "Master's Degree", label: "Master's Degree" },
+                    { value: "M.Phil", label: "M.Phil" }, { value: "PhD", label: "PhD" },
+                    { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
+                    { value: "Engineering", label: "Engineering" },
+                    { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
+                    { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" }, { value: "Other", label: "Other" },
+                  ]}
+                />
+                {filters.educationalQualification === "Other" && (
+                  <Input label="Please specify educational qualification" placeholder="Please specify educational qualification"
+                    value={filters.educationalQualificationOther || ""} onChange={(e) => handleOtherChange("educationalQualification", e.target.value)} />
+                )}
+
+                <Input label="Certificate Courses" placeholder="Certificate Courses"
+                  value={filters.certificateCourses || ""} onChange={(e) => handleChange("certificateCourses", e.target.value)} />
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    Occupation
+                  </label>
+                  <Select
+                    value={professionOptions.find((p) => p.value === filters.occupation)}
+                    onChange={(selected) => {
+                      const value = selected?.value || "";
+                      const newFilters = { ...filters, occupation: value };
+                      if (value !== "Other") delete newFilters.occupationOther;
+                      onFilterChange(newFilters);
+                    }}
+                    isSearchable={true}
+                    options={professionOptions}
+                    styles={{
+                      control: (base) => ({ ...base, borderColor: "#FCA5A5", borderRadius: "0.5rem", minHeight: "40px", boxShadow: "none", "&:hover": { borderColor: "#EF4444" } }),
+                      option: (base, state) => ({ ...base, backgroundColor: state.isSelected ? "#EF4444" : state.isFocused ? "#FEE2E2" : "white", color: state.isSelected ? "white" : "#374151" }),
+                    }}
                   />
                 </div>
-              </div>
+                {filters.occupation === "Other" && (
+                  <Input label="Please specify occupation" placeholder="Please specify occupation"
+                    value={filters.occupationOther || ""} onChange={(e) => handleOtherChange("occupation", e.target.value)} />
+                )}
 
-              <CustomSelect
-                label="Religion"
-                value={filters.religion || ""}
-                onChange={(e) => {
-                  const newFilters = { ...filters, religion: e.target.value };
-                  // Don't clear community/caste when religion changes
-                  if (e.target.value !== "Other") {
-                    delete newFilters.religionOther;
-                  }
-                  onFilterChange(newFilters);
-                }}
-                options={[
-                  { value: "", label: "Select Religion" },
-                  { value: "Hindu", label: "Hindu" },
-                  { value: "Muslim", label: "Muslim" },
-                  { value: "Christian", label: "Christian" },
-                  { value: "Sikh", label: "Sikh" },
-                  { value: "Jain", label: "Jain" },
-                  { value: "Other", label: "Other" },
-                ]}
-              />
-              {filters.religion === "Other" && (
-                <Input
-                  label="Please specify religion"
-                  placeholder="Please specify religion"
-                  value={filters.religionOther || ""}
-                  onChange={(e) => handleOtherChange("religion", e.target.value)}
+                <CustomSelect label="Employed In" value={filters.employedIn || ""}
+                  onChange={(e) => handleChange("employedIn", e.target.value)}
+                  options={[
+                    { value: "", label: "Employed In" }, { value: "Private", label: "Private" },
+                    { value: "Government", label: "Government" }, { value: "Business", label: "Business" },
+                    { value: "Self Employed", label: "Self Employed" }, { value: "Not Working", label: "Not Working" },
+                  ]}
                 />
-              )}
-
-              {/* Community Category Filter (Tamil Nadu Government Categories) */}
-              <CustomSelect
-                label="Community Category"
-                value={filters.community || ""}
-                onChange={(e) => {
-                  const newFilters = { ...filters, community: e.target.value };
-                  delete newFilters.caste;
-                  delete newFilters.subCaste;
-                  delete newFilters.casteOther;
-                  delete newFilters.communityOther;
-                  if (e.target.value !== "Other") {
-                    delete newFilters.communityOther;
-                  }
-                  onFilterChange(newFilters);
-                }}
-                options={[
-                  { value: "", label: categoriesLoading ? "Loading..." : "Select Community Category" },
-                  ...availableCategories.map((c) => ({
-                    value: c.value || c,
-                    label: c.label || c,
-                  })),
-                  { value: "Other", label: "Other" },
-                ]}
-                disabled={categoriesLoading}
-              />
-              {filters.community === "Other" && (
-                <Input
-                  label="Please specify community category"
-                  placeholder="Please specify community category"
-                  value={filters.communityOther || ""}
-                  onChange={(e) => handleOtherChange("community", e.target.value)}
+                <CustomSelect label="Annual Income" value={filters.annualIncome || ""}
+                  onChange={(e) => handleChange("annualIncome", e.target.value)}
+                  options={getAnnualIncomeOptions(membershipType)}
                 />
-              )}
+              </FilterBox>
 
-              {/* Caste/Subcaste Filter - shown when community is selected */}
-              {filters.community && (
-                <>
-                  {filters.community === "Other" ? (
-                    <Input
-                      label="Please specify caste/subcaste"
-                      placeholder="Please specify caste/subcaste"
-                      value={filters.casteOther || ""}
-                      onChange={(e) => handleOtherChange("caste", e.target.value)}
-                    />
-                  ) : (
-                    <>
-                      <CustomSelect
-                        label="Caste / Subcaste"
-                        value={filters.caste || ""}
-                        onChange={(e) => {
-                          const newFilters = { ...filters, caste: e.target.value };
-                          // Set subCaste same as caste for backward compatibility
-                          newFilters.subCaste = e.target.value;
-                          if (e.target.value !== "Others") {
-                            delete newFilters.casteOther;
-                          }
-                          onFilterChange(newFilters);
-                        }}
-                        options={[
-                          { value: "", label: "Select Caste/Subcaste" },
-                          ...availableCastes.map((c) => ({
-                            value: c,
-                            label: c,
-                          })),
-                        ]}
-                      />
-                      {filters.caste === "Others" && (
-                        <Input
-                          label="Please specify caste/subcaste"
-                          placeholder="Please specify caste/subcaste"
-                          value={filters.casteOther || ""}
-                          onChange={(e) => handleOtherChange("caste", e.target.value)}
-                        />
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-              <CustomSelect
-                label="Dosham"
-                value={filters.dosham || ""}
-                onChange={(e) => handleChange("dosham", e.target.value)}
-                options={[
-                  { value: "", label: "Dosham" },
-                  { value: "Yes", label: "Yes" },
-                  { value: "No", label: "No" },
-                  { value: "Doesn't Matter", label: "Doesn't Matter" },
-                ]}
-              />
-
-              <CustomSelect
-                label="Marital Status"
-                value={filters.maritalStatus || ""}
-                onChange={(e) => handleChange("maritalStatus", e.target.value)}
-                options={[
-                  { value: "", label: "Marital Status" },
-                  { value: "Never Married", label: "Never Married" },
-                  { value: "Divorced", label: "Divorced" },
-                  { value: "Widowed", label: "Widowed" },
-                  { value: "Separated", label: "Separated" },
-                ]}
-              />
-
-              <CustomSelect
-                label="Physically Challenged"
-                value={filters.physicallyChallenged || ""}
-                onChange={(e) => handleChange("physicallyChallenged", e.target.value)}
-                options={[
-                  { value: "", label: "Physically Challenged" },
-                  { value: "Yes", label: "Yes" },
-                  { value: "No", label: "No" },
-                ]}
-              />
-            </FilterBox>
-
-            {/* PROFESSIONAL DETAILS */}
-            <FilterBox title="Professional Details">
-              <CustomSelect
-                label="Education"
-                value={filters.education || ""}
-                onChange={(e) => handleChange("education", e.target.value)}
-                options={[
-                  { value: "", label: "Select Education" },
-                  { value: "High School", label: "High School" },
-                  { value: "Diploma", label: "Diploma" },
-                  { value: "Bachelor's", label: "Bachelor's" },
-                  { value: "Master's", label: "Master's" },
-                  { value: "PhD", label: "PhD" },
-                  { value: "Vocational / ITI", label: "Vocational / ITI" },
-                  { value: "Other", label: "Other" },
-                ]}
-              />
-              {filters.education === "Other" && (
-                <Input
-                  label="Please specify education"
-                  placeholder="Please specify education"
-                  value={filters.educationOther || ""}
-                  onChange={(e) => handleOtherChange("education", e.target.value)}
-                />
-              )}
-
-              <CustomSelect
-                label="Educational Qualification"
-                value={filters.educationalQualification || ""}
-                onChange={(e) => handleChange("educationalQualification", e.target.value)}
-                options={[
-                  { value: "", label: "Educational Qualification" },
-                  { value: "10th Pass", label: "10th Pass" },
-                  { value: "12th Pass", label: "12th Pass" },
-                  { value: "Diploma", label: "Diploma" },
-                  { value: "Bachelor's Degree", label: "Bachelor's Degree" },
-                  { value: "Master's Degree", label: "Master's Degree" },
-                  { value: "M.Phil", label: "M.Phil" },
-                  { value: "PhD", label: "PhD" },
-                  { value: "Professional Degree (CA, CS, ICWA)", label: "Professional Degree (CA, CS, ICWA)" },
-                  { value: "Engineering", label: "Engineering" },
-                  { value: "Medical (MBBS, MD, etc.)", label: "Medical (MBBS, MD, etc.)" },
-                  { value: "Law (LLB, LLM)", label: "Law (LLB, LLM)" },
-                  { value: "Other", label: "Other" },
-                ]}
-              />
-              {filters.educationalQualification === "Other" && (
-                <Input
-                  label="Please specify educational qualification"
-                  placeholder="Please specify educational qualification"
-                  value={filters.educationalQualificationOther || ""}
-                  onChange={(e) => handleOtherChange("educationalQualification", e.target.value)}
-                />
-              )}
-
-              <Input
-                label="Certificate Courses"
-                placeholder="Certificate Courses"
-                value={filters.certificateCourses || ""}
-                onChange={(e) => handleChange("certificateCourses", e.target.value)}
-              />
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Occupation
-                </label>
-                <Select
-                  value={professionOptions.find(
-                    (p) => p.value === filters.occupation
-                  )}
-                  onChange={(selected) => {
-                    const value = selected?.value || "";
-                    const newFilters = { ...filters, occupation: value };
-                    if (value !== "Other") {
-                      delete newFilters.occupationOther;
-                    }
-                    onFilterChange(newFilters);
-                  }}
-                  isSearchable={true}
-                  options={professionOptions}
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      borderColor: "#FCA5A5",
-                      borderRadius: "0.5rem",
-                      minHeight: "40px",
-                      boxShadow: "none",
-                      "&:hover": { borderColor: "#EF4444" },
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      backgroundColor: state.isSelected
-                        ? "#EF4444"
-                        : state.isFocused
-                        ? "#FEE2E2"
-                        : "white",
-                      color: state.isSelected ? "white" : "#374151",
-                    }),
-                  }}
-                />
-              </div>
-              {filters.occupation === "Other" && (
-                <Input
-                  label="Please specify occupation"
-                  placeholder="Please specify occupation"
-                  value={filters.occupationOther || ""}
-                  onChange={(e) => handleOtherChange("occupation", e.target.value)}
-                />
-              )}
-
-              <CustomSelect
-                label="Employed In"
-                value={filters.employedIn || ""}
-                onChange={(e) => handleChange("employedIn", e.target.value)}
-                options={[
-                  { value: "", label: "Employed In" },
-                  { value: "Private", label: "Private" },
-                  { value: "Government", label: "Government" },
-                  { value: "Business", label: "Business" },
-                  { value: "Self Employed", label: "Self Employed" },
-                  { value: "Not Working", label: "Not Working" },
-                ]}
-              />
-
-              <CustomSelect
-                label="Annual Income"
-                value={filters.annualIncome || ""}
-                onChange={(e) => handleChange("annualIncome", e.target.value)}
-                options={getAnnualIncomeOptions(membershipType)}
-              />
-            </FilterBox>
-
-            {/* LOCATION DETAILS */}
-            <FilterBox title="Location">
-              <CustomSelect
-                label="Country"
-                value={filters.country || "India"}
-                onChange={(e) => {
-                  const newFilters = { ...filters, country: e.target.value };
-                  if (e.target.value !== "India") {
-                    delete newFilters.state;
-                    delete newFilters.district;
-                  }
-                  if (e.target.value !== "Other") {
-                    delete newFilters.countryOther;
-                  }
-                  onFilterChange(newFilters);
-                }}
-                options={[
-                  // South Asia
-                  { value: "India", label: "India" },
-                  { value: "Sri Lanka", label: "Sri Lanka" },
-                  
-                  // Southeast Asia
-                  { value: "Malaysia", label: "Malaysia" },
-                  { value: "Singapore", label: "Singapore" },
-                  { value: "Indonesia", label: "Indonesia" },
-                  { value: "Myanmar", label: "Myanmar" },
-                  { value: "Thailand", label: "Thailand" },
-                  
-                  // Middle East
-                  { value: "United Arab Emirates", label: "United Arab Emirates (UAE)" },
-                  { value: "Saudi Arabia", label: "Saudi Arabia" },
-                  { value: "Qatar", label: "Qatar" },
-                  { value: "Kuwait", label: "Kuwait" },
-                  { value: "Oman", label: "Oman" },
-                  { value: "Bahrain", label: "Bahrain" },
-                  
-                  // Africa
-                  { value: "South Africa", label: "South Africa" },
-                  { value: "Mauritius", label: "Mauritius" },
-                  { value: "Réunion", label: "Réunion (France)" },
-                  { value: "Kenya", label: "Kenya" },
-                  { value: "Tanzania", label: "Tanzania" },
-                  { value: "Uganda", label: "Uganda" },
-                  
-                  // Europe
-                  { value: "United Kingdom", label: "United Kingdom" },
-                  { value: "France", label: "France" },
-                  { value: "Germany", label: "Germany" },
-                  { value: "Switzerland", label: "Switzerland" },
-                  { value: "Netherlands", label: "Netherlands" },
-                  { value: "Norway", label: "Norway" },
-                  { value: "Sweden", label: "Sweden" },
-                  { value: "Denmark", label: "Denmark" },
-                  
-                  // North America
-                  { value: "Canada", label: "Canada" },
-                  { value: "United States", label: "United States" },
-                  
-                  // Oceania
-                  { value: "Australia", label: "Australia" },
-                  { value: "New Zealand", label: "New Zealand" },
-                  
-                  // Caribbean & South America
-                  { value: "Guyana", label: "Guyana" },
-                  { value: "Suriname", label: "Suriname" },
-                  { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
-                  { value: "Fiji", label: "Fiji" },
-                  
-                  { value: "Other", label: "Other" },
-                ]}
-              />
-              {filters.country === "Other" && (
-                <Input
-                  label="Please specify country"
-                  placeholder="Please specify country"
-                  value={filters.countryOther || ""}
-                  onChange={(e) => handleOtherChange("country", e.target.value)}
-                />
-              )}
-
-              {(filters.country === "India" || !filters.country) && (
+              {/* LOCATION DETAILS */}
+              <FilterBox title="Location">
                 <CustomSelect
-                  label="State"
-                  value={filters.state || ""}
+                  label="Country"
+                  value={filters.country || "India"}
                   onChange={(e) => {
-                    const newFilters = { ...filters, state: e.target.value };
-                    delete newFilters.district;
+                    const newFilters = { ...filters, country: e.target.value };
+                    if (e.target.value !== "India") { delete newFilters.state; delete newFilters.district; }
+                    if (e.target.value !== "Other") delete newFilters.countryOther;
                     onFilterChange(newFilters);
                   }}
                   options={[
-                    { value: "", label: filters.region ? `Select State (${filters.region})` : "Select State" },
-                    ...availableStates.map((s) => ({ value: s, label: s })),
+                    { value: "India", label: "India" },
+                    { value: "Sri Lanka", label: "Sri Lanka" },
+                    { value: "Malaysia", label: "Malaysia" },
+                    { value: "Singapore", label: "Singapore" },
+                    { value: "Indonesia", label: "Indonesia" },
+                    { value: "Myanmar", label: "Myanmar" },
+                    { value: "Thailand", label: "Thailand" },
+                    { value: "United Arab Emirates", label: "United Arab Emirates (UAE)" },
+                    { value: "Saudi Arabia", label: "Saudi Arabia" },
+                    { value: "Qatar", label: "Qatar" },
+                    { value: "Kuwait", label: "Kuwait" },
+                    { value: "Oman", label: "Oman" },
+                    { value: "Bahrain", label: "Bahrain" },
+                    { value: "South Africa", label: "South Africa" },
+                    { value: "Mauritius", label: "Mauritius" },
+                    { value: "Réunion", label: "Réunion (France)" },
+                    { value: "Kenya", label: "Kenya" },
+                    { value: "Tanzania", label: "Tanzania" },
+                    { value: "Uganda", label: "Uganda" },
+                    { value: "United Kingdom", label: "United Kingdom" },
+                    { value: "France", label: "France" },
+                    { value: "Germany", label: "Germany" },
+                    { value: "Switzerland", label: "Switzerland" },
+                    { value: "Netherlands", label: "Netherlands" },
+                    { value: "Norway", label: "Norway" },
+                    { value: "Sweden", label: "Sweden" },
+                    { value: "Denmark", label: "Denmark" },
+                    { value: "Canada", label: "Canada" },
+                    { value: "United States", label: "United States" },
+                    { value: "Australia", label: "Australia" },
+                    { value: "New Zealand", label: "New Zealand" },
+                    { value: "Guyana", label: "Guyana" },
+                    { value: "Suriname", label: "Suriname" },
+                    { value: "Trinidad and Tobago", label: "Trinidad and Tobago" },
+                    { value: "Fiji", label: "Fiji" },
+                    { value: "Other", label: "Other" },
                   ]}
                 />
-              )}
+                {filters.country === "Other" && (
+                  <Input label="Please specify country" placeholder="Please specify country"
+                    value={filters.countryOther || ""} onChange={(e) => handleOtherChange("country", e.target.value)} />
+                )}
 
-              {filters.state && districtOptions.length > 0 ? (
-                <CustomSelect
-                  label="District"
-                  value={filters.district || ""}
-                  onChange={(e) => handleChange("district", e.target.value)}
-                  options={[
-                    { value: "", label: "Select District" },
-                    ...districtOptions.map((d) => ({ value: d, label: d })),
-                  ]}
-                />
-              ) : filters.state ? (
-                <Input
-                  label="District"
-                  placeholder="District (type)"
-                  value={filters.district || ""}
-                  onChange={(e) => handleChange("district", e.target.value)}
-                />
-              ) : null}
-            </FilterBox>
+                {(filters.country === "India" || !filters.country) && (
+                  <CustomSelect
+                    label="State"
+                    value={filters.state || ""}
+                    onChange={(e) => {
+                      const newFilters = { ...filters, state: e.target.value };
+                      delete newFilters.district;
+                      onFilterChange(newFilters);
+                    }}
+                    options={[
+                      { value: "", label: filters.region ? `Select State (${filters.region})` : "Select State" },
+                      ...availableStates.map((s) => ({ value: s, label: s })),
+                    ]}
+                  />
+                )}
 
-            {/* FEEDBACK & SUGGESTIONS */}
-            <FilterBox title="Feedback & Suggestions">
-              <FeedbackForm />
-            </FilterBox>
+                {filters.state && districtOptions.length > 0 ? (
+                  <CustomSelect label="District" value={filters.district || ""}
+                    onChange={(e) => handleChange("district", e.target.value)}
+                    options={[{ value: "", label: "Select District" }, ...districtOptions.map((d) => ({ value: d, label: d }))]}
+                  />
+                ) : filters.state ? (
+                  <Input label="District" placeholder="District (type)"
+                    value={filters.district || ""} onChange={(e) => handleChange("district", e.target.value)} />
+                ) : null}
+              </FilterBox>
+
+              {/* FEEDBACK & SUGGESTIONS */}
+              <FilterBox title="Feedback & Suggestions">
+                <FeedbackForm />
+              </FilterBox>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+
+        {/* Styles: story animation + mobile sidebar */}
+        <style>{`
+          @keyframes storyFade {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+
+          /* Mobile: half-height filter bar with frozen header that still works */
+          @media (max-width: 767px) {
+            .filter-sidebar-aside {
+              position: relative !important;
+              top: 0 !important;
+              max-height: none !important;
+            }
+            /* Give the filter panel a fixed half-viewport height on mobile */
+            .filter-sidebar-aside .filter-panel-mobile {
+              height: 50vh !important;
+              min-height: 300px !important;
+            }
+          }
+        `}</style>
+      </aside>
+    </>
   );
 }
 
@@ -1090,8 +1470,7 @@ export default function FilterSidebar({
 function FilterBox({ title, children }) {
   return (
     <div className="bg-red-50/50 border border-red-100 rounded-xl p-4 hover:shadow-md transition-all duration-200">
-      <h3 className="text-md font-semibold text-red-700 mb-3"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <h3 className="text-md font-semibold text-red-700 mb-3" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         {title}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -1108,20 +1487,15 @@ function FeedbackForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate that at least one field is filled
     if (!feedback.trim() && !suggestions.trim()) {
       setSubmitMessage("Please provide at least feedback or suggestions");
       setTimeout(() => setSubmitMessage(""), 3000);
       return;
     }
-
     setIsSubmitting(true);
     setSubmitMessage("");
-
     try {
       const result = await profileService.submitFeedback(feedback, suggestions);
-      
       if (result.success) {
         setSubmitMessage("Thank you for your feedback! We appreciate your input.");
         setFeedback("");
@@ -1143,49 +1517,26 @@ function FeedbackForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Feedback
-        </label>
-        <textarea
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Share your feedback..."
-          rows={4}
+        <label className="block text-sm font-medium text-gray-700 mb-1">Feedback</label>
+        <textarea value={feedback} onChange={(e) => setFeedback(e.target.value)}
+          placeholder="Share your feedback..." rows={4}
           className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400 resize-none"
         />
       </div>
-
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Suggestions
-        </label>
-        <textarea
-          value={suggestions}
-          onChange={(e) => setSuggestions(e.target.value)}
-          placeholder="Share your suggestions..."
-          rows={4}
+        <label className="block text-sm font-medium text-gray-700 mb-1">Suggestions</label>
+        <textarea value={suggestions} onChange={(e) => setSuggestions(e.target.value)}
+          placeholder="Share your suggestions..." rows={4}
           className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all placeholder-gray-400 resize-none"
         />
       </div>
-
       {submitMessage && (
-        <div className={`text-sm p-2 rounded ${
-          submitMessage.includes("Thank you") 
-            ? "bg-green-100 text-green-700" 
-            : "bg-red-100 text-red-700"
-        }`}>
+        <div className={`text-sm p-2 rounded ${submitMessage.includes("Thank you") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
           {submitMessage}
         </div>
       )}
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
-          isSubmitting
-            ? "bg-gray-400 cursor-not-allowed text-white"
-            : "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 hover:opacity-90 shadow-md hover:shadow-lg"
-        }`}
+      <button type="submit" disabled={isSubmitting}
+        className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${isSubmitting ? "bg-gray-400 cursor-not-allowed text-white" : "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 hover:opacity-90 shadow-md hover:shadow-lg"}`}
         style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         {isSubmitting ? "Submitting..." : "Submit Feedback"}
@@ -1194,13 +1545,12 @@ function FeedbackForm() {
   );
 }
 
-/* 🔹 Styled Input Component — red/gold border, with optional label */
+/* 🔹 Styled Input Component */
 function Input({ placeholder, label, ...props }) {
   return (
     <div>
       {label && (
-        <label className="block text-xs font-bold text-gray-700 mb-1"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <label className="block text-xs font-bold text-gray-700 mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
           {label}
         </label>
       )}
@@ -1213,26 +1563,20 @@ function Input({ placeholder, label, ...props }) {
   );
 }
 
-/* 🔹 Styled Select Component — red/gold border, with optional label */
+/* 🔹 Styled Select Component */
 function CustomSelect({ value, onChange, options, disabled, label }) {
   return (
     <div>
       {label && (
-        <label className="block text-xs font-bold text-gray-700 mb-1"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <label className="block text-xs font-bold text-gray-700 mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
           {label}
         </label>
       )}
-      <select
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
+      <select value={value} onChange={onChange} disabled={disabled}
         className="w-full border border-red-300 rounded-lg px-3 py-2 text-gray-700 focus:ring-red-400 focus:border-red-300 transition-all disabled:bg-gray-100 disabled:text-gray-500"
       >
         {options.map((opt) => (
-          <option key={String(opt.value)} value={opt.value}>
-            {opt.label}
-          </option>
+          <option key={String(opt.value)} value={opt.value}>{opt.label}</option>
         ))}
       </select>
     </div>

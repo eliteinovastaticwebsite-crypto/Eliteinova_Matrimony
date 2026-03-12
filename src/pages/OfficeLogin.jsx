@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import officeService from "../services/officeAuthService";
-import { ShieldCheckIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { ShieldCheckIcon, EyeIcon, EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const OfficeLogin = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +9,20 @@ const OfficeLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Reset password states
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetStep, setResetStep] = useState("email"); // email, otp, newPassword
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState("");
+  const [resetSuccess, setResetSuccess] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [countdown, setCountdown] = useState(0);
 
   const navigate = useNavigate();
 
@@ -23,6 +37,15 @@ const OfficeLogin = () => {
     };
     checkAuth();
   }, [navigate]);
+
+  // Countdown timer for OTP resend
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -40,6 +63,123 @@ const OfficeLogin = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle forgot password - send OTP
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setResetError("");
+    setResetLoading(true);
+    
+    try {
+      // Call your API to send OTP
+      const res = await officeService.sendPasswordResetOTP(resetEmail);
+      if (res.success) {
+        setResetStep("otp");
+        setCountdown(60); // Start 60 second countdown for resend
+        setResetSuccess("OTP sent successfully to your email");
+      } else {
+        setResetError(res.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      setResetError(err.message || "An error occurred. Please try again.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  // Handle verify OTP
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    setResetError("");
+    setResetLoading(true);
+    
+    try {
+      // Call your API to verify OTP
+      const res = await officeService.verifyPasswordResetOTP(resetEmail, otp);
+      if (res.success) {
+        setResetStep("newPassword");
+        setResetSuccess("");
+        setOtp("");
+      } else {
+        setResetError(res.message || "Invalid OTP");
+      }
+    } catch (err) {
+      setResetError(err.message || "OTP verification failed");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  // Handle reset password
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setResetError("");
+    
+    // Validate passwords
+    if (newPassword.length < 6) {
+      setResetError("Password must be at least 6 characters long");
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setResetError("Passwords do not match");
+      return;
+    }
+    
+    setResetLoading(true);
+    
+    try {
+      // Call your API to reset password
+      const res = await officeService.resetPassword(resetEmail, otp, newPassword);
+      if (res.success) {
+        setResetSuccess("Password reset successful! You can now login with your new password.");
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      } else {
+        setResetError(res.message || "Failed to reset password");
+      }
+    } catch (err) {
+      setResetError(err.message || "An error occurred");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  // Handle resend OTP
+  const handleResendOTP = async () => {
+    if (countdown > 0) return;
+    
+    setResetError("");
+    setResetLoading(true);
+    
+    try {
+      const res = await officeService.sendPasswordResetOTP(resetEmail);
+      if (res.success) {
+        setCountdown(60);
+        setResetSuccess("OTP resent successfully");
+      } else {
+        setResetError(res.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      setResetError(err.message || "An error occurred");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  // Close modal and reset states
+  const handleCloseModal = () => {
+    setShowResetModal(false);
+    setResetStep("email");
+    setResetEmail("");
+    setOtp("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setResetError("");
+    setResetSuccess("");
+    setCountdown(0);
   };
 
   return (
@@ -66,7 +206,7 @@ const OfficeLogin = () => {
             </div>
           </div>
 
-          {/* ✅ FIXED: form with onSubmit handler */}
+          {/* Login Form */}
           <form onSubmit={handleLogin} className="px-8 py-8 space-y-5">
 
             {error && (
@@ -118,7 +258,18 @@ const OfficeLogin = () => {
               </div>
             </div>
 
-            {/* ✅ FIXED: type="submit" so Enter key works */}
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => setShowResetModal(true)}
+                className="text-sm text-red-600 hover:text-red-700 font-medium hover:underline transition-all"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
+            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}
@@ -164,6 +315,211 @@ const OfficeLogin = () => {
           © {new Date().getFullYear()} Eliteinova Tech Pvt Ltd. All rights reserved.
         </p>
       </div>
+
+      {/* Reset Password Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onClick={handleCloseModal}
+          ></div>
+
+          {/* Modal */}
+          <div className="relative min-h-screen flex items-center justify-center p-4">
+            <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden">
+              
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-red-600 to-red-500 px-6 py-4 flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Reset Password</h3>
+                <button
+                  onClick={handleCloseModal}
+                  className="text-white/80 hover:text-white transition-colors"
+                >
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6">
+                {resetSuccess && (
+                  <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
+                    <span className="text-green-500 mt-0.5">✓</span>
+                    <span>{resetSuccess}</span>
+                  </div>
+                )}
+
+                {resetError && (
+                  <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5">⚠️</span>
+                    <span>{resetError}</span>
+                  </div>
+                )}
+
+                {/* Step 1: Email */}
+                {resetStep === "email" && (
+                  <form onSubmit={handleForgotPassword} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Office Email <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        placeholder="Enter your registered email"
+                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      We'll send a password reset OTP to this email address.
+                    </p>
+                    <button
+                      type="submit"
+                      disabled={resetLoading}
+                      className="w-full py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white font-medium rounded-xl hover:from-red-700 hover:to-red-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {resetLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <span>Send OTP</span>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* Step 2: OTP Verification */}
+                {resetStep === "otp" && (
+                  <form onSubmit={handleVerifyOTP} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Enter OTP <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        placeholder="6-digit OTP"
+                        maxLength="6"
+                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 text-center text-lg tracking-widest"
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={handleResendOTP}
+                        disabled={countdown > 0 || resetLoading}
+                        className="text-sm text-red-600 hover:text-red-700 font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        {countdown > 0 ? `Resend in ${countdown}s` : "Resend OTP"}
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setResetStep("email")}
+                        className="text-sm text-gray-600 hover:text-gray-700"
+                      >
+                        Change Email
+                      </button>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={resetLoading || otp.length < 6}
+                      className="w-full py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white font-medium rounded-xl hover:from-red-700 hover:to-red-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {resetLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Verifying...</span>
+                        </>
+                      ) : (
+                        <span>Verify OTP</span>
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* Step 3: New Password */}
+                {resetStep === "newPassword" && (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New Password <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showNewPassword ? "text" : "password"}
+                          required
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="Enter new password"
+                          className="w-full px-4 py-2.5 pr-10 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showNewPassword ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Confirm Password <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showConfirmPassword ? "text" : "password"}
+                          required
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Confirm new password"
+                          className="w-full px-4 py-2.5 pr-10 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showConfirmPassword ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-500">
+                      Password must be at least 6 characters long.
+                    </p>
+
+                    <button
+                      type="submit"
+                      disabled={resetLoading}
+                      className="w-full py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white font-medium rounded-xl hover:from-red-700 hover:to-red-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {resetLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Resetting...</span>
+                        </>
+                      ) : (
+                        <span>Reset Password</span>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

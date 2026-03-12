@@ -102,13 +102,13 @@ export default function Services({ onOpenAuthModal }) {
       image: photography,
       subcategories: [
         "Wedding Photography",
-        "Pre-wedding Shoots",
-        "Candid Photography",
-        "Traditional Photography",
-        "Cinematography",
-        "Drone Photography",
-        "Album Design",
-        "Photo Editing"
+        "Event Photography",
+        "Videography",
+        "Editing & Album Services",
+        "Fashion & Lifestyle",
+        "Commercial Photography",
+        "Religious & Cultural",
+        "Kids & Special Shoots"
       ]
     },
     { 
@@ -116,14 +116,16 @@ export default function Services({ onOpenAuthModal }) {
       path: "/catering", 
       image: catering,
       subcategories: [
+        "Traditional Catering",
         "Vegetarian Catering",
         "Non-Vegetarian Catering",
-        "Multi-cuisine",
-        "Live Counters",
-        "Wedding Cakes",
-        "Beverage Services",
-        "Traditional Sweets",
-        "Snacks & Appetizers"
+        "Multi-cuisine Catering",
+        "Buffet Catering",
+        "Live Counter Catering",
+        "Theme-Based Catering",
+        "Event-Based Catering",
+        "Snack & Beverage Catering",
+        "Special Service Catering"
       ]
     },
     { 
@@ -131,14 +133,14 @@ export default function Services({ onOpenAuthModal }) {
       path: "/wedding-halls", 
       image: weddinghalls,
       subcategories: [
-        "Banquet Halls",
-        "Convention Centers",
-        "Resort Venues",
-        "Palace Weddings",
-        "Garden Weddings",
-        "Beach Weddings",
-        "Temple Weddings",
-        "Farmhouse Venues"
+        "AC Wedding Halls",
+        "Non AC Wedding Halls",
+        "Luxury Wedding Halls",
+        "Mini Wedding Halls",
+        "Event Halls",
+        "Convention & Banquet Halls",
+        "Party & Reception Hall",
+        "Outdoor / Open-Air"
       ]
     },
     { 
@@ -146,14 +148,14 @@ export default function Services({ onOpenAuthModal }) {
       path: "/decorations", 
       image: decoration,
       subcategories: [
+        "Wedding Decoration",
+        "Stage Decoration",
         "Mandap Decoration",
-        "Flower Decoration",
-        "Lighting Design",
-        "Stage Setup",
-        "Entrance Decoration",
-        "Table Settings",
-        "Theme Decoration",
-        "Prop Rentals"
+        "Reception Decoration",
+        "Event Decoration",
+        "Floral Decoration",
+        "Theme-Based Decoration",
+        "Lighting & Ambience"
       ]
     },
     { 
@@ -161,14 +163,13 @@ export default function Services({ onOpenAuthModal }) {
       path: "/entertainment", 
       image: entertainment,
       subcategories: [
-        "DJ Services",
-        "Live Bands",
-        "Dance Performances",
-        "Wedding Choreography",
-        "Fireworks Display",
-        "Emcee Services",
-        "Traditional Musicians",
-        "Magicians & Performers"
+        "Wedding MCs",
+        "DJ & Remix",
+        "Dance Shows",
+        "Live Music",
+        "Photo Booths",
+        "LED Effects",
+        "Kids Entertainment",
       ]
     },
     { 
@@ -176,14 +177,14 @@ export default function Services({ onOpenAuthModal }) {
       path: "/invitation", 
       image: invitation,
       subcategories: [
-        "Traditional Cards",
-        "Digital Invitations",
-        "Video Invitations",
-        "Wedding Website",
+        "Digital Invites",
+        "Luxury Cards",
+        "Printed Cards",
+        "Custom Designs",
         "Return Gifts",
-        "Wedding Favors",
+        "Eco Gifts",
         "Gift Hampers",
-        "Personalized Gifts"
+        "Luxury Hampers"
       ]
     },
     { 
@@ -192,13 +193,14 @@ export default function Services({ onOpenAuthModal }) {
       image: makeup,
       subcategories: [
         "Bridal Makeup",
-        "Hairstyling",
+        "Bridal Accessories",
+        "Hair Styling",
         "Mehendi Art",
-        "Saree Draping",
-        "Jewelry Styling",
-        "Groom Styling",
-        "Family Makeup",
-        "Trial Sessions"
+        "Traditional Attire Styling",
+        "Groom Makeup",
+        "Groom Hair Styling",
+        "Groom Accessories",
+        "Groom Attire Styling"
       ]
     },
     {
@@ -207,13 +209,13 @@ export default function Services({ onOpenAuthModal }) {
       image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
       subcategories: [
         "Identity Verification",
-        "Employment Verification",
+        "Marital Status Check",
+        "Criminal Record Check",
         "Education Verification",
+        "Employment Verification",
+        "Financial Background",
         "Family Background",
-        "Social Verification",
-        "Address Verification",
-        "Criminal Check",
-        "Financial Verification"
+        "Social Media Screening"
       ]
     },
   ];
@@ -505,7 +507,7 @@ export default function Services({ onOpenAuthModal }) {
                 </div>
                 
                 <span className="font-bold text-sm sm:text-base whitespace-nowrap">
-                  Background Investigations
+                  Background Investigations for Bride and Groom
                 </span>
                 
                 {/* Magnifying glass icon */}

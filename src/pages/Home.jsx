@@ -1496,8 +1496,8 @@ export default function Home({ onOpenAuthModal }) {
       {/* RIGHT: Stats / Highlights */}
       <div className="grid grid-cols-2 gap-4">
         {[
-          { value: "1000+", label: "Happy Couples", icon: "💑" },
-          { value: "98%",     label: "Success Rate",  icon: "⭐" },
+          { value: "More", label: "Happy Couples", icon: "💑" },
+          { value: "100%",     label: "Success Rate",  icon: "⭐" },
           { value: "27+",     label: "Communities",   icon: "🏘️" },
           { value: "24/7",    label: "Support",       icon: "🤝" },
         ].map((stat, i) => (

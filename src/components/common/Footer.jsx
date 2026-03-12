@@ -2,7 +2,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaFacebookF,
-  FaTwitter,
   FaInstagram,
   FaLinkedinIn,
   FaHeart,
@@ -12,6 +11,7 @@ import {
   FaEnvelope,
   FaMapMarkerAlt
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";  // Import FaXTwitter from react-icons/fa6 package
 import { footerLinks } from "../../config/footerLinks";
 
 export default function Footer({ onRegister, onLogin }) {
@@ -174,7 +174,7 @@ export default function Footer({ onRegister, onLogin }) {
                 <div className="flex gap-2 sm:gap-3">
                   {[
   { icon: FaFacebookF,   label: "Facebook",  href: "https://www.facebook.com/profile.php?id=61584991709336" },
-  { icon: FaTwitter,     label: "Twitter",   href: "https://x.com/Eliteinova" },
+  { icon: FaXTwitter,    label: "X (Twitter)", href: "https://x.com/Eliteinova" },  // Changed to FaXTwitter
   { icon: FaInstagram,   label: "Instagram", href: "https://www.instagram.com/eliteinovamatrimony2.0/" },
   { icon: FaLinkedinIn,  label: "LinkedIn",  href: "https://www.linkedin.com/in/eliteinova-matrimony-171ab5393" }
 ].map((social, index) => (
@@ -269,4 +269,3 @@ export default function Footer({ onRegister, onLogin }) {
     </footer>
   );
 }
-
