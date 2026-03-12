@@ -87,7 +87,9 @@ export default function ProfilesList({onOpenAuthModal}) {
   // Fallback mock data filtered by user's membership type
 const getMockProfiles = () => {
   const userMembership = user?.membership || user?.membershipType || "SILVER";
-  return mockProfiles.filter(p => p.membershipType === userMembership.toUpperCase());
+  // DEV: return all mock profiles to test all membership card themes
+  // return mockProfiles.filter(p => p.membershipType === userMembership.toUpperCase());
+  return mockProfiles;
 };
   const fetchAllProfiles = async (page = 0, size = 12) => {
     setLoading(true);
@@ -824,15 +826,15 @@ const performSearch = async (searchFilters) => {
     100% { filter: brightness(1) saturate(1.1) sepia(0.1); }
   }
 
-  /* ── Diamond: electric sparkle flicker ── */
-  @keyframes diamondSparkle {
-    0%   { filter: brightness(1) saturate(1) hue-rotate(0deg); }
-    20%  { filter: brightness(1.1) saturate(1.4) hue-rotate(10deg); }
-    40%  { filter: brightness(1.18) saturate(1.6) hue-rotate(-8deg); }
-    60%  { filter: brightness(1.08) saturate(1.3) hue-rotate(6deg); }
-    80%  { filter: brightness(1.15) saturate(1.5) hue-rotate(-5deg); }
-    100% { filter: brightness(1) saturate(1) hue-rotate(0deg); }
-  }
+  /* ── Diamond: platinum white sparkle ── */
+@keyframes diamondSparkle {
+  0%   { filter: brightness(1) saturate(0.9) contrast(1); }
+  20%  { filter: brightness(1.12) saturate(1.0) contrast(1.05); }
+  40%  { filter: brightness(1.2) saturate(0.8) contrast(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.6)); }
+  60%  { filter: brightness(1.08) saturate(1.0) contrast(1.03); }
+  80%  { filter: brightness(1.18) saturate(0.85) contrast(1.08) drop-shadow(0 0 12px rgba(255,255,255,0.8)); }
+  100% { filter: brightness(1) saturate(0.9) contrast(1); }
+}
 `}</style>
     </div>
   );
