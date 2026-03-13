@@ -26,13 +26,12 @@ import {
 import Banner from "../components/common/Banner";
 import AuthModal from "../components/auth/AuthModal"; 
 import SubscriptionPage from "./SubscriptionPage";
-import BannerImage6 from "../assets/BannerImage12.png";
+import BannerImage6 from "../assets/BannerImage1.png";
 
 const UpgradeBannerTexts = [
   {
-    title: "Eliteinova Matrimony",
-    subtitle: "Connect with Life Partner and Two Families",
-    paragraph:"Eliteinova Matrimony is a trusted platform where meaningful relationships begin and two families unite with happiness and tradition. We combine cultural values with modern technology to help you find a compatible and verified life partner.",
+    title: "Upgrade Today – Your Perfect Partner is Waiting",
+    subtitle: "More Matches. More Connections.",
     cta: "Register To Upgrade Now",
   },
 ];
@@ -223,6 +222,102 @@ export default function Upgrade({ onOpenAuthModal }) {
           onOpenAuthModal={() => handleOpenAuthModal("register")} 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent"></div>
+      </div>
+
+      {/* ── NEW INTRO SECTION — EliteInova Matrimony ── */}
+      <div className="py-10 bg-gradient-to-b from-red-50 via-white to-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+
+          {/* Badge */}
+          <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
+            ✦ Connect with Life Partner and Two Families ✦
+          </p>
+
+          {/* Heading */}
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
+            style={{
+              background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+            }}
+          >
+            Eliteinova Matrimony
+          </h2>
+
+          {/* Subheading */}
+          <p className="text-lg md:text-xl font-semibold mb-4"
+            style={{
+              background: "linear-gradient(135deg, #b91c1c 0%, #92400e 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Complete Matrimony Solutions for Your Perfect Match
+          </p>
+
+          {/* Decorative divider */}
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="h-px w-16 md:w-24" style={{ background: "linear-gradient(to right, transparent, #b91c1c)" }} />
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-red-700">
+                <path d="M12 2C9 6 4 8 4 12s3.5 6 8 9c4.5-3 8-5 8-9s-5-6-8-10z" fill="currentColor" opacity="0.7" />
+              </svg>
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            </div>
+            <div className="h-px w-16 md:w-24" style={{ background: "linear-gradient(to left, transparent, #b91c1c)" }} />
+          </div>
+
+          {/* Content Card */}
+          <div
+            className="rounded-2xl p-8 md:p-10 text-center"
+            style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #fffdf9 100%)",
+              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(185,28,28,0.1)",
+            }}
+          >
+            <div className="h-0.5 w-full mb-8" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+
+            <p className="text-gray-700 text-base md:text-lg leading-relaxed mb-4" style={{ fontFamily: "'Georgia', serif" }}>
+              At <span className="font-semibold" style={{ color: "#9b1c1c" }}>Eliteinova</span>, we go beyond matchmaking. Eliteinova Matrimony is a trusted platform where{" "}
+              <span className="font-medium text-amber-700 border-b border-amber-300">meaningful relationships begin</span> and two families unite with happiness and tradition.
+            </p>
+
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
+              We combine <span className="font-medium text-amber-700 border-b border-amber-300">cultural values</span> with modern technology to help you find a{" "}
+              <span className="font-medium text-amber-700 border-b border-amber-300">compatible and verified life partner</span>.
+            </p>
+
+            <p className="text-gray-800 font-semibold text-base md:text-lg">
+              Our goal is simple — to make your marriage journey smooth, meaningful, and successful.
+            </p>
+
+            <div className="h-0.5 w-full mt-8 mb-6" style={{ background: "linear-gradient(to right, #b91c1c, #d97706, #b91c1c)" }} />
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {["✓ Verified Profiles", "✓ Trusted Families", "✓ Premium Matchmaking"].map((badge, i) => (
+                <span
+                  key={i}
+                  className="px-5 py-2 rounded-full text-sm font-medium border"
+                  style={{
+                    color: "#9b1c1c",
+                    borderColor: "rgba(185,28,28,0.25)",
+                    background: "rgba(254,242,242,0.8)",
+                  }}
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* Main Content */}

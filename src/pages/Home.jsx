@@ -787,7 +787,6 @@ export default function Home({ onOpenAuthModal }) {
 
               {/* Login Now only — Register moved to banner above */}
               <button
-                onClick={handleLoginFromCard}
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
               >
                 Login Now

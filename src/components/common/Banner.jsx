@@ -28,7 +28,6 @@ export default function Banner({
     {
       title: "Find Your Perfect Match",
       subtitle: "Join thousands of successful marriages in Tamil Nadu",
-      paragraph: "", // Added empty paragraph to default texts
       cta: "Get Started Now",
     },
   ];
@@ -166,7 +165,7 @@ export default function Banner({
               </p>
             )}
 
-            {/* Paragraph - VERY THIN LIGHT FONT */}
+            {/* Paragraph - VERY THIN LIGHT FONT 
             {currentText.paragraph && (
               <p
                 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extralight mb-6 sm:mb-8 text-white/90 max-w-4xl mx-auto leading-relaxed tracking-wide transition-all duration-700 delay-300 ${
@@ -177,7 +176,7 @@ export default function Banner({
               >
                 {currentText.paragraph}
               </p>
-            )}
+            )} */}
 
             {/* CTA Button */}
             <div
