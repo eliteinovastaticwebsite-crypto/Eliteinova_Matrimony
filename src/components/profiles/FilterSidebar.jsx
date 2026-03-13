@@ -19,55 +19,55 @@ if (typeof document !== "undefined") {
 const filterThemes = {
   silver: {
     primary: "#DC2626",
-    sidebarBg: "rgba(255,255,255,0.98)",
+    sidebarBg: "linear-gradient(160deg, #fff5f5 0%, #fff0f0 40%, #fef2f2 100%)",
     sidebarBorder: "#FCA5A5",
     headerBorder: "#FEE2E2",
-    filterBoxBg: "rgba(254,242,242,0.5)",
+    filterBoxBg: "rgba(254,242,242,0.6)",
     filterBoxBorder: "#FECACA",
     filterBoxTitle: "#B91C1C",
     inputBorder: "#FCA5A5",
     inputFocus: "#EF4444",
     resetColor: "#DC2626",
-    submitBtn: "background: linear-gradient(to right, #DC2626, #B91C1C)",
+    submitBtn: "linear-gradient(135deg, #DC2626, #B91C1C)",
   },
-  gold: {
-    primary: "#B45309",
-    sidebarBg: "linear-gradient(to bottom, rgba(254,243,199,0.4), rgba(255,251,235,0.98))",
-    sidebarBorder: "#FCD34D",
-    headerBorder: "#FDE68A",
-    filterBoxBg: "rgba(255,251,235,0.6)",
-    filterBoxBorder: "#FDE68A",
-    filterBoxTitle: "#92400E",
-    inputBorder: "#FCD34D",
-    inputFocus: "#D97706",
-    resetColor: "#B45309",
-    submitBtn: "background: linear-gradient(to right, #D97706, #B45309)",
-  },
-  diamond: {
-    primary: "#E879A0",
-    sidebarBg: "linear-gradient(to bottom, rgba(253,242,248,0.4), rgba(255,250,253,0.98))",
-    sidebarBorder: "#F9A8D4",
-    headerBorder: "#FBCFE8",
-    filterBoxBg: "rgba(253,242,248,0.6)",
-    filterBoxBorder: "#FBCFE8",
-    filterBoxTitle: "#9D174D",
-    inputBorder: "#F9A8D4",
-    inputFocus: "#EC4899",
-    resetColor: "#BE185D",
-    submitBtn: "background: linear-gradient(to right, #EC4899, #BE185D)",
-  },
+ gold: {
+  primary: "#B45309",
+  sidebarBg: "linear-gradient(160deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%)",
+  sidebarBorder: "#F59E0B",
+  headerBorder: "#FCD34D",
+  filterBoxBg: "linear-gradient(135deg, rgba(255,251,235,0.95) 0%, rgba(254,243,199,0.95) 100%)",
+  filterBoxBorder: "#FCD34D",
+  filterBoxTitle: "#78350F",
+  inputBorder: "#FCD34D",
+  inputFocus: "#D97706",
+  resetColor: "#92400E",
+  submitBtn: "linear-gradient(135deg, #F59E0B, #D97706, #B45309)",
+},
+diamond: {
+  primary: "#DB2777",
+  sidebarBg: "linear-gradient(160deg, #fff8f0 0%, #fdf0f7 35%, #fce4f0 65%, #fef9ec 100%)",
+  sidebarBorder: "#F9A8D4",
+  headerBorder: "#FBCFE8",
+  filterBoxBg: "linear-gradient(135deg, rgba(255,240,250,0.92) 0%, rgba(255,249,235,0.92) 100%)",
+  filterBoxBorder: "#F9A8D4",
+  filterBoxTitle: "#9D174D",
+  inputBorder: "#F9A8D4",
+  inputFocus: "#EC4899",
+  resetColor: "#BE185D",
+  submitBtn: "linear-gradient(135deg, #F472B6, #EC4899, #DB2777)",
+},
   default: {
     primary: "#DC2626",
-    sidebarBg: "rgba(255,255,255,0.98)",
+    sidebarBg: "linear-gradient(160deg, #fff5f5 0%, #fff0f0 40%, #fef2f2 100%)",
     sidebarBorder: "#FCA5A5",
     headerBorder: "#FEE2E2",
-    filterBoxBg: "rgba(254,242,242,0.5)",
+    filterBoxBg: "rgba(254,242,242,0.6)",
     filterBoxBorder: "#FECACA",
     filterBoxTitle: "#B91C1C",
     inputBorder: "#FCA5A5",
     inputFocus: "#EF4444",
     resetColor: "#DC2626",
-    submitBtn: "background: linear-gradient(to right, #DC2626, #B91C1C)",
+    submitBtn: "linear-gradient(135deg, #DC2626, #B91C1C)",
   },
 };
 
@@ -833,9 +833,6 @@ function ShareStoryModal({ onClose, onSubmitted }) {
 // ─────────────────────────────────────────────
 // Success Story Section
 // ─────────────────────────────────────────────
-// ─────────────────────────────────────────────
-// Success Story Section
-// ─────────────────────────────────────────────
 function SuccessStorySection() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -982,11 +979,16 @@ export default function FilterSidebar({
     ? indianStates.filter(state => getStatesByRegion(filters.region).includes(state))
     : indianStates;
 
-  const tColor = currentTheme.filterBoxTitle;
-const tBg    = currentTheme.filterBoxBg;
-const tBorder = currentTheme.filterBoxBorder;
-const tInput  = currentTheme.inputBorder;
-const tPrimary = currentTheme.primary;
+ const tColor   = currentTheme.filterBoxTitle;
+  const tBg      = currentTheme.filterBoxBg;
+  const tBorder  = currentTheme.filterBoxBorder;
+  const tInput   = currentTheme.inputBorder;
+  const tPrimary = currentTheme.primary;
+  const tSelectBg = theme === "gold"
+    ? "rgba(255,251,235,0.9)"
+    : theme === "diamond"
+    ? "rgba(255,240,250,0.9)"
+    : "rgba(255,245,245,0.9)";
 
   return (
     <>
@@ -1129,9 +1131,9 @@ const tPrimary = currentTheme.primary;
           animation: `goldFilterFall ${2.0 + (i * 0.25)}s linear infinite`,
           animationDelay: `${i * 0.18}s`,
           fontSize: `${i % 3 === 0 ? "12px" : i % 3 === 1 ? "8px" : "6px"}`,
-          color: i % 4 === 0 ? "#fbbf24" : i % 4 === 1 ? "#fcd34d" : i % 4 === 2 ? "#ffffff" : "#f59e0b",
-          textShadow: "0 0 4px rgba(251,191,36,0.95)",
-          filter: "drop-shadow(0 0 2px rgba(180,120,0,0.8))",
+          color: i % 4 === 0 ? "#fbbf24" : i % 4 === 1 ? "#fde047" : i % 4 === 2 ? "#ffffff" : "#f59e0b",
+        textShadow: "0 0 8px rgba(251,191,36,1), 0 0 16px rgba(245,158,11,0.8)",
+        filter: "drop-shadow(0 0 4px rgba(251,191,36,1)) drop-shadow(0 0 8px rgba(180,120,0,0.9))",
           pointerEvents: "none",
         }}>
           {i % 5 === 0 ? "✦" : i % 5 === 1 ? "★" : i % 5 === 2 ? "✧" : i % 5 === 3 ? "⋆" : "·"}
@@ -1151,9 +1153,9 @@ const tPrimary = currentTheme.primary;
           animation: `pinkFilterFall ${2.0 + (i * 0.25)}s linear infinite`,
           animationDelay: `${i * 0.18}s`,
           fontSize: `${i % 3 === 0 ? "12px" : i % 3 === 1 ? "8px" : "6px"}`,
-          color: i % 4 === 0 ? "#f9a8d4" : i % 4 === 1 ? "#fbcfe8" : i % 4 === 2 ? "#ffffff" : "#fce7f3",
-          textShadow: "0 0 4px rgba(249,168,212,0.95)",
-          filter: "drop-shadow(0 0 2px rgba(236,72,153,0.7))",
+          color: i % 4 === 0 ? "#f472b6" : i % 4 === 1 ? "#ec4899" : i % 4 === 2 ? "#ffffff" : "#f9a8d4",
+        textShadow: "0 0 8px rgba(236,72,153,1), 0 0 16px rgba(244,114,182,0.8)",
+        filter: "drop-shadow(0 0 4px rgba(236,72,153,1)) drop-shadow(0 0 8px rgba(190,24,93,0.8))",
           pointerEvents: "none",
         }}>
           {i % 5 === 0 ? "✦" : i % 5 === 1 ? "✧" : i % 5 === 2 ? "❋" : i % 5 === 3 ? "✿" : "⋆"}
@@ -1161,6 +1163,45 @@ const tPrimary = currentTheme.primary;
       ))}
     </div>
   )}
+
+  {/* ── Sparkle crown for Gold & Diamond — header area only, never overlaps inputs ── */}
+{(theme === "gold" || theme === "diamond") && (
+  <div
+    className="absolute left-0 right-0 top-0 pointer-events-none overflow-hidden"
+    style={{ height: "56px", zIndex: 4 }}
+  >
+    {[...Array(18)].map((_, i) => {
+      const symbols = theme === "gold"
+        ? ["✦","★","✧","⋆","·","✦","★"]
+        : ["✦","✧","❋","✿","⋆","✦","✧"];
+      const colors = theme === "gold"
+        ? ["#fbbf24","#fcd34d","#ffffff","#f59e0b","#fde68a"]
+        : ["#f9a8d4","#fbcfe8","#ffffff","#fce7f3","#f472b6"];
+      return (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: `${(i * 5.8) % 96 + 2}%`,
+            top: `${4 + (i % 3) * 14}px`,
+            fontSize: i % 3 === 0 ? "12px" : i % 3 === 1 ? "8px" : "6px",
+            color: colors[i % colors.length],
+            textShadow: theme === "diamond"
+              ? "0 0 5px rgba(251,191,36,0.9)"
+              : "0 0 5px rgba(249,168,212,0.9)",
+            filter: theme === "gold"
+              ? "drop-shadow(0 0 2px rgba(180,120,0,0.7))"
+              : "drop-shadow(0 0 2px rgba(236,72,153,0.6))",
+            animation: `headerSparkle${(i % 4) + 1} ${1.2 + (i * 0.15)}s ease-in-out infinite`,
+            animationDelay: `${i * 0.12}s`,
+          }}
+        >
+          {symbols[i % symbols.length]}
+        </div>
+      );
+    })}
+  </div>
+)}
 
           {/* 🔒 FROZEN header */}
 <div
@@ -1190,7 +1231,7 @@ const tPrimary = currentTheme.primary;
           <div className="p-4 md:p-5">
             <div className="space-y-5">
               {/* PERSONAL DETAILS */}
-              <FilterBox title="Personal Details"        bg={tBg} border={tBorder} titleColor={tColor}>
+              <FilterBox title="Personal Details" bg={tBg} border={tBorder} titleColor={tColor}>
                 {/* <Select
                   value={filters.gender || ""}
                   onChange={(e) => handleChange("gender", e.target.value)}
@@ -1354,20 +1395,74 @@ const tPrimary = currentTheme.primary;
                     Occupation
                   </label>
                   <Select
-                    value={professionOptions.find((p) => p.value === filters.occupation)}
-                    onChange={(selected) => {
-                      const value = selected?.value || "";
-                      const newFilters = { ...filters, occupation: value };
-                      if (value !== "Other") delete newFilters.occupationOther;
-                      onFilterChange(newFilters);
-                    }}
-                    isSearchable={true}
-                    options={professionOptions}
-                    styles={{
-                      control: (base) => ({ ...base, borderColor: "#FCA5A5", borderRadius: "0.5rem", minHeight: "40px", boxShadow: "none", "&:hover": { borderColor: "#EF4444" } }),
-                      option: (base, state) => ({ ...base, backgroundColor: state.isSelected ? "#EF4444" : state.isFocused ? "#FEE2E2" : "white", color: state.isSelected ? "white" : "#374151" }),
-                    }}
-                  />
+  value={professionOptions.find((p) => p.value === filters.occupation)}
+  onChange={(selected) => {
+    const value = selected?.value || "";
+    const newFilters = { ...filters, occupation: value };
+    if (value !== "Other") delete newFilters.occupationOther;
+    onFilterChange(newFilters);
+  }}
+  isSearchable={true}
+  options={professionOptions}
+  styles={{
+    control: (base) => ({
+      ...base,
+      borderColor: tInput,
+      borderRadius: "0.5rem",
+      minHeight: "40px",
+      boxShadow: "none",
+      background: tBg,
+      "&:hover": { borderColor: tPrimary }
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: "0.5rem",
+      border: `1px solid ${tInput}`,
+      boxShadow: `0 4px 20px rgba(0,0,0,0.1)`,
+      overflow: "hidden",
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: "4px",
+      background: theme === "gold"
+        ? "linear-gradient(160deg, #fffbeb, #fef3c7)"
+        : theme === "diamond"
+        ? "linear-gradient(160deg, #fff8f0, #fdf0f7)"
+        : "linear-gradient(160deg, #fff5f5, #fef2f2)",
+    }),
+    option: (base, state) => ({
+      ...base,
+      borderRadius: "6px",
+      marginBottom: "2px",
+      fontSize: "13px",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      backgroundColor: state.isSelected
+        ? tPrimary
+        : state.isFocused
+        ? theme === "gold"
+          ? "rgba(251,191,36,0.2)"
+          : theme === "diamond"
+          ? "rgba(244,114,182,0.15)"
+          : "rgba(220,38,38,0.1)"
+        : "transparent",
+      color: state.isSelected ? "white" : theme === "gold" ? "#78350F" : theme === "diamond" ? "#831843" : "#374151",
+      fontWeight: state.isSelected ? "700" : "500",
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: tColor,
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontSize: "13px",
+      fontWeight: "600",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "#9ca3af",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontSize: "13px",
+    }),
+  }}
+/>
                 </div>
                 {filters.occupation === "Other" && (
                   <Input label="Please specify occupation" placeholder="Please specify occupation"
@@ -1471,9 +1566,9 @@ const tPrimary = currentTheme.primary;
               </FilterBox>
 
               {/* FEEDBACK & SUGGESTIONS */}
-              <FilterBox title="Feedback & Suggestions">
-                <FeedbackForm />
-              </FilterBox>
+              <FilterBox title="Feedback & Suggestions" bg={tBg} border={tBorder} titleColor={tColor}>
+  <FeedbackForm submitGradient={currentTheme.submitBtn} />
+</FilterBox>
             </div>
           </div>
         </div>
@@ -1536,7 +1631,7 @@ function FilterBox({ title, children, bg, border, titleColor }) {
 }
 
 /* 🔹 Feedback Form Component */
-function FeedbackForm() {
+function FeedbackForm({ submitGradient = "linear-gradient(135deg, #DC2626, #B91C1C)" }) {
   const [feedback, setFeedback] = useState("");
   const [suggestions, setSuggestions] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1592,12 +1687,18 @@ function FeedbackForm() {
           {submitMessage}
         </div>
       )}
-      <button type="submit" disabled={isSubmitting}
-        className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${isSubmitting ? "bg-gray-400 cursor-not-allowed text-white" : "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 hover:opacity-90 shadow-md hover:shadow-lg"}`}
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-      >
-        {isSubmitting ? "Submitting..." : "Submit Feedback"}
-      </button>
+      <button
+  type="submit"
+  disabled={isSubmitting}
+  className="w-full py-2 px-4 rounded-lg font-bold text-white transition-all shadow-md hover:shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+  style={{
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    background: isSubmitting ? "#9ca3af" : submitGradient,
+    boxShadow: isSubmitting ? "none" : "0 4px 14px rgba(0,0,0,0.2)",
+  }}
+>
+  {isSubmitting ? "Submitting..." : "Submit Feedback"}
+</button>
     </form>
   );
 }
@@ -1622,7 +1723,7 @@ function Input({ placeholder, label, borderColor = "#FCA5A5", ...props }) {
 }
 
 /* 🔹 Styled Select Component */
-function CustomSelect({ value, onChange, options, disabled, label, borderColor = "#FCA5A5" }) {
+function CustomSelect({ value, onChange, options, disabled, label, borderColor = "#FCA5A5", bgColor = "#ffffff", textColor = "#1f2937" }) {
   return (
     <div>
       {label && (
@@ -1632,42 +1733,20 @@ function CustomSelect({ value, onChange, options, disabled, label, borderColor =
       )}
       <select
         value={value} onChange={onChange} disabled={disabled}
-        className="w-full rounded-lg px-3 py-2 text-gray-700 transition-all disabled:bg-gray-100 disabled:text-gray-500"
-        style={{ border: `1px solid ${borderColor}` }}
+        className="w-full rounded-lg px-3 py-2 transition-all disabled:bg-gray-100 disabled:text-gray-500"
+        style={{
+          border: `1px solid ${borderColor}`,
+          backgroundColor: bgColor,
+          color: textColor,
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontSize: "13px",
+          fontWeight: "500",
+        }}
       >
         {options.map((opt) => (
           <option key={String(opt.value)} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      <style>{`
-  @keyframes storyFade {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes goldFilterFall {
-    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 0.7; }
-    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
-  }
-  @keyframes pinkFilterFall {
-    0%   { transform: translateY(-10px) rotate(0deg);    opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 0.7; }
-    100% { transform: translateY(1400px) rotate(360deg); opacity: 0; }
-  }
-  @media (max-width: 767px) {
-    .filter-sidebar-aside {
-      position: relative !important;
-      top: 0 !important;
-      max-height: none !important;
-    }
-    .filter-sidebar-aside .filter-panel-mobile {
-      height: 50vh !important;
-      min-height: 300px !important;
-    }
-  }
-`}</style>
     </div>
   );
 }

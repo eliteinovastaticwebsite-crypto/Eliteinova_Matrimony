@@ -220,8 +220,8 @@ function AppContent() {
             }
           />
 
-          <Route path="/bride-profile/:id" element={<DetailedProfilePage />} />
-          <Route path="/groom-profile/:id" element={<DetailedProfilePage />} />
+          <Route path="/bride-profile/:id" element={<PaymentProtectedRoute><DetailedProfilePage /></PaymentProtectedRoute>} />
+          <Route path="/groom-profile/:id" element={<PaymentProtectedRoute><DetailedProfilePage /></PaymentProtectedRoute>} />
           <Route path="/faqs" element={<FullFAQPage onOpenRegister={openRegisterModal} />} />
           <Route path="/notifications/:id" element={<NotificationDetails />} />
 

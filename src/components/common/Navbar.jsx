@@ -29,6 +29,10 @@ const publicNavLinks = [
   { label: "Contact Us", path: "/contact" },
 ];
 
+const authenticatedExtraLinks = [
+  { label: "Terms & Conditions", path: "/terms&conditions" },
+];
+
 const isAdminTokenPresent = () => !!localStorage.getItem("adminToken");
 const isOfficeTokenPresent = () => !!localStorage.getItem("officeToken");
 
@@ -54,6 +58,8 @@ export default function Navbar({ onLogin, onRegister }) {
   const shortSpacerPages = ["/", "/aboutus", "/upgrade", "/services", "/profiles", "/contact"];
   const needsShortSpacer = shortSpacerPages.includes(location.pathname);
   const spacerHeight = needsShortSpacer ? "h-10" : "h-20";
+
+  const authNavLinks = [...navLinks, ...authenticatedExtraLinks];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -173,7 +179,7 @@ export default function Navbar({ onLogin, onRegister }) {
 
           {/* ── Desktop Nav Links ── */}
           <ul className="hidden lg:flex items-center gap-1 font-semibold text-[13.5px] tracking-wide flex-wrap justify-center flex-1 px-4">
-            {(isAuthenticated ? navLinks : publicNavLinks).map((link) => (
+            {(isAuthenticated ? authNavLinks : publicNavLinks).map((link) => (
               <li key={link.path} className="relative group">
                 <Link
                   to={link.path}
@@ -304,7 +310,7 @@ export default function Navbar({ onLogin, onRegister }) {
                   Login
                 </button>
 
-                {/* Staff Access Dropdown — fixed overflow */}
+                {/* Staff Access Dropdown */}
                 <div className="relative" ref={moreDropdownRef}>
                   <button
                     onClick={() => setMoreDropdown(!moreDropdown)}
@@ -361,7 +367,7 @@ export default function Navbar({ onLogin, onRegister }) {
           }`}
         >
           <div className="px-6 py-6 space-y-3">
-            {(isAuthenticated ? navLinks : publicNavLinks).map((link) => (
+            {(isAuthenticated ? authNavLinks : publicNavLinks).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}

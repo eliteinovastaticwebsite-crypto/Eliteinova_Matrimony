@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import profileService from "../services/profileService";
 import {
   ArrowLeft,
@@ -22,6 +22,64 @@ import {
   FileUp,
   Image as ImageIcon,
 } from "lucide-react";
+
+// Membership theme config
+const membershipThemes = {
+  SILVER: {
+    headerBg: "bg-white",
+    headerBorder: "border-b border-red-200",
+    backBtn: "text-red-600 hover:text-red-800",
+    shareBtn: "border border-red-300 text-red-600 hover:bg-red-50",
+    interestBtn: "bg-gradient-to-r from-red-700 to-red-500 hover:from-red-800 hover:to-red-600 text-white",
+    cardBorder: "border border-red-200",
+    cardShadow: "shadow-lg hover:shadow-red-200",
+    sectionTitle: "text-red-700",
+    iconColor: "text-red-500",
+    contactBtn: "bg-gradient-to-r from-red-700 to-red-500 text-white hover:from-red-800 hover:to-red-600",
+    msgBtn: "border border-red-600 text-red-600 hover:bg-red-50",
+    thumbnailActive: "border-red-500",
+    badge: "bg-red-100 text-red-700",
+    pageBg: "bg-gradient-to-br from-red-50 to-white",
+    downloadBtn: "bg-red-600 text-white hover:bg-red-700",
+    infoLabel: "text-red-400",
+  },
+  GOLD: {
+    headerBg: "bg-amber-50",
+    headerBorder: "border-b border-amber-300",
+    backBtn: "text-amber-700 hover:text-amber-900",
+    shareBtn: "border border-amber-400 text-amber-700 hover:bg-amber-50",
+    interestBtn: "bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-500 hover:from-yellow-700 hover:to-amber-500 text-white font-bold",
+    cardBorder: "border border-amber-300",
+    cardShadow: "shadow-lg hover:shadow-amber-200",
+    sectionTitle: "text-amber-800",
+    iconColor: "text-amber-500",
+    contactBtn: "bg-gradient-to-r from-yellow-600 to-amber-400 text-white hover:from-yellow-700 hover:to-amber-500 font-bold",
+    msgBtn: "border border-amber-500 text-amber-700 hover:bg-amber-50",
+    thumbnailActive: "border-amber-500",
+    badge: "bg-amber-100 text-amber-800",
+    pageBg: "bg-gradient-to-br from-amber-50 via-yellow-50 to-white",
+    downloadBtn: "bg-amber-500 text-white hover:bg-amber-600",
+    infoLabel: "text-amber-500",
+  },
+  DIAMOND: {
+    headerBg: "bg-pink-50",
+    headerBorder: "border-b border-pink-300",
+    backBtn: "text-pink-600 hover:text-pink-800",
+    shareBtn: "border border-pink-400 text-pink-600 hover:bg-pink-50",
+    interestBtn: "bg-gradient-to-r from-pink-400 via-rose-300 to-pink-500 hover:from-pink-500 hover:to-rose-400 text-white font-bold",
+    cardBorder: "border border-pink-200",
+    cardShadow: "shadow-lg hover:shadow-pink-200",
+    sectionTitle: "text-pink-700",
+    iconColor: "text-pink-400",
+    contactBtn: "bg-gradient-to-r from-pink-400 to-rose-400 text-white hover:from-pink-500 hover:to-rose-500 font-bold",
+    msgBtn: "border border-pink-400 text-pink-600 hover:bg-pink-50",
+    thumbnailActive: "border-pink-400",
+    badge: "bg-pink-100 text-pink-700",
+    pageBg: "bg-gradient-to-br from-pink-50 via-rose-50 to-amber-50",
+    downloadBtn: "bg-pink-500 text-white hover:bg-pink-600",
+    infoLabel: "text-pink-400",
+  },
+};
 
 // Helper component for info rows
 const InfoRow = React.memo(({ label, value }) => (
@@ -159,6 +217,8 @@ Your safety, privacy, and thoughtful decision-making are important — please pr
 export default function DetailedProfilePage() {
   const { profileType, id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const passedMembershipType = location.state?.membershipType || null;
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -668,6 +728,15 @@ useEffect(() => {
   const hasJathagam = profile?.jathagamFileId || profile?.jathagam;
   const hasResume = profile?.resumeFileId || profile?.resume;
 
+  const membershipType = (
+    passedMembershipType ||
+    profile?.membershipType ||
+    profile?.user?.membership ||
+    profile?.membership ||
+    "SILVER"
+  ).toUpperCase();
+  const t = membershipThemes[membershipType] || membershipThemes.SILVER;
+
   // Debug current state
   console.log("🔄 Component state:", {
     loading,
@@ -732,14 +801,14 @@ useEffect(() => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${t.pageBg}`}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-40">
+      <div className={`${t.headerBg} shadow-sm ${t.headerBorder} sticky top-0 z-40`}>
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={handleGoBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+              className={`flex items-center gap-2 ${t.backBtn} transition-colors`}
               aria-label="Go back to previous page"
             >
               <ArrowLeft size={20} />
@@ -749,7 +818,7 @@ useEffect(() => {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleShareProfile}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg ${t.shareBtn} transition-colors`}
                 aria-label="Share profile"
               >
                 <Share2 size={18} />
@@ -759,7 +828,7 @@ useEffect(() => {
               <button
                 onClick={handleExpressInterest}
                 disabled={interestLoading}
-                className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className={`flex items-center gap-2 ${t.interestBtn} px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
                 aria-label={
                   interestLoading
                     ? "Sending interest request"
@@ -780,7 +849,7 @@ useEffect(() => {
           {/* Left Column - Photos & Basic Info */}
           <div className="lg:col-span-1 space-y-6">
             {/* Profile Image Gallery */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} overflow-hidden`}>
               <div className="relative h-80 bg-gray-100">
                 {hasImages ? (
                   <img
@@ -823,7 +892,7 @@ useEffect(() => {
                             onClick={() => setActiveImage(index)}
                             className={`flex-shrink-0 w-16 h-16 rounded-lg border-2 overflow-hidden ${
                               activeImage === index
-                                ? "border-red-500"
+                                ? t.thumbnailActive
                                 : "border-gray-300"
                             }`}
                           >
@@ -845,8 +914,8 @@ useEffect(() => {
             </div>
 
             {/* Quick Info Card */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
+              <h3 className={`text-lg font-bold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                 <User size={20} />
                 Quick Info
               </h3>
@@ -955,8 +1024,8 @@ useEffect(() => {
 )}
 
             {/* Contact Preferences */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
+              <h3 className={`text-lg font-bold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                 <Phone size={20} />
                 Contact
               </h3>
@@ -970,7 +1039,7 @@ useEffect(() => {
     setShowWarningModal(true);
   }}
   disabled={contactLoading || contactRequestStatus === "PENDING" || contactRequestStatus === "ACCEPTED"}
-  className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+  className={`w-full ${t.contactBtn} py-3 rounded-lg transition-colors font-semibold`}
   aria-label="Request contact information"
 >
   <Phone size={18} className="inline mr-2" />
@@ -987,7 +1056,7 @@ useEffect(() => {
 
 
                 <button
-                  className="w-full border border-red-600 text-red-600 py-3 rounded-lg hover:bg-red-50 transition-colors font-semibold"
+                  className={`w-full ${t.msgBtn} py-3 rounded-lg transition-colors font-semibold`}
                   aria-label="Send message"
                 >
                   <Mail size={18} className="inline mr-2" />
@@ -998,8 +1067,8 @@ useEffect(() => {
 
             {/* Documents Quick Access */}
             {(hasJathagam || hasResume) && (
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
+                <h3 className={`text-lg font-bold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                   <FileText size={20} />
                   Documents
                 </h3>
@@ -1048,7 +1117,7 @@ useEffect(() => {
           {/* Right Column - Detailed Information */}
           <div className="lg:col-span-2 space-y-6">
             {/* Personal Details */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
               <h1 className="text-2xl font-bold text-gray-800 mb-2">
                 {profileName}
               </h1>
@@ -1083,7 +1152,7 @@ useEffect(() => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Personal Information */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <h2 className={`text-lg font-semibold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                     <User size={20} />
                     Personal Details
                   </h2>
@@ -1110,7 +1179,7 @@ useEffect(() => {
 
                 {/* Professional Information */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <h2 className={`text-lg font-semibold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                     <BookOpen size={20} />
                     Professional Details
                   </h2>
@@ -1135,11 +1204,11 @@ useEffect(() => {
             </div>
 
             {/* Family & Location Details */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Family Information */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <h2 className={`text-lg font-semibold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                     <Home size={20} />
                     Family Details
                   </h2>
@@ -1158,7 +1227,7 @@ useEffect(() => {
 
                 {/* Location Information */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <h2 className={`text-lg font-semibold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                     <MapPin size={20} />
                     Location
                   </h2>
@@ -1175,7 +1244,7 @@ useEffect(() => {
 
             {/* About Section */}
             {profile.about && (
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">
                   About {profileName}
                 </h2>
@@ -1187,8 +1256,8 @@ useEffect(() => {
 
             {/* Documents Section */}
             {(hasJathagam || hasResume) && (
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
+                <h2 className={`text-lg font-semibold ${t.sectionTitle} mb-4 flex items-center gap-2`}>
                   <FileText size={20} />
                   Documents & Files
                 </h2>
@@ -1223,7 +1292,7 @@ useEffect(() => {
                                 `Jathagam_${profileName}.pdf`
                               )
                             }
-                            className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                            className={`flex items-center gap-2 px-3 py-2 ${t.downloadBtn} rounded-lg transition-colors text-sm`}
                           >
                             <Download size={16} />
                             Download
@@ -1262,7 +1331,7 @@ useEffect(() => {
                                 `Resume_${profileName}.pdf`
                               )
                             }
-                            className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                            className={`flex items-center gap-2 px-3 py-2 ${t.downloadBtn} rounded-lg transition-colors text-sm`}
                           >
                             <Download size={16} />
                             Download
@@ -1277,7 +1346,7 @@ useEffect(() => {
 
             {/* Partner Preferences */}
             {(profile.minAge || profile.maxAge) && (
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <div className={`bg-white rounded-xl ${t.cardShadow} ${t.cardBorder} p-6`}>
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">
                   Partner Preferences
                 </h2>

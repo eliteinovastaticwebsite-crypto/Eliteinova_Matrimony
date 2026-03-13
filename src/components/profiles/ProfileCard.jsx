@@ -207,7 +207,12 @@ export default function ProfileCard({
   const handleViewProfile = (e) => {
     e?.stopPropagation();
     const profileType = normalizedGender === "Female" ? "bride" : "groom";
-    navigate(`/${profileType}-profile/${profile.id}`);
+    console.log("🔗 Navigating to:", `/${profileType}-profile/${profile.id}`);
+    navigate(`/${profileType}-profile/${profile.id}`, {
+      state: {
+        membershipType: (profile?.membershipType || profile?.user?.membership || profile?.membership || "SILVER").toUpperCase()
+      }
+    });
   };
 
   const handleCardClick = (e) => {

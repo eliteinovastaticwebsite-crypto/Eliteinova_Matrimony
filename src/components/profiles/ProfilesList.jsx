@@ -641,26 +641,32 @@ const performSearch = async (searchFilters) => {
                   <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-semibold text-gray-800 mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
                     {["Hindu", "Muslim", "Christian"].map((religion) => {
-                      const isActive = religionFilter === (religion === "all" ? "all" : religion);
-                      return (
-                        <button
-                          key={religion}
-                          onClick={() => setReligionFilter(religion === "all" ? "all" : religion)}
-                          className={`px-4 py-2 rounded-md ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium transition ${
-                            isActive
-                              ? "text-white shadow"
-                              : `text-gray-700 font-medium border border-gray-300`
-                          }`}
-                          style={isActive ? {
-                            backgroundColor: colors.accent
-                          } : {
-                            backgroundColor: colors.accentLight + '40'
-                          }}
-                        >
-                          {religion === "all" ? "All Religions" : religion}
-                        </button>
-                      );
-                    })}
+  const isActive = religionFilter === religion;
+  const mem = (membershipType || user?.membership || user?.membershipType || "SILVER").toUpperCase();
+
+  const activeStyle = mem === "GOLD"
+    ? { background: "linear-gradient(135deg, #f59e0b, #d97706)", color: "#fff", border: "2px solid #fbbf24", boxShadow: "0 2px 12px rgba(251,191,36,0.55)" }
+    : mem === "DIAMOND"
+    ? { background: "linear-gradient(135deg, #ec4899, #be185d)", color: "#fff", border: "2px solid #f9a8d4", boxShadow: "0 2px 12px rgba(236,72,153,0.5)" }
+    : { background: "linear-gradient(135deg, #DC2626, #B91C1C)", color: "#fff", border: "2px solid #fca5a5", boxShadow: "0 2px 12px rgba(220,38,38,0.45)" };
+
+  const inactiveStyle = mem === "GOLD"
+    ? { background: "rgba(254,243,199,0.75)", color: "#92400e", border: "1.5px solid #fde68a" }
+    : mem === "DIAMOND"
+    ? { background: "rgba(253,242,248,0.85)", color: "#9d174d", border: "1.5px solid #fbcfe8" }
+    : { background: "rgba(254,242,242,0.75)", color: "#b91c1c", border: "1.5px solid #fca5a5" };
+
+  return (
+    <button
+      key={religion}
+      onClick={() => setReligionFilter(religion)}
+      className={`px-4 py-2 rounded-md ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-semibold transition-all duration-200`}
+      style={isActive ? activeStyle : inactiveStyle}
+    >
+      {religion}
+    </button>
+  );
+})}
                   </div>
                 </div>
               </div>
@@ -688,13 +694,13 @@ const performSearch = async (searchFilters) => {
                       </span>
                     )}
                     {religionFilter !== "all" && (
-                      <span 
-                        className={`inline-flex items-center px-3 py-1 rounded-full ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-medium`}
-                        style={{
-                          backgroundColor: colors.accentLight,
-                          color: colors.accent
-                        }}
-                      >
+  <span 
+    className={`inline-flex items-center px-3 py-1 rounded-full ...`}
+    style={{
+      backgroundColor: colors.accentLight,
+      color: colors.accent
+    }}
+  >
                         {religionFilter}
                         <button 
                           onClick={() => setReligionFilter("all")}
