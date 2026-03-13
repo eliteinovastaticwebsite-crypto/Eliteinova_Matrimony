@@ -90,7 +90,7 @@ export default function Banner({
   const currentText = bannerTexts[textIndex];
 
   return (
-    <section className="relative w-full min-h-[320px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[580px] overflow-hidden group flex items-center">
+    <section className="relative w-full min-h-[400px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[580px] overflow-hidden group flex items-center">
 
       {/* 🔙 Back Button */}
       <div className="absolute top-24 md:top-28 left-4 md:left-6 z-40">
@@ -115,14 +115,18 @@ export default function Banner({
             }`}
           >
             <img
-              src={img}
-              alt={`Banner ${index + 1}`}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                console.error(`Failed to load banner image: ${img}`);
-                e.target.style.display = "none";
-              }}
-            />
+  src={img}
+  alt={`Banner ${index + 1}`}
+  className="w-full h-full object-cover md:object-contain lg:object-cover"
+  style={{
+    objectPosition: 'center',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' // Fallback color if image doesn't cover
+  }}
+  onError={(e) => {
+    console.error(`Failed to load banner image: ${img}`);
+    e.target.style.display = "none";
+  }}
+/>
           </div>
         ))}
 

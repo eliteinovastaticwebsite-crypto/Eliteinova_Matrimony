@@ -539,7 +539,6 @@ function ReportModal({ onClose }) {
       setIsSubmitting(false);
     }
   };
-
   return (
     <ModalOverlay onClose={onClose}>
       {/* Sticky header */}
@@ -925,6 +924,15 @@ export default function FilterSidebar({
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [showReportModal, setShowReportModal] = useState(false);
 
+  const [showWeddingServiceComingSoon, setShowWeddingServiceComingSoon] = useState(false);
+  const closeWeddingServiceModal = () => {
+  setShowWeddingServiceComingSoon(false);
+};
+const handleWeddingServiceClick = (e) => {
+  e.preventDefault();
+  setShowWeddingServiceComingSoon(true);
+};
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -993,6 +1001,55 @@ export default function FilterSidebar({
   return (
     <>
       {showReportModal && <ReportModal onClose={() => setShowReportModal(false)} />}
+        {/* Wedding Service Coming Soon Modal */}
+{showWeddingServiceComingSoon && (
+  <ModalOverlay onClose={closeWeddingServiceModal}>
+    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">💒</span>
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">
+          Coming Soon
+        </h1>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          Eliteinova Wedding Services
+        </h3>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          This is our dedicated Eliteinova Wedding Service page where wedding-related planning and services will be available soon!
+        </p>
+      </div>
+      
+      <div className="space-y-3 mb-6">
+        {[
+          "Wedding planning and coordination",
+          "Vendor management and bookings",
+          "Photography and videography services",
+          "Catering and venue arrangements",
+          "Complete wedding event management"
+        ].map((item, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <span className="text-green-500 text-sm mt-0.5">✓</span>
+            <span className="text-gray-700 text-sm">{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-gray-600 text-sm mb-6 text-center">
+        Stay tuned! Our comprehensive wedding services are coming soon to help you plan your perfect day.
+      </p>
+
+      <div className="flex gap-3">
+        <button
+          onClick={closeWeddingServiceModal}
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+  </ModalOverlay>
+)}
 
       <aside
   className="filter-sidebar-aside w-full md:w-80 sticky top-24 flex flex-col"
@@ -1052,20 +1109,33 @@ export default function FilterSidebar({
 
               {/* CTA Button */}
               
-                <a href="https://matrimonial-services.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center font-black text-sm text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  background: "linear-gradient(135deg, #dc2626, #b91c1c)",
-                  padding: "7px 24px",
-                  letterSpacing: "0.02em",
-                  boxShadow: "0 4px 15px rgba(185,28,28,0.5)",
-                }}
-              >
-                Register Now
-              </a>
+                {/* <a href="https://matrimonial-services.vercel.app/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center justify-center font-black text-sm text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+  style={{
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    background: "linear-gradient(135deg, #dc2626, #b91c1c)",
+    padding: "7px 24px",
+    letterSpacing: "0.02em",
+    boxShadow: "0 4px 15px rgba(185,28,28,0.5)",
+  }}
+>
+  Register Now
+</a> */}
+<button
+  onClick={handleWeddingServiceClick}
+  className="inline-flex items-center justify-center font-black text-sm text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+  style={{
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    background: "linear-gradient(135deg, #dc2626, #b91c1c)",
+    padding: "7px 24px",
+    letterSpacing: "0.02em",
+    boxShadow: "0 4px 15px rgba(185,28,28,0.5)",
+  }}
+>
+  Register Now
+</button>
             </div>
 
             {/* Keyframes injected here */}

@@ -99,6 +99,7 @@ export default function Home({ onOpenAuthModal }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("register");
   const [showServiceConfirmation, setShowServiceConfirmation] = useState(false);
+  const [showWeddingServiceComingSoon, setShowWeddingServiceComingSoon] = useState(false);
   const [serviceUrl, setServiceUrl] = useState("");
   const [stats, setStats] = useState({
     profiles: 400,
@@ -279,8 +280,8 @@ export default function Home({ onOpenAuthModal }) {
 
   const handleServicePageClick = (e, url) => {
     e.preventDefault();
-    setServiceUrl(url);
-    setShowServiceConfirmation(true);
+    // Show the wedding service coming soon modal instead of confirmation
+    setShowWeddingServiceComingSoon(true);
   };
 
   const confirmServiceNavigation = () => {
@@ -291,6 +292,10 @@ export default function Home({ onOpenAuthModal }) {
   const cancelServiceNavigation = () => {
     setShowServiceConfirmation(false);
     setServiceUrl("");
+  };
+
+  const closeWeddingServiceModal = () => {
+    setShowWeddingServiceComingSoon(false);
   };
 
   // Get default featured profiles for fallback
@@ -411,12 +416,18 @@ export default function Home({ onOpenAuthModal }) {
       <span>💍</span> Eliteinova Wedding Services
     </h3>
     
-      <a href="https://matrimonial-services.vercel.app/"
+      {/* <a href="https://matrimonial-services.vercel.app/"
       onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
       className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap text-center w-full lg:w-auto"
     >
       Visit Our Service Page →
-    </a>
+    </a> */}
+    <button
+      onClick={(e) => handleServicePageClick(e, "#")}
+      className="bg-white text-orange-600 px-4 py-1.5 sm:py-2 rounded-lg hover:bg-orange-50 transition-all duration-300 font-semibold text-sm shadow-md hover:shadow-lg hover:scale-105 transform whitespace-nowrap text-center w-full lg:w-auto"
+    >
+      Visit Our Service Page →
+    </button>
   </div>
 
 </div>
@@ -983,13 +994,19 @@ export default function Home({ onOpenAuthModal }) {
 
         {/* Button - Bigger */}
         <div className="pt-3 flex justify-center sm:justify-start">
-          <a 
+          {/* <a 
             href="https://matrimonial-services.vercel.app/" 
             onClick={(e) => handleServicePageClick(e, "https://matrimonial-services.vercel.app/")}
             className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
           >
             Visit Our Service Page →
-          </a>
+          </a> */}
+          <button
+            onClick={(e) => handleServicePageClick(e, "#")}
+            className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
+          >
+            Visit Our Service Page →
+          </button>
         </div>
       </div>
 
@@ -2014,6 +2031,56 @@ export default function Home({ onOpenAuthModal }) {
           )}
         </div>
       </div>
+
+      {/* Wedding Service Coming Soon Modal */}
+      {showWeddingServiceComingSoon && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💒</span>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900 mb-2">
+                Coming Soon
+              </h1>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Eliteinova Wedding Services
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                This is our dedicated Eliteinova Wedding Service page where wedding-related planning and services will be available soon!
+              </p>
+            </div>
+            
+            <div className="space-y-3 mb-6">
+              {[
+                "Wedding planning and coordination",
+                "Vendor management and bookings",
+                "Photography and videography services",
+                "Catering and venue arrangements",
+                "Complete wedding event management"
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-green-500 text-sm mt-0.5">✓</span>
+                  <span className="text-gray-700 text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-gray-600 text-sm mb-6 text-center">
+              Stay tuned! Our comprehensive wedding services are coming soon to help you plan your perfect day.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={closeWeddingServiceModal}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Service Page Confirmation Modal */}
       {showServiceConfirmation && (

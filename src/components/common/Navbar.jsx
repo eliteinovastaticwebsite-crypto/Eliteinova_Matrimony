@@ -178,7 +178,7 @@ export default function Navbar({ onLogin, onRegister }) {
           </div>
 
           {/* ── Desktop Nav Links ── */}
-          <ul className="hidden lg:flex items-center gap-1 font-semibold text-[13.5px] tracking-wide flex-wrap justify-center flex-1 px-4">
+          <ul className="hidden lg:flex items-center gap-0.5 font-semibold text-[13.5px] tracking-wide flex-wrap justify-center flex-1 px-4">
             {(isAuthenticated ? authNavLinks : publicNavLinks).map((link) => (
               <li key={link.path} className="relative group">
                 <Link

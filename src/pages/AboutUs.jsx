@@ -11,8 +11,8 @@ import {
 import Banner from "../components/common/Banner";
 import AuthModal from "../components/auth/AuthModal"; // Import AuthModal
 
-import AboutUsImage from "../assets/AboutUsImage.avif";
-import BannerImage1 from "../assets/BannerImage1.png";
+import AboutUsImage from "../assets/aboutUs.png";
+import BannerImage1 from "../assets/BannerImage10.png";
 
 const AboutBannerTexts = [
   {
