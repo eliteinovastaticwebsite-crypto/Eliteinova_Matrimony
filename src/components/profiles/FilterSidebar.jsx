@@ -19,10 +19,10 @@ if (typeof document !== "undefined") {
 const filterThemes = {
   silver: {
     primary: "#DC2626",
-    sidebarBg: "linear-gradient(160deg, #fff5f5 0%, #fff0f0 40%, #fef2f2 100%)",
+    sidebarBg: "linear-gradient(160deg, #ffe4e4 0%, #ffd6d6 40%, #ffcece 100%)",
     sidebarBorder: "#FCA5A5",
     headerBorder: "#FEE2E2",
-    filterBoxBg: "rgba(254,242,242,0.6)",
+    filterBoxBg: "linear-gradient(135deg, rgba(255,220,220,0.95) 0%, rgba(255,200,200,0.95) 100%)",
     filterBoxBorder: "#FECACA",
     filterBoxTitle: "#B91C1C",
     inputBorder: "#FCA5A5",
@@ -1481,7 +1481,6 @@ const handleWeddingServiceClick = (e) => {
       borderRadius: "0.5rem",
       minHeight: "40px",
       boxShadow: "none",
-      background: tBg,
       "&:hover": { borderColor: tPrimary }
     }),
     menu: (base) => ({

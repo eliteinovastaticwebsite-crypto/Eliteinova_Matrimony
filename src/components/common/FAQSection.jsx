@@ -27,7 +27,7 @@ const FAQSection = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Eliteinova Matrimony <span className="text-red-600">FAQs</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Eliteinova Matrimony FAQs</span>
           </h2>
           <p className="text-lg text-gray-600">
             Find answers to the most common questions about using Eliteinova Matrimony.

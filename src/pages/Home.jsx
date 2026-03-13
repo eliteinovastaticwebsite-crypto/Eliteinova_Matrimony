@@ -1530,7 +1530,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Success Stories – Building Happy Families</span>
+         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Hear From Happy Couples</span>
         </h3>
 
         <div className="space-y-3">
@@ -1617,8 +1617,7 @@ export default function Home({ onOpenAuthModal }) {
             <div className="inline-flex items-center justify-center mb-4">
               <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 mr-2 sm:mr-3"></div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-                How It Works
-              </h2>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> How It Works</span>              </h2>
               <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 ml-2 sm:ml-3"></div>
             </div>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 text-justify">
@@ -1908,7 +1907,7 @@ export default function Home({ onOpenAuthModal }) {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Hear From Happy Couples
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Success Stories – Building Happy Families</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 text-justify">
               Real stories from couples who found love through our platform
@@ -2012,7 +2011,7 @@ export default function Home({ onOpenAuthModal }) {
       <div className="bg-gray-50 py-12 sm:py-16 border-t border-gray-200 z-20">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900">
-            Ready to Start Your Journey?
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Ready to Start Your Journey?</span>
           </h3>
           <p className="text-gray-600 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 px-4">
             Join millions in finding their perfect life partner
