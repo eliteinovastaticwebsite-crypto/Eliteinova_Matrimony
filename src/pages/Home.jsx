@@ -658,19 +658,10 @@ export default function Home({ onOpenAuthModal }) {
       <div className="flex flex-col items-center justify-center">
         {/* Heading above video */}
         <div className="w-full mb-6">
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 text-center sm:text-left"
-            style={{
-              background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              fontFamily: "'Georgia', 'Times New Roman', serif",
-            }}
-          >
-            Eliteinova Matrimony Platform – Step-by-Step Demo
-          </h2>
-          <div className="space-y-2 text-gray-600 text-sm sm:text-base">
+          <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
+          Eliteinova Matrimony Platform <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">– Step by Step Demo</span>
+        </h1>
+          <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-4">
             <div className="flex items-start gap-2">
               <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
               <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
@@ -1025,11 +1016,11 @@ export default function Home({ onOpenAuthModal }) {
             <h4 className="font-bold text-gray-900 text-xs sm:text-sm">Customer Portal</h4>
             <p className="text-[10px] sm:text-xs text-gray-600">Access your profile</p>
           </div>
-          <div className="bg-red-50 p-2 sm:p-3 rounded-lg border border-red-100 text-center">
+          {/*<div className="bg-red-50 p-2 sm:p-3 rounded-lg border border-red-100 text-center">
             <span className="text-xl sm:text-2xl block mb-1">💍</span>
             <h4 className="font-bold text-gray-900 text-xs sm:text-sm">Matrimony Portal</h4>
             <p className="text-[10px] sm:text-xs text-gray-600">Find your partner</p>
-          </div>
+          </div>*/}
         </div>
 
         {/* Button - Bigger */}

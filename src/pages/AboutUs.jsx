@@ -12,7 +12,7 @@ import Banner from "../components/common/Banner";
 import AuthModal from "../components/auth/AuthModal"; // Import AuthModal
 
 import AboutUsImage from "../assets/aboutUs.png";
-import BannerImage1 from "../assets/BannerImage10.png";
+import BannerImage1 from "../assets/BannerImage11.png";
 
 const AboutBannerTexts = [
   {

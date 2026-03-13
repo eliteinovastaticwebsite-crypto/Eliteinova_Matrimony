@@ -26,7 +26,7 @@ import {
 import Banner from "../components/common/Banner";
 import AuthModal from "../components/auth/AuthModal"; 
 import SubscriptionPage from "./SubscriptionPage";
-import BannerImage6 from "../assets/BannerImage9.png";
+import BannerImage6 from "../assets/BannerImage12.png";
 
 const UpgradeBannerTexts = [
   {
