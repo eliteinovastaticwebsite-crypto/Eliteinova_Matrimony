@@ -87,9 +87,7 @@ export default function ProfilesList({onOpenAuthModal}) {
   // Fallback mock data filtered by user's membership type
 const getMockProfiles = () => {
   const userMembership = user?.membership || user?.membershipType || "SILVER";
-  // DEV: return all mock profiles to test all membership card themes
-  // return mockProfiles.filter(p => p.membershipType === userMembership.toUpperCase());
-  return mockProfiles;
+  return mockProfiles.filter(p => p.membershipType === userMembership.toUpperCase());
 };
   const fetchAllProfiles = async (page = 0, size = 12) => {
     setLoading(true);

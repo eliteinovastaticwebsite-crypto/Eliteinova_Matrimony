@@ -652,10 +652,32 @@ export default function Home({ onOpenAuthModal }) {
     </div>
 
     {/* Main Content Grid */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
 
-      {/* LEFT — YouTube Video */}
+      {/* LEFT — Heading + Content + YouTube Video */}
       <div className="flex flex-col items-center justify-center">
+        {/* Heading above video */}
+        <div className="w-full mb-6">
+          <h2
+            className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 text-center sm:text-left"
+            style={{
+              background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+            }}
+          >
+            Eliteinova Matrimony Platform – Step-by-Step Demo
+          </h2>
+          <div className="space-y-2 text-gray-600 text-sm sm:text-base">
+            <div className="flex items-start gap-2">
+              <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
+              <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
+            </div>
+          </div>
+        </div>
+
         <div
           className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
           style={{ aspectRatio: "16/9" }}
@@ -675,7 +697,7 @@ export default function Home({ onOpenAuthModal }) {
       </div>
 
       {/* RIGHT — Login Card + Register Now button */}
-      <div className="space-y-6">
+      <div className="flex flex-col h-full">
 
         {/* If logged in: Welcome card */}
         {isAuthenticated && user && (
@@ -718,48 +740,66 @@ export default function Home({ onOpenAuthModal }) {
           </div>
         )}
 
-        {/* If NOT logged in: Inline login form with two buttons */}
+        {/* If NOT logged in: Register banner + Login form */}
         {!isAuthenticated && (
-          <div
-            className="bg-white rounded-2xl shadow-xl p-6"
-            style={{
-              boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
-              border: "1px solid rgba(185,28,28,0.12)",
-            }}
-          >
-            <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
-              Login To Get Started
-            </h3>
+          <div className="flex flex-col h-full gap-3">
 
-            <div className="mb-3">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-              />
-            </div>
+            <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-5 shadow-2xl relative overflow-hidden w-full max-w-lg mx-auto my-5">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="relative z-10 text-center">
+      <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">
+        🎉 Register Now! 🎉
+      </h3>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
+        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+        <span className="text-white font-bold">|</span>
+        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+      </div>
+      <button
+        onClick={handleRegisterFromCard}
+        className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+      >
+        Register Now
+      </button>
+    </div>
+  </div>
 
-            <div className="mb-4">
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-              />
-            </div>
+            {/* Login Box */}
+            <div
+              className="bg-white rounded-2xl shadow-xl p-6 flex-1 flex flex-col justify-center"
+              style={{
+                boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
+                border: "1px solid rgba(185,28,28,0.12)",
+              }}
+            >
+              <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
+                Login To Get Started
+              </h3>
 
-            {/* Login Now + Register Now side by side */}
-            <div className="flex gap-3">
+              <div className="mb-3">
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+                />
+              </div>
+
+              <div className="mb-4">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+                />
+              </div>
+
+              {/* Login Now only — Register moved to banner above */}
               <button
                 onClick={handleLoginFromCard}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
               >
                 Login Now
-              </button>
-              <button
-                onClick={handleRegisterFromCard}
-                className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
-              >
-                Register Now
               </button>
             </div>
           </div>
