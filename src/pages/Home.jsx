@@ -659,7 +659,7 @@ export default function Home({ onOpenAuthModal }) {
         {/* Heading above video */}
         <div className="w-full mb-6">
           <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Eliteinova Matrimony Platform <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">– Step by Step Demo</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimony Platform – Step by Step Demo</span>
         </h1>
           <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-4">
             <div className="flex items-start gap-2">
@@ -994,7 +994,7 @@ export default function Home({ onOpenAuthModal }) {
       <div className="space-y-4 px-4 sm:px-0">
         {/* Main Heading - Much Bigger */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Wedding Services</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Welcome to Eliteinova Wedding Services</span>
         </h1>
 
         {/* Two-line Description - Bigger */}
@@ -1096,7 +1096,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Find Brides & Grooms <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">by Profession</span>
+           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Find Brides & Grooms by Profession</span>
         </h2>
 
         <p className="text-base sm:text-lg text-gray-600 text-center sm:text-left">We offer specialized searches for:</p>
@@ -1196,7 +1196,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
         
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Trusted Matrimony Service for <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Meaningful Matches</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Trusted Matrimony Service for Meaningful Matches</span>
         </h2>
         
         <div className="space-y-3 sm:space-y-4 text-gray-600">
@@ -1381,7 +1381,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Why is Eliteinova the Best <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Tamil Matrimony Website?</span>
+           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Why is Eliteinova the Best Tamil Matrimony Website?</span>
         </h2>
 
         <div className="space-y-6 sm:space-y-8">
@@ -1495,7 +1495,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          Horoscope Matching <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">(Jathagam Matching)</span>
+           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Horoscope Matching (Jathagam Matching)</span>
         </h2>
 
         <p className="text-base sm:text-lg text-gray-600 text-center sm:text-left">Horoscope compatibility plays an important role in Tamil marriages. Our platform allows users to filter matches based on:</p>
@@ -1530,7 +1530,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-          Success Stories – Building Happy Families
+         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Success Stories – Building Happy Families</span>
         </h3>
 
         <div className="space-y-3">

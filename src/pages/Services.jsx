@@ -86,6 +86,7 @@ export default function Services({ onOpenAuthModal }) {
     return () => cancelAnimationFrame(animRef2.current);
   }, [hovered2]);
 
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const handleOpenAuthModal = (mode = "register") => {
     if (onOpenAuthModal && typeof onOpenAuthModal === "function") {
       onOpenAuthModal(mode);
@@ -715,14 +716,14 @@ export default function Services({ onOpenAuthModal }) {
                   <p className="text-gray-500 text-sm mb-6">Partner services & business access</p>
                   
                   <div className="flex gap-3">
-                    <Link to="/vendor-login" 
+                    <button onClick={() => setShowComingSoon(true)}
                       className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
                       Login
-                    </Link>
-                    <Link to="/vendor-login" 
+                    </button>
+                    <button onClick={() => setShowComingSoon(true)}
                       className="flex-1 px-4 py-2.5 bg-amber-50 text-amber-700 text-sm font-semibold rounded-xl border border-amber-200 hover:bg-amber-100 hover:scale-105 transition-all duration-300 text-center">
                       Register
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -749,18 +750,63 @@ export default function Services({ onOpenAuthModal }) {
                   <p className="text-gray-500 text-sm mb-6">Access your profile & matches</p>
                   
                   <div className="flex gap-3">
-                    <Link to="/customer-login" 
+                    <button onClick={() => setShowComingSoon(true)}
                       className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
                       Login
-                    </Link>
-                    <Link to="/customer-registration" 
+                    </button>
+                    <button onClick={() => setShowComingSoon(true)}
                       className="flex-1 px-4 py-2.5 bg-red-50 text-red-700 text-sm font-semibold rounded-xl border border-red-200 hover:bg-red-100 hover:scale-105 transition-all duration-300 text-center">
                       Register
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
+            {/* Coming Soon Modal */}
+{showComingSoon && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">💒</span>
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h1>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          Eliteinova Wedding Services
+        </h3>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          This is our dedicated Eliteinova Wedding Service page where wedding-related planning and services will be available soon!
+        </p>
+      </div>
+
+      <div className="space-y-3 mb-6">
+        {[
+          "Wedding planning and coordination",
+          "Vendor management and bookings",
+          "Photography and videography services",
+          "Catering and venue arrangements",
+          "Complete wedding event management",
+        ].map((item, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <span className="text-green-500 text-sm mt-0.5">✓</span>
+            <span className="text-gray-700 text-sm">{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-gray-600 text-sm mb-6 text-center">
+        Stay tuned! Our comprehensive wedding services are coming soon to help you plan your perfect day.
+      </p>
+
+      <button
+        onClick={() => setShowComingSoon(false)}
+        className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+      >
+        Got it
+      </button>
+    </div>
+  </div>
+)}
           </section>
 
           {/* Categories Section with Flip Cards - Updated with better spacing and back theme */}

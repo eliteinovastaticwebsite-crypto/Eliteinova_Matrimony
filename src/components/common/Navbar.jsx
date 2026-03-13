@@ -13,7 +13,7 @@ import {
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { navLinks } from "../../config/footerLinks";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/Logo2.png";
 import AuthModal from "../auth/AuthModal";
 import { useAuth } from "../../context/AuthContext";
 
