@@ -600,8 +600,8 @@ function ProfileManagement() {
                   <p className="text-gray-600">{selectedProfile.user?.id || 'N/A'}</p>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-700">Profile ID:</span>
-                  <p className="text-gray-600">{selectedProfile.id || 'N/A'}</p>
+                  <span className="font-medium text-gray-700">Matrimony ID:</span>
+                  <p className="text-gray-600">{selectedProfile.matrimonyId || 'N/A'}</p>
                 </div>
                 <div>
                   <span className="font-medium text-gray-700">Joined Date:</span>

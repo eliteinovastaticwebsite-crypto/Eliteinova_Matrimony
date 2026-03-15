@@ -1,9 +1,9 @@
 // src/components/profiles/DiamondMemberProfiles.jsx
 import React, { useState, useEffect } from "react";
-import { mockProfileService as profileService } from "../services/MockProfileService";
+import profileService from "../services/profileService";
 import ProfileCard from "../components/profiles/ProfileCard";
 import ProfileFilters from "../components/profiles/FilterSidebar";
-import { useMockAuth as useAuth } from "../context/MockAuthContext";
+import { useAuth } from "../context/AuthContext";
 import CategoryNav from "../components/common/CategoryNav";
 import Banner from "../components/common/Banner";
 
@@ -60,19 +60,26 @@ export default function DiamondMemberProfiles({ onOpenAuthModal }) {
     setError("");
     
     try {
-      console.log("🔄 DiamondMemberProfiles: Fetching elite profiles...", { page, size });
-      const data = await profileService.getAllProfiles(page, size);
+      console.log("🔄 DiamondMemberProfiles: Fetching DIAMOND profiles...", { page, size });
+      const data = await profileService.getAllProfiles(page, size, "DIAMOND");
       console.log("✅ DiamondMemberProfiles: Service response:", data);
       
-      const profilesData = data.content || [];
+      let profilesData = data.content || [];
+      
+      // Filter to ensure only DIAMOND membership profiles are shown
+      profilesData = profilesData.filter(profile => {
+        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
+        return profileMembership === "DIAMOND";
+      });
+      
       const paginationData = {
         page: data.number || page,
         size: data.size || size,
         totalPages: data.totalPages || 1,
-        totalElements: data.totalElements || profilesData.length
+        totalElements: profilesData.length
       };
 
-      console.log("📊 DiamondMemberProfiles: Elite profiles data:", profilesData);
+      console.log("📊 DiamondMemberProfiles: Filtered DIAMOND profiles:", profilesData.length);
       setProfiles(profilesData);
       setPagination(paginationData);
       
@@ -145,6 +152,12 @@ export default function DiamondMemberProfiles({ onOpenAuthModal }) {
       } else {
         searchProfiles = [];
       }
+      
+      // Filter to ensure only DIAMOND membership profiles are shown
+      searchProfiles = searchProfiles.filter(profile => {
+        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
+        return profileMembership === "DIAMOND";
+      });
       
       setSearchResults(searchProfiles);
       

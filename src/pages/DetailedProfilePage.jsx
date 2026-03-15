@@ -344,6 +344,7 @@ useEffect(() => {
     const mappedProfile = {
       // ✅ Basic Info - Direct mapping
       id: backendProfile.id,
+      matrimonyId: backendProfile.matrimonyId,
       name: backendProfile.name,
       gender: backendProfile.gender,
       age: backendProfile.age,
@@ -775,7 +776,6 @@ useEffect(() => {
           <p className="text-gray-600 mb-4">
             The profile you're looking for doesn't exist or cannot be loaded.
           </p>
-          <p className="text-sm text-gray-500 mb-6">Profile ID: {id}</p>
           <button
             onClick={handleGoBack}
             className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
@@ -921,7 +921,7 @@ useEffect(() => {
               </h3>
 
               <div className="space-y-3">
-                <InfoRow label="Profile ID" value={`#${profile.id || "N/A"}`} />
+                <InfoRow label="Matrimony ID" value={profile.matrimonyId || "N/A"} />
                 <InfoRow label="Age" value={profileAge} />
                 <InfoRow
                   label="Height"

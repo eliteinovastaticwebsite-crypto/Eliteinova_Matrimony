@@ -1,9 +1,9 @@
 // src/components/profiles/GoldMemberProfiles.jsx
 import React, { useState, useEffect } from "react";
-import { mockProfileService as profileService } from "../services/MockProfileService";
+import profileService from "../services/profileService";
 import ProfileCard from "../components/profiles/ProfileCard";
 import ProfileFilters from "../components/profiles/FilterSidebar";
-import { useMockAuth as useAuth } from "../context/MockAuthContext";
+import { useAuth } from "../context/AuthContext";
 import CategoryNav from "../components/common/CategoryNav";
 import Banner from "../components/common/Banner";
 
@@ -60,19 +60,26 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
     setError("");
     
     try {
-      console.log("🔄 GoldMemberProfiles: Fetching profiles...", { page, size });
-      const data = await profileService.getAllProfiles(page, size);
+      console.log("🔄 GoldMemberProfiles: Fetching GOLD profiles...", { page, size });
+      const data = await profileService.getAllProfiles(page, size, "GOLD");
       console.log("✅ GoldMemberProfiles: Service response:", data);
       
-      const profilesData = data.content || [];
+      let profilesData = data.content || [];
+      
+      // Filter to ensure only GOLD membership profiles are shown
+      profilesData = profilesData.filter(profile => {
+        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
+        return profileMembership === "GOLD";
+      });
+      
       const paginationData = {
         page: data.number || page,
         size: data.size || size,
         totalPages: data.totalPages || 1,
-        totalElements: data.totalElements || profilesData.length
+        totalElements: profilesData.length
       };
 
-      console.log("📊 GoldMemberProfiles: Profiles data:", profilesData);
+      console.log("📊 GoldMemberProfiles: Filtered GOLD profiles:", profilesData.length);
       setProfiles(profilesData);
       setPagination(paginationData);
       
@@ -145,6 +152,12 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
       } else {
         searchProfiles = [];
       }
+      
+      // Filter to ensure only GOLD membership profiles are shown
+      searchProfiles = searchProfiles.filter(profile => {
+        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
+        return profileMembership === "GOLD";
+      });
       
       setSearchResults(searchProfiles);
       

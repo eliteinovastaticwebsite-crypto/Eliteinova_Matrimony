@@ -323,6 +323,7 @@ useEffect(() => {
     return {
       // ✅ Basic Info - Direct mapping from backend entity
       id: backendProfile.id,
+      matrimonyId: backendProfile.matrimonyId,
       name: backendProfile.name,
       fullName: backendProfile.name, // Use name as fullName
       age: backendProfile.age,
