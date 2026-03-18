@@ -93,134 +93,68 @@ function PaymentSummary({ plan, onProceed, onBack }) {
   );
 }
  
-// ─── PaymentMethod Component ──────────────────────────────────────────────────
 function PaymentMethod({ plan, onProceed, onBack, loading = false }) {
   const p = MEMBERSHIP_PLANS[plan];
   const total = (p.price + p.tax).toFixed(2);
-  const [method, setMethod] = React.useState("");
-  const [upiId, setUpiId] = React.useState("");
-  const [bankSelected, setBankSelected] = React.useState("");
-  const [walletSelected, setWalletSelected] = React.useState("");
-  const [err, setErr] = React.useState("");
- 
-  const banks = ["State Bank of India","HDFC Bank","ICICI Bank","Axis Bank","Kotak Mahindra Bank","Punjab National Bank","Bank of Baroda"];
-  const wallets = [
-    { name: "Paytm", icon: "💙" },{ name: "PhonePe", icon: "💜" },
-    { name: "Amazon Pay", icon: "🟠" },{ name: "Mobikwik", icon: "🔵" },
-    { name: "Freecharge", icon: "🟢" },
-  ];
- 
-  const handlePay = () => {
-    if (!method) { setErr("Please select a payment method."); return; }
-    if (method === "upi" && !upiId.trim()) { setErr("Please enter your UPI ID."); return; }
-    if (method === "netbanking" && !bankSelected) { setErr("Please select your bank."); return; }
-    if (method === "wallet" && !walletSelected) { setErr("Please select a wallet."); return; }
-    setErr("");
-    onProceed();
-  };
- 
-  const RadioRow = ({ id, icon, title, sub }) => (
-    <div onClick={() => setMethod(id)}
-      className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === id ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
-      <div className="flex items-center gap-3">
-        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === id ? "border-red-500" : "border-gray-300"}`}>
-          {method === id && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
-        </div>
-        <span className="text-xl">{icon}</span>
-        <div><p className="font-semibold text-gray-800 text-sm">{title}</p><p className="text-xs text-gray-500">{sub}</p></div>
-      </div>
-    </div>
-  );
- 
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="text-center">
-        <h3 className="text-xl font-bold text-gray-800">Choose Payment Method</h3>
+        <h3 className="text-xl font-bold text-gray-800">Complete Payment</h3>
         <p className="text-sm text-gray-500 mt-1">Secure payment · 256-bit SSL</p>
       </div>
-      <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-full text-white text-sm font-bold mx-auto w-fit shadow-md" style={{ background: p.gradient }}>
+
+      <div
+        className="flex items-center justify-center gap-2 py-2 px-4 rounded-full text-white text-sm font-bold mx-auto w-fit shadow-md"
+        style={{ background: p.gradient }}
+      >
         {p.icon} {p.label} · ₹{total}
       </div>
- 
-      {/* UPI */}
-      <div onClick={() => setMethod("upi")}
-        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "upi" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "upi" ? "border-red-500" : "border-gray-300"}`}>
-            {method === "upi" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
-          </div>
-          <span className="text-xl">📱</span>
-          <div><p className="font-semibold text-gray-800 text-sm">UPI Payment</p><p className="text-xs text-gray-500">Google Pay, PhonePe, BHIM, Paytm UPI</p></div>
+
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-3">
+        <div className="flex justify-between text-sm text-gray-600">
+          <span>{p.label} Registration Fee</span>
+          <span className="font-semibold">₹{p.price}.00</span>
         </div>
-        {method === "upi" && (
-          <div className="mt-3">
-            <input type="text" value={upiId} onChange={e => setUpiId(e.target.value)}
-              placeholder="Enter UPI ID (e.g., name@upi)"
-              className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
-            <div className="flex gap-2 mt-2 flex-wrap">
-              {["GPay","PhonePe","BHIM","Paytm"].map(a => (
-                <span key={a} className="text-xs bg-white border border-gray-200 px-2 py-1 rounded-full text-gray-600 cursor-pointer hover:bg-red-50 hover:border-red-300">{a}</span>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
- 
-      {/* Net Banking */}
-      <div onClick={() => setMethod("netbanking")}
-        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "netbanking" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "netbanking" ? "border-red-500" : "border-gray-300"}`}>
-            {method === "netbanking" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
-          </div>
-          <span className="text-xl">🏦</span>
-          <div><p className="font-semibold text-gray-800 text-sm">Net Banking</p><p className="text-xs text-gray-500">All major Indian banks supported</p></div>
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>Tax (18% GST)</span>
+          <span>₹{p.tax}</span>
         </div>
-        {method === "netbanking" && (
-          <div className="mt-3">
-            <select value={bankSelected} onChange={e => setBankSelected(e.target.value)}
-              className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white">
-              <option value="">Select your bank</option>
-              {banks.map(b => <option key={b} value={b}>{b}</option>)}
-            </select>
-          </div>
-        )}
-      </div>
- 
-      {/* Wallet */}
-      <div onClick={() => setMethod("wallet")}
-        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "wallet" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
-        <div className="flex items-center gap-3">
-          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "wallet" ? "border-red-500" : "border-gray-300"}`}>
-            {method === "wallet" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
-          </div>
-          <span className="text-xl">👛</span>
-          <div><p className="font-semibold text-gray-800 text-sm">Wallets</p><p className="text-xs text-gray-500">Paytm, PhonePe, Amazon Pay & more</p></div>
+        <div className="border-t border-dashed border-gray-300 pt-3 flex justify-between">
+          <span className="font-bold text-gray-800">Total Payable</span>
+          <span className="font-bold text-lg" style={{ color: p.color }}>₹{total}</span>
         </div>
-        {method === "wallet" && (
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {wallets.map(w => (
-              <div key={w.name} onClick={e => { e.stopPropagation(); setWalletSelected(w.name); }}
-                className={`flex flex-col items-center gap-1 p-2 rounded-lg border cursor-pointer text-xs transition-all ${walletSelected === w.name ? "border-red-500 bg-red-50 font-semibold text-red-700" : "border-gray-200 hover:border-red-300 text-gray-600"}`}>
-                <span className="text-lg">{w.icon}</span><span>{w.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
- 
-      {err && <p className="text-red-500 text-sm text-center">{err}</p>}
-      <div className="flex items-center justify-center gap-1 text-xs text-gray-400">
-        <span>🔒</span><span>256-bit SSL Encrypted · Secured by Razorpay</span>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">
+          What you get:
+        </p>
+        <ul className="space-y-1.5">
+          {p.perks.map((perk, i) => (
+            <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
+              <span className="text-green-500 font-bold">✓</span> {perk}
+            </li>
+          ))}
+        </ul>
       </div>
+
+      <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+        <span>🔒</span>
+        <span>256-bit SSL Encrypted · Secured by Razorpay</span>
+      </div>
+
       <div className="flex gap-3">
-        <button type="button" onClick={onBack}
-          className="flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-all">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-all"
+        >
           ← Back
         </button>
         <button
           type="button"
-          onClick={handlePay}
+          onClick={onProceed}
           disabled={loading}
           className="flex-1 py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={{ background: p.gradient }}
@@ -231,10 +165,13 @@ function PaymentMethod({ plan, onProceed, onBack, loading = false }) {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
               </svg>
-              Registering & Confirming...
+              Processing...
             </>
           ) : (
-            <>Pay Now ₹{total}</>
+            <>
+              <span>💳</span>
+              Pay ₹{total} via Razorpay
+            </>
           )}
         </button>
       </div>
@@ -1684,12 +1621,17 @@ const plan = MEMBERSHIP_PLANS[form.membershipType];
 const totalAmount = Math.round((plan.price + plan.tax) * 100); // Razorpay needs paise
 
 const options = {
-  key: "YOUR_RAZORPAY_KEY_ID", // 🔴 Replace with your Razorpay Key ID
+  key: "rzp_live_xxxxxxxxxx", // paste your actual key from Razorpay dashboard here
   amount: totalAmount,
   currency: "INR",
   name: "Eliteinova Matrimony",
   description: `${plan.label} Membership - 3 Months`,
-  image: "/logo.png", // optional - your logo
+image: "/logo.png",
+notes: {
+  membershipType: form.membershipType,
+  userName: form.name,
+  paymentLink: "https://razorpay.me/@eliteinovatechprivatelimited",
+},
   handler: async function (response) {
     // Payment successful — response.razorpay_payment_id is the payment ID
     console.log("✅ Razorpay payment success:", response);
