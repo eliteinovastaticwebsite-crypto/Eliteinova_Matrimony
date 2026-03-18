@@ -63,6 +63,7 @@ class profileService {
     community: 'community',
     physicalStatus: 'physicalStatus',
     physicallyChallenged: 'physicalStatus', // Map physicallyChallenged to physicalStatus
+    membershipType: 'membershipType',
   };
 
   const backendFilters = {};
@@ -707,6 +708,219 @@ async rejectContactRequest(profileId) {
     } catch (error) {
       console.error('❌ Submit feedback error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.error || error.response?.data?.message || 'Failed to submit feedback. Please try again.');
+    }
+  }
+
+  // Submit suggestion/report
+  async submitSuggestion(reason, additionalDetails) {
+    try {
+      // Check authentication first
+      const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('Authentication required. Please login first.');
+      }
+
+      console.log('📝 Submitting suggestion:', { reason, additionalDetails });
+      console.log('🔑 Token available:', !!token);
+      
+      // Prepare request body
+      const requestBody = {
+        reason: reason || '',
+        additionalDetails: additionalDetails || ''
+      };
+      
+      console.log('📤 Request body:', requestBody);
+      
+      // Make the API call - axios interceptor will add Authorization header
+      const response = await api.post('/api/profiles/suggestion', requestBody, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000 // 15 second timeout
+      });
+
+      console.log('✅ Suggestion submitted successfully:', response.data);
+      console.log('✅ Response status:', response.status);
+      
+      // Ensure response has success field
+      if (response.data && !response.data.hasOwnProperty('success')) {
+        response.data.success = true;
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('❌ Submit suggestion error:', error);
+      console.error('❌ Error type:', error.constructor.name);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
+      console.error('❌ Error headers:', error.response?.headers);
+      console.error('❌ Request config:', error.config);
+      
+      // Extract error message from response
+      let errorMessage = 'Failed to submit suggestion. Please try again.';
+      
+      if (error.response) {
+        // Server responded with error status
+        const data = error.response.data;
+        console.error('❌ Server error data:', data);
+        
+        if (data) {
+          if (data.error) {
+            errorMessage = data.error;
+          } else if (data.message) {
+            errorMessage = data.message;
+          } else if (typeof data === 'string') {
+            errorMessage = data;
+          }
+        }
+        
+        // Handle specific HTTP status codes
+        if (error.response.status === 401) {
+          errorMessage = 'Authentication required. Please login first.';
+        } else if (error.response.status === 400) {
+          errorMessage = data?.error || data?.message || 'Invalid request. Please check your input.';
+        } else if (error.response.status === 403) {
+          errorMessage = 'Access denied. Please check your permissions.';
+        } else if (error.response.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        } else if (error.response.status === 0) {
+          errorMessage = 'Network error. Unable to connect to server.';
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        console.error('❌ No response received:', error.request);
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else {
+        // Error in request setup
+        console.error('❌ Request setup error:', error.message);
+        errorMessage = error.message || 'Failed to submit suggestion. Please try again.';
+      }
+      
+      throw new Error(errorMessage);
+    }
+  }
+
+  // Submit success story
+  async submitSuccessStory(formData) {
+    try {
+      // Get token from localStorage (try both 'token' and 'authToken')
+      const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+      
+      if (!token) {
+        throw new Error('Authentication required. Please login first.');
+      }
+
+      console.log('💑 Submitting success story...');
+      console.log('🔑 Token available:', !!token);
+      console.log('📤 FormData entries:');
+      for (let pair of formData.entries()) {
+        console.log(`  ${pair[0]}:`, pair[1] instanceof File ? `File: ${pair[1].name}` : pair[1]);
+      }
+      
+      const response = await api.post('/api/profiles/success-story', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+        timeout: 60000 // 60 second timeout for file uploads
+      });
+
+      console.log('✅ Success story submitted successfully:', response.data);
+      
+      // Ensure response has success field
+      if (response.data && !response.data.hasOwnProperty('success')) {
+        response.data.success = true;
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('❌ Submit success story error:', error);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
+      
+      // Extract error message
+      let errorMessage = 'Failed to submit success story. Please try again.';
+      
+      if (error.response?.data) {
+        if (error.response.data.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      throw new Error(errorMessage);
+    }
+  }
+
+  // Get success stories
+  async getSuccessStories() {
+    try {
+      console.log('💑 Fetching success stories...');
+      
+      const response = await api.get('/api/profiles/success-stories', {
+        timeout: 10000
+      });
+
+      console.log('✅ Success stories response:', response);
+      console.log('✅ Success stories data:', response.data);
+      
+      // Ensure response has the expected structure
+      if (response.data) {
+        // If response.data is already the correct format, return it
+        if (response.data.success !== undefined || response.data.stories !== undefined) {
+          return response.data;
+        }
+        // If response.data is an array, wrap it
+        if (Array.isArray(response.data)) {
+          return {
+            success: true,
+            stories: response.data,
+            total: response.data.length
+          };
+        }
+      }
+      
+      // Default fallback
+      return {
+        success: true,
+        stories: [],
+        total: 0
+      };
+    } catch (error) {
+      console.error('❌ Get success stories error:', error);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
+      
+      // Return empty stories on error instead of throwing
+      return {
+        success: false,
+        stories: [],
+        total: 0,
+        error: error.response?.data?.error || error.message
+      };
+    }
+  }
+
+  // Get matrimony ID for current user
+  async getMatrimonyId() {
+    try {
+      const token = localStorage.getItem('token');
+      console.log('🆔 Fetching matrimony ID...');
+      
+      const response = await api.get('/api/profiles/matrimony-id', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log('✅ Matrimony ID fetched:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Get matrimony ID error:', error.response?.data || error.message);
+      throw new Error(error.response?.data?.error || error.response?.data?.message || 'Failed to fetch matrimony ID. Please try again.');
     }
   }
 }

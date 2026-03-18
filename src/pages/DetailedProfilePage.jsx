@@ -215,10 +215,25 @@ Your safety, privacy, and thoughtful decision-making are important — please pr
 
 
 export default function DetailedProfilePage() {
-  const { profileType, id } = useParams();
+  const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const passedMembershipType = location.state?.membershipType || null;
+  
+  // Extract ID from params - handle both /bride-profile/:id and /groom-profile/:id routes
+  const id = params.id;
+  
+  // Determine profile type from URL path
+  const profileType = location.pathname.includes('bride-profile') ? 'bride' : 
+                     location.pathname.includes('groom-profile') ? 'groom' : null;
+  
+  // Debug logging
+  useEffect(() => {
+    console.log("🔍 DetailedProfilePage - URL params:", params);
+    console.log("🔍 DetailedProfilePage - Profile ID:", id);
+    console.log("🔍 DetailedProfilePage - Profile Type:", profileType);
+    console.log("🔍 DetailedProfilePage - Pathname:", location.pathname);
+  }, [id, profileType, location.pathname]);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

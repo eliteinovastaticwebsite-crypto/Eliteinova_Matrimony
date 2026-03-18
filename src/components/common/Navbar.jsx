@@ -199,7 +199,7 @@ export default function Navbar({ onLogin, onRegister }) {
                 </Link>
               </li>
             ))}
-            {isStaffAdmin && (
+            {/* {isStaffAdmin && (
               <li className="relative group">
                 <button
                   onClick={handleAdminDashboard}
@@ -209,7 +209,7 @@ export default function Navbar({ onLogin, onRegister }) {
                   <span>Admin</span>
                 </button>
               </li>
-            )}
+            )} */}
           </ul>
 
           {/* ── Desktop Auth Buttons ── */}
@@ -271,12 +271,12 @@ export default function Navbar({ onLogin, onRegister }) {
                         </div>
                       </div>
 
-                      {isStaffAdmin && (
+                      {/* {isStaffAdmin && (
                         <button onClick={handleAdminDashboard} className="w-full px-4 py-3 text-left hover:bg-yellow-50 text-yellow-700 font-medium text-sm transition-colors flex items-center gap-3 border-b border-gray-100">
                           <ShieldCheckIcon className="w-5 h-5" />
                           <span>Admin Dashboard</span>
                         </button>
-                      )}
+                      )} */}
 
                       {!isAdmin() && (
                         <button onClick={handleProfile} className="w-full px-4 py-3 text-left hover:bg-gray-50 text-gray-700 font-medium text-sm transition-colors flex items-center gap-3">

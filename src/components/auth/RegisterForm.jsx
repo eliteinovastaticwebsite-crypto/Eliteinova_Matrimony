@@ -7,6 +7,436 @@ import FloatingInput from "../ui/FloatingInput";
 import { useAuth } from "../../context/AuthContext";
 import Select from "react-select";
 
+const MEMBERSHIP_PLANS = {
+  SILVER: {
+    label: "SILVER", price: 299, tax: 53.82, icon: "🥈",
+    color: "#6B7280",
+    gradient: "linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%)",
+    route: "/silver-members",
+    perks: ["50 Interests/month", "Basic Profile Visibility", "Email Support"],
+  },
+  GOLD: {
+    label: "GOLD", price: 499, tax: 89.82, icon: "🥇",
+    color: "#D97706",
+    gradient: "linear-gradient(135deg, #FCD34D 0%, #D97706 100%)",
+    route: "/gold-members",
+    perks: ["150 Interests/month", "Priority Visibility", "Chat Access", "Phone Support"],
+  },
+  DIAMOND: {
+    label: "DIAMOND", price: 749, tax: 134.82, icon: "💎",
+    color: "#7C3AED",
+    gradient: "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
+    route: "/diamond-members",
+    perks: ["Unlimited Interests", "Top Profile Boost", "Video Call Access", "Dedicated Manager"],
+  },
+};
+ 
+// ─── PaymentSummary Component ─────────────────────────────────────────────────
+function PaymentSummary({ plan, onProceed, onBack }) {
+  const p = MEMBERSHIP_PLANS[plan];
+  const total = (p.price + p.tax).toFixed(2);
+  return (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="text-center">
+        <div className="text-4xl mb-2">{p.icon}</div>
+        <h3 className="text-xl font-bold text-gray-800">{p.label} Membership</h3>
+        <p className="text-sm text-gray-500">3 Months Subscription</p>
+      </div>
+      <div className="rounded-2xl border-2 overflow-hidden shadow-lg" style={{ borderColor: p.color }}>
+        <div className="p-1" style={{ background: p.gradient }}>
+          <div className="bg-white rounded-xl p-5 space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <span className="font-bold text-gray-700 text-base">Payment Summary</span>
+              <span className="text-xs px-2 py-1 rounded-full text-white font-bold" style={{ background: p.gradient }}>{p.label}</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-600">
+              <span>{p.label} Registration Fee</span>
+              <span className="font-semibold">₹{p.price}.00</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>Tax (18% GST)</span>
+              <span>₹{p.tax}</span>
+            </div>
+            <div className="border-t border-dashed border-gray-200 pt-3 flex justify-between">
+              <span className="font-bold text-gray-800 text-base">Total Payable</span>
+              <span className="font-bold text-lg" style={{ color: p.color }}>₹{total}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-gray-50 rounded-xl p-4">
+        <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">What you get:</p>
+        <ul className="space-y-1.5">
+          {p.perks.map((perk, i) => (
+            <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
+              <span className="text-green-500 font-bold">✓</span> {perk}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
+        <span>📅</span>
+        <span>Valid for <strong>3 months</strong> from date of activation.</span>
+      </div>
+      <div className="flex gap-3">
+        <button type="button" onClick={onBack}
+          className="flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-all">
+          ← Back
+        </button>
+        <button type="button" onClick={onProceed}
+          className="flex-1 py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all"
+          style={{ background: p.gradient }}>
+          Pay Now ₹{total}
+        </button>
+      </div>
+    </div>
+  );
+}
+ 
+// ─── PaymentMethod Component ──────────────────────────────────────────────────
+function PaymentMethod({ plan, onProceed, onBack, loading = false }) {
+  const p = MEMBERSHIP_PLANS[plan];
+  const total = (p.price + p.tax).toFixed(2);
+  const [method, setMethod] = React.useState("");
+  const [upiId, setUpiId] = React.useState("");
+  const [bankSelected, setBankSelected] = React.useState("");
+  const [walletSelected, setWalletSelected] = React.useState("");
+  const [err, setErr] = React.useState("");
+ 
+  const banks = ["State Bank of India","HDFC Bank","ICICI Bank","Axis Bank","Kotak Mahindra Bank","Punjab National Bank","Bank of Baroda"];
+  const wallets = [
+    { name: "Paytm", icon: "💙" },{ name: "PhonePe", icon: "💜" },
+    { name: "Amazon Pay", icon: "🟠" },{ name: "Mobikwik", icon: "🔵" },
+    { name: "Freecharge", icon: "🟢" },
+  ];
+ 
+  const handlePay = () => {
+    if (!method) { setErr("Please select a payment method."); return; }
+    if (method === "upi" && !upiId.trim()) { setErr("Please enter your UPI ID."); return; }
+    if (method === "netbanking" && !bankSelected) { setErr("Please select your bank."); return; }
+    if (method === "wallet" && !walletSelected) { setErr("Please select a wallet."); return; }
+    setErr("");
+    onProceed();
+  };
+ 
+  const RadioRow = ({ id, icon, title, sub }) => (
+    <div onClick={() => setMethod(id)}
+      className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === id ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
+      <div className="flex items-center gap-3">
+        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === id ? "border-red-500" : "border-gray-300"}`}>
+          {method === id && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
+        </div>
+        <span className="text-xl">{icon}</span>
+        <div><p className="font-semibold text-gray-800 text-sm">{title}</p><p className="text-xs text-gray-500">{sub}</p></div>
+      </div>
+    </div>
+  );
+ 
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <h3 className="text-xl font-bold text-gray-800">Choose Payment Method</h3>
+        <p className="text-sm text-gray-500 mt-1">Secure payment · 256-bit SSL</p>
+      </div>
+      <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-full text-white text-sm font-bold mx-auto w-fit shadow-md" style={{ background: p.gradient }}>
+        {p.icon} {p.label} · ₹{total}
+      </div>
+ 
+      {/* UPI */}
+      <div onClick={() => setMethod("upi")}
+        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "upi" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
+        <div className="flex items-center gap-3">
+          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "upi" ? "border-red-500" : "border-gray-300"}`}>
+            {method === "upi" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
+          </div>
+          <span className="text-xl">📱</span>
+          <div><p className="font-semibold text-gray-800 text-sm">UPI Payment</p><p className="text-xs text-gray-500">Google Pay, PhonePe, BHIM, Paytm UPI</p></div>
+        </div>
+        {method === "upi" && (
+          <div className="mt-3">
+            <input type="text" value={upiId} onChange={e => setUpiId(e.target.value)}
+              placeholder="Enter UPI ID (e.g., name@upi)"
+              className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            <div className="flex gap-2 mt-2 flex-wrap">
+              {["GPay","PhonePe","BHIM","Paytm"].map(a => (
+                <span key={a} className="text-xs bg-white border border-gray-200 px-2 py-1 rounded-full text-gray-600 cursor-pointer hover:bg-red-50 hover:border-red-300">{a}</span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+ 
+      {/* Net Banking */}
+      <div onClick={() => setMethod("netbanking")}
+        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "netbanking" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
+        <div className="flex items-center gap-3">
+          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "netbanking" ? "border-red-500" : "border-gray-300"}`}>
+            {method === "netbanking" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
+          </div>
+          <span className="text-xl">🏦</span>
+          <div><p className="font-semibold text-gray-800 text-sm">Net Banking</p><p className="text-xs text-gray-500">All major Indian banks supported</p></div>
+        </div>
+        {method === "netbanking" && (
+          <div className="mt-3">
+            <select value={bankSelected} onChange={e => setBankSelected(e.target.value)}
+              className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white">
+              <option value="">Select your bank</option>
+              {banks.map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+          </div>
+        )}
+      </div>
+ 
+      {/* Wallet */}
+      <div onClick={() => setMethod("wallet")}
+        className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${method === "wallet" ? "border-red-500 bg-red-50 shadow-md" : "border-gray-200 hover:border-red-300 bg-white"}`}>
+        <div className="flex items-center gap-3">
+          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${method === "wallet" ? "border-red-500" : "border-gray-300"}`}>
+            {method === "wallet" && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
+          </div>
+          <span className="text-xl">👛</span>
+          <div><p className="font-semibold text-gray-800 text-sm">Wallets</p><p className="text-xs text-gray-500">Paytm, PhonePe, Amazon Pay & more</p></div>
+        </div>
+        {method === "wallet" && (
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {wallets.map(w => (
+              <div key={w.name} onClick={e => { e.stopPropagation(); setWalletSelected(w.name); }}
+                className={`flex flex-col items-center gap-1 p-2 rounded-lg border cursor-pointer text-xs transition-all ${walletSelected === w.name ? "border-red-500 bg-red-50 font-semibold text-red-700" : "border-gray-200 hover:border-red-300 text-gray-600"}`}>
+                <span className="text-lg">{w.icon}</span><span>{w.name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+ 
+      {err && <p className="text-red-500 text-sm text-center">{err}</p>}
+      <div className="flex items-center justify-center gap-1 text-xs text-gray-400">
+        <span>🔒</span><span>256-bit SSL Encrypted · Secured by Razorpay</span>
+      </div>
+      <div className="flex gap-3">
+        <button type="button" onClick={onBack}
+          className="flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-all">
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={handlePay}
+          disabled={loading}
+          className="flex-1 py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          style={{ background: p.gradient }}
+        >
+          {loading ? (
+            <>
+              <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              Registering & Confirming...
+            </>
+          ) : (
+            <>Pay Now ₹{total}</>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+ 
+// ─── PaymentSuccess Component ─────────────────────────────────────────────────
+function PaymentSuccess({ plan, userData, onVisitPage }) {
+  const p = MEMBERSHIP_PLANS[plan];
+  const total = (p.price + p.tax).toFixed(2);
+  const txnId = React.useMemo(() => "TXN" + Math.random().toString(36).substring(2, 10).toUpperCase(), []);
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+  const expiry = new Date(new Date().setMonth(new Date().getMonth() + 3))
+    .toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+ 
+  const downloadInvoice = () => {
+    // ── Build HTML invoice page ───────────────────────────────────────────
+    const planColor = p.color;
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>EliteInova Invoice ${txnId}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; padding: 40px 20px; color: #1a1a2e; }
+    .page { max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); }
+    .header { background: ${p.gradient}; padding: 32px 36px 24px; color: white; }
+    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
+    .header p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+    .badge { display: inline-block; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; margin-top: 10px; }
+    .status-bar { background: #d1fae5; border-bottom: 2px solid #6ee7b7; padding: 10px 36px; display: flex; align-items: center; gap: 8px; }
+    .status-bar span { color: #065f46; font-weight: 700; font-size: 13px; }
+    .body { padding: 28px 36px; }
+    .section-title { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; margin-top: 24px; }
+    .section-title:first-child { margin-top: 0; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+    .info-item label { font-size: 11px; color: #9ca3af; display: block; margin-bottom: 2px; }
+    .info-item span { font-size: 13px; font-weight: 600; color: #111827; }
+    .divider { border: none; border-top: 1px dashed #e5e7eb; margin: 20px 0; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+    .price-row .label { font-size: 13px; color: #6b7280; }
+    .price-row .value { font-size: 13px; font-weight: 600; color: #374151; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f9fafb; border-radius: 10px; margin-top: 10px; border: 1px solid #e5e7eb; }
+    .total-row .label { font-size: 15px; font-weight: 700; color: #111827; }
+    .total-row .value { font-size: 20px; font-weight: 800; color: ${planColor}; }
+    .footer { background: #f9fafb; border-top: 1px solid #f0f0f0; padding: 18px 36px; text-align: center; }
+    .footer p { font-size: 12px; color: #9ca3af; }
+    .footer strong { color: #374151; }
+    .txn-box { background: #f3f4f6; border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-family: monospace; font-size: 13px; color: #374151; letter-spacing: 1px; }
+    @media print {
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>EliteInova Matrimony</h1>
+      <p>Payment Invoice &nbsp;·&nbsp; Tax Invoice</p>
+      <div class="badge">${p.icon} ${p.label} Member</div>
+    </div>
+
+    <div class="status-bar">
+      <svg width="16" height="16" fill="none" stroke="#065f46" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+      <span>Payment Successful — Thank you for registering!</span>
+    </div>
+
+    <div class="body">
+      <p class="section-title">Invoice Details</p>
+      <div class="info-grid">
+        <div class="info-item"><label>Invoice No</label><span>INV-${txnId}</span></div>
+        <div class="info-item"><label>Transaction ID</label><span>${txnId}</span></div>
+        <div class="info-item"><label>Date</label><span>${dateStr}</span></div>
+        <div class="info-item"><label>Payment Status</label><span style="color:#059669">✓ Success</span></div>
+      </div>
+
+      <hr class="divider"/>
+
+      <p class="section-title">Member Details</p>
+      <div class="info-grid">
+        <div class="info-item"><label>Full Name</label><span>${userData?.name || "—"}</span></div>
+        <div class="info-item"><label>Mobile</label><span>${userData?.mobile || "—"}</span></div>
+        <div class="info-item" style="grid-column:1/-1"><label>Email</label><span>${userData?.email || "—"}</span></div>
+      </div>
+
+      <hr class="divider"/>
+
+      <p class="section-title">Membership Details</p>
+      <div class="info-grid">
+        <div class="info-item"><label>Plan</label><span>${p.label} Membership</span></div>
+        <div class="info-item"><label>Duration</label><span>3 Months</span></div>
+        <div class="info-item"><label>Activation Date</label><span>${dateStr}</span></div>
+        <div class="info-item"><label>Valid Until</label><span>${expiry}</span></div>
+      </div>
+
+      <hr class="divider"/>
+
+      <p class="section-title">Payment Breakdown</p>
+      <div class="price-row"><span class="label">${p.label} Registration Fee</span><span class="value">₹${p.price}.00</span></div>
+      <div class="price-row"><span class="label">GST @ 18%</span><span class="value">₹${p.tax}</span></div>
+      <div class="total-row"><span class="label">Total Paid</span><span class="value">₹${total}</span></div>
+
+      <div class="txn-box">Transaction Ref: ${txnId}</div>
+    </div>
+
+    <div class="footer">
+      <p>Thank you for choosing <strong>EliteInova Matrimony</strong></p>
+      <p style="margin-top:4px">Questions? Email us at <strong>support@eliteinova.com</strong></p>
+      <p style="margin-top:8px; font-size:11px; color:#d1d5db">This is a computer-generated invoice and does not require a signature.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    // ── Open print dialog → Save as PDF ──────────────────────────────────
+    const printWindow = window.open("", "_blank", "width=700,height=900");
+    if (!printWindow) {
+      alert("Please allow popups for this site to download the invoice as PDF.");
+      return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    // Small delay so styles load before print dialog opens
+    setTimeout(() => {
+      printWindow.print();
+      // printWindow.close(); // optionally close after print
+    }, 600);
+  };
+ 
+  return (
+    <div className="space-y-5 text-center">
+      <style>{`
+        @keyframes popIn { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+        .pop-in { animation: popIn 0.5s ease-out forwards; }
+      `}</style>
+      <div className="flex flex-col items-center gap-3">
+        <div className="pop-in w-20 h-20 rounded-full bg-green-100 flex items-center justify-center shadow-lg">
+          <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold text-green-600">Payment Successful!</h3>
+          <p className="text-gray-500 text-sm mt-1">Welcome to EliteInova Matrimony {p.label} {p.icon}</p>
+        </div>
+      </div>
+ 
+      {/* Invoice Card */}
+      <div className="bg-white border-2 border-green-200 rounded-2xl p-5 text-left shadow-md">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-dashed border-gray-200">
+          <div><p className="font-bold text-gray-800">EliteInova Matrimony</p><p className="text-xs text-gray-500">Payment Invoice</p></div>
+          <span className="text-xs px-3 py-1 rounded-full text-white font-bold" style={{ background: p.gradient }}>{p.icon} {p.label}</span>
+        </div>
+        <div className="space-y-2 text-sm">
+          {[["Transaction ID", txnId], ["Date", dateStr], ["Membership", `${p.label} – 3 Months`], ["Valid Until", expiry]].map(([k, v]) => (
+            <div key={k} className="flex justify-between text-gray-600">
+              <span>{k}</span><span className="font-semibold text-gray-800">{v}</span>
+            </div>
+          ))}
+          <div className="border-t border-dashed pt-2 mt-1 space-y-1">
+            <div className="flex justify-between text-xs text-gray-500"><span>Registration Fee</span><span>₹{p.price}.00</span></div>
+            <div className="flex justify-between text-xs text-gray-400"><span>Tax (18% GST)</span><span>₹{p.tax}</span></div>
+            <div className="flex justify-between font-bold text-gray-800 pt-1 border-t border-gray-100">
+              <span>Total Paid</span><span className="text-green-600 text-base">₹{total}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700 text-left">
+        <span className="flex-shrink-0 text-base">📧</span>
+        <span>Invoice automatically sent to <strong>{userData?.email || "your email"}</strong></span>
+      </div>
+ 
+      <div className="space-y-3">
+        <button type="button" onClick={downloadInvoice}
+          className="w-full py-3 rounded-xl border-2 border-green-500 text-green-600 font-bold text-sm hover:bg-green-50 transition-all flex items-center justify-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download Invoice (PDF)
+        </button>
+        <button type="button" onClick={() => onVisitPage(p.route)}
+          className="w-full py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+          style={{ background: p.gradient }}>
+          {p.icon} Visit {p.label} Member Page
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function RegisterForm({
   isInModal = false,
   onRegisterSuccess,
@@ -19,6 +449,8 @@ export default function RegisterForm({
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [paymentStep, setPaymentStep] = useState("form");
+  const [registrationError, setRegistrationError] = useState("");
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -99,6 +531,7 @@ export default function RegisterForm({
   "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
   "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir",
   "Ladakh", "Lakshadweep", "Puducherry"
+  
 ];
 
 // ------------- Districts Mapping -------------
@@ -117,7 +550,7 @@ const districtsByState = {
     "Dibang Valley","Anjaw","Lohit","Namsai","Changlang","Tirap","Longding"
   ],
 
-  Assam: [
+  "Assam": [
     "Baksa","Barpeta","Biswanath","Bongaigaon","Cachar","Charaideo",
     "Chirang","Darrang","Dhemaji","Dhubri","Dibrugarh","Dima Hasao",
     "Goalpara","Golaghat","Hailakandi","Hojai","Jorhat","Kamrup",
@@ -126,7 +559,7 @@ const districtsByState = {
     "Sonitpur","South Salmara","Tinsukia","Udalguri","West Karbi Anglong"
   ],
 
-  Bihar: [
+  "Bihar": [
     "Araria","Arwal","Aurangabad","Banka","Begusarai","Bhagalpur","Bhojpur",
     "Buxar","Darbhanga","East Champaran","Gaya","Gopalganj","Jamui",
     "Jehanabad","Kaimur","Katihar","Khagaria","Kishanganj","Lakhisarai",
@@ -135,7 +568,7 @@ const districtsByState = {
     "Sheohar","Sitamarhi","Siwan","Supaul","Vaishali","West Champaran"
   ],
 
-  Chhattisgarh: [
+  "Chhattisgarh": [
     "Balod","Baloda Bazar","Balrampur","Bastar","Bemetara","Bijapur",
     "Bilaspur","Dantewada","Dhamtari","Durg","Gariaband","Janjgir-Champa",
     "Jashpur","Kabirdham","Kanker","Kondagaon","Korba","Korea",
@@ -143,9 +576,9 @@ const districtsByState = {
     "Sukma","Surajpur","Surguja"
   ],
 
-  Goa: ["North Goa","South Goa"],
+  "Goa": ["North Goa","South Goa"],
 
-  Gujarat: [
+  "Gujarat": [
     "Ahmedabad","Amreli","Anand","Aravalli","Banaskantha","Bharuch",
     "Bhavnagar","Botad","Chhota Udaipur","Dahod","Dang","Devbhoomi Dwarka",
     "Gandhinagar","Gir Somnath","Jamnagar","Junagadh","Kheda","Kutch",
@@ -154,7 +587,7 @@ const districtsByState = {
     "Tapi","Vadodara","Valsad"
   ],
 
-  Haryana: [
+  "Haryana": [
     "Ambala","Bhiwani","Charkhi Dadri","Faridabad","Fatehabad","Gurgaon",
     "Hisar","Jhajjar","Jind","Kaithal","Karnal","Kurukshetra","Mahendragarh",
     "Nuh","Palwal","Panchkula","Panipat","Rewari","Rohtak","Sirsa",
@@ -166,14 +599,14 @@ const districtsByState = {
     "Lahaul and Spiti","Mandi","Shimla","Sirmaur","Solan","Una"
   ],
 
-  Jharkhand: [
+  "Jharkhand": [
     "Bokaro","Chatra","Deoghar","Dhanbad","Dumka","East Singhbhum",
     "Garhwa","Giridih","Godda","Gumla","Hazaribagh","Jamtara","Khunti",
     "Koderma","Latehar","Lohardaga","Pakur","Palamu","Ramgarh",
     "Ranchi","Sahebganj","Saraikela Kharsawan","Simdega","West Singhbhum"
   ],
 
-  Karnataka: [
+  "Karnataka": [
     "Bagalkot","Ballari","Belagavi","Bengaluru Rural","Bengaluru Urban",
     "Bidar","Chamarajanagar","Chikkaballapur","Chikkamagaluru",
     "Chitradurga","Dakshina Kannada","Davanagere","Dharwad",
@@ -182,7 +615,7 @@ const districtsByState = {
     "Tumakuru","Udupi","Uttara Kannada","Vijayapura","Yadgir"
   ],
 
-  Kerala: [
+  "Kerala": [
     "Thiruvananthapuram","Kollam","Pathanamthitta","Alappuzha","Kottayam",
     "Idukki","Ernakulam","Thrissur","Palakkad","Malappuram",
     "Kozhikode","Wayanad","Kannur","Kasaragod"
@@ -199,7 +632,7 @@ const districtsByState = {
     "Sidhi","Singrauli","Tikamgarh","Ujjain","Umaria","Vidisha"
   ],
 
-  Maharashtra: [
+  "Maharashtra": [
     "Ahmednagar","Akola","Amravati","Aurangabad","Beed","Bhandara",
     "Buldhana","Chandrapur","Dhule","Gadchiroli","Gondia","Hingoli",
     "Jalgaon","Jalna","Kolhapur","Latur","Mumbai City","Mumbai Suburban",
@@ -208,30 +641,30 @@ const districtsByState = {
     "Sindhudurg","Solapur","Thane","Wardha","Washim","Yavatmal"
   ],
 
-  Manipur: [
+  "Manipur": [
     "Bishnupur","Chandel","Churachandpur","Imphal East","Imphal West",
     "Jiribam","Kakching","Kamjong","Kangpokpi","Noney","Pherzawl",
     "Senapati","Tamenglong","Tengnoupal","Thoubal","Ukhrul"
   ],
 
-  Meghalaya: [
+  "Meghalaya": [
     "East Garo Hills","East Khasi Hills","Jaintia Hills",
     "North Garo Hills","Ri-Bhoi","South Garo Hills",
     "South West Garo Hills","South West Khasi Hills",
     "West Garo Hills","West Khasi Hills"
   ],
 
-  Mizoram: [
+  "Mizoram": [
     "Aizawl","Champhai","Kolasib","Lawngtlai","Lunglei",
     "Mamit","Saiha","Serchhip"
   ],
 
-  Nagaland: [
+  "Nagaland": [
     "Dimapur","Kiphire","Kohima","Longleng","Mokokchung",
     "Mon","Peren","Phek","Tuensang","Wokha","Zunheboto"
   ],
 
-  Odisha: [
+  "Odisha": [
     "Angul","Balangir","Balasore","Bargarh","Bhadrak","Boudh",
     "Cuttack","Deogarh","Dhenkanal","Gajapati","Ganjam","Jagatsinghpur",
     "Jajpur","Jharsuguda","Kalahandi","Kandhamal","Kendrapara",
@@ -240,7 +673,7 @@ const districtsByState = {
     "Sambalpur","Subarnapur","Sundargarh"
   ],
 
-  Punjab: [
+  "Punjab": [
     "Amritsar","Barnala","Bathinda","Faridkot","Fatehgarh Sahib",
     "Fazilka","Ferozepur","Gurdaspur","Hoshiarpur","Jalandhar",
     "Kapurthala","Ludhiana","Mansa","Moga","Mohali",
@@ -248,7 +681,7 @@ const districtsByState = {
     "Shaheed Bhagat Singh Nagar","Tarn Taran"
   ],
 
-  Rajasthan: [
+  "Rajasthan": [
     "Ajmer","Alwar","Banswara","Baran","Barmer","Bharatpur",
     "Bhilwara","Bikaner","Bundi","Chittorgarh","Churu","Dausa",
     "Dholpur","Dungarpur","Hanumangarh","Jaipur","Jaisalmer",
@@ -257,7 +690,7 @@ const districtsByState = {
     "Sikar","Sirohi","Sri Ganganagar","Tonk","Udaipur"
   ],
 
-  Sikkim: ["East Sikkim","North Sikkim","South Sikkim","West Sikkim"],
+  "Sikkim": ["East Sikkim","North Sikkim","South Sikkim","West Sikkim"],
 
   "Tamil Nadu": [
     "Chennai","Chengalpattu","Kanchipuram","Tiruvallur","Vellore",
@@ -269,7 +702,7 @@ const districtsByState = {
     "Krishnagiri","Dharmapuri","Nilgiris","Kallakurichi"
   ],
 
-  Telangana: [
+  "Telangana": [
     "Adilabad","Bhadradri Kothagudem","Hyderabad","Jagtial",
     "Jangaon","Jayashankar Bhupalpally","Jogulamba Gadwal",
     "Kamareddy","Karimnagar","Khammam","Mahabubabad",
@@ -280,7 +713,7 @@ const districtsByState = {
     "Vikarabad","Wanaparthy","Warangal"
   ],
 
-  Tripura: ["Dhalai","Gomati","Khowai","North Tripura","Sepahijala","South Tripura","Unakoti","West Tripura"],
+  "Tripura": ["Dhalai","Gomati","Khowai","North Tripura","Sepahijala","South Tripura","Unakoti","West Tripura"],
 
   "Uttar Pradesh": [
     "Agra","Aligarh","Allahabad","Ambedkar Nagar","Amethi","Amroha",
@@ -299,7 +732,7 @@ const districtsByState = {
     "Sultanpur","Unnao","Varanasi"
   ],
 
-  Uttarakhand: [
+  "Uttarakhand": [
     "Almora","Bageshwar","Chamoli","Champawat","Dehradun",
     "Haridwar","Nainital","Pauri Garhwal","Pithoragarh",
     "Rudraprayag","Tehri Garhwal","Udham Singh Nagar","Uttarkashi"
@@ -315,13 +748,13 @@ const districtsByState = {
   ],
 
   "Andaman and Nicobar Islands": ["Nicobar","North and Middle Andaman","South Andaman"],
-  Chandigarh: ["Chandigarh"],
+  "Chandigarh": ["Chandigarh"],
   "Dadra and Nagar Haveli and Daman and Diu": ["Daman","Diu","Dadra and Nagar Haveli"],
-  Delhi: ["Central Delhi","East Delhi","New Delhi","North Delhi","North East Delhi","North West Delhi","Shahdara","South Delhi","South East Delhi","South West Delhi","West Delhi"],
+  "Delhi": ["Central Delhi","East Delhi","New Delhi","North Delhi","North East Delhi","North West Delhi","Shahdara","South Delhi","South East Delhi","South West Delhi","West Delhi"],
   "Jammu and Kashmir": ["Anantnag","Bandipora","Baramulla","Budgam","Doda","Ganderbal","Jammu","Kathua","Kishtwar","Kulgam","Kupwara","Poonch","Pulwama","Rajouri","Ramban","Reasi","Samba","Shopian","Srinagar","Udhampur"],
-  Ladakh: ["Kargil","Leh"],
-  Lakshadweep: ["Lakshadweep"],
-  Puducherry: ["Karaikal","Mahe","Puducherry","Yanam"]
+  "Ladakh": ["Kargil","Leh"],
+  "Lakshadweep": ["Lakshadweep"],
+  "Puducherry": ["Karaikal","Mahe","Puducherry","Yanam"]
 
 };
 
@@ -446,7 +879,6 @@ const communityCasteData = {
 
 // ------------ Profession Options ------------
 const professionOptions = [
-  { value: "", label: "Select Occupation" },
   { value: "Occupation with own", label: "Occupation with own" },
   { value: "Software Engineer", label: "Software Engineer" },
   { value: "Doctor", label: "Doctor" },
@@ -576,6 +1008,10 @@ const professionOptions = [
         ...prev, 
         photos: [...prev.photos, ...validFiles] 
       }));
+      // Clear validation error when photos are uploaded
+      if (validationErrors.photos) {
+        setValidationErrors((prev) => ({ ...prev, photos: "" }));
+      }
     }
   };
 
@@ -584,6 +1020,12 @@ const professionOptions = [
       ...prev,
       photos: prev.photos.filter((_, i) => i !== index),
     }));
+    // Re-validate photos if removing last photo
+    if (form.photos.length === 1) {
+      setValidationErrors((prev) => ({ ...prev, photos: "At least one profile photo is required" }));
+    } else {
+      setValidationErrors((prev) => ({ ...prev, photos: "" }));
+    }
   };
 
   const validateStep = (step) => {
@@ -606,7 +1048,12 @@ const professionOptions = [
           errors.confirmPassword = "Passwords do not match";
         break;
       case 2:
-  if (!form.email?.trim()) errors.email = "Email required";
+  if (!form.gender) errors.gender = "Gender is required";
+  if (!form.email?.trim()) {
+    errors.email = "Email is required";
+  } else if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(form.email.trim())) {
+    errors.email = "Only Gmail addresses are accepted (e.g., name@gmail.com)";
+  }
   
   if (form.dob) {
     const calculatedAge = calculateAge(form.dob);
@@ -709,9 +1156,12 @@ const professionOptions = [
           if (!form.annualIncome) errors.annualIncome = "Income required";
           if (!form.district?.trim()) errors.district = "District required";
           if (!form.state?.trim()) errors.state = "State required";
+          if (!form.address?.trim()) errors.address = "Address is required"
         break;
       case 6:
         if (!form.about?.trim()) errors.about = "About yourself required";
+        if (!form.photos || form.photos.length === 0) errors.photos = "At least one profile photo is required";
+        if (!form.aadhar) errors.aadhar = "ID proof is required for verification";
         break;
       default:
         break;
@@ -740,7 +1190,18 @@ const professionOptions = [
         nextStep();
         return;
     }
-
+ 
+    // Show payment summary before final submission
+    if (paymentStep === "form") {
+        if (!validateStep(6)) {
+            setError("Please fix errors before proceeding.");
+            return;
+        }
+        setError("");
+        setPaymentStep("summary");
+        return;
+    }
+ 
     // Final validation - ensure password is present before submission
     if (!form.password || form.password.trim() === "") {
         setError("Password is required. Please go back to step 1 and enter your password.");
@@ -1136,6 +1597,209 @@ const professionOptions = [
   //   setError(""); setValidationErrors({});
   // };
 
+  if (paymentStep === "summary") {
+    return (
+      <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? 'h-full flex flex-col' : 'p-6'}`}>
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold text-red-600">Almost Done!</h2>
+          <p className="text-gray-500 text-sm">Review your order</p>
+        </div>
+        <div className={`${inModal ? 'flex-1 overflow-y-auto px-6 pb-6' : 'max-h-[75vh] overflow-y-auto'}`}>
+          <PaymentSummary
+            plan={form.membershipType}
+            onProceed={() => setPaymentStep("payment")}
+            onBack={() => setPaymentStep("form")}
+          />
+        </div>
+      </div>
+    );
+  }
+ 
+  if (paymentStep === "payment") {
+    const handlePaymentProceed = async () => {
+      setLoading(true);
+      setRegistrationError("");
+
+      try {
+        const formData = new FormData();
+        const userData = {
+          profileFor: form.profileFor,
+          name: form.name.trim(),
+          email: form.email.trim().toLowerCase(),
+          mobile: form.mobile.replace(/\D/g, ""),
+          password: (form.password || "").trim(),
+          gender: form.gender.toUpperCase(),
+          maritalStatus: convertMaritalStatus(form.maritalStatus),
+          age: parseInt(form.age) || calculateAge(form.dob),
+          dob: form.dob,
+          motherTongue: form.motherTongue === "Other" ? (form.motherTongueOther || "Other") : form.motherTongue,
+          religion: form.religion === "Other" ? (form.religionOther || "Other") : form.religion,
+          community: form.community === "Other" ? form.communityOther : form.community,
+          caste: form.caste === "Others" ? form.subCasteOther : form.caste,
+          subCaste: form.caste === "Others" ? form.subCasteOther : (form.community === "Other" ? form.subCasteOther : form.caste),
+          willingOtherCaste: form.willingOtherCaste,
+          dosham: form.dosham,
+          education: form.education,
+          occupation: form.occupation || "",
+          profession: form.occupation || "",
+          employedIn: form.employedIn,
+          specialization: form.specialization || "",
+          educationalQualification: form.educationalQualification || "",
+          certificateCourses: form.certificateCourses || "",
+          annualIncome: parseIncome(form.annualIncome),
+          address: form.address || "",
+          city: form.city || "",
+          state: form.state,
+          district: form.district,
+          country: form.country,
+          pincode: form.pincode || "",
+          familyStatus: form.familyStatus,
+          familyType: form.familyType,
+          height: convertHeightToCm(form.height),
+          physicallyChallenged: form.physicallyChallenged === "Yes",
+          physicallyChallengedDescription: form.physicallyChallenged === "Yes"
+            ? (form.physicallyChallengedDescription || "") : "",
+          about: form.about,
+          childrenCount: form.childrenCount || "0",
+          childrenWithYou: form.childrenWithYou || false,
+          minAge: parseInt(form.partnerAgeMin) || 18,
+          maxAge: parseInt(form.partnerAgeMax) || 60,
+          membershipType: form.membershipType || "SILVER",
+        };
+
+        formData.append(
+          "user",
+          new Blob([JSON.stringify(userData)], { type: "application/json" })
+        );
+
+        if (form.photos && form.photos.length > 0) {
+          form.photos.forEach((photo) => formData.append("photos", photo));
+        }
+        if (form.aadhar) {
+          formData.append("aadhar", form.aadhar);
+        }
+
+        // ── TESTING MODE: skip API, go straight to success ────────────────
+        // TODO: Remove this block and uncomment the real API call below
+        //       when backend is ready.
+        console.log("🧪 TEST MODE — skipping API, showing success screen");
+        await new Promise((r) => setTimeout(r, 1200)); // simulate network delay
+        setPaymentStep("success");
+        setLoading(false);
+        return;
+
+        // ── REAL API CALL (uncomment when backend is ready) ───────────────
+        // const apiModule = await import('../../config/api');
+        // const url = apiModule.buildApiUrl("api/auth/register");
+        // const response = await fetch(url, {
+        //   method: "POST",
+        //   body: formData,
+        //   credentials: "include",
+        //   mode: "cors",
+        // });
+        // if (!response.ok) {
+        //   let errorMessage = `Server error ${response.status}`;
+        //   try {
+        //     const errorText = await response.text();
+        //     const errorJson = JSON.parse(errorText);
+        //     errorMessage = errorJson.message || errorJson.error || errorMessage;
+        //   } catch (_) {}
+        //   throw new Error(errorMessage);
+        // }
+        // const result = await response.json();
+        // if (!result.token) throw new Error(result.error || "Registration failed");
+        // localStorage.setItem("authToken", result.token);
+        // localStorage.setItem("user", JSON.stringify(result.user));
+        // try {
+        //   const axiosInstance = (await import('../../api/axiosUser')).default;
+        //   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${result.token}`;
+        // } catch (_) {}
+        // syncAuthFromStorage();
+        // if (onClose) onClose();
+        // if (onRegisterSuccess) onRegisterSuccess(result);
+        // setPaymentStep("success");
+
+      } catch (err) {
+        console.error("❌ Registration error during payment:", err);
+
+        let msg = err.message || "Registration failed. Please try again.";
+
+        // ── Friendly error messages ───────────────────────────────────────
+        if (err.name === "TypeError" && msg.includes("Failed to fetch")) {
+          msg = "Cannot reach the server. Please check your internet connection and try again.";
+        } else if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("already exists")) {
+          if (msg.toLowerCase().includes("email")) {
+            msg = "This email is already registered. Please go back and use a different email.";
+          } else if (msg.toLowerCase().includes("mobile")) {
+            msg = "This mobile number is already registered. Please go back and use a different number.";
+          } else {
+            msg = "Account already exists. Please try logging in instead.";
+          }
+        }
+
+        // ── Stay on payment screen, show error — do NOT go back to form ──
+        setRegistrationError(msg);
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? 'h-full flex flex-col' : 'p-6'}`}>
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold text-red-600">Secure Payment</h2>
+          <p className="text-gray-500 text-sm">Choose your payment method</p>
+        </div>
+
+        {/* Show registration error on payment screen — don't redirect away */}
+        {registrationError && (
+          <div className="mx-0 mb-4 bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
+            <span className="text-lg flex-shrink-0">⚠️</span>
+            <div>
+              <p className="font-semibold mb-0.5">Registration Failed</p>
+              <p>{registrationError}</p>
+              <button
+                type="button"
+                onClick={() => { setRegistrationError(""); setPaymentStep("form"); setStep(1); }}
+                className="mt-2 text-xs underline text-red-600 hover:text-red-800"
+              >
+                ← Go back and fix your details
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className={`${inModal ? 'flex-1 overflow-y-auto px-6 pb-6' : 'max-h-[75vh] overflow-y-auto'}`}>
+          <PaymentMethod
+            plan={form.membershipType}
+            onProceed={handlePaymentProceed}
+            onBack={() => { setRegistrationError(""); setPaymentStep("summary"); }}
+            loading={loading}
+          />
+        </div>
+      </div>
+    );
+  }
+ 
+  if (paymentStep === "success") {
+    return (
+      <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? 'h-full flex flex-col' : 'p-6'}`}>
+        <div className={`${inModal ? 'flex-1 overflow-y-auto px-6 py-6' : 'max-h-[75vh] overflow-y-auto'}`}>
+          <PaymentSuccess
+            plan={form.membershipType}
+            userData={form}
+            onVisitPage={(route) => {
+              // Navigate to the plan-specific member page
+              // SILVER → /silver-members, GOLD → /gold-members, DIAMOND → /diamond-members
+              navigate(route, { replace: true });
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+ 
   return (
     <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? 'h-full flex flex-col' : 'p-6'}`}>
       <div className={`text-center mb-6 ${inModal ? 'shrink-0 px-6 pt-6' : ''}`}>
@@ -1286,8 +1950,8 @@ const professionOptions = [
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Gender *
-              </label>
+  Gender <span className="text-red-500">*</span>
+</label>
               <div className="flex items-center space-x-6">
                 {["Male", "Female"].map((gender) => (
                   <label
@@ -1313,16 +1977,28 @@ const professionOptions = [
               )}
             </div>
 
-            <FloatingInput
-              label="Date of Birth"
-              name="dob"
-              type="date"
-              value={form.dob}
-              onChange={handleChange}
-              required
-              error={validationErrors.dob}
-              className="z-50"
-            />
+            <div className="relative">
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Date of Birth <span className="text-red-500">*</span>
+  </label>
+  <input
+    type="date"
+    name="dob"
+    value={form.dob}
+    onChange={handleChange}
+    required
+    min="1975-01-01"
+    max={new Date(new Date().setFullYear(new Date().getFullYear() - 18))
+      .toISOString().split("T")[0]}
+    className={`w-full border rounded-lg px-3 py-3 text-gray-800 text-sm bg-white
+      focus:outline-none focus:ring-2 focus:ring-red-400 transition-all cursor-pointer
+      ${validationErrors.dob ? "border-red-400" : "border-gray-300"}`}
+    style={{ colorScheme: "light" }}
+  />
+  {validationErrors.dob && (
+    <p className="text-red-500 text-xs mt-1">{validationErrors.dob}</p>
+  )}
+</div>
 
             <FloatingInput
               label="Age"
@@ -1370,14 +2046,14 @@ const professionOptions = [
 </div>
 
             <FloatingInput
-              label="Email ID"
+              label="Email ID (Gmail only)"
               name="email"
               type="email"
               value={form.email}
               onChange={handleChange}
               required
               error={validationErrors.email}
-              placeholder="your.email@example.com"
+              placeholder="yourname@gmail.com"
             />
           </div>
         )}
@@ -1893,6 +2569,15 @@ const professionOptions = [
     <p className="text-red-500 text-sm">{validationErrors.educationalQualification}</p>
   )} 
 </div>
+    
+    {/* Specialization (normal input) */}
+    <FloatingInput
+      label="Specialization"
+      name="specialization"
+      value={form.specialization}
+      onChange={handleChange}
+      placeholder="e.g., Computer Science, Business Administration"
+    />
 
     {/* Certificate Courses */}
     <FloatingInput
@@ -1901,15 +2586,6 @@ const professionOptions = [
       value={form.certificateCourses}
       onChange={handleChange}
       placeholder="e.g., AWS Certified, PMP, Digital Marketing, etc."
-    />
-
-    {/* Specialization (normal input) */}
-    <FloatingInput
-      label="Specialization"
-      name="specialization"
-      value={form.specialization}
-      onChange={handleChange}
-      placeholder="e.g., Computer Science, Business Administration"
     />
 
        {/* ⭐ Employed In with Other option */}
@@ -2194,12 +2870,13 @@ const professionOptions = [
       maxLength="6"
     />
 
-        {/* Address (Optional) */}
+        {/* Address (Required) */}
 <FloatingInput
-  label="Address (Optional)"
+  label="Address"
   name="address"
   value={form.address}
   onChange={handleChange}
+  required
   textarea
   placeholder="Enter your complete address"
   rows="4"
@@ -2253,12 +2930,19 @@ const professionOptions = [
             {/* Photos Upload - Updated with green colors */}
             <div>
               <label className="block text-lg font-bold text-red-600 mb-1">
-                📸 Profile Photos
+                📸 Profile Photos <span className="text-red-500">*</span>
               </label>
               <p className="text-sm text-gray-600 mb-3">
-                Upload clear, recent photos for better matches
+                Upload clear, recent photos for better matches (Required)
               </p>
-              <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-500 transition-colors duration-300 bg-gray-50 hover:bg-green-50">
+              {validationErrors.photos && (
+                <p className="text-red-600 text-sm mb-2">{validationErrors.photos}</p>
+              )}
+              <div className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors duration-300 ${
+                validationErrors.photos 
+                  ? "border-red-500 bg-red-50 hover:bg-red-100" 
+                  : "border-gray-300 bg-gray-50 hover:border-green-500 hover:bg-green-50"
+              }`}>
                 <input
                   type="file"
                   multiple
@@ -2266,6 +2950,7 @@ const professionOptions = [
                   onChange={handlePhotoUpload}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   disabled={form.photos.length >= 3}
+                  
                 />
                 <div className="flex flex-col items-center justify-center">
                   <svg
@@ -2345,12 +3030,19 @@ const professionOptions = [
  {/* ID Proof Upload - Changed from Aadhar */}
 <div>
   <label className="block text-lg font-bold text-red-600 mb-1">
-    🆔 Upload Any ID Proof
+    🆔 Upload Any ID Proof <span className="text-red-500">*</span>
   </label>
   <p className="text-sm text-gray-600 mb-3">
-    Upload for identity verification
+    Upload for identity verification (Required)
   </p>
-  <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-500 transition-colors duration-300 bg-green-50 hover:bg-green-100">
+  {validationErrors.aadhar && (
+    <p className="text-red-600 text-sm mb-2">{validationErrors.aadhar}</p>
+  )}
+  <div className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors duration-300 ${
+    validationErrors.aadhar 
+      ? "border-red-500 bg-red-50 hover:bg-red-100" 
+      : "border-gray-300 bg-green-50 hover:border-green-500 hover:bg-green-100"
+  }`}>
     <input
       type="file"
       accept=".pdf,.PDF,.jpg,.jpeg,.png,.JPG,.JPEG,.PNG"
@@ -2370,6 +3062,10 @@ const professionOptions = [
             }
             setForm((prev) => ({ ...prev, aadhar: file }));
             setError("");
+            // Clear validation error when ID proof is uploaded
+            if (validationErrors.aadhar) {
+              setValidationErrors((prev) => ({ ...prev, aadhar: "" }));
+            }
           } else {
             setError("Please upload PDF, JPG, or PNG for ID Proof");
           }
@@ -2467,9 +3163,11 @@ const professionOptions = [
 
           <button
             type="button"
-            onClick={() =>
-              setForm((prev) => ({ ...prev, aadhar: null }))
-            }
+            onClick={() => {
+              setForm((prev) => ({ ...prev, aadhar: null }));
+              // Re-validate when ID proof is removed
+              setValidationErrors((prev) => ({ ...prev, aadhar: "ID proof is required for verification" }));
+            }}
             className="flex items-center gap-1 px-3 py-1.5 text-xs bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             title="Remove Aadhar"
           >
@@ -2585,9 +3283,9 @@ const professionOptions = [
               </div>
               <div className="flex flex-col space-y-3">
                 {[
-                  { value: "SILVER", label: "SILVER", price: "/Per 3 Months" },
-                  { value: "GOLD", label: "GOLD", price: "₹499/Per 3 Months" },
-                  { value: "DIAMOND", label: "DIAMOND", price: "₹749/Per 3 Months" },
+                  { value: "SILVER", label: "SILVER", price: "₹299 + Tax/Per 3 Months" },
+                  { value: "GOLD", label: "GOLD", price: "₹499 + Tax/Per 3 Months" },
+                  { value: "DIAMOND", label: "DIAMOND", price: "₹749 + Tax/Per 3 Months" },
                 ].map((membership) => (
                   <label
                     key={membership.value}

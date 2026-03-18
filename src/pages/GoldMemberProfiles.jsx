@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import profileService from "../services/profileService";
 import ProfileCard from "../components/profiles/ProfileCard";
 import ProfileFilters from "../components/profiles/FilterSidebar";
-import { useAuth } from "../context/AuthContext";
+import { useMockAuth as useAuth } from "../context/MockAuthContext";
 import CategoryNav from "../components/common/CategoryNav";
 import Banner from "../components/common/Banner";
 
@@ -60,16 +60,18 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
     setError("");
     
     try {
-      console.log("🔄 GoldMemberProfiles: Fetching GOLD profiles...", { page, size });
+      console.log("🔄 GoldMemberProfiles: Fetching GOLD membership profiles...", { page, size });
+
+      // Ask backend explicitly for GOLD membership profiles
       const data = await profileService.getAllProfiles(page, size, "GOLD");
       console.log("✅ GoldMemberProfiles: Service response:", data);
       
       let profilesData = data.content || [];
-      
-      // Filter to ensure only GOLD membership profiles are shown
+
+      // Only show GOLD membership profiles on this page
       profilesData = profilesData.filter(profile => {
-        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
-        return profileMembership === "GOLD";
+        const mem = (profile.membershipType || profile.user?.membership || "").toString().toUpperCase();
+        return mem === "GOLD";
       });
       
       const paginationData = {
@@ -103,92 +105,66 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
     }
   };
 
-  const handleSearchResults = async (filters) => {
+  const handleSearchResults = (filters) => {
     setLoading(true);
     setError("");
-    
-    try {
-      console.log("🔍 GoldMemberProfiles: Searching with filters", filters);
-      
-      const searchFilters = {
-        gender: filters.gender,
-        minAge: filters.ageMin,
-        maxAge: filters.ageMax,
-        religion: filters.religion,
-        caste: filters.caste,
-        subCaste: filters.subCaste,
-        maritalStatus: filters.maritalStatus,
-        education: filters.education,
-        occupation: filters.occupation,
-        employedIn: filters.employedIn,
-        annualIncome: filters.annualIncome,
-        country: filters.country,
-        state: filters.state,
-        district: filters.district,
-        category: filters.category
-      };
 
-      Object.keys(searchFilters).forEach(key => {
-        if (!searchFilters[key] || searchFilters[key] === "") {
-          delete searchFilters[key];
-        }
-      });
+    console.log("🔍 GoldMemberProfiles: Searching with GOLD filters", filters);
 
-      console.log("🔍 Converted search filters:", searchFilters);
-      
-      const searchData = await profileService.searchProfiles(searchFilters);
-      console.log("✅ GoldMemberProfiles: Search results:", searchData);
-      
-      let searchProfiles = [];
-      
-      if (searchData.profiles && Array.isArray(searchData.profiles)) {
-        searchProfiles = searchData.profiles;
-      } else if (Array.isArray(searchData)) {
-        searchProfiles = searchData;
-      } else if (searchData.content && Array.isArray(searchData.content)) {
-        searchProfiles = searchData.content;
-      } else if (searchData.fallback) {
-        searchProfiles = filterProfilesClientSide(profiles, searchFilters);
-      } else {
-        searchProfiles = [];
+    const searchFilters = {
+      membershipType: "GOLD",
+      gender: filters.gender,
+      minAge: filters.minAge ?? filters.ageMin,
+      maxAge: filters.maxAge ?? filters.ageMax,
+      religion: filters.religion,
+      caste: filters.caste,
+      subCaste: filters.subCaste,
+      maritalStatus: filters.maritalStatus,
+      education: filters.education,
+      occupation: filters.occupation,
+      employedIn: filters.employedIn,
+      annualIncome: filters.annualIncome,
+      country: filters.country,
+      state: filters.state,
+      district: filters.district,
+      category: filters.category,
+    };
+
+    Object.keys(searchFilters).forEach((key) => {
+      if (!searchFilters[key] || searchFilters[key] === "") {
+        delete searchFilters[key];
       }
-      
-      // Filter to ensure only GOLD membership profiles are shown
-      searchProfiles = searchProfiles.filter(profile => {
-        const profileMembership = (profile.user?.membership || profile.membership || profile.membershipType || "SILVER").toUpperCase();
-        return profileMembership === "GOLD";
-      });
-      
-      setSearchResults(searchProfiles);
-      
-    } catch (err) {
-      console.error("❌ GoldMemberProfiles: Search error", err);
-      setError(err.message || "Search failed");
-      
-      console.log("🔄 Using client-side filtering as fallback");
-      const searchFilters = {
-        gender: filters.gender,
-        minAge: filters.ageMin,
-        maxAge: filters.ageMax,
-        religion: filters.religion,
-        caste: filters.caste,
-        subCaste: filters.subCaste,
-        maritalStatus: filters.maritalStatus,
-        education: filters.education,
-        occupation: filters.occupation,
-        employedIn: filters.employedIn,
-        annualIncome: filters.annualIncome,
-        country: filters.country,
-        state: filters.state,
-        district: filters.district,
-        category: filters.category
-      };
-      
-      const fallbackResults = filterProfilesClientSide(profiles, searchFilters);
-      setSearchResults(fallbackResults);
-    } finally {
-      setLoading(false);
-    }
+    });
+
+    profileService
+      .searchProfiles(searchFilters)
+      .then((searchData) => {
+        let searchProfiles = [];
+        if (searchData?.profiles && Array.isArray(searchData.profiles)) {
+          searchProfiles = searchData.profiles;
+        } else if (Array.isArray(searchData)) {
+          searchProfiles = searchData;
+        } else if (searchData?.content && Array.isArray(searchData.content)) {
+          searchProfiles = searchData.content;
+        }
+
+        // Ensure GOLD only (defensive)
+        searchProfiles = searchProfiles.filter((p) => {
+          const mem = (p.membershipType || p.user?.membership || "").toString().toUpperCase();
+          return mem === "GOLD";
+        });
+
+        setSearchResults(searchProfiles);
+      })
+      .catch((err) => {
+        console.error("❌ GoldMemberProfiles: Search error", err);
+        setError(err.message || "Search failed");
+
+        // Fallback to client-side filtering of already loaded GOLD profiles
+        const filtered = filterProfilesClientSide(profiles, searchFilters);
+        setSearchResults(filtered);
+      })
+      .finally(() => setLoading(false));
   };
 
   const filterProfilesClientSide = (allProfiles, filters) => {
@@ -241,13 +217,49 @@ export default function GoldMemberProfiles({ onOpenAuthModal }) {
       
       if (filters.annualIncome && profile.annualIncome !== filters.annualIncome) return false;
       
-      if (filters.country && profile.country !== filters.country) return false;
-      if (filters.state && profile.state !== filters.state) return false;
+      // ---- Location filters (use country/state/district OR fallback to location string) ----
+      // NOTE: Treat "India" as default country so we don't accidentally
+      // hide Indian profiles that don't explicitly store "India" in data.
+      if (filters.country && filters.country !== "India") {
+        const filterCountry = filters.country.toLowerCase();
+        const profileCountry = (profile.country || "").toLowerCase();
+        const profileLocation = (profile.location || "").toLowerCase();
+
+        if (profileCountry) {
+          if (profileCountry !== filterCountry && !profileLocation.includes(filterCountry)) {
+            return false;
+          }
+        } else if (!profileLocation.includes(filterCountry)) {
+          return false;
+        }
+      }
+
+      if (filters.state) {
+        const filterState = filters.state.toLowerCase();
+        const profileState = (profile.state || "").toLowerCase();
+        const profileLocation = (profile.location || "").toLowerCase();
+
+        if (profileState) {
+          if (profileState !== filterState && !profileLocation.includes(filterState)) {
+            return false;
+          }
+        } else if (!profileLocation.includes(filterState)) {
+          return false;
+        }
+      }
       
-      if (filters.district && profile.district) {
-        const profileDistrict = profile.district.toLowerCase();
+      if (filters.district) {
         const filterDistrict = filters.district.toLowerCase();
-        if (!profileDistrict.includes(filterDistrict)) return false;
+        const profileDistrict = (profile.district || "").toLowerCase();
+        const profileLocation = (profile.location || "").toLowerCase();
+
+        if (profileDistrict) {
+          if (!profileDistrict.includes(filterDistrict) && !profileLocation.includes(filterDistrict)) {
+            return false;
+          }
+        } else if (!profileLocation.includes(filterDistrict)) {
+          return false;
+        }
       }
       
       if (filters.dosham && filters.dosham !== "Doesn't Matter") {

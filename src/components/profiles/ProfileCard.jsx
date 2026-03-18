@@ -206,13 +206,34 @@ export default function ProfileCard({
 
   const handleViewProfile = (e) => {
     e?.stopPropagation();
+    
+    // Ensure we have a valid profile ID
+    if (!profile || !profile.id) {
+      console.error("❌ Cannot navigate: Profile or profile ID is missing", profile);
+      alert("Profile information is missing. Please try again.");
+      return;
+    }
+    
     const profileType = normalizedGender === "Female" ? "bride" : "groom";
-    console.log("🔗 Navigating to:", `/${profileType}-profile/${profile.id}`);
-    navigate(`/${profileType}-profile/${profile.id}`, {
-      state: {
-        membershipType: (profile?.membershipType || profile?.user?.membership || profile?.membership || "SILVER").toUpperCase()
-      }
+    const profileId = profile.id;
+    
+    console.log("🔗 Navigating to profile:", {
+      profileType,
+      profileId,
+      profileName: profile.name,
+      membershipType: profile?.membershipType || profile?.user?.membership || profile?.membership || "SILVER"
     });
+    
+    try {
+      navigate(`/${profileType}-profile/${profileId}`, {
+        state: {
+          membershipType: (profile?.membershipType || profile?.user?.membership || profile?.membership || "SILVER").toUpperCase()
+        }
+      });
+    } catch (error) {
+      console.error("❌ Navigation error:", error);
+      alert("Failed to navigate to profile. Please try again.");
+    }
   };
 
   const handleCardClick = (e) => {

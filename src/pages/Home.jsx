@@ -758,40 +758,69 @@ export default function Home({ onOpenAuthModal }) {
   </div>
 
             {/* Login Box */}
-            <div
-              className="bg-white rounded-2xl shadow-xl p-6 flex-1 flex flex-col justify-center"
-              style={{
-                boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
-                border: "1px solid rgba(185,28,28,0.12)",
-              }}
-            >
-              <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
-                Login To Get Started
-              </h3>
+<div
+  className="bg-white rounded-2xl shadow-xl p-6 flex-1 flex flex-col justify-center"
+  style={{
+    boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
+    border: "1px solid rgba(185,28,28,0.12)",
+  }}
+>
+  <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
+    Login To Get Started
+  </h3>
 
-              <div className="mb-3">
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-                />
-              </div>
+  <form onSubmit={(e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    
+    // Simple validation
+    if (!email || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    // Mock authentication - replace with actual API call
+    if (email === 'test@example.com' && password === 'password123') {
+      alert('Login successful!');
+      // Here you would typically:
+      // 1. Call your actual login API
+      // 2. Store the auth token
+      // 3. Update auth context
+      // 4. Redirect or update UI
+    } else {
+      alert('Invalid email or password. Try test@example.com / password123');
+    }
+  }}>
+    <div className="mb-3">
+      <input
+        type="email"
+        name="email"
+        placeholder="Email address"
+        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+        required
+      />
+    </div>
 
-              <div className="mb-4">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-                />
-              </div>
+    <div className="mb-4">
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
+        required
+      />
+    </div>
 
-              {/* Login Now only — Register moved to banner above */}
-              <button
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
-              >
-                Login Now
-              </button>
-            </div>
+    {/* Login Now only — Register moved to banner above */}
+    <button
+      type="submit"
+      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
+    >
+      Login Now
+    </button>
+  </form>
+</div>
           </div>
         )}
 
@@ -1530,7 +1559,7 @@ export default function Home({ onOpenAuthModal }) {
         </div>
 
         <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Success Stories – Building Happy Families</span>
+         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Hear From Happy Couples</span>
         </h3>
 
         <div className="space-y-3">
@@ -1617,8 +1646,7 @@ export default function Home({ onOpenAuthModal }) {
             <div className="inline-flex items-center justify-center mb-4">
               <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 mr-2 sm:mr-3"></div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-                How It Works
-              </h2>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> How It Works</span>              </h2>
               <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 ml-2 sm:ml-3"></div>
             </div>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 text-justify">
@@ -1908,7 +1936,7 @@ export default function Home({ onOpenAuthModal }) {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Hear From Happy Couples
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Success Stories – Building Happy Families</span>
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 text-justify">
               Real stories from couples who found love through our platform
@@ -2012,7 +2040,7 @@ export default function Home({ onOpenAuthModal }) {
       <div className="bg-gray-50 py-12 sm:py-16 border-t border-gray-200 z-20">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900">
-            Ready to Start Your Journey?
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> Ready to Start Your Journey?</span>
           </h3>
           <p className="text-gray-600 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 px-4">
             Join millions in finding their perfect life partner

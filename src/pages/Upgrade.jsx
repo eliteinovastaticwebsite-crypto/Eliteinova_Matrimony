@@ -421,7 +421,7 @@ export default function Upgrade({ onOpenAuthModal }) {
                     <div className="text-center mb-8">
                       <div className="flex flex-col items-center justify-center space-y-2">
                         <span className="text-lg font-bold text-gray-600 whitespace-nowrap">
-  {`₹${plan.price}/Per 3 Months + Tax`}
+  {`₹${plan.price}+ Tax / 3 Months`}
 </span>
                       </div>
                       {plan.savings && (

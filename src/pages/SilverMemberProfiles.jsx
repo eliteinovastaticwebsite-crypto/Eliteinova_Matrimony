@@ -65,7 +65,14 @@ export default function SilverMemberProfiles({ onOpenAuthModal }) {
       const data = await profileService.getAllProfiles(page, size);
       console.log("✅ SilverMemberProfiles: Service response:", data);
       
-      const profilesData = data.content || [];
+      let profilesData = data.content || [];
+
+      // Only show SILVER membership profiles on this page
+      profilesData = profilesData.filter(profile => {
+        const mem = (profile.membershipType || profile.user?.membership || "").toString().toUpperCase();
+        return mem === "SILVER" || mem === "";// treat missing as SILVER/basic
+      });
+
       const paginationData = {
         page: data.number || page,
         size: data.size || size,
@@ -105,9 +112,10 @@ export default function SilverMemberProfiles({ onOpenAuthModal }) {
       console.log("🔍 SilverMemberProfiles: Searching with filters", filters);
       
       const searchFilters = {
+        membershipType: "SILVER",
         gender: filters.gender,
-        minAge: filters.ageMin,
-        maxAge: filters.ageMax,
+        minAge: filters.minAge ?? filters.ageMin,
+        maxAge: filters.maxAge ?? filters.ageMax,
         religion: filters.religion,
         caste: filters.caste,
         subCaste: filters.subCaste,

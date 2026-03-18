@@ -109,6 +109,9 @@ const getMockProfiles = () => {
       // Filter profiles by membership type (client-side fallback if backend doesn't filter)
       if (userMembershipType && profilesData.length > 0) {
         profilesData = profilesData.filter(profile => {
+           if(data && data.membershipType){
+           profile.membership = data.membershipType;
+        }
           const profileMembership = profile.user?.membership || profile.membership || "SILVER";
           return profileMembership === userMembershipType;
         });
@@ -134,7 +137,7 @@ const getMockProfiles = () => {
       const mockData = getMockProfiles();
       setProfiles(mockData);
       setPagination({
-        page: 0,
+        page: 0,    
         size: 12,
         totalPages: 1,
         totalElements: mockData.length
@@ -309,15 +312,34 @@ const performSearch = async (searchFilters) => {
   const applyQuickFilters = () => {
     let filtered = searchResults || profiles;
     
-    // ✅ ADDED: Filter by membership type - only show profiles matching user's membership
-    if (user?.membership || user?.membershipType) {
-      const userMembership = user.membership || user.membershipType;
-      filtered = filtered.filter(profile => {
-        const profileMembership = profile.user?.membership || profile.membership || "SILVER";
-        return profileMembership === userMembership;
-      });
-      console.log(`🔍 Filtered by membership type ${userMembership}:`, filtered.length, "profiles");
-    }
+    // Membership priority
+const membershipPriority = {
+  SILVER: 1,
+  GOLD: 2,
+  DIAMOND: 3
+};
+
+// ✅ Filter by membership hierarchy
+if (user?.membership || user?.membershipType) {
+  const userMembership = user.membership || user.membershipType;
+  const userLevel = membershipPriority[userMembership] || 1;
+
+  filtered = filtered.filter(profile => {
+    const profileMembership =
+      profile.user?.membership || profile.membership || "SILVER";
+
+    const profileLevel = membershipPriority[profileMembership] || 1;
+
+    // ✅ Allow same or lower memberships
+    return profileLevel <= userLevel;
+  });
+
+  console.log(
+    `🔍 Filtered by membership hierarchy ${userMembership}:`,
+    filtered.length,
+    "profiles"
+  );
+}
     
     // Apply gender filter
     if (genderFilter === "brides") {
@@ -624,17 +646,17 @@ const performSearch = async (searchFilters) => {
 
             {/* Quick Filter Buttons - Membership-based styling */}
             <div 
-  className="rounded-xl shadow-md border-2 p-6 mb-6"
-  style={{ 
-    backgroundColor: "rgba(255,255,255,0.97)",
-    borderColor: "#DC2626",
-    backdropFilter: "blur(8px)"
-  }}
+  // className="rounded-xl shadow-md border-2 p-6 mb-6"
+  // style={{ 
+  //   backgroundColor: "rgba(255,255,255,0.97)",
+  //   borderColor: "#DC2626",
+  //   backdropFilter: "blur(8px)"
+  // }}
 >
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <h3 className={`${isAuthenticated && user?.membership ? 'text-base' : 'text-lg'} font-semibold text-gray-900 mb-3`}>Quick Filters</h3>
 
-                {/* Religion Filter */}
+    
                 <div>
                   <label className={`block ${isAuthenticated && user?.membership ? 'text-xs' : 'text-sm'} font-semibold text-gray-800 mb-2`}>Religion:</label>
                   <div className="flex gap-2 flex-wrap">
@@ -667,7 +689,7 @@ const performSearch = async (searchFilters) => {
 })}
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Active Filters Display */}
               {(genderFilter !== "all" || religionFilter !== "all") && (

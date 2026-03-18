@@ -20,8 +20,10 @@ export default function LoginCard({ onRegister, onLoginSuccess }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     if (!form.email || !form.password) {
       setError("Please fill in all fields");
       return;
@@ -69,7 +71,7 @@ export default function LoginCard({ onRegister, onLoginSuccess }) {
       <h3 className="text-lg font-semibold mb-4 text-red-600">
         Login To Get Started
       </h3>
-      
+
       <form onSubmit={handleSubmit} className="space-y-3">
         <Input
           type="email"
@@ -118,7 +120,7 @@ export default function LoginCard({ onRegister, onLoginSuccess }) {
           )}
         </Button>
       </form>
-      
+
       <p className="mt-3 text-sm text-gray-600 text-center">
         Not registered?{" "}
         <button

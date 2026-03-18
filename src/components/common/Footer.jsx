@@ -193,7 +193,7 @@ export default function Footer({ onRegister, onLogin }) {
               </div>
 
               {/* Stay Updated */}
-              <div className="flex flex-col gap-2 w-full sm:flex-1 sm:min-w-[260px]">
+              {/* <div className="flex flex-col gap-2 w-full sm:flex-1 sm:min-w-[260px]">
                 <div>
                   <p className="text-white font-bold text-sm">Stay Updated</p>
                   <p className="text-white/75 text-xs font-bold">Get the latest matchmaking insights</p>
@@ -208,7 +208,7 @@ export default function Footer({ onRegister, onLogin }) {
                     Subscribe
                   </button>
                 </div>
-              </div>
+              </div> */}
 
             </div>
           </div>
