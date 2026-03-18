@@ -124,6 +124,21 @@ export default function Upgrade({ onOpenAuthModal }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(null);
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const planFromUrl = params.get("plan");
+  if (planFromUrl) {
+    // Find the plan matching SILVER/GOLD/DIAMOND and auto-scroll to it
+    const matchedPlan = plans.find(
+      p => p.name.toUpperCase() === planFromUrl.toUpperCase()
+    );
+    if (matchedPlan) {
+      setTimeout(() => {
+        document.getElementById(`plan-${matchedPlan.id}`)?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    }
+  }
+}, [plans]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState("register");
   const [showSubscription, setShowSubscription] = useState(false);

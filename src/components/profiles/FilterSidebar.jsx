@@ -4478,6 +4478,93 @@ return (
               <FilterBox title="Feedback & Suggestions" bg={tBg} border={tBorder} titleColor={tColor}>
                 <FeedbackForm submitGradient={currentTheme.submitBtn} />
               </FilterBox> */}
+
+              {/* ── Reset & Apply Filter Buttons ── */}
+              <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                <button
+                  onClick={resetFilters}
+                  style={{
+                    flex: 1,
+                    padding: "11px 0",
+                    border: `2px solid ${currentTheme.primary}`,
+                    borderRadius: 10,
+                    background: "#fff",
+                    color: currentTheme.primary,
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = currentTheme.primary;
+                    e.currentTarget.style.color = "#fff";
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.style.color = currentTheme.primary;
+                  }}
+                >
+                  ↺ Reset
+                </button>
+
+                <button
+                  onClick={() => {
+  // Fire the filter change to trigger profile search
+  onFilterChange({ ...filters });
+
+  // On mobile — close the filter panel and scroll to profiles
+  if (window.innerWidth < 768) {
+    setShowMobileFilters(false);
+    // Small delay so panel closes first then scroll happens
+    setTimeout(() => {
+      const profilesGrid = document.getElementById("profiles-grid");
+      if (profilesGrid) {
+        profilesGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 200);
+  } else {
+    // Desktop — just scroll to top of profiles
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}}
+                  style={{
+                    flex: 2,
+                    padding: "11px 0",
+                    border: "none",
+                    borderRadius: 10,
+                    background: currentTheme.submitBtn,
+                    color: "#fff",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    boxShadow: `0 4px 14px ${currentTheme.primary}44`,
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = `0 8px 20px ${currentTheme.primary}66`;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = "";
+                    e.currentTarget.style.boxShadow = `0 4px 14px ${currentTheme.primary}44`;
+                  }}
+                >
+                  🔍 Apply Filters
+                </button>
+              </div>
+
             </div>
           </div>
         </div>

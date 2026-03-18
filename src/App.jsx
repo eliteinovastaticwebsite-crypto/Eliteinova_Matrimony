@@ -34,6 +34,7 @@ import PaymentProtectedRoute from "./components/common/PaymentProtectedRoute";
 import OfficeLogin from "./pages/OfficeLogin";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import RegistrationCompletion from "./pages/RegistrationCompletion";
+import InterestResponsePage from "./pages/InterestResponsePage";
 
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
@@ -148,6 +149,8 @@ function AppContent() {
               </PaymentProtectedRoute>
             }
           />
+          <Route path="/interest-response/:profileId" element={<InterestResponsePage />} />
+<Route path="/upgrade" element={<Upgrade />} />
 
           <Route
             path="/matches"

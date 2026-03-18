@@ -119,7 +119,6 @@ export default function Banner({
   className="w-full h-full object-cover md:object-contain lg:object-cover"
   style={{
     objectPosition: 'center',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' // Fallback color if image doesn't cover
   }}
   onError={(e) => {
     console.error(`Failed to load banner image: ${img}`);

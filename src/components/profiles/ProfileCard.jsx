@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import profileService from "../../services/profileService";
 import { useNavigate } from "react-router-dom";
 import { buildImageUrl, buildApiUrl } from "../../config/api";
+import { generateWhatsAppInterestLink } from "./matrimonyUtils";
+import { useAuth } from "../../context/AuthContext";
 
 // Theme configurations (unchanged)
 const themes = {
@@ -103,6 +105,7 @@ export default function ProfileCard({
   const [finalImageUrl, setFinalImageUrl] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const currentTheme = themes[theme] || themes.default;
 
@@ -189,20 +192,32 @@ export default function ProfileCard({
     setImageError(false);
   }, []);
 
-  const handleExpressInterest = async (e) => {
-    e.stopPropagation();
-    setLoading(true);
-    try {
-      await profileService.expressInterest(profile.id);
-      onInterestExpressed?.(profile.id);
-      alert("Interest expressed successfully! 💝");
-    } catch (err) {
-      console.error("❌ Error expressing interest:", err);
-      alert(err.message || "Failed to express interest. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleExpressInterest = (e) => {
+  e.stopPropagation();
+
+  // Get target person's phone number
+  const targetPhone = (profile?.mobile || profile?.phone || "").replace(/\D/g, "");
+
+  // Sender info from logged-in user
+  const senderName = user?.name || user?.fullName || "Someone";
+  const senderGender = (user?.gender || "Male").toLowerCase();
+  const senderType = senderGender.includes("female") ? "bride" : "groom";
+  const senderUrl = `${window.location.origin}/${senderType}-profile/${user?.profileId || user?.id}`;
+
+  // WhatsApp message
+  const message =
+    `💍 *Eliteinova Matrimony — Interest Received*\n\n` +
+    `Hello! *${senderName}* has shown interest in your profile.\n\n` +
+    `👤 *View their profile:*\n${senderUrl}\n\n` +
+    `Please visit the link and tap *Interested* or *Not Interested* to respond.\n\n` +
+    `_Eliteinova — Connect with Life Partner and Two Families_`;
+
+  const whatsappUrl = targetPhone
+    ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`
+    : `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappUrl, "_blank");
+};
 
   const handleViewProfile = (e) => {
     e?.stopPropagation();

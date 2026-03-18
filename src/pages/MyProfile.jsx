@@ -4,6 +4,10 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { buildImageUrl } from "../config/api";
 import MembershipBanner from "../components/common/MembershipBanner";
+import {
+  ProfilePhotoEditor,
+  PhoneEditor,
+} from "../components/profiles/MatrimonyInterestFlow";
 
 
 const MyProfile = () => {
@@ -948,86 +952,17 @@ const removePhoto = async (index) => {
         {/* Enhanced Profile Header */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border border-gray-200">
           <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0">
-            {/* ✅ FIXED: Profile Image Section */}
-<div className="relative">
-  {/* Main Profile Image */}
-  <div className="w-52 h-52 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center border-8 border-white shadow-2xl overflow-hidden">
-  {validPhotos.length > 0 && activeImage < photos.length && photos[activeImage] && validPhotos.includes(photos[activeImage]) ? (
-    <img
-      src={formatImageUrl(photos[activeImage])}
-      alt={profile.fullName || profile.name}
-      className="w-full h-full object-cover"
-      onError={(e) => {
-        console.error(`❌ Main image failed: ${photos[activeImage]}`);
-        // Find next valid image
-        const currentIndex = validPhotos.indexOf(photos[activeImage]);
-        const nextIndex = (currentIndex + 1) % validPhotos.length;
-        const nextPhoto = validPhotos[nextIndex];
-        const originalIndex = photos.indexOf(nextPhoto);
-        setActiveImage(originalIndex);
-      }}
-      onLoad={() => console.log(`✅ Main image loaded: ${photos[activeImage]}`)}
-    />
-  ) : (
-    <div className="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
-      <span className="text-white text-4xl font-bold">
-        {(profile.fullName || profile.name || "U").charAt(0).toUpperCase()}
-      </span>
-    </div>
-  )}
-</div>
-
-{/* Thumbnails - Only show valid photos */}
-{validPhotos.length > 1 && (
-  <div className="flex gap-2 mt-4 overflow-x-auto max-w-52">
-    {validPhotos.map((photo, validIndex) => {
-      const originalIndex = photos.indexOf(photo);
-      return (
-        <button
-          key={`thumb-${originalIndex}`}
-          onClick={() => setActiveImage(originalIndex)}
-          className={`flex-shrink-0 w-12 h-12 rounded-lg border-2 overflow-hidden transition-all duration-200 ${
-            activeImage === originalIndex
-              ? "border-red-500 shadow-md scale-105"
-              : "border-gray-300 hover:border-gray-400 hover:scale-102"
-          }`}
-        >
-          <img
-            src={formatImageUrl(photo)}
-            alt={`Thumbnail ${validIndex + 1}`}
-            className="w-full h-full object-cover"
-            onLoad={() => console.log(`✅ Thumbnail ${originalIndex} loaded`)}
-          />
-        </button>
-      );
-    })}
-  </div>
-)}
-
-  {/* Upload Button */}
-  {isEditing && (
-    <label className="absolute -bottom-3 -right-3 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-full shadow-lg transition cursor-pointer z-10">
-      <span className="text-sm">📷</span>
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        onChange={handlePhotoUpload}
-        className="hidden"
-      />
-    </label>
-  )}
-
-  {/* Remove Photo Button */}
-  {isEditing && photos.length > 0 && photos[activeImage] && (
-    <button
-      onClick={() => removePhoto(activeImage)}
-      className="absolute -bottom-3 -left-3 bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition z-10"
-    >
-      <span className="text-sm">🗑️</span>
-    </button>
-  )}
-</div>
+            {/* ✅ NEW: Profile Photo Editor */}
+<ProfilePhotoEditor
+  photos={photos}
+  isEditing={isEditing}
+  onUpload={handlePhotoUpload}
+  onRemove={removePhoto}
+  activeImage={activeImage}
+  onSetActive={setActiveImage}
+  formatImageUrl={formatImageUrl}
+  profileName={profile.fullName || profile.name}
+/>
 
             {/* Profile Info */}
             <div className="flex-1 lg:ml-10 text-center lg:text-left">
@@ -1281,14 +1216,11 @@ const PersonalInfoTab = ({
           step="1"
           icon="📏"
         />
-        <InfoField
-          label="Mobile"
-          value={profile.mobile}
-          editing={isEditing}
-          editedValue={editedProfile?.mobile}
-          onChange={(value) => handleChange("mobile", value)}
-          icon="📱"
-        />
+        <PhoneEditor
+  value={isEditing ? editedProfile?.mobile : profile.mobile}
+  isEditing={isEditing}
+  onChange={(value) => handleChange("mobile", value)}
+/>
         <InfoField
           label="Email"
           value={profile.email}

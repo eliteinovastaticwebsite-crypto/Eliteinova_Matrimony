@@ -424,14 +424,14 @@ function PaymentSuccess({ plan, userData, onVisitPage }) {
           </svg>
           Download Invoice (PDF)
         </button>
-        <button type="button" onClick={() => onVisitPage(p.route)}
+       {/* <button type="button" onClick={() => onVisitPage(p.route)}
           className="w-full py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
           style={{ background: p.gradient }}>
           {p.icon} Visit {p.label} Member Page
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
-        </button>
+        </button>*/}
       </div>
     </div>
   );
@@ -1679,15 +1679,101 @@ const professionOptions = [
           formData.append("aadhar", form.aadhar);
         }
 
-        // ── TESTING MODE: skip API, go straight to success ────────────────
-        // TODO: Remove this block and uncomment the real API call below
-        //       when backend is ready.
-        console.log("🧪 TEST MODE — skipping API, showing success screen");
-        await new Promise((r) => setTimeout(r, 1200)); // simulate network delay
-        setPaymentStep("success");
-        setLoading(false);
-        return;
+        // ── RAZORPAY PAYMENT ─────────────────────────────────────────────
+const plan = MEMBERSHIP_PLANS[form.membershipType];
+const totalAmount = Math.round((plan.price + plan.tax) * 100); // Razorpay needs paise
 
+const options = {
+  key: "YOUR_RAZORPAY_KEY_ID", // 🔴 Replace with your Razorpay Key ID
+  amount: totalAmount,
+  currency: "INR",
+  name: "Eliteinova Matrimony",
+  description: `${plan.label} Membership - 3 Months`,
+  image: "/logo.png", // optional - your logo
+  handler: async function (response) {
+    // Payment successful — response.razorpay_payment_id is the payment ID
+    console.log("✅ Razorpay payment success:", response);
+
+    // Now register the user
+    try {
+      setLoading(true);
+      const apiModule = await import('../../config/api');
+      const url = apiModule.buildApiUrl("api/auth/register");
+      const regResponse = await fetch(url, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+        mode: "cors",
+      });
+
+      if (!regResponse.ok) {
+        let errorMessage = `Server error ${regResponse.status}`;
+        try {
+          const errorText = await regResponse.text();
+          const errorJson = JSON.parse(errorText);
+          errorMessage = errorJson.message || errorJson.error || errorMessage;
+        } catch (_) {}
+        throw new Error(errorMessage);
+      }
+
+      const result = await regResponse.json();
+      if (!result.token) throw new Error(result.error || "Registration failed");
+
+      localStorage.setItem("authToken", result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+
+      try {
+        const axiosInstance = (await import('../../api/axiosUser')).default;
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${result.token}`;
+      } catch (_) {}
+
+      syncAuthFromStorage();
+      if (onClose) onClose();
+      if (onRegisterSuccess) onRegisterSuccess(result);
+      setPaymentStep("success");
+
+    } catch (err) {
+      console.error("❌ Registration after payment failed:", err);
+      setRegistrationError("Payment successful but registration failed. Please contact support with payment ID: " + response.razorpay_payment_id);
+    } finally {
+      setLoading(false);
+    }
+  },
+  prefill: {
+    name: form.name || "",
+    email: form.email || "",
+    contact: form.mobile || "",
+  },
+  notes: {
+    membershipType: form.membershipType,
+    userName: form.name,
+  },
+  theme: {
+    color: "#DC2626", // red to match your brand
+  },
+  modal: {
+    ondismiss: function () {
+      console.log("Razorpay modal closed by user");
+      setLoading(false);
+    },
+  },
+};
+
+// Load Razorpay script if not already loaded
+if (!window.Razorpay) {
+  await new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = resolve;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
+const rzp = new window.Razorpay(options);
+rzp.open();
+setLoading(false);
+return;
         // ── REAL API CALL (uncomment when backend is ready) ───────────────
         // const apiModule = await import('../../config/api');
         // const url = apiModule.buildApiUrl("api/auth/register");
