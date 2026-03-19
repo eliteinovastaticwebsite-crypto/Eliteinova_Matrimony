@@ -527,6 +527,137 @@ export default function Services({ onOpenAuthModal }) {
             </button>
           </div>
 
+        {/* Portal Access Section */}
+          <section id="portal-access" className="mb-24 scroll-mt-20">
+            <div className="text-center mb-12">
+              <p className="text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
+                ✦ Access Your Account ✦
+              </p>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-red-800 via-red-600 to-amber-700 bg-clip-text text-transparent mb-4">
+                Portal Login & Registration
+              </h2>
+              <div className="flex items-center justify-center gap-3">
+                <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-red-500" />
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-red-500" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+              
+              {/* Vendor Portal */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-amber-100">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-2xl" />
+                  
+                  <div className="flex items-center gap-3 mb-3">
+  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+  </div>
+  <div>
+    <h3 className="text-lg font-bold text-gray-800 group-hover:text-amber-600 transition-colors">
+      Vendor Portal
+    </h3>
+    <p className="text-gray-500 text-xs">Partner services & business access</p>
+  </div>
+</div>
+                  
+                  <div className="flex gap-3">
+                    <button onClick={() => setShowComingSoon(true)}
+                      className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
+                      Login
+                    </button>
+                    <button onClick={() => setShowComingSoon(true)}
+                      className="flex-1 px-4 py-2.5 bg-amber-50 text-amber-700 text-sm font-semibold rounded-xl border border-amber-200 hover:bg-amber-100 hover:scale-105 transition-all duration-300 text-center">
+                      Register
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customer Portal */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-rose-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
+                <div className="relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-red-100">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-rose-500 rounded-t-2xl" />
+                  
+                  <div className="flex items-center gap-3 mb-3">
+  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+  </div>
+  <div>
+    <h3 className="text-lg font-bold text-gray-800 group-hover:text-red-600 transition-colors">
+      Customer Portal
+    </h3>
+    <p className="text-gray-500 text-xs">Access your profile & matches</p>
+  </div>
+</div>
+                  
+                  <div className="flex gap-3">
+                    <button onClick={() => setShowComingSoon(true)}
+                      className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
+                      Login
+                    </button>
+                    <button onClick={() => setShowComingSoon(true)}
+                      className="flex-1 px-4 py-2.5 bg-red-50 text-red-700 text-sm font-semibold rounded-xl border border-red-200 hover:bg-red-100 hover:scale-105 transition-all duration-300 text-center">
+                      Register
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Coming Soon Modal */}
+{showComingSoon && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">💒</span>
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h1>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          Eliteinova Wedding Services
+        </h3>
+        <p className="text-gray-600 text-sm leading-relaxed">
+          This is our dedicated Eliteinova Wedding Service page where wedding-related planning and services will be available soon!
+        </p>
+      </div>
+
+      <div className="space-y-3 mb-6">
+        {[
+          "Wedding planning and coordination",
+          "Vendor management and bookings",
+          "Photography and videography services",
+          "Catering and venue arrangements",
+          "Complete wedding event management",
+        ].map((item, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <span className="text-green-500 text-sm mt-0.5">✓</span>
+            <span className="text-gray-700 text-sm">{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-gray-600 text-sm mb-6 text-center">
+        Stay tuned! Our comprehensive wedding services are coming soon to help you plan your perfect day.
+      </p>
+
+      <button
+        onClick={() => setShowComingSoon(false)}
+        className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+      >
+        Got it
+      </button>
+    </div>
+  </div>
+)}
+          </section>
+
           {/* Section Heading - Matching Home page style */}
           <div className="text-center mb-6 md:mb-8">
             <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-2 md:mb-3">
@@ -622,192 +753,63 @@ export default function Services({ onOpenAuthModal }) {
     {/* Decorative background elements */}
     <div className="absolute inset-0 bg-gradient-to-r from-amber-100/50 via-red-100/50 to-amber-100/50 rounded-3xl blur-3xl -z-10"></div>
     
-    {/* Main Content Card */}
-    <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-2xl border border-amber-200 overflow-hidden">
-      {/* Top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-red-500 to-amber-500"></div>
-      
-      {/* Decorative rings */}
-      <div className="absolute top-10 right-10 w-40 h-40 border-8 border-amber-100 rounded-full opacity-30"></div>
-      <div className="absolute bottom-10 left-10 w-32 h-32 border-8 border-red-100 rounded-full opacity-30"></div>
-      
-      {/* Content */}
-      <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center justify-center">
-        
-        {/* Right side - Text content */}
-        <div className="w-full lg:w-4/5 mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-red-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold">
-            <span className="animate-pulse">✨</span>
-            Make It Unforgettable
-            <span className="animate-pulse">✨</span>
-          </div>
-          
-          <h3 className="text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
-            Your wedding is one of the most important celebrations of your life.
-          </h3>
-          
-          <p className="text-lg text-gray-600 leading-relaxed">
-            With <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-600">EliteInova Wedding Services</span>, you receive professional support, creative ideas, and trusted vendors to make your wedding truly unforgettable.
-          </p>
-          
-          <div className="flex flex-wrap gap-4 pt-4">
-            <button
-              onClick={() => {
-                const element = document.getElementById('our-categories');
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-              className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
-            >
-              <span className="relative z-10">Explore Our Services</span>
-              <svg className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-          </div>
-        </div>
-      </div>
+    {/* Main Content Card — matches EliteInova Wedding Services card style */}
+<div
+  className="relative bg-white rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden"
+  style={{
+    background: "linear-gradient(135deg, #ffffff 0%, #fffdf9 100%)",
+    boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+    border: "1px solid rgba(185,28,28,0.1)",
+  }}
+>
+  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-amber-500 to-red-600 rounded-t-3xl" />
 
-      {/* Bottom decorative text */}
-      <div className="mt-8 text-center">
-        <p className="text-sm text-gray-400 italic">
-          Start planning your perfect wedding today
-        </p>
-      </div>
+  <div className="text-center space-y-3 md:space-y-4">
+    <p className="text-gray-700 text-sm md:text-base lg:text-lg leading-relaxed">
+      Your wedding is one of the most important celebrations of your life. With{" "}
+      <span className="font-semibold" style={{ color: "#9b1c1c" }}>EliteInova Wedding Services</span>,
+      you receive professional support, creative ideas, and trusted vendors to make your wedding truly unforgettable.
+    </p>
+
+    <p className="text-gray-700 text-sm md:text-base lg:text-lg leading-relaxed">
+      From the first consultation to the final celebration, our team ensures every detail is handled with care, creativity, and elegance.
+    </p>
+
+    <p className="text-gray-700 text-sm md:text-base lg:text-lg font-medium">
+      Let us help you create a wedding day that you and your family will cherish forever.
+    </p>
+
+    <div className="flex flex-wrap justify-center gap-2 md:gap-3 pt-2 md:pt-3">
+      <span className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-50 to-amber-50 rounded-full text-xs md:text-sm font-medium text-red-700 border border-red-200">
+        ✓ Professional Support
+      </span>
+      <span className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-50 to-amber-50 rounded-full text-xs md:text-sm font-medium text-red-700 border border-red-200">
+        ✓ Trusted Vendors
+      </span>
+      <span className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-50 to-amber-50 rounded-full text-xs md:text-sm font-medium text-red-700 border border-red-200">
+        ✓ Unforgettable Memories
+      </span>
     </div>
-  </div>
-</section>
 
-{/* Portal Access Section */}
-          <section id="portal-access" className="mb-24 scroll-mt-20">
-            <div className="text-center mb-12">
-              <p className="text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
-                ✦ Access Your Account ✦
-              </p>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-red-800 via-red-600 to-amber-700 bg-clip-text text-transparent mb-4">
-                Portal Login & Registration
-              </h2>
-              <div className="flex items-center justify-center gap-3">
-                <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-red-500" />
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-red-500" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
-              
-              {/* Vendor Portal */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
-                <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-amber-100">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-2xl" />
-                  
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-amber-600 transition-colors">
-                    Vendor Portal
-                  </h3>
-                  <p className="text-gray-500 text-sm mb-6">Partner services & business access</p>
-                  
-                  <div className="flex gap-3">
-                    <button onClick={() => setShowComingSoon(true)}
-                      className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
-                      Login
-                    </button>
-                    <button onClick={() => setShowComingSoon(true)}
-                      className="flex-1 px-4 py-2.5 bg-amber-50 text-amber-700 text-sm font-semibold rounded-xl border border-amber-200 hover:bg-amber-100 hover:scale-105 transition-all duration-300 text-center">
-                      Register
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Customer Portal */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-rose-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
-                <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-red-100">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-rose-500 rounded-t-2xl" />
-                  
-                  <div className="absolute -top-3 right-6 px-3 py-1 bg-gradient-to-r from-red-500 to-rose-500 text-white text-xs font-bold rounded-full shadow-lg">
-                    Popular
-                  </div>
-                  
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors">
-                    Customer Portal
-                  </h3>
-                  <p className="text-gray-500 text-sm mb-6">Access your profile & matches</p>
-                  
-                  <div className="flex gap-3">
-                    <button onClick={() => setShowComingSoon(true)}
-                      className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-300 text-center">
-                      Login
-                    </button>
-                    <button onClick={() => setShowComingSoon(true)}
-                      className="flex-1 px-4 py-2.5 bg-red-50 text-red-700 text-sm font-semibold rounded-xl border border-red-200 hover:bg-red-100 hover:scale-105 transition-all duration-300 text-center">
-                      Register
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Coming Soon Modal */}
-{showComingSoon && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
-      <div className="text-center mb-6">
-        <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">💒</span>
-        </div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h1>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">
-          Eliteinova Wedding Services
-        </h3>
-        <p className="text-gray-600 text-sm leading-relaxed">
-          This is our dedicated Eliteinova Wedding Service page where wedding-related planning and services will be available soon!
-        </p>
-      </div>
-
-      <div className="space-y-3 mb-6">
-        {[
-          "Wedding planning and coordination",
-          "Vendor management and bookings",
-          "Photography and videography services",
-          "Catering and venue arrangements",
-          "Complete wedding event management",
-        ].map((item, i) => (
-          <div key={i} className="flex items-start gap-2">
-            <span className="text-green-500 text-sm mt-0.5">✓</span>
-            <span className="text-gray-700 text-sm">{item}</span>
-          </div>
-        ))}
-      </div>
-
-      <p className="text-gray-600 text-sm mb-6 text-center">
-        Stay tuned! Our comprehensive wedding services are coming soon to help you plan your perfect day.
-      </p>
-
+    <div className="pt-3">
       <button
-        onClick={() => setShowComingSoon(false)}
-        className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:from-red-700 hover:to-red-600 transition-colors font-medium"
+        onClick={() => {
+          const element = document.getElementById('our-categories');
+          if (element) element.scrollIntoView({ behavior: "smooth" });
+        }}
+        className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300"
       >
-        Got it
+        Explore Our Services
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
       </button>
     </div>
   </div>
-)}
-          </section>
+</div>
+  </div>
+</section>
+
 
           {/* Categories Section with Flip Cards - Updated with better spacing and back theme */}
           <section id="our-categories" className="mb-24 scroll-mt-20">
