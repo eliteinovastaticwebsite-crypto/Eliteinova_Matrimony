@@ -799,7 +799,7 @@ export default function Services({ onOpenAuthModal }) {
         }}
         className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300"
       >
-        Explore Our Services
+        Explore Our Eliteinova Wedding Services
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
