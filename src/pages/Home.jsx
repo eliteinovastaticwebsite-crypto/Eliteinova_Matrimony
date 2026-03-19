@@ -652,40 +652,63 @@ export default function Home({ onOpenAuthModal }) {
     </div>
 
     {/* Main Content Grid */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
 
-      {/* LEFT — Heading + Content + YouTube Video */}
-      <div className="flex flex-col items-center justify-center">
-        {/* Heading above video */}
-        <div className="w-full mb-6">
-          <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimony Platform – Step by Step Demo</span>
-        </h1>
-          <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-4">
-            <div className="flex items-start gap-2">
-              <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
-              <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
-          style={{ aspectRatio: "16/9" }}
-        >
-          <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/iDBuFPltT08?si=HRIN8UWimh-TXS_G"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            style={{ display: "block", width: "100%", height: "100%" }}
-          />
+  {/* LEFT — Heading + Content + YouTube Video */}
+  <div className="flex flex-col items-center justify-center">
+    {/* Heading above video */}
+    <div className="w-full mb-6">
+      <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimony Platform – Step by Step Demo</span>
+      </h1>
+      <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-4">
+        <div className="flex items-start gap-2">
+          <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
+          <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
         </div>
       </div>
+    </div>
+
+    <div
+      className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
+      style={{ aspectRatio: "16/9" }}
+    >
+      <iframe
+        width="100%"
+        height="100%"
+        src="https://www.youtube.com/embed/iDBuFPltT08?si=HRIN8UWimh-TXS_G"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+        style={{ display: "block", width: "100%", height: "100%" }}
+      />
+    </div>
+
+    {/* Buttons */}
+    <div className="flex flex-wrap justify-center gap-2 mt-4 w-full">
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Intro
+      </button>
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Demo
+      </button>
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Register
+      </button>
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Filter
+      </button>
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Find Matches
+      </button>
+      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
+        Success Stories
+      </button>
+    </div>
+    
+  </div>
 
       {/* RIGHT — Login Card + Register Now button */}
       <div className="flex flex-col h-full">

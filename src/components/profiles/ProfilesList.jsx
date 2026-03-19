@@ -156,12 +156,9 @@ const performSearch = async (searchFilters) => {
   try {
     console.log("🔍 ProfilesList: Searching with REAL backend", searchFilters);
     
-    // Pass the original searchFilters (including "Other" fields) to searchProfiles
-    // The mapFiltersToBackend function will handle the mapping and "Other" value replacement
     const searchData = await profileService.searchProfiles(searchFilters);
     console.log("✅ ProfilesList: Real search results:", searchData);
     
-    // Handle response structure
     const searchProfiles = searchData.content || searchData.profiles || searchData || [];
     setSearchResults(searchProfiles);
     
@@ -169,7 +166,6 @@ const performSearch = async (searchFilters) => {
     console.error("❌ ProfilesList: Real search error", err);
     setError(err.message || "Search failed - using client-side filtering");
     
-    // Fallback to client-side filtering
     console.log("🔄 Using client-side filtering as fallback");
     const fallbackResults = filterProfilesClientSide(profiles, searchFilters);
     setSearchResults(fallbackResults);
@@ -192,7 +188,6 @@ const performSearch = async (searchFilters) => {
     filters 
   });
   
-  // Helper function to get the actual filter value (handles "Other" / "Others" options)
   const getFilterValue = (fieldName) => {
     const value = filters[fieldName];
     if ((value === "Other" || value === "Others") && filters[`${fieldName}Other`]) {
@@ -205,18 +200,15 @@ const performSearch = async (searchFilters) => {
   };
   
   return allProfiles.filter(profile => {
-    // ✅ FIXED: Age filter with proper field names
     if (filters.minAge && profile.age < parseInt(filters.minAge)) return false;
     if (filters.maxAge && profile.age > parseInt(filters.maxAge)) return false;
     
-    // Gender filter
     if (filters.gender) {
       const profileGender = profile.gender?.toLowerCase();
       const filterGender = filters.gender?.toLowerCase();
       if (profileGender !== filterGender) return false;
     }
     
-    // Religion filter (with "Other" handling)
     const religionFilter = getFilterValue('religion');
     if (religionFilter && profile.religion) {
       const profileReligion = profile.religion.toLowerCase();
@@ -224,7 +216,6 @@ const performSearch = async (searchFilters) => {
       if (!profileReligion.includes(filterReligion)) return false;
     }
     
-    // Caste filter (case-insensitive partial match, with "Others" handling)
     const casteFilter = getFilterValue('caste');
     if (casteFilter && profile.caste) {
       const profileCaste = profile.caste.toLowerCase();
@@ -232,20 +223,15 @@ const performSearch = async (searchFilters) => {
       if (!profileCaste.includes(filterCaste)) return false;
     }
     
-    // Subcaste filter (case-insensitive partial match)
     if (filters.subCaste && profile.subCaste) {
       const profileSubCaste = profile.subCaste.toLowerCase();
       const filterSubCaste = filters.subCaste.toLowerCase();
       if (!profileSubCaste.includes(filterSubCaste)) return false;
     }
     
-    // Category filter
     if (filters.category && profile.category !== filters.category) return false;
-    
-    // Marital status filter
     if (filters.maritalStatus && profile.maritalStatus !== filters.maritalStatus) return false;
     
-    // Education filter (case-insensitive partial match, with "Other" handling)
     const educationFilter = getFilterValue('education');
     if (educationFilter && profile.education) {
       const profileEducation = profile.education.toLowerCase();
@@ -253,7 +239,6 @@ const performSearch = async (searchFilters) => {
       if (!profileEducation.includes(filterEducation)) return false;
     }
     
-    // Educational Qualification filter (with "Other" handling)
     const educationalQualificationFilter = getFilterValue('educationalQualification');
     if (educationalQualificationFilter && profile.educationalQualification) {
       const profileEduQual = profile.educationalQualification.toLowerCase();
@@ -261,7 +246,6 @@ const performSearch = async (searchFilters) => {
       if (!profileEduQual.includes(filterEduQual)) return false;
     }
     
-    // ✅ FIXED: Occupation filter - search in both occupation and profession fields (with "Other" handling)
     const occupationFilter = getFilterValue('occupation');
     if (occupationFilter && (profile.occupation || profile.profession)) {
       const profileOccupation = (profile.occupation || profile.profession || '').toLowerCase();
@@ -269,20 +253,15 @@ const performSearch = async (searchFilters) => {
       if (!profileOccupation.includes(filterOccupation)) return false;
     }
     
-    // ✅ FIXED: Profession filter - search in both profession and occupation fields
     if (filters.profession && (profile.profession || profile.occupation)) {
       const profileProfession = (profile.profession || profile.occupation || '').toLowerCase();
       const filterProfession = filters.profession.toLowerCase();
       if (!profileProfession.includes(filterProfession)) return false;
     }
     
-    // Employed in filter
     if (filters.employedIn && profile.employedIn !== filters.employedIn) return false;
-    
-    // Annual income filter
     if (filters.annualIncome && profile.annualIncome !== filters.annualIncome) return false;
     
-    // Location filters (with "Other" handling for country)
     const countryFilter = getFilterValue('country');
     if (countryFilter && profile.country) {
       const profileCountry = profile.country.toLowerCase();
@@ -291,14 +270,12 @@ const performSearch = async (searchFilters) => {
     }
     if (filters.state && profile.state !== filters.state) return false;
     
-    // District filter (case-insensitive partial match)
     if (filters.district && profile.district) {
       const profileDistrict = profile.district.toLowerCase();
       const filterDistrict = filters.district.toLowerCase();
       if (!profileDistrict.includes(filterDistrict)) return false;
     }
     
-    // Dosham filter
     if (filters.dosham && filters.dosham !== "Doesn't Matter") {
       if (filters.dosham === "Yes" && profile.dosham !== "Yes") return false;
       if (filters.dosham === "No" && profile.dosham !== "No") return false;
@@ -308,40 +285,33 @@ const performSearch = async (searchFilters) => {
   });
 };
 
-  // Apply gender and religion filters
   const applyQuickFilters = () => {
     let filtered = searchResults || profiles;
     
-    // Membership priority
-const membershipPriority = {
-  SILVER: 1,
-  GOLD: 2,
-  DIAMOND: 3
-};
+    const membershipPriority = {
+      SILVER: 1,
+      GOLD: 2,
+      DIAMOND: 3
+    };
 
-// ✅ Filter by membership hierarchy
-if (user?.membership || user?.membershipType) {
-  const userMembership = user.membership || user.membershipType;
-  const userLevel = membershipPriority[userMembership] || 1;
+    if (user?.membership || user?.membershipType) {
+      const userMembership = user.membership || user.membershipType;
+      const userLevel = membershipPriority[userMembership] || 1;
 
-  filtered = filtered.filter(profile => {
-    const profileMembership =
-      profile.user?.membership || profile.membership || "SILVER";
+      filtered = filtered.filter(profile => {
+        const profileMembership =
+          profile.user?.membership || profile.membership || "SILVER";
+        const profileLevel = membershipPriority[profileMembership] || 1;
+        return profileLevel <= userLevel;
+      });
 
-    const profileLevel = membershipPriority[profileMembership] || 1;
-
-    // ✅ Allow same or lower memberships
-    return profileLevel <= userLevel;
-  });
-
-  console.log(
-    `🔍 Filtered by membership hierarchy ${userMembership}:`,
-    filtered.length,
-    "profiles"
-  );
-}
+      console.log(
+        `🔍 Filtered by membership hierarchy ${userMembership}:`,
+        filtered.length,
+        "profiles"
+      );
+    }
     
-    // Apply gender filter
     if (genderFilter === "brides") {
       filtered = filtered.filter(profile => 
         profile.gender === "Female" || profile.gender === "FEMALE" || profile.gender === "female"
@@ -351,9 +321,7 @@ if (user?.membership || user?.membershipType) {
         profile.gender === "Male" || profile.gender === "MALE" || profile.gender === "male"
       );
     }
-    // If genderFilter is "all", show all genders
     
-    // Apply religion filter
     if (religionFilter !== "all") {
       filtered = filtered.filter(profile => profile.religion === religionFilter);
     }
@@ -361,7 +329,6 @@ if (user?.membership || user?.membershipType) {
     return filtered;
   };
 
-  // Clear all filters
   const clearAllFilters = () => {
     setGenderFilter("all");
     setReligionFilter("all");
@@ -369,13 +336,11 @@ if (user?.membership || user?.membershipType) {
     setError("");
   };
 
-  // Clear search and show all profiles
   const clearSearch = () => {
     setSearchResults(null);
     setError("");
   };
 
-  // Load more profiles
   const loadMore = () => {
     const nextPage = pagination.page + 1;
     if (nextPage < pagination.totalPages) {
@@ -383,17 +348,14 @@ if (user?.membership || user?.membershipType) {
     }
   };
 
-  // Toggle gender filter
   const toggleGenderFilter = (gender) => {
     setGenderFilter(gender);
   };
 
-  // Determine which profiles to show after applying quick filters
   const filteredProfiles = applyQuickFilters();
   const showLoadMore = !searchResults && pagination.page < pagination.totalPages - 1;
   const hasQuickFilters = genderFilter !== "all" || religionFilter !== "all";
 
-  // Get membership banner image based on membership type
   const getMembershipBanner = () => {
     const normalizedType = membershipType?.toUpperCase() || user?.membership?.toUpperCase() || user?.membershipType?.toUpperCase() || 'SILVER';
     switch (normalizedType) {
@@ -410,17 +372,22 @@ if (user?.membership || user?.membershipType) {
   if (loading && profiles.length === 0) {
     const membershipBannerImage = getMembershipBanner();
     return (
-      <div 
-        className="min-h-screen flex justify-center items-center relative overflow-hidden"
-        style={{ 
-          backgroundImage: `url(${membershipBannerImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-          minHeight: '100vh'
-        }}
-      >
+      <div className="min-h-screen flex justify-center items-center relative overflow-hidden">
+        {/* Fixed background for loading state */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url(${membershipBannerImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            zIndex: 0,
+          }}
+        />
         <div className="text-center relative z-10">
           <div 
             className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
@@ -435,24 +402,30 @@ if (user?.membership || user?.membershipType) {
   const membershipBannerImage = getMembershipBanner();
 
   return (
-    <div 
-      className="min-h-screen relative"
-     style={{
-  backgroundImage: `url(${membershipBannerImage})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  backgroundAttachment: 'fixed',
-  minHeight: '100vh',
-  position: 'relative',
-  animation: (() => {
-    const mem = (membershipType || user?.membership || user?.membershipType || "SILVER").toUpperCase();
-    if (mem === "DIAMOND") return "diamondSparkle 2.5s ease-in-out infinite";
-    if (mem === "GOLD")    return "goldShimmer 3.5s ease-in-out infinite";
-    return "silverPulse 4s ease-in-out infinite";
-  })(),
-}}
-    >
+    <div className="min-h-screen relative">
+
+      {/* ── Fixed background — separate from scrollable content ── */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${membershipBannerImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          zIndex: 0,
+          animation: (() => {
+            const mem = (membershipType || user?.membership || user?.membershipType || "SILVER").toUpperCase();
+            if (mem === "DIAMOND") return "diamondSparkle 2.5s ease-in-out infinite";
+            if (mem === "GOLD")    return "goldShimmer 3.5s ease-in-out infinite";
+            return "silverPulse 4s ease-in-out infinite";
+          })(),
+        }}
+      />
+
       {/* Banner Section */}
       <div className="relative" style={{ zIndex: 1 }}>
         <Banner
@@ -469,26 +442,21 @@ if (user?.membership || user?.membershipType) {
           onSelect={(selectedCategory) => {
             console.log("🏷️ CategoryNav selected:", selectedCategory);
             if (selectedCategory) {
-              // Update filters to filter by caste (communities are castes)
               const updatedFilters = {
                 ...filters,
                 caste: selectedCategory,
-                subCaste: selectedCategory, // Set subCaste same as caste for backward compatibility
+                subCaste: selectedCategory,
               };
               console.log("🔄 Updating filters with category:", updatedFilters);
               setFilters(updatedFilters);
-              
-              // Trigger search with the new filter
               performSearch(updatedFilters);
             } else {
-              // Clear caste filter when deselected
               const updatedFilters = { ...filters };
               delete updatedFilters.caste;
               delete updatedFilters.subCaste;
               console.log("🔄 Clearing category filter:", updatedFilters);
               setFilters(updatedFilters);
               
-              // If no other filters, show all profiles, otherwise search with remaining filters
               const hasOtherFilters = Object.keys(updatedFilters).some(
                 key => key !== 'caste' && key !== 'subCaste' && 
                 updatedFilters[key] !== "" && updatedFilters[key] !== null && updatedFilters[key] !== undefined
@@ -497,7 +465,6 @@ if (user?.membership || user?.membershipType) {
               if (hasOtherFilters) {
                 performSearch(updatedFilters);
               } else {
-                // No filters, show all profiles
                 setSearchResults(null);
                 fetchAllProfiles(0, pagination.size);
               }
@@ -519,7 +486,6 @@ if (user?.membership || user?.membershipType) {
       onFilterChange={(updatedFilters) => {
         console.log("🔄 Filter changed:", updatedFilters);
         
-        // Debug age fields specifically
         console.log("🎯 Age fields:", {
           minAge: updatedFilters.minAge,
           maxAge: updatedFilters.maxAge,
@@ -529,7 +495,6 @@ if (user?.membership || user?.membershipType) {
         
         setFilters(updatedFilters);
         
-        // Check if we have any active filters
         const hasActiveFilters = Object.values(updatedFilters).some(
           value => value !== "" && value !== null && value !== undefined
         );
@@ -597,7 +562,6 @@ if (user?.membership || user?.membershipType) {
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  {/* Clear All Filters Button */}
                   {(searchResults || hasQuickFilters) && (
                     <button
                       onClick={clearAllFilters}
@@ -619,7 +583,6 @@ if (user?.membership || user?.membershipType) {
                     </button>
                   )}
                   
-                  {/* Clear Search Button */}
                   {searchResults && (
                     <button
                       onClick={clearSearch}
@@ -631,7 +594,6 @@ if (user?.membership || user?.membershipType) {
                     </button>
                   )}
                   
-                  {/* Refresh Button */}
                   <button
                     onClick={() => fetchAllProfiles()}
                     className={`${classes.textColor} opacity-70 hover:opacity-100 font-medium text-sm flex items-center gap-1 px-3 py-1 border rounded transition-colors`}
@@ -735,7 +697,6 @@ if (user?.membership || user?.membershipType) {
               )}
             </div>
 
-            {/* Error Alert */}
             {error && (
               <div 
                 className="mb-6 border rounded-lg p-4"
@@ -776,15 +737,9 @@ if (user?.membership || user?.membershipType) {
                   <button
                     onClick={clearAllFilters}
                     className="text-white px-6 py-2 rounded-lg transition-colors font-medium"
-                    style={{
-                      backgroundColor: colors.accent
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.opacity = '0.9';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.opacity = '1';
-                    }}
+                    style={{ backgroundColor: colors.accent }}
+                    onMouseEnter={(e) => { e.target.style.opacity = '0.9'; }}
+                    onMouseLeave={(e) => { e.target.style.opacity = '1'; }}
                   >
                     Show All Profiles
                   </button>
@@ -794,18 +749,17 @@ if (user?.membership || user?.membershipType) {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {filteredProfiles.map((profile) => (
-  <ProfileCard 
-    key={profile.id} 
-    profile={profile}
-    theme={(() => {
-      const mem = profile.membershipType || profile.user?.membership || profile.membership || membershipType || "SILVER";
-      return mem.toLowerCase();
-    })()}
-  />
-))}
+                    <ProfileCard 
+                      key={profile.id} 
+                      profile={profile}
+                      theme={(() => {
+                        const mem = profile.membershipType || profile.user?.membership || profile.membership || membershipType || "SILVER";
+                        return mem.toLowerCase();
+                      })()}
+                    />
+                  ))}
                 </div>
                 
-                {/* Load More Button */}
                 {showLoadMore && (
                   <div className="text-center">
                     <button
@@ -817,14 +771,10 @@ if (user?.membership || user?.membershipType) {
                         color: colors.accent
                       }}
                       onMouseEnter={(e) => {
-                        if (!loading) {
-                          e.target.style.backgroundColor = colors.accentLight + '60';
-                        }
+                        if (!loading) e.target.style.backgroundColor = colors.accentLight + '60';
                       }}
                       onMouseLeave={(e) => {
-                        if (!loading) {
-                          e.target.style.backgroundColor = '';
-                        }
+                        if (!loading) e.target.style.backgroundColor = '';
                       }}
                     >
                       {loading ? "Loading..." : "Load More Profiles"}
@@ -836,32 +786,33 @@ if (user?.membership || user?.membershipType) {
           </div>
         </div>
       </div>
+
       {/* Per-membership page glow styles */}
       <style>{`
-  /* ── Silver: navbar red pulse ── */
-  @keyframes silverPulse {
-    0%, 100% { filter: brightness(1) saturate(1); }
-    50% { filter: brightness(1.04) saturate(1.1); }
-  }
+        /* ── Silver: navbar red pulse ── */
+        @keyframes silverPulse {
+          0%, 100% { filter: brightness(1) saturate(1); }
+          50% { filter: brightness(1.04) saturate(1.1); }
+        }
 
-  /* ── Gold: elegant shimmer sweep ── */
-  @keyframes goldShimmer {
-    0%   { filter: brightness(1) saturate(1.1) sepia(0.1); }
-    30%  { filter: brightness(1.07) saturate(1.4) sepia(0.2); }
-    60%  { filter: brightness(1.12) saturate(1.5) sepia(0.25); }
-    100% { filter: brightness(1) saturate(1.1) sepia(0.1); }
-  }
+        /* ── Gold: elegant shimmer sweep ── */
+        @keyframes goldShimmer {
+          0%   { filter: brightness(1) saturate(1.1) sepia(0.1); }
+          30%  { filter: brightness(1.07) saturate(1.4) sepia(0.2); }
+          60%  { filter: brightness(1.12) saturate(1.5) sepia(0.25); }
+          100% { filter: brightness(1) saturate(1.1) sepia(0.1); }
+        }
 
-  /* ── Diamond: electric sparkle flicker ── */
-  @keyframes diamondSparkle {
-    0%   { filter: brightness(1) saturate(1) hue-rotate(0deg); }
-    20%  { filter: brightness(1.1) saturate(1.4) hue-rotate(10deg); }
-    40%  { filter: brightness(1.18) saturate(1.6) hue-rotate(-8deg); }
-    60%  { filter: brightness(1.08) saturate(1.3) hue-rotate(6deg); }
-    80%  { filter: brightness(1.15) saturate(1.5) hue-rotate(-5deg); }
-    100% { filter: brightness(1) saturate(1) hue-rotate(0deg); }
-  }
-`}</style>
+        /* ── Diamond: electric sparkle flicker ── */
+        @keyframes diamondSparkle {
+          0%   { filter: brightness(1) saturate(1) hue-rotate(0deg); }
+          20%  { filter: brightness(1.1) saturate(1.4) hue-rotate(10deg); }
+          40%  { filter: brightness(1.18) saturate(1.6) hue-rotate(-8deg); }
+          60%  { filter: brightness(1.08) saturate(1.3) hue-rotate(6deg); }
+          80%  { filter: brightness(1.15) saturate(1.5) hue-rotate(-5deg); }
+          100% { filter: brightness(1) saturate(1) hue-rotate(0deg); }
+        }
+      `}</style>
     </div>
   );
 }

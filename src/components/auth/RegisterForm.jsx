@@ -9,12 +9,12 @@ import Select from "react-select";
 
 const MEMBERSHIP_PLANS = {
   SILVER: {
-    label: "SILVER", price: 299, tax: 53.82, icon: "🥈",
-    color: "#6B7280",
-    gradient: "linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%)",
-    route: "/silver-members",
-    perks: ["50 Interests/month", "Basic Profile Visibility", "Email Support"],
-  },
+  label: "SILVER", price: 299, tax: 53.82, icon: "🥈",
+  color: "#16a34a",
+  gradient: "linear-gradient(135deg, #86efac 0%, #22c55e 50%, #16a34a 100%)",
+  route: "/silver-members",
+  perks: ["50 Interests/month", "Basic Profile Visibility", "Email Support"],
+},
   GOLD: {
     label: "GOLD", price: 499, tax: 89.82, icon: "🥇",
     color: "#D97706",
@@ -23,12 +23,12 @@ const MEMBERSHIP_PLANS = {
     perks: ["150 Interests/month", "Priority Visibility", "Chat Access", "Phone Support"],
   },
   DIAMOND: {
-    label: "DIAMOND", price: 749, tax: 134.82, icon: "💎",
-    color: "#7C3AED",
-    gradient: "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
-    route: "/diamond-members",
-    perks: ["Unlimited Interests", "Top Profile Boost", "Video Call Access", "Dedicated Manager"],
-  },
+  label: "DIAMOND", price: 749, tax: 134.82, icon: "💎",
+  color: "#be185d",
+  gradient: "linear-gradient(135deg, #f9a8d4 0%, #ec4899 30%, #db2777 55%, #ec4899 75%, #f472b6 100%)",
+  route: "/diamond-members",
+  perks: ["Unlimited Interests", "Top Profile Boost", "Video Call Access", "Dedicated Manager"],
+},
 };
  
 // ─── PaymentSummary Component ─────────────────────────────────────────────────
