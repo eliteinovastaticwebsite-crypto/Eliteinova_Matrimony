@@ -222,7 +222,7 @@ function AppContent() {
               </PaymentProtectedRoute>
             }
           />
-
+          
           <Route path="/bride-profile/:id" element={<PaymentProtectedRoute><DetailedProfilePage /></PaymentProtectedRoute>} />
           <Route path="/groom-profile/:id" element={<PaymentProtectedRoute><DetailedProfilePage /></PaymentProtectedRoute>} />
           <Route path="/faqs" element={<FullFAQPage onOpenRegister={openRegisterModal} />} />

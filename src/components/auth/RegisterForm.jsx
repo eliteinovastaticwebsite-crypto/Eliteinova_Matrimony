@@ -1,5 +1,5 @@
 // src/components/auth/RegisterForm.jsx (UPDATED VERSION)
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../ui/Stepper";
 import StepperController from "../ui/StepperControl";
@@ -86,7 +86,7 @@ function PaymentSummary({ plan, onProceed, onBack }) {
         <button type="button" onClick={onProceed}
           className="flex-1 py-3 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all"
           style={{ background: p.gradient }}>
-          Pay Now ₹{total}
+          Pay Now 
         </button>
       </div>
     </div>
@@ -174,6 +174,18 @@ function PaymentMethod({ plan, onProceed, onBack, loading = false }) {
             </>
           )}
         </button>
+      </div>
+      {/* Fallback payment link */}
+      <div className="text-center mt-3">
+        <p className="text-xs text-gray-400 mb-1">Having trouble? Pay directly:</p>
+        
+          <a href="https://razorpay.me/@eliteinovatechprivatelimited"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-600 underline hover:text-blue-800"
+        >
+          Pay via Razorpay Payment Link
+        </a>
       </div>
     </div>
   );
@@ -390,6 +402,28 @@ export default function RegisterForm({
   const [registrationError, setRegistrationError] = useState("");
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
+  const formScrollRef = React.useRef(null);
+
+useEffect(() => {
+  setTimeout(() => {
+    if (formScrollRef.current) {
+      formScrollRef.current.scrollTop = 0;
+    }
+    const selectors = [
+      ".register-form-scrollable",
+      '[role="dialog"]',
+      ".modal-body",
+      ".modal-content",
+      ".overflow-y-auto",
+      ".overflow-auto",
+    ];
+    selectors.forEach((selector) => {
+      const el = document.querySelector(selector);
+      if (el) el.scrollTop = 0;
+    });
+    window.scrollTo(0, 0);
+  }, 50);
+}, [step]);
 
   const [form, setForm] = useState({
     // Step 1: Basic Info
@@ -1107,18 +1141,49 @@ const professionOptions = [
     return Object.keys(errors).length === 0;
   };
 
-  const nextStep = () => {
-    if (validateStep(step)) {
-      setStep((s) => s + 1);
-      setError("");
-    } else setError("Please fix errors");
-  };
+  const scrollToTop = () => {
+  if (formScrollRef.current) {
+    formScrollRef.current.scrollTop = 0;
+  }
+  const selectors = [
+    ".register-form-scrollable",
+    '[role="dialog"]',
+    ".modal-body",
+    ".modal-content",
+    ".overflow-y-auto",
+    ".overflow-auto",
+  ];
+  selectors.forEach((selector) => {
+    const el = document.querySelector(selector);
+    if (el) el.scrollTop = 0;
+  });
+  window.scrollTo(0, 0);
+};
 
-  const prevStep = () => {
-    setStep((s) => s - 1);
+const nextStep = () => {
+  if (validateStep(step)) {
+    setStep((s) => s + 1);
     setError("");
-    setValidationErrors({});
-  };
+    setTimeout(scrollToTop, 50);
+  } else {
+    setError("Please fix errors");
+    setTimeout(() => {
+      const firstError = document.querySelector(
+        ".register-form-scrollable .text-red-500, .register-form-scrollable .text-red-600"
+      );
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
+  }
+};
+
+const prevStep = () => {
+  setStep((s) => s - 1);
+  setError("");
+  setValidationErrors({});
+  setTimeout(scrollToTop, 50);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1538,7 +1603,7 @@ const professionOptions = [
     return (
       <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? 'h-full flex flex-col' : 'p-6'}`}>
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold text-red-600">Almost Done!</h2>
+          <h2 className="text-2xl font-bold text-red-600">Few Steps to Complete Your Registration!</h2>
           <p className="text-gray-500 text-sm">Review your order</p>
         </div>
         <div className={`${inModal ? 'flex-1 overflow-y-auto px-6 pb-6' : 'max-h-[75vh] overflow-y-auto'}`}>
@@ -1621,17 +1686,18 @@ const plan = MEMBERSHIP_PLANS[form.membershipType];
 const totalAmount = Math.round((plan.price + plan.tax) * 100); // Razorpay needs paise
 
 const options = {
-  key: "rzp_live_xxxxxxxxxx", // paste your actual key from Razorpay dashboard here
+  key: "rzp_live_xxxxxxxxxx", // paste your actual Razorpay key here
   amount: totalAmount,
   currency: "INR",
   name: "Eliteinova Matrimony",
   description: `${plan.label} Membership - 3 Months`,
-image: "/logo.png",
-notes: {
-  membershipType: form.membershipType,
-  userName: form.name,
-  paymentLink: "https://razorpay.me/@eliteinovatechprivatelimited",
-},
+  image: "/logo.png",
+  callback_url: "https://razorpay.me/@eliteinovatechprivatelimited",
+  redirect: false,
+  notes: {
+    membershipType: form.membershipType,
+    userName: form.name,
+  },
   handler: async function (response) {
     // Payment successful — response.razorpay_payment_id is the payment ID
     console.log("✅ Razorpay payment success:", response);
@@ -1686,10 +1752,6 @@ notes: {
     email: form.email || "",
     contact: form.mobile || "",
   },
-  notes: {
-    membershipType: form.membershipType,
-    userName: form.name,
-  },
   theme: {
     color: "#DC2626", // red to match your brand
   },
@@ -1697,7 +1759,10 @@ notes: {
     ondismiss: function () {
       console.log("Razorpay modal closed by user");
       setLoading(false);
+      // Fallback: open payment link directly if modal fails
     },
+    escape: true,
+    confirm_close: true,
   },
 };
 
@@ -1853,6 +1918,7 @@ return;
 
       {/* Scrollable form content wrapper - enables scrolling for all steps */}
       <div 
+        ref={formScrollRef}
         className={`register-form-scrollable ${inModal ? 'flex-1 overflow-y-auto min-h-0 px-6' : 'max-h-[70vh] overflow-y-auto pr-2'} scroll-smooth`}
         style={{
           scrollbarWidth: 'thin',
