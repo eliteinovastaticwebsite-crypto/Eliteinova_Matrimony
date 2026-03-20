@@ -751,8 +751,32 @@ export default function Home({ onOpenAuthModal }) {
             >
               Find Matches
             </button>
+
           </div>
         )}
+
+        {isAuthenticated && (
+  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-8 sm:p-10 shadow-2xl relative overflow-hidden w-full max-w-lg mx-auto mt-4">
+    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+    <div className="relative z-10 text-center">
+
+      {/* CHANGE THIS LINE ONLY — remove style, add animate-bounce */}
+      <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">
+        💍 Eliteinova Wedding Services 💍
+      </h3>
+
+      <p className="text-white/90 text-xs sm:text-sm mb-4">
+        ✦ Your Complete Wedding Partner ✦
+      </p>
+      <button
+        onClick={(e) => handleServicePageClick(e, "#")}
+        className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+      >
+        Visit Our Service Page →
+      </button>
+    </div>
+  </div>
+)}
 
         {/* If NOT logged in: Register banner + Login form */}
         {!isAuthenticated && (

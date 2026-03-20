@@ -205,7 +205,7 @@ export default function Services({ onOpenAuthModal }) {
       ]
     },
     {
-      name: "Background Verification",
+      name: "Pre-Matrimonial Verification",
       path: "/background-investigations",
       image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
       subcategories: [
@@ -399,7 +399,7 @@ export default function Services({ onOpenAuthModal }) {
                 "Bridal Styling",
                 "Entertainment",
                 "Invitation Cards",
-                "Background Verification",
+                "Pre-Matrimonial Verification",
               ]).map((label, i) => (
                 <button
                   key={i}
@@ -445,7 +445,7 @@ export default function Services({ onOpenAuthModal }) {
             {[...Array(2)].flatMap(() => [
               { label: "Celebrate Your Wedding", id: "celebrate-wedding" },
               { label: "Service Categories", id: "our-categories" },
-              { label: "Background Verification", id: "background-verification" },
+              { label: "Pre-Matrimonial Verification", id: "background-verification" },
               { label: "Portal Access", id: "portal-access" },
               { label: "Why Choose Us", id: "why-choose" },
             ]).map((link, i) => (
@@ -508,7 +508,7 @@ export default function Services({ onOpenAuthModal }) {
                 </div>
                 
                 <span className="font-bold text-sm sm:text-base whitespace-nowrap">
-                  Background Investigations for Bride and Groom
+                  Pre-Matrimonial Verification for Bride and Groom
                 </span>
                 
                 {/* Magnifying glass icon */}
@@ -828,20 +828,19 @@ export default function Services({ onOpenAuthModal }) {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {homeCategories.map((category, index) => (
-                <div
-                  key={index}
-                  className="group relative h-72 cursor-pointer perspective-1000"
-                  onMouseEnter={() => setFlippedCard(index)}
-                  onMouseLeave={() => setFlippedCard(null)}
-                  onClick={() => {
-                    if (flippedCard !== index) {
-                      setFlippedCard(index);
-                    } else {
-                      setFlippedCard(null);
-                    }
-                  }}
-                >
+  {homeCategories.map((category, index) => (
+    <div
+      key={index}
+      className="group relative h-72 cursor-pointer perspective-1000"
+      // Desktop: hover to flip
+      onMouseEnter={() => setFlippedCard(index)}
+      onMouseLeave={() => setFlippedCard(null)}
+      // Mobile: tap to toggle flip
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        setFlippedCard(flippedCard === index ? null : index);
+      }}
+    >
                   <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-amber-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
                   
                   {/* Flip Card Container */}
@@ -913,14 +912,14 @@ export default function Services({ onOpenAuthModal }) {
             </div>
           </section>
 
-          {/* Background Verification Services Section */}
+          {/* Pre-Matrimonial Verification Services Section */}
           <section id="background-verification" className="mb-24 scroll-mt-20">
             <div className="text-center mb-12">
               <p className="text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
                 ✦ Trust & Transparency ✦
               </p>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-red-800 via-red-600 to-amber-700 bg-clip-text text-transparent mb-4">
-                Background Verification Services
+                Pre-Matrimonial Verification Services
               </h2>
               <p className="text-lg md:text-xl text-amber-700 font-medium">
                 Trusted Verification for Confident Marriages
@@ -944,7 +943,7 @@ export default function Services({ onOpenAuthModal }) {
                   </p>
                   
                   <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-                    Our Background Verification Services help families and individuals verify important details before proceeding with a matrimonial alliance. Through professional investigation and careful verification, we help ensure that the information provided is accurate and reliable.
+                    Our Pre-Matrimonial Verification Services help families and individuals verify important details before proceeding with a matrimonial alliance. Through professional investigation and careful verification, we help ensure that the information provided is accurate and reliable.
                   </p>
                   
                   <p className="text-gray-700 text-base md:text-lg font-medium">
@@ -957,13 +956,13 @@ export default function Services({ onOpenAuthModal }) {
             {/* Why Verification is Important */}
             <div className="mb-16">
               <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-                Why Background Verification is Important
+                Why Pre-Matrimonial Verification is Important
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-red-100">
                   <p className="text-gray-600 mb-4">
-                    In today's digital world, profiles and information can sometimes be incomplete or misleading. Background verification helps confirm key details such as identity, career, and personal background.
+                    In today's digital world, profiles and information can sometimes be incomplete or misleading. Pre-Matrimonial Verification helps confirm key details such as identity, career, and personal background.
                   </p>
                   <p className="text-gray-600">
                     This process helps families:
@@ -1007,10 +1006,293 @@ export default function Services({ onOpenAuthModal }) {
               </div>
             </div>
 
+            {/* What is Pre-Matrimonial Verification Section */}
+<div className="mb-16">
+  <div className="relative max-w-4xl mx-auto">
+    {/* Section Title */}
+    <div className="text-center mb-8">
+      <h3 className="text-2xl font-bold text-gray-800 mb-2">
+        What is Pre-Matrimonial Verification?
+      </h3>
+      <p className="text-gray-500 text-sm max-w-2xl mx-auto">
+        Pre-Matrimonial Verification is a background check done before marriage to confirm that the prospective bride/groom is genuine, trustworthy, and matches the details they've provided. It's becoming very common, especially in online matrimony platforms, to avoid fraud, hidden facts, or future disputes.
+      </p>
+    </div>
+
+    {/* What is Checked - Grid */}
+    <div className="mb-10">
+      <h4 className="text-lg font-bold text-center text-gray-800 mb-6 flex items-center justify-center gap-2">
+        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        What is Checked in Pre-Matrimonial Verification?
+      </h4>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          {
+            number: "01",
+            title: "Identity Verification",
+            points: ["Name, age, photo authenticity", "Aadhaar / Passport / ID proof validation"],
+            color: "from-red-500 to-rose-500",
+            bg: "bg-red-50",
+            border: "border-red-200",
+          },
+          {
+            number: "02",
+            title: "Family Background",
+            points: ["Family reputation and status", "Parents' details and social standing"],
+            color: "from-amber-500 to-orange-500",
+            bg: "bg-amber-50",
+            border: "border-amber-200",
+          },
+          {
+            number: "03",
+            title: "Education Verification",
+            points: ["Degree certificates", "College/university authenticity"],
+            color: "from-red-600 to-amber-600",
+            bg: "bg-red-50",
+            border: "border-red-200",
+          },
+          {
+            number: "04",
+            title: "Employment & Income",
+            points: ["Job role, company details", "Salary verification"],
+            color: "from-amber-600 to-yellow-500",
+            bg: "bg-amber-50",
+            border: "border-amber-200",
+          },
+          {
+            number: "05",
+            title: "Financial Status",
+            points: ["Assets, liabilities, loans", "Business credibility (if self-employed)"],
+            color: "from-rose-500 to-red-500",
+            bg: "bg-rose-50",
+            border: "border-rose-200",
+          },
+          {
+            number: "06",
+            title: "Marital Status",
+            points: ["Confirm unmarried / divorced / widowed", "Check for hidden marriages"],
+            color: "from-red-700 to-rose-600",
+            bg: "bg-red-50",
+            border: "border-red-200",
+          },
+          {
+            number: "07",
+            title: "Criminal Background",
+            points: ["Police records (if any)", "Court cases"],
+            color: "from-amber-700 to-red-600",
+            bg: "bg-amber-50",
+            border: "border-amber-200",
+          },
+          {
+            number: "08",
+            title: "Social Reputation",
+            points: ["Behavior in society", "Habits (drinking, smoking, etc.)"],
+            color: "from-orange-500 to-amber-500",
+            bg: "bg-orange-50",
+            border: "border-orange-200",
+          },
+          {
+            number: "09",
+            title: "Online Presence",
+            points: ["Social media activity", "Consistency of profile information"],
+            color: "from-red-500 to-amber-600",
+            bg: "bg-red-50",
+            border: "border-red-200",
+          },
+        ].map((item, index) => (
+          <div
+            key={index}
+            className={`group relative ${item.bg} rounded-2xl p-5 border ${item.border} hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                {item.number}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="font-bold text-gray-800 text-sm mb-2 group-hover:text-red-700 transition-colors">
+                  {item.title}
+                </h5>
+                <ul className="space-y-1">
+                  {item.points.map((point, idx) => (
+                    <li key={idx} className="flex items-start gap-1.5 text-xs text-gray-600">
+                      <span className="text-amber-500 flex-shrink-0 mt-0.5">▸</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Why It's Important + How To Do It — Side by Side */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+      
+      {/* Why It's Important */}
+      <div className="bg-gradient-to-br from-red-600 to-amber-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h4 className="font-bold text-base">Why It's Important</h4>
+        </div>
+        <ul className="space-y-2.5">
+          {[
+            "Avoid fake profiles and scams",
+            "Ensure transparency before marriage",
+            "Protect family reputation",
+            "Build trust between both parties",
+          ].map((item, idx) => (
+            <li key={idx} className="flex items-center gap-2.5 text-sm text-white/90">
+              <div className="w-5 h-5 rounded-full bg-white/25 flex items-center justify-center flex-shrink-0">
+                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* How To Do It */}
+      <div className="bg-white rounded-2xl p-6 border border-red-100 shadow-lg">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center flex-shrink-0">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h4 className="font-bold text-gray-800 text-base">How To Do It</h4>
+        </div>
+        <div className="space-y-3">
+          {[
+            {
+              label: "Option 1",
+              title: "Self Verification",
+              points: ["Check documents manually", "Talk to references (friends, colleagues)", "Verify social media"],
+              tag: "bg-green-100 text-green-700",
+            },
+            {
+              label: "Option 2",
+              title: "Professional Agencies",
+              points: ["Private detective agencies", "Matrimonial verification services"],
+              tag: "bg-amber-100 text-amber-700",
+            },
+            {
+              label: "Option 3",
+              title: "Through Matrimony Apps",
+              points: ["Some platforms offer verified badges", "AI-based profile verification"],
+              tag: "bg-red-100 text-red-700",
+            },
+          ].map((opt, idx) => (
+            <div key={idx} className="flex gap-3">
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold whitespace-nowrap h-fit mt-0.5 ${opt.tag}`}>
+                {opt.label}
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-gray-800 mb-1">{opt.title}</p>
+                <ul className="space-y-0.5">
+                  {opt.points.map((p, i) => (
+                    <li key={i} className="text-xs text-gray-500 flex items-start gap-1">
+                      <span className="text-amber-400 flex-shrink-0">•</span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* EliteInova Premium Feature Tip */}
+    <div className="relative overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 via-red-50 to-amber-50 shadow-lg">
+      {/* Decorative shimmer bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-red-500 to-amber-400" />
+      
+      <div className="p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
+          
+          {/* Bulb icon */}
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="px-2.5 py-1 bg-amber-500 text-white text-xs font-bold rounded-full tracking-wide uppercase">
+                Eliteinova Exclusive
+              </span>
+              <h4 className="font-bold text-gray-800 text-base">
+                Premium Verification Features
+              </h4>
+            </div>
+            
+            <p className="text-gray-600 text-sm mb-4">
+              Eliteinova offers exclusive premium verification tools to give families complete peace of mind:
+            </p>
+
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                {
+                  icon: "🔐",
+                  title: "Verified Profile Badge",
+                  desc: "Instantly identify trusted and verified profiles",
+                  bg: "bg-red-100 border-red-200",
+                  textColor: "text-red-800",
+                },
+                {
+                  icon: "📄",
+                  title: "Document Verification System",
+                  desc: "Secure digital verification of all submitted documents",
+                  bg: "bg-amber-100 border-amber-200",
+                  textColor: "text-amber-800",
+                },
+                {
+                  icon: "🕵️",
+                  title: "Background Check Service",
+                  desc: "Exclusive to Gold & Diamond members",
+                  bg: "bg-red-100 border-red-200",
+                  textColor: "text-red-800",
+                },
+                {
+                  icon: "🤖",
+                  title: "AI Fraud Detection",
+                  desc: "Advanced AI-powered screening for suspicious profiles",
+                  bg: "bg-amber-100 border-amber-200",
+                  textColor: "text-amber-800",
+                },
+              ].map((feature, idx) => (
+                <div key={idx} className={`rounded-xl p-3.5 border ${feature.bg} flex flex-col gap-1.5`}>
+                  <div className="text-xl leading-none">{feature.icon}</div>
+                  <p className={`text-xs font-bold ${feature.textColor}`}>{feature.title}</p>
+                  <p className="text-xs text-gray-500 leading-snug">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
             {/* Verification Services Grid */}
             <div className="mb-16">
               <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-                Our Background Verification Services
+                Our Pre-Matrimonial Verification Services
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1206,6 +1488,10 @@ export default function Services({ onOpenAuthModal }) {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #a0aec0;
         }
+        .perspective-1000 {
+  perspective: 1000px;
+  touch-action: manipulation;
+}
       `}</style>
     </div>
   );
