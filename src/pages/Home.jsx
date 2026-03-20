@@ -518,7 +518,7 @@ export default function Home({ onOpenAuthModal }) {
               { label: "Horoscope Matching",   id: "horoscope-matching" },
               { label: "Success Stories",      id: "success-stories" },
               { label: "Demo Video",                   id: "demo-video" },        
-              { label: "Pre-Matrimonial Verification", id: "pre-matrimonial" },
+              { label: "Pre-Matrimonial Investigations", id: "pre-matrimonial" },
             ]).map((link, i) => (
               <button
                 key={i}
@@ -603,9 +603,7 @@ export default function Home({ onOpenAuthModal }) {
           </div>
           </div>
 
-     {/* Premium Hero Section with Eliteinova Matrimony Styling */}
-<div id="demo-video" className="relative py-16 lg:py-24 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
-  {/* Animated Background Pattern */}
+     <div id="demo-video" className="relative py-6 lg:py-10 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
   <div className="absolute inset-0 opacity-10">
     <div className="absolute top-10 left-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
     <div className="absolute top-10 right-10 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
@@ -614,21 +612,21 @@ export default function Home({ onOpenAuthModal }) {
 
   <div className="container mx-auto px-4 relative z-10 max-w-7xl">
 
-    {/* ── MOST TRUSTED BADGE — top of section, same style as other section badges ── */}
-    <div className="flex justify-start mb-6">
+    {/* Badge */}
+    <div className="flex justify-start mb-3">
       <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
         <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
         <span className="text-red-600 text-sm font-medium uppercase tracking-wide">Demo Video</span>
       </div>
     </div>
 
-    {/* Section Heading with Eliteinova styling */}
-    <div className="text-center mb-12 md:mb-16">
-      <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-4">
+    {/* Section Heading */}
+    <div className="text-center mb-6 md:mb-8">
+      <p className="text-xs md:text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-2">
         ✦ With Love & Trust ✦
       </p>
       <h2
-        className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4"
+        className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3"
         style={{
           background: "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #92400e 100%)",
           WebkitBackgroundClip: "text",
@@ -653,76 +651,59 @@ export default function Home({ onOpenAuthModal }) {
       </div>
     </div>
 
-    {/* Main Content Grid */}
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+    {/* Main Content Grid — items-stretch so both columns are same height */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
-  {/* LEFT — Heading + Content + YouTube Video */}
-  <div className="flex flex-col items-center justify-center">
-    {/* Heading above video */}
-    <div className="w-full mb-6">
-      <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">Eliteinova Matrimony Platform – Step by Step Demo</span>
-      </h1>
-      <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-4">
-        <div className="flex items-start gap-2">
-          <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
-          <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
+      {/* LEFT — Video + Buttons */}
+      <div className="flex flex-col items-center justify-center">
+        <div className="w-full mb-4">
+          <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight text-center sm:text-left">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">
+              Eliteinova Matrimony Platform – Step by Step Demo
+            </span>
+          </h1>
+          <div className="space-y-2 text-gray-600 text-sm sm:text-base mt-3">
+            <div className="flex items-start gap-2">
+              <span className="text-red-500 mt-0.5 flex-shrink-0">✓</span>
+              <span>Watch this demo to learn how to create your profile, search matches, and connect with your ideal partner.</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white" style={{ aspectRatio: "16/9" }}>
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/iDBuFPltT08?si=HRIN8UWimh-TXS_G"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ display: "block", width: "100%", height: "100%" }}
+          />
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2 mt-3 w-full">
+          {["Intro", "Demo", "Register", "Filter", "Find Matches", "Success Stories"].map((label) => (
+            <button
+              key={label}
+              className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400"
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
-    </div>
 
-    <div
-      className="w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white"
-      style={{ aspectRatio: "16/9" }}
-    >
-      <iframe
-        width="100%"
-        height="100%"
-        src="https://www.youtube.com/embed/iDBuFPltT08?si=HRIN8UWimh-TXS_G"
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-        style={{ display: "block", width: "100%", height: "100%" }}
-      />
-    </div>
+      {/* RIGHT — fills full column height, no leftover space */}
+      <div className="flex flex-col">
 
-    {/* Buttons */}
-    <div className="flex flex-wrap justify-center gap-2 mt-4 w-full">
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Intro
-      </button>
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Demo
-      </button>
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Register
-      </button>
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Filter
-      </button>
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Find Matches
-      </button>
-      <button className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-xs md:text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 border border-red-400">
-        Success Stories
-      </button>
-    </div>
-    
-  </div>
-
-      {/* RIGHT — Login Card + Register Now button */}
-      <div className="flex flex-col h-full">
-
-        {/* If logged in: Welcome card */}
+        {/* Logged in: Welcome card */}
         {isAuthenticated && user && (
           <div
             className="bg-gradient-to-br from-green-200 to-gray-300 rounded-2xl border border-gray-300 p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-            style={{
-              boxShadow: "0 4px 24px rgba(185,28,28,0.08), 0 1px 4px rgba(0,0,0,0.04)",
-              border: "1px solid rgba(185,28,28,0.1)",
-            }}
+            style={{ boxShadow: "0 4px 24px rgba(185,28,28,0.08)", border: "1px solid rgba(185,28,28,0.1)" }}
           >
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
@@ -731,9 +712,7 @@ export default function Home({ onOpenAuthModal }) {
                 </span>
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-gray-900 text-lg">
-                  Welcome back, {user.name?.split(" ")[0] || "User"}!
-                </h3>
+                <h3 className="font-bold text-gray-900 text-lg">Welcome back, {user.name?.split(" ")[0] || "User"}!</h3>
                 <p className="text-gray-600">Ready to find your perfect match?</p>
               </div>
             </div>
@@ -747,129 +726,119 @@ export default function Home({ onOpenAuthModal }) {
                 <div className="text-lg font-bold text-red-500">12</div>
               </div>
             </div>
-            <button
-              onClick={handleViewAllProfiles}
-              className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors font-semibold"
-            >
+            <button onClick={handleViewAllProfiles} className="w-full mt-4 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors font-semibold">
               Find Matches
             </button>
-
           </div>
         )}
 
         {isAuthenticated && (
-  <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-8 sm:p-10 shadow-2xl relative overflow-hidden w-full max-w-lg mx-auto mt-4">
-    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-    <div className="relative z-10 text-center">
+          <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden w-full max-w-lg mx-auto mt-4">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+            <div className="relative z-10 text-center">
+              <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">💍 Eliteinova Wedding Services 💍</h3>
+              <p className="text-white/90 text-xs sm:text-sm mb-4">✦ Your Complete Wedding Partner ✦</p>
+              <button onClick={(e) => handleServicePageClick(e, "#")}
+                className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                Visit Our Service Page →
+              </button>
+            </div>
+          </div>
+        )}
 
-      {/* CHANGE THIS LINE ONLY — remove style, add animate-bounce */}
-      <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">
-        💍 Eliteinova Wedding Services 💍
-      </h3>
-
-      <p className="text-white/90 text-xs sm:text-sm mb-4">
-        ✦ Your Complete Wedding Partner ✦
-      </p>
-      <button
-        onClick={(e) => handleServicePageClick(e, "#")}
-        className="bg-red-700 hover:bg-red-800 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-      >
-        Visit Our Service Page →
-      </button>
-    </div>
-  </div>
-)}
-
-        {/* If NOT logged in: Register banner + Login form */}
+        {/* NOT logged in — flex-col + flex-1 on login box fills remaining height */}
         {!isAuthenticated && (
-          <div className="flex flex-col h-full gap-3">
+          <div className="flex flex-col flex-1 gap-3">
 
-            <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-5 shadow-2xl relative overflow-hidden w-full max-w-lg mx-auto my-5">
-    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
-    <div className="relative z-10 text-center">
-      <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">
-        🎉 Register Now! 🎉
-      </h3>
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4">
-        <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
-        <span className="text-white font-bold">|</span>
-        <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
-        <span className="text-white font-bold">|</span>
-        <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
-      </div>
-      <button
-        onClick={handleRegisterFromCard}
-        className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-      >
-        Register Now
-      </button>
-    </div>
-  </div>
+            {/* Pre-Matrimonial Big Button */}
+            <button
+              onClick={() => {
+                const el = document.getElementById('pre-matrimonial');
+                if (el) {
+                  const offsetPosition = el.getBoundingClientRect().top + window.pageYOffset - 100;
+                  window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+              }}
+              className="group relative w-full overflow-hidden rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 flex-shrink-0"
+              style={{ background: "linear-gradient(135deg, #b91c1c 0%, #c2410c 50%, #d97706 100%)" }}
+            >
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <div className="relative z-10 flex items-center justify-between px-4 py-3.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0 border border-white/30">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <span className="text-white font-bold text-sm sm:text-base leading-tight">
+                    Pre-Matrimonial Investigations for Bride and Groom
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <svg className="w-4 h-4 text-white/80 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </button>
 
-            {/* Login Box */}
-<div
-  className="bg-white rounded-2xl shadow-xl p-6 flex-1 flex flex-col justify-center"
-  style={{
-    boxShadow: "0 4px 24px rgba(185,28,28,0.10), 0 1px 4px rgba(0,0,0,0.06)",
-    border: "1px solid rgba(185,28,28,0.12)",
-  }}
->
-  <h3 className="text-lg font-bold text-red-600 mb-4 text-center">
-    Login To Get Started
-  </h3>
+            {/* Register Banner — slightly taller padding */}
+            <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-5 shadow-2xl relative overflow-hidden flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>
+              <div className="relative z-10 text-center">
+                <h3 className="text-white font-bold text-xl sm:text-2xl mb-2 animate-bounce">🎉 Register Now! 🎉</h3>
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3">
+                  <span className="text-white/90 text-xs sm:text-sm">Silver ₹299</span>
+                  <span className="text-white font-bold">|</span>
+                  <span className="text-white/90 text-xs sm:text-sm">Gold ₹499</span>
+                  <span className="text-white font-bold">|</span>
+                  <span className="text-white/90 text-xs sm:text-sm">Diamond ₹749</span>
+                </div>
+                <button onClick={handleRegisterFromCard}
+                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                  Register Now
+                </button>
+              </div>
+            </div>
 
-  <form onSubmit={(e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    
-    // Simple validation
-    if (!email || !password) {
-      alert('Please fill in all fields');
-      return;
-    }
-    
-    // Mock authentication - replace with actual API call
-    if (email === 'test@example.com' && password === 'password123') {
-      alert('Login successful!');
-      // Here you would typically:
-      // 1. Call your actual login API
-      // 2. Store the auth token
-      // 3. Update auth context
-      // 4. Redirect or update UI
-    } else {
-      alert('Invalid email or password. Try test@example.com / password123');
-    }
-  }}>
-    <div className="mb-3">
-      <input
-        type="email"
-        name="email"
-        placeholder="Email address"
-        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-        required
-      />
-    </div>
+            {/* Login Box — flex-1 so it grows to fill all remaining space */}
+            <div
+              className="bg-white rounded-2xl shadow-lg p-5 flex flex-col flex-1"
+              style={{ boxShadow: "0 4px 24px rgba(185,28,28,0.10)", border: "1px solid rgba(185,28,28,0.12)" }}
+            >
+              <h3 className="text-base font-bold text-red-600 mb-3 text-center">Login To Get Started</h3>
+              <form
+                className="flex flex-col flex-1 justify-center"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const email = e.target.email.value;
+                  const password = e.target.password.value;
+                  if (!email || !password) { alert('Please fill in all fields'); return; }
+                  if (email === 'test@example.com' && password === 'password123') {
+                    alert('Login successful!');
+                  } else {
+                    alert('Invalid email or password. Try test@example.com / password123');
+                  }
+                }}
+              >
+                <div className="mb-3">
+                  <input type="email" name="email" placeholder="Email address" required
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition" />
+                </div>
+                <div className="mb-4">
+                  <input type="password" name="password" placeholder="Password" required
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition" />
+                </div>
+                <button type="submit"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md">
+                  Login Now
+                </button>
+              </form>
+            </div>
 
-    <div className="mb-4">
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 transition"
-        required
-      />
-    </div>
-
-    {/* Login Now only — Register moved to banner above */}
-    <button
-      type="submit"
-      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-all duration-200 shadow hover:shadow-md"
-    >
-      Login Now
-    </button>
-  </form>
-</div>
           </div>
         )}
 
@@ -877,9 +846,10 @@ export default function Home({ onOpenAuthModal }) {
     </div>
 
     {/* Bottom decorative line */}
-    <div className="mt-16 flex justify-center">
+    <div className="mt-8 flex justify-center">
       <div className="w-24 h-0.5" style={{ background: "linear-gradient(to right, transparent, #b91c1c, #d97706, #b91c1c, transparent)" }} />
     </div>
+
   </div>
 </div>
 
@@ -1694,9 +1664,15 @@ export default function Home({ onOpenAuthModal }) {
     <div className="flex justify-start mb-3">
       <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
         <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-        <span className="text-red-600 text-sm font-medium uppercase">Pre-Matrimonial Verification</span>
+        <span className="text-red-600 text-sm font-medium uppercase">Pre-Matrimonial Investigations</span>
       </div>
     </div>
+    {/* Heading */}
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-6">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500">
+            Pre-Matrimonial Investigations
+          </span>
+        </h2>
 
     {/* OUTER LAYOUT CARD */}
     <div className="bg-white rounded-3xl shadow-xl border border-red-100 overflow-hidden">
@@ -1710,7 +1686,7 @@ export default function Home({ onOpenAuthModal }) {
           <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          What is Checked in Pre-Matrimonial Verification?
+          What is Checked in Pre-Matrimonial Investigations?
         </h4>
 
         {/* Grid */}
@@ -1833,7 +1809,7 @@ export default function Home({ onOpenAuthModal }) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            Get Pre-Matrimonial Verification
+            Get Pre-Matrimonial Investigations
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
@@ -1848,273 +1824,7 @@ export default function Home({ onOpenAuthModal }) {
 
   </div>
 </section>
-      {/* Professional How It Works Section */}
-      <div className="py-12 sm:py-16 md:py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <div className="inline-flex items-center justify-center mb-4">
-              <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 mr-2 sm:mr-3"></div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-500"> How It Works</span>              </h2>
-              <div className="w-2 h-6 sm:w-2 sm:h-8 bg-red-600 ml-2 sm:ml-3"></div>
-            </div>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light px-4 text-justify">
-              A streamlined process designed to help you find meaningful connections with confidence
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-0">
-            {[
-              {
-                step: "01",
-                title: "Create Your Profile",
-                desc: "Build your comprehensive profile with essential details and preferences",
-                icon: (
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                ),
-                delay: "0",
-              },
-              {
-                step: "02",
-                title: "Verification Process",
-                desc: "Complete our secure verification to ensure authenticity and trust",
-                icon: (
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
-                delay: "100",
-              },
-              {
-                step: "03",
-                title: "Discover Matches",
-                desc: "Receive curated matches based on compatibility and shared values",
-                icon: (
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                ),
-                delay: "200",
-              },
-              {
-                step: "04",
-                title: "Connect & Communicate",
-                desc: "Engage in meaningful conversations with verified matches",
-                icon: (
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                ),
-                delay: "300",
-              },
-            ].map((item, index) => (
-              <div key={index} className="group relative">
-                {/* Main Card */}
-                <div className="relative bg-white rounded-lg border border-gray-200 hover:border-red-300 shadow-sm hover:shadow-md transition-all duration-300 h-full overflow-hidden">
-                  
-                  {/* Top Accent Bar */}
-                  <div className="h-1 bg-gradient-to-r from-red-600 to-red-500"></div>
-                  
-                  {/* Card Content */}
-                  <div className="p-4 sm:p-6 md:p-8">
-                    {/* Step Number */}
-                    <div className="flex items-center justify-between mb-4 sm:mb-6">
-                      <div className="text-xl sm:text-2xl font-bold text-gray-400 group-hover:text-red-600 transition-colors duration-300">
-                        {item.step}
-                      </div>
-                      {/* Icon */}
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-red-50 group-hover:bg-red-100 rounded-lg flex items-center justify-center text-red-600 transition-colors duration-300">
-                        {item.icon}
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="space-y-2 sm:space-y-3 md:space-y-4">
-                      <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-600 leading-relaxed text-xs sm:text-sm font-light text-justify">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Progress Connector (Desktop) */}
-                  {index < 3 && (
-                    <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                      <div className="w-8 h-0.5 bg-gray-300 group-hover:bg-red-300 transition-colors duration-300">
-                        <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-400 group-hover:bg-red-500 rounded-full transition-colors duration-300"></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Bottom Progress Line (Mobile) */}
-          <div className="lg:hidden mt-8 sm:mt-12">
-            <div className="flex justify-center">
-              <div className="flex space-x-6 sm:space-x-8">
-                {[0, 1, 2, 3].map((dot) => (
-                  <div key={dot} className="flex flex-col items-center">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-300 rounded-full mb-1 sm:mb-2"></div>
-                    {dot < 3 && <div className="w-6 sm:w-8 h-0.5 bg-gray-300 mt-1"></div>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Premium Services Section */}
-      <div className="py-12 sm:py-16 bg-gradient-to-b from-white to-gray-200">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Our <span className="text-red-500">Services Include</span>
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4 text-justify">
-              Comprehensive services designed to make your matchmaking journey
-              seamless and successful
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-0">
-            {/* Premium Membership Plans */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-xl sm:text-2xl text-white">👑</span>
-                </div>
-                <div>
-                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
-                    Membership Plans
-                  </div>
-                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
-                    Premium Membership Options
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-3 sm:space-y-4">
-                <div className="text-base sm:text-lg font-bold text-gray-900">
-                  Choose the plan that{" "}
-                  <span className="text-red-500">fits you best</span>
-                </div>
-                <div className="space-y-2 sm:space-y-3">
-                  {[
-                    "Complete profile creation",
-                    "Premium advanced features",
-                    "Unlimited matches",
-                    "Priority customer support",
-                  ].map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2 sm:space-x-3">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
-                      </div>
-                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <button 
-                  onClick={handleCreateProfile}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105"
-                >
-                  View Plans →
-                </button>
-              </div>
-            </div>
-
-            {/* Profile Verification & Privacy Controls */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-xl sm:text-2xl text-white">🔒</span>
-                </div>
-                <div>
-                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
-                    Verification & Privacy
-                  </div>
-                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
-                    Secure & Trusted
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-3 sm:space-y-4">
-                <div className="text-base sm:text-lg font-bold text-gray-900">
-                  Your safety is our{" "}
-                  <span className="text-red-500">top priority</span>
-                </div>
-                <div className="space-y-2 sm:space-y-3">
-                  {[
-                    "Advanced profile verification",
-                    "Complete privacy controls",
-                    "Secure data protection",
-                    "Verified member badges",
-                  ].map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-2 sm:space-x-3">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
-                      </div>
-                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <button className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105">
-                  Learn More →
-                </button>
-              </div>
-            </div>
-
-            {/* Personalized Match Recommendations */}
-            <div className="group bg-white rounded-2xl border border-red-500/20 p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-xl sm:text-2xl text-white">💝</span>
-                </div>
-                <div>
-                  <div className="font-bold text-gray-900 text-base sm:text-lg md:text-xl">
-                    Smart Matching
-                  </div>
-                  <div className="text-red-500 font-semibold text-xs sm:text-sm">
-                    Personalized Recommendations
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-3 sm:space-y-4">
-                <div className="text-base sm:text-lg font-bold text-gray-900">
-                  Find your perfect{" "}
-                  <span className="text-red-500">match faster</span>
-                </div>
-                <div className="space-y-2 sm:space-y-3">
-                  {[
-                    "AI-powered match suggestions",
-                    "Compatibility scoring",
-                    "Interest-based matching",
-                    "Daily curated profiles",
-                  ].map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-2 sm:space-x-3">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-green-600 text-xs sm:text-sm">✓</span>
-                      </div>
-                      <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <button 
-                  onClick={handleViewAllProfiles}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-2 sm:py-3 rounded-xl hover:from-red-700 hover:to-red-600 transition-all duration-300 font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl mt-4 sm:mt-6 group-hover:scale-105"
-                >
-                  Get Matches →
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     {!isAuthenticated && (
   <div className="bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl p-4 sm:p-8 shadow-2xl relative overflow-hidden w-[90%] sm:w-10/12 md:w-8/12 lg:w-7/12 mx-auto my-5">
     <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 opacity-75 animate-pulse"></div>

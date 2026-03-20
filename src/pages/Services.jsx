@@ -205,7 +205,7 @@ export default function Services({ onOpenAuthModal }) {
       ]
     },
     {
-      name: "Pre-Matrimonial Verification",
+      name: "Pre-Matrimonial Investigation",
       path: "/background-investigations",
       image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
       subcategories: [
@@ -399,7 +399,7 @@ export default function Services({ onOpenAuthModal }) {
                 "Bridal Styling",
                 "Entertainment",
                 "Invitation Cards",
-                "Pre-Matrimonial Verification",
+                "Pre-Matrimonial Investigations",
               ]).map((label, i) => (
                 <button
                   key={i}
@@ -445,7 +445,7 @@ export default function Services({ onOpenAuthModal }) {
             {[...Array(2)].flatMap(() => [
               { label: "Celebrate Your Wedding", id: "celebrate-wedding" },
               { label: "Service Categories", id: "our-categories" },
-              { label: "Pre-Matrimonial Verification", id: "background-verification" },
+              { label: "Pre-Matrimonial Investigations", id: "background-verification" },
               { label: "Portal Access", id: "portal-access" },
               { label: "Why Choose Us", id: "why-choose" },
             ]).map((link, i) => (
@@ -508,7 +508,7 @@ export default function Services({ onOpenAuthModal }) {
                 </div>
                 
                 <span className="font-bold text-sm sm:text-base whitespace-nowrap">
-                  Pre-Matrimonial Verification for Bride and Groom
+                  Pre-Matrimonial Investigations for Bride and Groom
                 </span>
                 
                 {/* Magnifying glass icon */}
@@ -909,14 +909,14 @@ export default function Services({ onOpenAuthModal }) {
             </div>
           </section>
 
-          {/* Pre-Matrimonial Verification Services Section */}
+          {/* Pre-Matrimonial Investigations Services Section */}
           <section id="background-verification" className="mb-24 scroll-mt-20">
             <div className="text-center mb-12">
               <p className="text-sm font-semibold tracking-[0.3em] uppercase text-amber-600 mb-3">
                 ✦ Trust & Transparency ✦
               </p>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-red-800 via-red-600 to-amber-700 bg-clip-text text-transparent mb-4">
-                Pre-Matrimonial Verification Services
+                Pre-Matrimonial Investigations Services
               </h2>
               <p className="text-lg md:text-xl text-amber-700 font-medium">
                 Trusted Verification for Confident Marriages
@@ -940,7 +940,7 @@ export default function Services({ onOpenAuthModal }) {
                   </p>
                   
                   <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-                    Our Pre-Matrimonial Verification Services help families and individuals verify important details before proceeding with a matrimonial alliance. Through professional investigation and careful verification, we help ensure that the information provided is accurate and reliable.
+                    Our Pre-Matrimonial Investigations Services help families and individuals verify important details before proceeding with a matrimonial alliance. Through professional investigation and careful verification, we help ensure that the information provided is accurate and reliable.
                   </p>
                   
                   <p className="text-gray-700 text-base md:text-lg font-medium">
@@ -953,13 +953,13 @@ export default function Services({ onOpenAuthModal }) {
             {/* Why Verification is Important */}
             <div className="mb-16">
               <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-                Why Pre-Matrimonial Verification is Important
+                Why Pre-Matrimonial Investigations is Important
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-red-100">
                   <p className="text-gray-600 mb-4">
-                    In today's digital world, profiles and information can sometimes be incomplete or misleading. Pre-Matrimonial Verification helps confirm key details such as identity, career, and personal background.
+                    In today's digital world, profiles and information can sometimes be incomplete or misleading. Pre-Matrimonial Investigations helps confirm key details such as identity, career, and personal background.
                   </p>
                   <p className="text-gray-600">
                     This process helps families:
@@ -1003,16 +1003,16 @@ export default function Services({ onOpenAuthModal }) {
               </div>
             </div>
 
-            {/* What is Pre-Matrimonial Verification Section */}
+            {/* What is Pre-Matrimonial Investigations Section */}
 <div className="mb-16">
   <div className="relative max-w-4xl mx-auto">
     {/* Section Title */}
     <div className="text-center mb-8">
       <h3 className="text-2xl font-bold text-gray-800 mb-2">
-        What is Pre-Matrimonial Verification?
+        What is Pre-Matrimonial Investigations?
       </h3>
       <p className="text-gray-500 text-sm max-w-2xl mx-auto">
-        Pre-Matrimonial Verification is a background check done before marriage to confirm that the prospective bride/groom is genuine, trustworthy, and matches the details they've provided. It's becoming very common, especially in online matrimony platforms, to avoid fraud, hidden facts, or future disputes.
+        Pre-Matrimonial Investigations is a background check done before marriage to confirm that the prospective bride/groom is genuine, trustworthy, and matches the details they've provided. It's becoming very common, especially in online matrimony platforms, to avoid fraud, hidden facts, or future disputes.
       </p>
     </div>
 
@@ -1022,7 +1022,7 @@ export default function Services({ onOpenAuthModal }) {
         <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        What is Checked in Pre-Matrimonial Verification?
+        What is Checked in Pre-Matrimonial Investigations?
       </h4>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1289,7 +1289,7 @@ export default function Services({ onOpenAuthModal }) {
             {/* Verification Services Grid */}
             <div className="mb-16">
               <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-                Our Pre-Matrimonial Verification Services
+                Our Pre-Matrimonial Investigations Services
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
