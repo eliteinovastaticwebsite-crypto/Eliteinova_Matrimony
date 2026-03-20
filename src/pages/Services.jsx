@@ -209,7 +209,7 @@ export default function Services({ onOpenAuthModal }) {
       path: "/background-investigations",
       image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
       subcategories: [
-        "Identity Verification",
+        " Identity and Character Verification",
         "Marital Status Check",
         "Criminal Record Check",
         "Education Verification",
@@ -223,7 +223,7 @@ export default function Services({ onOpenAuthModal }) {
 
   const verificationServices = [
     {
-      title: "Identity Verification",
+      title: " Identity and Character Verification",
       desc: "Authenticate personal details including name, age, marital status, and government ID verification.",
       icon: (
         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -793,17 +793,14 @@ export default function Services({ onOpenAuthModal }) {
 
     <div className="pt-3">
       <button
-        onClick={() => {
-          const element = document.getElementById('our-categories');
-          if (element) element.scrollIntoView({ behavior: "smooth" });
-        }}
-        className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-      >
-        Explore Our Eliteinova Wedding Services
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </button>
+  onClick={() => setShowComingSoon(true)}
+  className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+>
+  Explore Our Eliteinova Wedding Services Page
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+  </svg>
+</button>
     </div>
   </div>
 </div>
@@ -1032,7 +1029,7 @@ export default function Services({ onOpenAuthModal }) {
         {[
           {
             number: "01",
-            title: "Identity Verification",
+            title: " Identity and Character Verification",
             points: ["Name, age, photo authenticity", "Aadhaar / Passport / ID proof validation"],
             color: "from-red-500 to-rose-500",
             bg: "bg-red-50",
@@ -1081,7 +1078,7 @@ export default function Services({ onOpenAuthModal }) {
           {
             number: "07",
             title: "Criminal Background",
-            points: ["Police records (if any)", "Court cases"],
+            points: ["Police records (if any)", "Court cases","Any Previous Marriage"],
             color: "from-amber-700 to-red-600",
             bg: "bg-amber-50",
             border: "border-amber-200",
@@ -1162,7 +1159,7 @@ export default function Services({ onOpenAuthModal }) {
         </ul>
       </div>
 
-      {/* How To Do It */}
+      {/* Suggestions */}
       <div className="bg-white rounded-2xl p-6 border border-red-100 shadow-lg">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center flex-shrink-0">
@@ -1171,7 +1168,7 @@ export default function Services({ onOpenAuthModal }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h4 className="font-bold text-gray-800 text-base">How To Do It</h4>
+          <h4 className="font-bold text-gray-800 text-base">Suggestions</h4>
         </div>
         <div className="space-y-3">
           {[

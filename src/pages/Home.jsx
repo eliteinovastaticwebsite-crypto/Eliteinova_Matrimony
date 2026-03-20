@@ -517,6 +517,8 @@ export default function Home({ onOpenAuthModal }) {
               { label: "Why Eliteinova",       id: "why-eliteinova" },
               { label: "Horoscope Matching",   id: "horoscope-matching" },
               { label: "Success Stories",      id: "success-stories" },
+              { label: "Demo Video",                   id: "demo-video" },        
+              { label: "Pre-Matrimonial Verification", id: "pre-matrimonial" },
             ]).map((link, i) => (
               <button
                 key={i}
@@ -602,7 +604,7 @@ export default function Home({ onOpenAuthModal }) {
           </div>
 
      {/* Premium Hero Section with Eliteinova Matrimony Styling */}
-<div className="relative py-16 lg:py-24 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
+<div id="demo-video" className="relative py-16 lg:py-24 overflow-hidden bg-gradient-to-br from-gray-200 via-white to-gray-200">
   {/* Animated Background Pattern */}
   <div className="absolute inset-0 opacity-10">
     <div className="absolute top-10 left-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
@@ -1685,7 +1687,167 @@ export default function Home({ onOpenAuthModal }) {
     </div>
   </div>
 )}
-      
+       <section id="pre-matrimonial" className="py-8 bg-gradient-to-b from-white via-gray-50 to-white">
+  <div className="container mx-auto px-4 lg:px-8">
+
+    {/* Badge */}
+    <div className="flex justify-start mb-3">
+      <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 shadow-sm">
+        <span className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+        <span className="text-red-600 text-sm font-medium uppercase">Pre-Matrimonial Verification</span>
+      </div>
+    </div>
+
+    {/* OUTER LAYOUT CARD */}
+    <div className="bg-white rounded-3xl shadow-xl border border-red-100 overflow-hidden">
+      {/* Top accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-red-600 via-amber-400 to-red-600" />
+
+      <div className="p-6 md:p-8">
+
+        {/* Heading */}
+        <h4 className="text-lg font-bold text-center text-gray-800 mb-6 flex items-center justify-center gap-2">
+          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          What is Checked in Pre-Matrimonial Verification?
+        </h4>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl mx-auto">
+          {[
+            {
+              number: "01",
+              title: "Identity Verification",
+              points: ["Name, age, photo authenticity", "Aadhaar / Passport / ID proof validation"],
+              color: "from-red-500 to-rose-500",
+              bg: "bg-red-50",
+              border: "border-red-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "02",
+              title: "Family Background",
+              points: ["Family reputation and status", "Parents' details and social standing"],
+              color: "from-amber-500 to-orange-500",
+              bg: "bg-amber-50",
+              border: "border-amber-100",
+              titleColor: "text-amber-600",
+            },
+            {
+              number: "03",
+              title: "Education Verification",
+              points: ["Degree certificates", "College/university authenticity"],
+              color: "from-red-600 to-amber-600",
+              bg: "bg-red-50",
+              border: "border-red-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "04",
+              title: "Employment & Income",
+              points: ["Job role, company details", "Salary verification"],
+              color: "from-amber-600 to-yellow-500",
+              bg: "bg-amber-50",
+              border: "border-amber-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "05",
+              title: "Financial Status",
+              points: ["Assets, liabilities, loans", "Business credibility (if self-employed)"],
+              color: "from-rose-500 to-red-500",
+              bg: "bg-rose-50",
+              border: "border-rose-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "06",
+              title: "Marital Status",
+              points: ["Confirm unmarried / divorced / widowed", "Check for hidden marriages"],
+              color: "from-red-700 to-rose-600",
+              bg: "bg-red-50",
+              border: "border-red-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "07",
+              title: "Criminal Background",
+              points: ["Police records (if any)", "Court cases"],
+              color: "from-amber-700 to-red-600",
+              bg: "bg-amber-50",
+              border: "border-amber-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "08",
+              title: "Social Reputation",
+              points: ["Behavior in society", "Habits (drinking, smoking, etc.)"],
+              color: "from-orange-500 to-amber-500",
+              bg: "bg-orange-50",
+              border: "border-orange-100",
+              titleColor: "text-gray-800",
+            },
+            {
+              number: "09",
+              title: "Online Presence",
+              points: ["Social media activity", "Consistency of profile information"],
+              color: "from-red-500 to-amber-600",
+              bg: "bg-red-50",
+              border: "border-red-100",
+              titleColor: "text-gray-800",
+            },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className={`group relative ${item.bg} rounded-xl p-3 border ${item.border} hover:shadow-md transition-all duration-300 hover:-translate-y-0.5`}
+            >
+              <div className="flex items-start gap-2.5">
+                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+                  {item.number}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h5 className={`font-bold text-sm mb-1.5 ${item.titleColor} group-hover:text-red-700 transition-colors`}>
+                    {item.title}
+                  </h5>
+                  <ul className="space-y-0.5">
+                    {item.points.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-1 text-xs text-gray-500">
+                        <span className="text-amber-500 flex-shrink-0 mt-0.5">▸</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Button */}
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => navigate("/services")}
+            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold rounded-xl hover:from-red-700 hover:to-amber-700 hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Get Pre-Matrimonial Verification
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+      {/* Bottom accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-red-600 via-amber-400 to-red-600" />
+    </div>
+
+  </div>
+</section>
       {/* Professional How It Works Section */}
       <div className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
