@@ -9,7 +9,7 @@ export const mockPlanService = {
         id: 1,
         name: "Silver",
         description: "Your Future Partner is One Premium Step Away",
-        price: "1000",
+        price: "750",
         duration: "3 months + tax",
         featured: false,
         popular: false,
@@ -30,7 +30,7 @@ export const mockPlanService = {
         id: 2,
         name: "Gold",
         description: "Verified Matches. Unlimited Access. Premium Advantage",
-        price: "2000",
+        price: "1500",
         duration: " 3 months +tax ",
         featured: true,
         popular: true,
@@ -53,7 +53,7 @@ export const mockPlanService = {
         id: 3,
         name: "Diamond",
         description: "Join Premium Today – Experience Elite Matchmaking",
-        price: "3000",
+        price: "2000",
         duration: " 3 months +tax ",
         featured: true,
         popular: false,
@@ -84,7 +84,7 @@ export const mockPlanService = {
 
   async selectPlan(planId) {
     // Simulate API call for plan selection
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 750));
     
     return {
       success: true,
@@ -121,7 +121,7 @@ export const mockPlanService = {
           id: 1,
           name: "Silver",
           description: "Your Future Partner is One Premium Step Away",
-          price: "1000",
+          price: "750",
           duration: "3 months + Tax",
           features: [
             "View More Verified Profiles",
@@ -138,7 +138,7 @@ export const mockPlanService = {
           id: 2,
           name: "Gold",
           description: "Verified Matches. Unlimited Access. Premium Advantage",
-          price: "2000",
+          price: "1500",
           duration: "3 months + Tax",
           features: [
              "Unlimited Profile Views",
@@ -158,7 +158,7 @@ export const mockPlanService = {
           id: 3,
           name: "Diamond",
           description: "Join Premium Today – Experience Elite Matchmaking",
-          price: "3000",
+          price: "2000",
           duration: "3 months + Tax",
           features: [
              "Unlimited Profile Views & Direct Contact Access",
@@ -201,7 +201,7 @@ export const mockPlanService = {
   async processPayment(planId, paymentDetails) {
     try {
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Simulate random success/failure for demo
       const isSuccess = Math.random() > 0.2; // 80% success rate

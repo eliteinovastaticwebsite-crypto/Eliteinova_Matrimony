@@ -500,67 +500,96 @@ useEffect(() => {
     if (!profile?.id) {
       return alert("Profile information not available");
     }
+
     setContactLoading(true);
+    setInterestLoading(true);
+
     try {
-      const payload = { acceptedLanguage };
+      // ── Get logged-in user from localStorage ──────────────────────────
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const senderName = storedUser?.name || storedUser?.fullName || "Someone";
+      const senderProfileId = storedUser?.profileId || storedUser?.id;
+      const senderNumber = (storedUser?.mobile || storedUser?.phone || "").replace(/\D/g, "");
 
-      const resp = await profileService.requestContact(profile.id, payload);
-      // resp expected: { success, status, message, contact?, requestId? }
+      // ── Receiver info ─────────────────────────────────────────────────
+      const receiverName = profile?.name || "Someone";
+      const receiverProfileId = profile?.id;
+      const receiverNumber = (profile?.mobile || profile?.phone || "").replace(/\D/g, "");
 
-      // Normalize fallback
-      const status = resp?.status || (resp.success ? "PENDING" : "FAILED");
-
-      // ALWAYS update UI state from resp
-      setContactRequestStatus(status);
-      if (resp.requestId) setContactRequestId(resp.requestId);
-
-      if (status === "ACCEPTED") {
-        if (resp.contact) {
-          setContactRevealed(resp.contact);
-        } else {
-          // ensure we have the latest contact if backend didn't include it
-          await fetchContact();
-        }
-        alert(resp.message || "Contact revealed");
-      } else if (status === "PENDING") {
-        // show pending locally and keep button disabled
-        alert(resp.message || "Request sent. Waiting for owner approval.");
-      } else if (status === "REJECTED") {
-        alert(resp.message || "User rejected your request.");
-      } else {
-        alert(resp.message || `Request result: ${status}`);
+      if (!receiverNumber) {
+        alert("Recipient's contact number is not available.");
+        return;
       }
+
+      // ── Build payload ─────────────────────────────────────────────────
+      const payload = {
+        senderName,
+        receiverName,
+        senderProfileId,
+        receiverProfileId,
+        receiverNumber,
+        senderNumber,
+        acceptedLanguage,
+      };
+
+      console.log("📤 Express Interest Payload:", payload);
+
+      // ── Call WhatsApp send API ────────────────────────────────────────
+      const response = await fetch("/api/whatsapp/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(localStorage.getItem("authToken") && {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          }),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.message || `API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("✅ Interest sent successfully:", result);
+
+      // ── Also update contact request status ───────────────────────────
+      try {
+        const resp = await profileService.requestContact(profile.id, { acceptedLanguage });
+        const status = resp?.status || (resp.success ? "PENDING" : "FAILED");
+        setContactRequestStatus(status);
+        if (resp.requestId) setContactRequestId(resp.requestId);
+        if (status === "ACCEPTED" && resp.contact) {
+          setContactRevealed(resp.contact);
+        }
+      } catch (_) {
+        // non-critical, continue
+      }
+
+      alert(`💌 Interest expressed successfully to ${receiverName}!`);
+
     } catch (err) {
-      console.error("request contact error", err);
-      alert(err?.response?.data?.message || err.message || "Failed to request contact");
+      console.error("❌ Failed to express interest:", err);
+      alert(`Failed to express interest: ${err.message || "Please try again."}`);
     } finally {
       setContactLoading(false);
+      setInterestLoading(false);
     }
   },
-  [profile?.id, fetchContact]
+  [profile, fetchContact]
 );
 
-
-
   // Rest of your functions remain the same...
-  const handleExpressInterest = useCallback(async () => {
+  const handleExpressInterest = useCallback(() => {
     if (!profile?.id) {
       alert("Profile information not available");
       return;
     }
-
-    setInterestLoading(true);
-    try {
-      console.log("💝 Expressing interest in profile:", profile.id);
-
-      await profileService.expressInterest(profile.id);
-      alert("Interest expressed successfully! 💝");
-    } catch (err) {
-      console.error("❌ Error expressing interest:", err);
-      alert(err.message || "Failed to express interest. Please try again.");
-    } finally {
-      setInterestLoading(false);
-    }
+    // Open warning modal first
+    setAcceptedWarning(false);
+    setSelectedLanguage("en");
+    setShowWarningModal(true);
   }, [profile?.id]);
 
   const handleGoBack = useCallback(() => {
@@ -1048,25 +1077,20 @@ useEffect(() => {
               <div className="space-y-3">
                 <button
   onClick={() => {
-    console.log("DEBUG: Request Contact button clicked", { contactLoading, contactRequestStatus });
     setAcceptedWarning(false);
     setSelectedLanguage("en");
     setShowWarningModal(true);
   }}
-  disabled={contactLoading || contactRequestStatus === "PENDING" || contactRequestStatus === "ACCEPTED"}
+  disabled={contactLoading || interestLoading || contactRequestStatus === "PENDING"}
   className={`w-full ${t.contactBtn} py-3 rounded-lg transition-colors font-semibold`}
-  aria-label="Request contact information"
+  aria-label="Express interest"
 >
-  <Phone size={18} className="inline mr-2" />
-  {contactLoading
-    ? "Requesting..."
-    : contactRevealed
-      ? `Contact: ${contactRevealed.mobile || contactRevealed.phone || contactRevealed.contact}`
-      : contactRequestStatus === "PENDING"
-        ? "Request Sent (Pending)"
-        : contactRequestStatus === "ACCEPTED"
-          ? "Contact Revealed"
-          : "Request Contact"}
+  <Heart size={18} className="inline mr-2" />
+  {contactLoading || interestLoading
+    ? "Sending..."
+    : contactRequestStatus === "PENDING"
+      ? "✅ Interest Sent"
+      : "Express Interest"}
 </button>
 
 
@@ -1077,6 +1101,32 @@ useEffect(() => {
                   <Mail size={18} className="inline mr-2" />
                   Send Message
                 </button>
+
+                {/* Upgrade button */}
+                <button
+                  onClick={() => {
+                    navigate("/upgrade", { state: { scrollToPlans: true } });
+                  }}
+                  className="w-full py-3 rounded-lg font-bold text-sm transition-all duration-200 text-white"
+                  style={{
+                    background: "linear-gradient(135deg, #f97316 0%, #eab308 100%)",
+                    boxShadow: "0 4px 14px rgba(249,115,22,0.4)",
+                  }}
+                  aria-label="Upgrade to get contact details"
+                >
+                  ⭐ Upgrade to Get Contacts
+                </button>
+
+                {/* Small note */}
+                <p className="text-xs text-gray-500 text-center leading-relaxed mt-1">
+                  💡 Upgrade your membership to unlock direct contact details of matches.{" "}
+                  <button
+                    onClick={() => navigate("/upgrade", { state: { scrollToPlans: true } })}
+                    className="text-orange-500 font-semibold underline hover:text-orange-600"
+                  >
+                    View Plans
+                  </button>
+                </p>
               </div>
             </div>
 

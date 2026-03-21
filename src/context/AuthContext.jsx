@@ -101,28 +101,44 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Enhanced login function
-  const login = async (email, password) => {
+  // AFTER - login accepts a credentials object { email, mobile, password }
+const login = async (credentials) => {
   setLoading(true);
   
   try {
-    console.log('🔐 Attempting login for:', email);
-    const credentials = { email, password };
-    const result = await AuthService.login(credentials);
+    // Support both email and mobile login
+    const loginPayload = {
+  password: credentials.password
+};
+
+// Only add email if it's a valid non-empty string
+if (credentials.email && typeof credentials.email === "string" && credentials.email.trim() !== "") {
+  loginPayload.email = credentials.email.toLowerCase();
+}
+
+// Only add mobile if it's a valid non-empty string
+if (credentials.mobile && typeof credentials.mobile === "string" && credentials.mobile.trim() !== "") {
+  loginPayload.mobile = credentials.mobile;
+}
+
+// Safety check — must have either email or mobile
+if (!loginPayload.email && !loginPayload.mobile) {
+  setLoading(false);
+  throw new Error("Please enter a valid email or mobile number");
+}
+
+    console.log('🔐 Attempting login with payload:', { 
+      ...loginPayload, 
+      password: '***' 
+    });
+    
+    const result = await AuthService.login(loginPayload);
     
     console.log('🔍 Raw login result from AuthService:', result);
     
-    // ✅ FIX: Check the actual response structure from your backend
     if (result.token && result.user) {
-      // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${result.token}`;
-      
-      // Update state
       const userData = result.user;
-      
-      // Debug: Log membership field
-      console.log('🔍 AuthContext: Login response user data:', userData);
-      console.log('🔍 AuthContext: Membership field:', userData.membership || userData.membershipType);
-      console.log('🔍 AuthContext: Full user object keys:', Object.keys(userData));
       
       setUser(userData);
       setIsAuthenticated(true);
@@ -131,14 +147,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('authToken', result.token);
 
       console.log('✅ User logged in:', userData.name);
-      console.log('✅ User membership stored:', userData.membership || userData.membershipType || 'NOT FOUND');
       
-      // Reset loading state after successful login
       setLoading(false);
       
-      // ✅ CORRECT: Return success based on actual backend response
       return {
-        success: true,  // This was incorrectly set to false!
+        success: true,
         user: userData,
         token: result.token,
         isAdmin: userData.role === 'ADMIN',
@@ -147,6 +160,7 @@ export const AuthProvider = ({ children }) => {
       };
     } else {
       console.warn('❌ Login failed - missing token or user:', result);
+      setLoading(false);
       return {
         success: false,
         error: result.message || 'Login failed. Invalid response from server.'
@@ -154,45 +168,24 @@ export const AuthProvider = ({ children }) => {
     }
   } catch (error) {
     console.error('❌ Login error in AuthContext:', error);
-    console.error('❌ Error response data:', error.response?.data);
-    console.error('❌ Error message:', error.message);
-    console.error('❌ Error error property:', error.error);
     
-    // Extract better error messages from backend
-    // Backend returns: { success: false, error: "message" } for 400 errors
     let errorMessage = 'Invalid email or password. Please check your credentials and try again.';
     
-    // Priority 1: Check if error has .error property (set by AuthService)
     if (error.error) {
       errorMessage = error.error;
-      console.log('✅ AuthContext: Using error.error:', errorMessage);
-    }
-    // Priority 2: Check response data directly
-    else if (error.response?.data) {
-      const backendError = error.response.data;
-      // Backend returns error in 'error' field for 400 responses: {success: false, error: "..."}
-      if (backendError.error) {
-        errorMessage = backendError.error;
-        console.log('✅ AuthContext: Using response.data.error:', errorMessage);
-      } else if (backendError.message) {
-        errorMessage = backendError.message;
-        console.log('✅ AuthContext: Using response.data.message:', errorMessage);
-      }
-    }
-    // Priority 3: Use error.message
-    else if (error.message) {
+    } else if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
       errorMessage = error.message;
-      console.log('✅ AuthContext: Using error.message:', errorMessage);
     }
     
     setLoading(false);
     
-    // Throw error with both message and error property for LoginForm to catch
     const loginError = new Error(errorMessage);
-    loginError.error = errorMessage; // Ensure error property is set
-    loginError.message = errorMessage; // Ensure message is set
-    loginError.response = error.response; // Preserve original response
-    console.log('✅ AuthContext: Throwing error with message:', errorMessage);
+    loginError.error = errorMessage;
+    loginError.message = errorMessage;
     throw loginError;
   }
 };

@@ -37,18 +37,18 @@ const themes = {
     shadow: "shadow-lg hover:shadow-amber-400/70 hover:shadow-2xl",
   },
  diamond: {
-  primary: "#E879A0",
-  secondary: "#F9A8C9",
-  accent: "#BE185D",
+  primary: "#F4BCE0",
+  secondary: "#FCDAF0",
+  accent: "#DF8EAE",
   background: "bg-white",
-  border: "border-2 border-pink-300 hover:border-pink-400",
-  buttonPrimary: "bg-gradient-to-r from-pink-400 via-rose-300 to-pink-500 hover:from-pink-300 hover:via-white hover:to-pink-400 text-white font-black",
-  buttonSecondary: "border-2 border-pink-400 text-pink-700 bg-pink-50 font-black hover:bg-gradient-to-r hover:from-pink-300 hover:to-rose-300 hover:text-white hover:border-pink-200",
-  badge: "bg-pink-100 text-pink-800",
-  genderFemale: "bg-pink-100 text-pink-700",
-  genderMale: "bg-rose-100 text-rose-700",
-  loading: "border-pink-400",
-  shadow: "shadow-xl hover:shadow-pink-300/80 hover:shadow-2xl",
+  border: "border-2 border-pink-100 hover:border-pink-200",
+  buttonPrimary: "bg-gradient-to-r from-pink-200 via-rose-100 to-pink-300 hover:from-pink-100 hover:via-white hover:to-pink-200 text-pink-700 font-black",
+  buttonSecondary: "border-2 border-pink-200 text-pink-500 bg-pink-50/50 font-black hover:bg-gradient-to-r hover:from-pink-100 hover:to-rose-100 hover:text-pink-600 hover:border-pink-100",
+  badge: "bg-pink-50 text-pink-600",
+  genderFemale: "bg-pink-50 text-pink-500",
+  genderMale: "bg-rose-50 text-rose-500",
+  loading: "border-pink-200",
+  shadow: "shadow-xl hover:shadow-pink-200/40 hover:shadow-2xl",
 },
   default: {
     primary: "#DC2626",
@@ -192,31 +192,77 @@ export default function ProfileCard({
     setImageError(false);
   }, []);
 
-  const handleExpressInterest = (e) => {
+const handleExpressInterest = async (e) => {
   e.stopPropagation();
 
-  // Get target person's phone number
-  const targetPhone = (profile?.mobile || profile?.phone || "").replace(/\D/g, "");
+  if (!user) {
+    alert("Please login to express interest.");
+    return;
+  }
 
-  // Sender info from logged-in user
-  const senderName = user?.name || user?.fullName || "Someone";
-  const senderGender = (user?.gender || "Male").toLowerCase();
-  const senderType = senderGender.includes("female") ? "bride" : "groom";
-  const senderUrl = `${window.location.origin}/${senderType}-profile/${user?.profileId || user?.id}`;
+  setLoading(true);
 
-  // WhatsApp message
-  const message =
-    `💍 *Eliteinova Matrimony — Interest Received*\n\n` +
-    `Hello! *${senderName}* has shown interest in your profile.\n\n` +
-    `👤 *View their profile:*\n${senderUrl}\n\n` +
-    `Please visit the link and tap *Interested* or *Not Interested* to respond.\n\n` +
-    `_Eliteinova — Connect with Life Partner and Two Families_`;
+  try {
+    // ── Sender info (logged-in user) ──
+    const senderName = user?.name || user?.fullName || "Someone";
+    const senderProfileId = user?.profileId || user?.id;
+    const senderNumber = (user?.mobile || user?.phone || "").replace(/\D/g, "");
 
-  const whatsappUrl = targetPhone
-    ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`
-    : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    // ── Receiver info (profile card being viewed) ──
+    const receiverName = profile?.name || profile?.fullName || "Someone";
+    const receiverProfileId = profile?.id;
+    const receiverNumber = (profile?.mobile || profile?.phone || "").replace(/\D/g, "");
 
-  window.open(whatsappUrl, "_blank");
+    if (!receiverNumber) {
+      alert("Recipient's contact number is not available.");
+      setLoading(false);
+      return;
+    }
+
+    // ── Build payload ──
+    const payload = {
+      senderName,
+      receiverName,
+      senderProfileId,
+      receiverProfileId,
+      receiverNumber,
+      senderNumber,
+    };
+
+    console.log("📤 Express Interest Payload:", payload);
+
+    // ── Call backend API ──
+    const response = await fetch("/api/whatsapp/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(localStorage.getItem("authToken") && {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        }),
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData?.message || `API error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("✅ Interest sent successfully:", result);
+
+    if (onInterestExpressed) {
+      onInterestExpressed(profile?.id);
+    }
+
+    alert(`💌 Interest sent successfully to ${receiverName}!`);
+
+  } catch (error) {
+    console.error("❌ Failed to send interest:", error);
+    alert(`Failed to send interest: ${error.message || "Please try again."}`);
+  } finally {
+    setLoading(false);
+  }
 };
 
   const handleViewProfile = (e) => {

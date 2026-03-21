@@ -1,5 +1,6 @@
 // src/pages/UpgradePage.jsx
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { mockPlanService as planService } from "../services/mockPlanService";
 import { 
   CheckBadgeIcon, 
@@ -44,7 +45,7 @@ const getFallbackPlans = () => [
   id: 1,
   name: "Silver",
   description: "Your Future Partner is One Premium Step Away.",
-  price: "1000",
+  price: "750",
   duration: "3 months + tax",
   featured: false,
   popular: false,
@@ -65,7 +66,7 @@ const getFallbackPlans = () => [
     id: 2,
     name: "Gold",
     description: "Verified Matches. Unlimited Access. Premium Advantage",
-    price: "2,999",
+    price: "1500",
     duration: "3 months",
     featured: true,
     popular: true,
@@ -89,7 +90,7 @@ const getFallbackPlans = () => [
     id: 3,
     name: "Diamond",
     description: " Join Premium Today – Experience Elite Matchmaking",
-    price: "9,999",
+    price: "2000",
     duration: "6 months",
     featured: true,
     popular: false,
@@ -124,6 +125,21 @@ export default function Upgrade({ onOpenAuthModal }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(null);
+
+  // ── Scroll to plans when navigated from profile page ──────────────────
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state?.scrollToPlans && !loading && plans.length > 0) {
+      setTimeout(() => {
+        const plansSection = document.getElementById("membership-plans");
+        if (plansSection) {
+          plansSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
+    }
+  }, [location.state, loading, plans]);
+  // ──────────────────────────────────────────────────────────────────────
+
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const planFromUrl = params.get("plan");
@@ -367,10 +383,10 @@ export default function Upgrade({ onOpenAuthModal }) {
           <>
 
             {/* Subscription Cards with "Why Choose" inside */}
-            <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {plans.map((plan) => {
-                const IconComponent = planIcons[plan.id];
-                return (
+            <div id="membership-plans" className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+  {plans.map((plan) => {
+    const IconComponent = planIcons[plan.id];
+    return (
                   <div
                     key={plan.id}
                     className={`relative rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group border-2 ${

@@ -953,16 +953,62 @@ const removePhoto = async (index) => {
         <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border border-gray-200">
           <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0">
             {/* ✅ NEW: Profile Photo Editor */}
-<ProfilePhotoEditor
-  photos={photos}
-  isEditing={isEditing}
-  onUpload={handlePhotoUpload}
-  onRemove={removePhoto}
-  activeImage={activeImage}
-  onSetActive={setActiveImage}
-  formatImageUrl={formatImageUrl}
-  profileName={profile.fullName || profile.name}
-/>
+{/* Photo with pencil icon only */}
+<div className="relative flex-shrink-0">
+  {/* Main Photo */}
+  <div className="w-40 h-40 rounded-2xl overflow-hidden border-4 border-red-200 shadow-xl bg-gray-100">
+    {validPhotos.length > 0 ? (
+      <img
+        src={formatImageUrl(validPhotos[activeImage] || validPhotos[0])}
+        alt={profile.fullName || profile.name}
+        className="w-full h-full object-cover"
+        onError={(e) => { e.target.style.display = "none"; }}
+      />
+    ) : (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-100 to-red-200 text-red-600 text-5xl font-bold">
+        {(profile.fullName || profile.name || "U").charAt(0).toUpperCase()}
+      </div>
+    )}
+  </div>
+
+  {/* Pencil upload icon */}
+  <label
+    className="absolute bottom-2 right-2 w-9 h-9 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all hover:scale-110 z-10"
+    title="Change profile photo"
+  >
+    ✏️
+    <input
+      type="file"
+      accept="image/*"
+      multiple
+      onChange={handlePhotoUpload}
+      className="hidden"
+    />
+  </label>
+
+  {/* Thumbnails for multiple photos */}
+  {validPhotos.length > 1 && (
+    <div className="flex gap-1 mt-2 justify-center flex-wrap">
+      {validPhotos.slice(0, 6).map((photo, idx) => (
+        <button
+          key={idx}
+          onClick={() => setActiveImage(photos.indexOf(photo))}
+          className={`w-8 h-8 rounded-lg overflow-hidden border-2 transition-all ${
+            photos.indexOf(photo) === activeImage
+              ? "border-red-500 scale-110"
+              : "border-gray-300 hover:border-red-300"
+          }`}
+        >
+          <img
+            src={formatImageUrl(photo)}
+            alt={`Photo ${idx + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
             {/* Profile Info */}
             <div className="flex-1 lg:ml-10 text-center lg:text-left">
@@ -999,43 +1045,6 @@ const removePhoto = async (index) => {
                         "Not specified"}
                     </span>
                   </div>
-                </div>
-                <div className="mt-4 lg:mt-0 flex space-x-3">
-                  {isEditing ? (
-                    <>
-                      <button
-                        onClick={handleSave}
-                        disabled={saveLoading}
-                        className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-8 py-3 rounded-xl font-semibold transition shadow-lg flex items-center disabled:cursor-not-allowed"
-                      >
-                        {saveLoading ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            Saving...
-                          </>
-                        ) : (
-                          <>
-                            <span className="mr-2">✓</span>
-                            Save Changes
-                          </>
-                        )}
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={handleEdit}
-                      className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold transition shadow-lg flex items-center"
-                    >
-                      <span className="mr-2">✏️</span>
-                      Edit Profile
-                    </button>
-                  )}
                 </div>
               </div>
 
@@ -1105,51 +1114,51 @@ const removePhoto = async (index) => {
         {/* Tab Content */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
           {activeTab === "personal" && (
-            <PersonalInfoTab
-              profile={profile}
-              isEditing={isEditing}
-              editedProfile={editedProfile}
-              handleChange={handleChange}
-            />
-          )}
+  <PersonalInfoTab
+    profile={profile}
+    isEditing={false}
+    editedProfile={profile}
+    handleChange={() => {}}
+  />
+)}
 
-          {activeTab === "professional" && (
-            <ProfessionalInfoTab
-              profile={profile}
-              isEditing={isEditing}
-              editedProfile={editedProfile}
-              handleChange={handleChange}
-            />
-          )}
+{activeTab === "professional" && (
+  <ProfessionalInfoTab
+    profile={profile}
+    isEditing={false}
+    editedProfile={profile}
+    handleChange={() => {}}
+  />
+)}
 
-          {activeTab === "family" && (
-            <FamilyInfoTab
-              profile={profile}
-              isEditing={isEditing}
-              editedProfile={editedProfile}
-              handleChange={handleChange}
-            />
-          )}
+{activeTab === "family" && (
+  <FamilyInfoTab
+    profile={profile}
+    isEditing={false}
+    editedProfile={profile}
+    handleChange={() => {}}
+  />
+)}
 
-          {activeTab === "preferences" && (
-            <PreferencesTab
-              profile={profile}
-              isEditing={isEditing}
-              editedProfile={editedProfile}
-              handleChange={handleChange}
-            />
-          )}
+{activeTab === "preferences" && (
+  <PreferencesTab
+    profile={profile}
+    isEditing={false}
+    editedProfile={profile}
+    handleChange={() => {}}
+  />
+)}
 
 {activeTab === "documents" && (
   <DocumentsTab
-  isEditing={isEditing}
-  onPreviewFile={previewFile}
-  getFileTypeIcon={getFileTypeIcon}
-  formatFileSize={formatFileSize}
-  handleDocumentUpload={handleDocumentUpload}
-  documents={documents}
-  documentsLoading={documentsLoading}
-/>
+    isEditing={false}
+    onPreviewFile={previewFile}
+    getFileTypeIcon={getFileTypeIcon}
+    formatFileSize={formatFileSize}
+    handleDocumentUpload={handleDocumentUpload}
+    documents={documents}
+    documentsLoading={documentsLoading}
+  />
 )}
         </div>
 

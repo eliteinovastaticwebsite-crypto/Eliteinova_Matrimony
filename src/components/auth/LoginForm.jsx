@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
 export default function LoginForm({ onLoginSuccess, onRegister, onForgotPassword, isInModal }) {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ emailOrMobile: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -13,39 +14,77 @@ export default function LoginForm({ onLoginSuccess, onRegister, onForgotPassword
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 
-    if (!form.email || !form.password) {
-      setError("Please fill in all fields");
+  if (!form.emailOrMobile || !form.password) {
+    setError("Please fill in all fields");
+    return;
+  }
+
+  setLoading(true);
+  setError("");
+
+  try {
+    const input = form.emailOrMobile.trim();
+    if (!input) {
+      setError("Please enter email or mobile number");
+      setLoading(false);
       return;
     }
+    
+    const isEmail = input.includes("@");
+let credentials = {
+  password: form.password,
+  email: undefined,
+  mobile: undefined,
+};
 
-    setLoading(true);
-    setError("");
-
-    try {
-      await onLoginSuccess({
-        email: form.email,
-        password: form.password
-      });
-    } catch (err) {
-      let errorMessage = "Invalid email or password. Please check your credentials and try again.";
-      
-      if (err.error) {
-        errorMessage = err.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      }
-      
+if (isEmail) {
+  credentials.email = input.toLowerCase();
+  credentials.mobile = undefined;
+} else {
+  const mobileDigits = String(input).replace(/\D/g, "");
+  if (!mobileDigits || mobileDigits.length < 10) {
+    setError("Please enter a valid 10-digit mobile number");
+    setLoading(false);
+    return;
+  }
+  credentials.mobile = mobileDigits;
+  credentials.email = undefined;
+}
+    
+    // Call the login function
+    const result = await onLoginSuccess(credentials);
+    
+    // If login is successful, result should have success: true
+    if (result && result.success === false) {
+      // Handle unsuccessful login from the returned object
+      setError(result.error || "Invalid email or password");
       setLoading(false);
-      setError(errorMessage);
+    } else {
+      // Success - loading will be set to false by the login function
+      setLoading(false);
     }
-  };
+  } catch (err) {
+    // Handle thrown errors
+    let errorMessage = "Invalid email or password. Please check your credentials and try again.";
+    
+    // Check for error in various possible locations
+    if (err.error) {
+      errorMessage = err.error;
+    } else if (err.message) {
+      errorMessage = err.message;
+    } else if (err.response?.data?.error) {
+      errorMessage = err.response.data.error;
+    } else if (err.response?.data?.message) {
+      errorMessage = err.response.data.message;
+    }
+    
+    setLoading(false);
+    setError(errorMessage);
+  }
+};
 
   const handleForgotPasswordClick = (e) => {
     e.preventDefault(); // Prevent any default behavior
@@ -78,46 +117,65 @@ export default function LoginForm({ onLoginSuccess, onRegister, onForgotPassword
             noValidate
             id="login-form"
           >
-            <div>
-              <label htmlFor="email" className={`block text-sm font-medium ${isInModal ? "text-gray-700" : "text-gray-300"}`}>
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Email address"
-                required
-                disabled={loading}
-                className={`w-full mt-1 px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 ${
-                  isInModal 
-                    ? "border border-gray-300 bg-white text-gray-900 placeholder-gray-500" 
-                    : "border border-gray-700 bg-gray-900/50 text-white placeholder-gray-400"
-                }`}
-              />
-            </div>
+           <div>
+  <label htmlFor="emailOrMobile" className={`block text-sm font-medium ${isInModal ? "text-gray-700" : "text-gray-300"}`}>
+    Email or Mobile Number
+  </label>
+  <input
+    id="emailOrMobile"
+    type="text"
+    name="emailOrMobile"
+    value={form.emailOrMobile}
+    onChange={handleChange}
+    placeholder="Email address or mobile number"
+    required
+    disabled={loading}
+    className={`w-full mt-1 px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 ${
+      isInModal 
+        ? "border border-gray-300 bg-white text-gray-900 placeholder-gray-500" 
+        : "border border-gray-700 bg-gray-900/50 text-white placeholder-gray-400"
+    }`}
+  />
+</div>
 
             <div>
               <label htmlFor="password" className={`block text-sm font-medium ${isInModal ? "text-gray-700" : "text-gray-300"}`}>
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Password"
-                required
-                disabled={loading}
-                className={`w-full mt-1 px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 ${
-                  isInModal 
-                    ? "border border-gray-300 bg-white text-gray-900 placeholder-gray-500" 
-                    : "border border-gray-700 bg-gray-900/50 text-white placeholder-gray-400"
-                }`}
-              />
+              <div className="relative">
+  <input
+    id="password"
+    type={showPassword ? "text" : "password"}
+    name="password"
+    value={form.password}
+    onChange={handleChange}
+    placeholder="Password"
+    required
+    disabled={loading}
+    className={`w-full mt-1 px-4 py-3 pr-12 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 ${
+      isInModal 
+        ? "border border-gray-300 bg-white text-gray-900 placeholder-gray-500" 
+        : "border border-gray-700 bg-gray-900/50 text-white placeholder-gray-400"
+    }`}
+  />
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+    tabIndex={-1}
+  >
+    {showPassword ? (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21" />
+      </svg>
+    ) : (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    )}
+  </button>
+</div>
               
               {/* Forgot Password Link - Now below the password input */}
               <div className="flex justify-end mt-2">

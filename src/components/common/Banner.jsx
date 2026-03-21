@@ -78,12 +78,8 @@ export default function Banner({
   };
 
   const handleBackClick = () => {
-    if (isAuthenticated) {
-      navigate("/profiles");
-    } else {
-      navigate("/");
-    }
-  };
+  navigate("/");
+};
 
   const textIndex = currentIndex % bannerTexts.length;
   const currentText = bannerTexts[textIndex];
@@ -100,7 +96,7 @@ export default function Banner({
           className="flex items-center gap-2 bg-gray/40 text-white border border-white/30 backdrop-blur-md hover:bg-black/60 transition-all"
         >
           <ArrowLeftIcon className="w-5 h-5" />
-          <span className="hidden md:inline">{isAuthenticated ? "Back to Profile" : "Back to Home"}</span>
+          <span className="hidden md:inline">Back to Home</span>
         </Button>
       </div>
 
@@ -194,7 +190,7 @@ export default function Banner({
                 >
                   <span className="flex items-center space-x-2">
                     <span>💖</span>
-                    <span>{currentText.cta}</span>
+                    <span>{isAuthenticated ? "Find Your Perfect Matches 💑" : currentText.cta}</span>
                   </span>
                 </Button>
               </div>

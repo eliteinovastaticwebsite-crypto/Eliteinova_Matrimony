@@ -361,142 +361,160 @@ export default function Navbar({ onLogin, onRegister }) {
         </div>
 
         {/* ── Mobile Menu ── */}
-        <div
-          className={`lg:hidden transition-all duration-500 ease-in-out overflow-hidden bg-gradient-to-b from-red-700 via-red-600 to-red-500 ${
-            open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="px-6 py-6 space-y-3">
-            {(isAuthenticated ? authNavLinks : publicNavLinks).map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={(e) => { handleNavLinkClick(e, link); setOpen(false); }}
-                className={`block py-3 text-base font-semibold transition-all duration-300 border-l-4 pl-5 ${
-                  location.pathname === link.path
-                    ? "text-yellow-400 border-yellow-400 bg-white/10 rounded-r-xl"
-                    : "text-white border-transparent hover:text-yellow-300 hover:border-yellow-300 hover:bg-white/5"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+<div
+  className={`lg:hidden transition-all duration-500 ease-in-out bg-gradient-to-b from-red-700 via-red-600 to-red-500 ${
+    open ? "block" : "hidden"
+  }`}
+  style={{ maxHeight: "100vh", overflowY: "auto" }}
+>
+  <div className="px-6 py-6 space-y-3 pb-10">
+    {(isAuthenticated ? authNavLinks : publicNavLinks).map((link) => (
+      <Link
+        key={link.path}
+        to={link.path}
+        onClick={(e) => { handleNavLinkClick(e, link); setOpen(false); }}
+        className={`block py-3 text-base font-semibold transition-all duration-300 border-l-4 pl-5 ${
+          location.pathname === link.path
+            ? "text-yellow-400 border-yellow-400 bg-white/10 rounded-r-xl"
+            : "text-white border-transparent hover:text-yellow-300 hover:border-yellow-300 hover:bg-white/5"
+        }`}
+      >
+        {link.label}
+      </Link>
+    ))}
 
+    {isStaffAdmin && (
+      <button
+        onClick={handleAdminDashboard}
+        className="w-full text-left py-3 text-base font-semibold border-l-4 border-yellow-400 pl-5 text-yellow-300 bg-white/10 rounded-r-xl flex items-center gap-2"
+      >
+        <ShieldCheckIcon className="w-5 h-5" />
+        Admin Dashboard
+      </button>
+    )}
+
+    {/* ── Auth Section ── */}
+    <div className="pt-4 border-t border-white/20 space-y-3">
+      {isAuthenticated ? (
+        <>
+          {/* User Info Card */}
+          <div className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl">
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg relative ${
+              isAdmin() ? "bg-gradient-to-br from-yellow-500 to-yellow-600" : "bg-gradient-to-br from-yellow-400 to-yellow-500"
+            }`}>
+              {getInitials(user?.name)}
+              {isAdmin() && <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />}
+            </div>
+            <div>
+              <p className="font-bold text-white">{user?.name || "User"}</p>
+              <p className="text-sm text-yellow-100">
+                {isAdmin() ? "Administrator" : user?.membership ? `${user.membership} Member` : "Premium Member"}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {!isAdmin() && (
+              <button
+                onClick={handleProfile}
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 rounded-2xl font-bold hover:scale-105 transition-all shadow-lg"
+              >
+                <UserIcon className="w-5 h-5" />
+                My Profile
+              </button>
+            )}
             {isStaffAdmin && (
               <button
                 onClick={handleAdminDashboard}
-                className="w-full text-left py-3 text-base font-semibold border-l-4 border-yellow-400 pl-5 text-yellow-300 bg-white/10 rounded-r-xl flex items-center gap-2"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-2xl font-bold transition-all shadow-lg"
               >
                 <ShieldCheckIcon className="w-5 h-5" />
-                Admin Dashboard
+                Admin Panel
               </button>
             )}
+            <button
+              onClick={handleLogout}
+              className="px-4 py-3 rounded-2xl font-bold border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-red-900 transition-all"
+            >
+              Logout
+            </button>
+          </div>
 
-            {isAuthenticated && (
-              <div className="pt-4 border-t border-white/20">
-                <div className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg relative ${
-                    isAdmin() ? "bg-gradient-to-br from-yellow-500 to-yellow-600" : "bg-gradient-to-br from-yellow-400 to-yellow-500"
-                  }`}>
-                    {getInitials(user?.name)}
-                    {isAdmin() && <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />}
-                  </div>
-                  <div>
-                    <p className="font-bold text-white">{user?.name || "User"}</p>
-                    <p className="text-sm text-yellow-100">
-                      {isAdmin() ? "Administrator" : user?.membership ? `${user.membership} Member` : "Premium Member"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+          {!isStaffAdmin && !isStaffOffice && (
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => navigate("/notifications")}
+                className="relative p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1"
+              >
+                <BellIcon className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center animate-pulse">3</span>
+                <span className="text-xs">Alerts</span>
+              </button>
+              <button
+                onClick={() => navigate("/messages")}
+                className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1"
+              >
+                <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                <span className="text-xs">Messages</span>
+              </button>
+              <button className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1">
+                <HeartIcon className="w-5 h-5" />
+                <span className="text-xs">Matches</span>
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        /* ── NOT Logged In: Show Login + Register ── */
+        <div className="space-y-3">
+          <div className="text-center p-4 rounded-2xl bg-white/10 text-yellow-100">
+            <HeartIcon className="w-7 h-7 mx-auto mb-2 text-red-300" />
+            <p className="text-sm">Start your journey today</p>
+          </div>
 
-            <div className="pt-4 border-t border-white/20 space-y-3">
-              {isAuthenticated ? (
-                <>
-                  <div className="grid grid-cols-2 gap-3">
-                    {!isAdmin() && (
-                      <button onClick={handleProfile} className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 rounded-2xl font-bold hover:scale-105 transition-all shadow-lg">
-                        <UserIcon className="w-5 h-5" />
-                        My Profile
-                      </button>
-                    )}
-                    {isStaffAdmin && (
-                      <button onClick={handleAdminDashboard} className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-2xl font-bold transition-all shadow-lg">
-                        <ShieldCheckIcon className="w-5 h-5" />
-                        Admin Panel
-                      </button>
-                    )}
-                    <button onClick={handleLogout} className="px-4 py-3 rounded-2xl font-bold border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-red-900 transition-all">
-                      Logout
-                    </button>
-                  </div>
+          {/* ✅ Register Button */}
+          <button
+            onClick={() => { handleRegisterClick(); setOpen(false); }}
+            className="w-full px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2"
+          >
+            <UserPlusIcon className="w-5 h-5" />
+            Register Now
+          </button>
 
-                  {!isStaffAdmin && !isStaffOffice && (
-                    <div className="grid grid-cols-3 gap-2">
-                      <button onClick={() => navigate("/notifications")} className="relative p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1">
-                        <BellIcon className="w-5 h-5" />
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center animate-pulse">3</span>
-                        <span className="text-xs">Alerts</span>
-                      </button>
-                      <button onClick={() => navigate("/messages")} className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1">
-                        <ChatBubbleLeftRightIcon className="w-5 h-5" />
-                        <span className="text-xs">Messages</span>
-                      </button>
-                      <button className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white flex flex-col items-center gap-1">
-                        <HeartIcon className="w-5 h-5" />
-                        <span className="text-xs">Matches</span>
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="space-y-3">
-                  <div className="text-center p-4 rounded-2xl bg-white/10 text-yellow-100">
-                    <HeartIcon className="w-7 h-7 mx-auto mb-2 text-red-300" />
-                    <p className="text-sm">Start your journey today</p>
-                  </div>
+          {/* ✅ Login Button */}
+          <button
+            onClick={() => { handleLoginClick(); setOpen(false); }}
+            className="w-full px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2"
+          >
+            <ArrowRightOnRectangleIcon className="w-5 h-5" />
+            Login
+          </button>
 
-                  <button
-                    onClick={() => { handleRegisterClick(); setOpen(false); }}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <UserPlusIcon className="w-5 h-5" />
-                    Register Now
-                  </button>
-
-                  <button
-                    onClick={() => { handleLoginClick(); setOpen(false); }}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-2xl font-bold hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                    Login
-                  </button>
-
-                  <div className="border-t border-white/20 pt-3">
-                    <p className="text-white/60 text-xs text-center mb-3 uppercase tracking-wider">Staff Access</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => { navigate("/office-login"); setOpen(false); }}
-                        className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center justify-center gap-2"
-                      >
-                        <ShieldCheckIcon className="w-5 h-5 text-yellow-400" />
-                        Office
-                      </button>
-                      <button
-                        onClick={() => { navigate("/admin-login"); setOpen(false); }}
-                        className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center justify-center gap-2"
-                      >
-                        <ShieldCheckIcon className="w-5 h-5 text-red-300" />
-                        Admin
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+          {/* Staff Access */}
+          <div className="border-t border-white/20 pt-3">
+            <p className="text-white/60 text-xs text-center mb-3 uppercase tracking-wider">Staff Access</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { navigate("/office-login"); setOpen(false); }}
+                className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+              >
+                <ShieldCheckIcon className="w-5 h-5 text-yellow-400" />
+                Office
+              </button>
+              <button
+                onClick={() => { navigate("/admin-login"); setOpen(false); }}
+                className="px-4 py-3 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+              >
+                <ShieldCheckIcon className="w-5 h-5 text-red-300" />
+                Admin
+              </button>
             </div>
           </div>
         </div>
+      )}
+    </div>
+  </div>
+</div>
       </nav>
 
       <div className={spacerHeight} />

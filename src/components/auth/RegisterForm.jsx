@@ -398,12 +398,99 @@ export default function RegisterForm({
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [paymentStep, setPaymentStep] = useState("form");
   const [registrationError, setRegistrationError] = useState("");
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
-  const formScrollRef = React.useRef(null);
+const formScrollRef = React.useRef(null);
 
+// ── OTP Gate states ──────────────────────────────────────────────────────────
+const [otpStep, setOtpStep] = useState("phone"); // "phone" | "otp" | "done"
+const [preForm, setPreForm] = useState({ name: "", mobile: "" });
+const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+const [otpLoading, setOtpLoading] = useState(false);
+const [otpError, setOtpError] = useState("");
+const [otpTimer, setOtpTimer] = useState(0);
+const otpRefs = [
+  React.useRef(), React.useRef(), React.useRef(),
+  React.useRef(), React.useRef(), React.useRef()
+];
+
+// OTP countdown timer
+useEffect(() => {
+  if (otpTimer > 0) {
+    const t = setTimeout(() => setOtpTimer((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }
+}, [otpTimer]);
+
+const handleSendOtp = async () => {
+  if (!preForm.name.trim()) return setOtpError("Full name is required");
+  if (!/^\d{10}$/.test(preForm.mobile)) return setOtpError("Enter a valid 10-digit mobile number");
+  setOtpLoading(true);
+  setOtpError("");
+  try {
+    // ── REPLACE with your real API call ──
+    // const res = await fetch("/api/auth/send-otp", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ mobile: preForm.mobile, name: preForm.name }),
+    // });
+    // if (!res.ok) throw new Error("Failed to send OTP");
+    await new Promise((r) => setTimeout(r, 1000)); // mock delay
+    console.log("📲 Mock OTP: 123456");
+    // ─────────────────────────────────────
+    setOtpStep("otp");
+    setOtpTimer(30);
+  } catch (err) {
+    setOtpError(err.message || "Failed to send OTP. Try again.");
+  } finally {
+    setOtpLoading(false);
+  }
+};
+
+const handleVerifyOtp = async () => {
+  const enteredOtp = otp.join("");
+  if (enteredOtp.length !== 6) return setOtpError("Please enter all 6 digits");
+  setOtpLoading(true);
+  setOtpError("");
+  try {
+    // ── REPLACE with your real API call ──
+    // const res = await fetch("/api/auth/verify-otp", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ mobile: preForm.mobile, otp: enteredOtp }),
+    // });
+    // if (!res.ok) throw new Error("Invalid OTP");
+    await new Promise((r) => setTimeout(r, 800)); // mock delay
+    if (enteredOtp !== "123456") throw new Error("Invalid OTP. Try again.");
+    // ─────────────────────────────────────
+    setForm((prev) => ({ ...prev, name: preForm.name, mobile: preForm.mobile }));
+    setOtpStep("done");
+  } catch (err) {
+    setOtpError(err.message || "OTP verification failed.");
+    setOtp(["", "", "", "", "", ""]);
+    otpRefs[0].current?.focus();
+  } finally {
+    setOtpLoading(false);
+  }
+};
+
+const handleOtpChange = (index, value) => {
+  if (!/^\d*$/.test(value)) return;
+  const newOtp = [...otp];
+  newOtp[index] = value.slice(-1);
+  setOtp(newOtp);
+  if (value && index < 5) otpRefs[index + 1].current?.focus();
+};
+
+const handleOtpKeyDown = (index, e) => {
+  if (e.key === "Backspace" && !otp[index] && index > 0) {
+    otpRefs[index - 1].current?.focus();
+  }
+};
 useEffect(() => {
   setTimeout(() => {
     if (formScrollRef.current) {
@@ -1417,13 +1504,13 @@ const prevStep = () => {
         const errorMsg = err.message?.toLowerCase() || "";
         
         if (errorMsg.includes("duplicate") || errorMsg.includes("already exists")) {
-            if (errorMsg.includes("email")) {
-                errorMessage = "An account with this email already exists. Please use a different email or try logging in.";
-            } else if (errorMsg.includes("mobile") || errorMsg.includes("phone")) {
-                errorMessage = "An account with this mobile number already exists. Please use a different mobile number or try logging in.";
-            } else {
-                errorMessage = "This information is already registered. Please check your details or try logging in.";
-            }
+    if (errorMsg.includes("mobile") || errorMsg.includes("phone")) {
+        errorMessage = "An account with this mobile number already exists. Please use a different mobile number or try logging in.";
+    } else if (errorMsg.includes("email")) {
+        errorMessage = "An account with this email already exists. Please use a different email or try logging in.";
+    } else {
+        errorMessage = "This information is already registered. Please check your details or try logging in.";
+    }
         } else if (errorMsg.includes("invalid email") || errorMsg.includes("email")) {
             errorMessage = "Invalid email address. Please enter a valid email.";
         } else if (errorMsg.includes("password") && (errorMsg.includes("short") || errorMsg.includes("length"))) {
@@ -1598,6 +1685,171 @@ const prevStep = () => {
   //   setForm({...form, name:"Test User", mobile:"9876543210", password:"Test@123", confirmPassword:"Test@123", email:"test@example.com", dob:"1990-01-01", age:"34"});
   //   setError(""); setValidationErrors({});
   // };
+  
+  // ── OTP Gate Screen ──────────────────────────────────────────────────────────
+if (otpStep !== "done") {
+  return (
+    <div className={`bg-white shadow-2xl rounded-2xl w-full max-w-lg mx-auto ${inModal ? "h-full flex flex-col" : "p-6"}`}>
+      <div className={`text-center mb-6 ${inModal ? "shrink-0 px-6 pt-6" : ""}`}>
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <span className="text-3xl">💍</span>
+        </div>
+        <h2 className="text-2xl font-bold text-red-600 mb-1">
+          {otpStep === "phone" ? "Get Started" : "Verify Your Number"}
+        </h2>
+        <p className="text-gray-500 text-sm">
+          {otpStep === "phone"
+            ? "Enter your name and mobile number to begin"
+            : `OTP sent to +91 ${preForm.mobile}`}
+        </p>
+      </div>
+
+      <div className={`${inModal ? "flex-1 overflow-y-auto px-6 pb-6" : ""}`}>
+        {otpError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            {otpError}
+          </div>
+        )}
+
+        {/* ── Phone Step ── */}
+        {otpStep === "phone" && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={preForm.name}
+                onChange={(e) => { setPreForm((p) => ({ ...p, name: e.target.value })); setOtpError(""); }}
+                placeholder="Enter your full name"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mobile Number <span className="text-red-500">*</span>
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-sm font-medium">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  value={preForm.mobile}
+                  onChange={(e) => { setPreForm((p) => ({ ...p, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) })); setOtpError(""); }}
+                  placeholder="10-digit mobile number"
+                  maxLength={10}
+                  className="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-400"
+                />
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700 flex gap-2">
+              <span>📱</span>
+              <span>An OTP will be sent to this number for verification. Standard SMS charges may apply.</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSendOtp}
+              disabled={otpLoading}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {otpLoading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Sending OTP...
+                </>
+              ) : (
+                <>Send OTP <span>→</span></>
+              )}
+            </button>
+
+            {onSwitch && (
+              <p className="text-center text-sm text-gray-600 pt-2">
+                Already have an account?{" "}
+                <button type="button" onClick={onSwitch} className="text-red-600 font-medium underline hover:text-red-700">
+                  Sign In
+                </button>
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* ── OTP Step ── */}
+        {otpStep === "otp" && (
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
+                Enter 6-digit OTP
+              </label>
+              <div className="flex justify-center gap-2">
+                {otp.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={otpRefs[i]}
+                    type="tel"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(i, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                    className="w-11 h-12 text-center text-lg font-bold border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 border-gray-300 text-gray-800"
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="text-center text-sm text-gray-500">
+              {otpTimer > 0 ? (
+                <span>Resend OTP in <span className="text-red-600 font-semibold">{otpTimer}s</span></span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { setOtp(["","","","","",""]); handleSendOtp(); }}
+                  className="text-red-600 font-medium underline hover:text-red-700"
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleVerifyOtp}
+              disabled={otpLoading || otp.join("").length !== 6}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {otpLoading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Verifying...
+                </>
+              ) : (
+                <>Verify & Continue <span>→</span></>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setOtpStep("phone"); setOtp(["","","","","",""]); setOtpError(""); }}
+              className="w-full py-2 text-sm text-gray-500 hover:text-gray-700"
+            >
+              ← Change mobile number
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+// ────────────────────────────────────────────────────────────────────────────
 
   if (paymentStep === "summary") {
     return (
@@ -1821,10 +2073,10 @@ return;
         if (err.name === "TypeError" && msg.includes("Failed to fetch")) {
           msg = "Cannot reach the server. Please check your internet connection and try again.";
         } else if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("already exists")) {
-          if (msg.toLowerCase().includes("email")) {
-            msg = "This email is already registered. Please go back and use a different email.";
-          } else if (msg.toLowerCase().includes("mobile")) {
+          if (msg.toLowerCase().includes("mobile") || msg.toLowerCase().includes("phone")) {
             msg = "This mobile number is already registered. Please go back and use a different number.";
+          } else if (msg.toLowerCase().includes("email")) {
+            msg = "This email is already registered. Please go back and use a different email.";
           } else {
             msg = "Account already exists. Please try logging in instead.";
           }
@@ -1997,27 +2249,63 @@ return;
               maxLength="14"
             />
 
-            <FloatingInput
-              label="Create Password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              error={validationErrors.password}
-              placeholder="At least 6 characters with uppercase, lowercase & numbers"
-            />
+            <div className="relative h-fit" style={{ marginBottom: 0 }}>  <FloatingInput
+    label="Create Password"
+    name="password"
+    type={showPassword ? "text" : "password"}
+    value={form.password}
+    onChange={handleChange}
+    required
+    error={validationErrors.password}
+    placeholder="Enter Your Password"
+  />
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+    tabIndex={-1}
+  >
+    {showPassword ? (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21" />
+      </svg>
+    ) : (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    )}
+  </button>
+</div>
 
-            <FloatingInput
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-              error={validationErrors.confirmPassword}
-              placeholder="Re-enter your password"
-            />
+            <div className="relative h-fit" style={{ marginBottom: 0 }}>  <FloatingInput
+    label="Confirm Password"
+    name="confirmPassword"
+    type={showConfirmPassword ? "text" : "password"}
+    value={form.confirmPassword}
+    onChange={handleChange}
+    required
+    error={validationErrors.confirmPassword}
+    placeholder="Re-enter your password"
+  />
+  <button
+    type="button"
+    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+    tabIndex={-1}
+  >
+    {showConfirmPassword ? (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21" />
+      </svg>
+    ) : (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    )}
+  </button>
+</div>
             {/* Password Requirements */}
 <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-600 space-y-1">
   <p className="font-semibold text-gray-700 mb-1">Password must contain:</p>

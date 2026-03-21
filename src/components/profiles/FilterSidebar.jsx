@@ -4031,24 +4031,20 @@ return (
             </button>
           </div>
 
-          <FilterBox title="Location">
 
-  {/* COUNTRY */}
+          {/* 📜 Scrollable filter content */}
+          <div className="p-4 md:p-5">
+            <div className="space-y-5">
+              {/* LOCATION DETAILS */}
+<FilterBox title="Location" bg={tBg} border={tBorder} titleColor={tColor}>
+  {/* Country - always visible */}
   <CustomSelect
-  label="Country"
-  value={filters.country || ""}
-  onChange={(e) => {
-    const value = e.target.value.trim();
-
-    const newFilters = {
-      ...filters,
-      country: value,
-      state: "",
-      district: ""
-    };
-
-    onFilterChange(newFilters);
-  }}
+    label="Country"
+    value={filters.country || ""}
+    onChange={(e) => {
+      const value = e.target.value;
+      onFilterChange({ ...filters, country: value, state: "", district: "" });
+    }}
     options={[
       { value: "", label: "Select Country" },
       { value: "India", label: "India" },
@@ -4066,6 +4062,7 @@ return (
       { value: "Bahrain", label: "Bahrain" },
       { value: "South Africa", label: "South Africa" },
       { value: "Mauritius", label: "Mauritius" },
+      { value: "Réunion", label: "Réunion (France)" },
       { value: "Kenya", label: "Kenya" },
       { value: "Tanzania", label: "Tanzania" },
       { value: "Uganda", label: "Uganda" },
@@ -4089,79 +4086,51 @@ return (
     ]}
   />
 
-  {/* OTHER COUNTRY TEXT */}
-  {filters.country === "Other" && (
+  {/* State - always visible */}
+  {filters.country === "India" || !filters.country ? (
+    <CustomSelect
+      label="State"
+      value={filters.state || ""}
+      onChange={(e) => {
+        onFilterChange({ ...filters, state: e.target.value, district: "" });
+      }}
+      options={[
+        { value: "", label: "Select State" },
+        ...availableStates.map((s) => ({ value: s, label: s })),
+      ]}
+    />
+  ) : (
     <Input
-      label="Please specify country"
-      placeholder="Enter country name"
-      value={filters.countryOther || ""}
-      onChange={(e) => handleOtherChange("countryOther", e.target.value)}
+      label="State / Province"
+      placeholder="Enter state"
+      value={filters.state || ""}
+      onChange={(e) => handleChange("state", e.target.value)}
     />
   )}
 
-  {/* INDIA STATE + DISTRICT */}
-  {filters.country === "India" && (
-    <>
-      <CustomSelect
-        label="State"
-        value={filters.state || ""}
-        onChange={(e) => {
-          const value = e.target.value;
-
-          const newFilters = {
-            ...filters,
-            state: value,
-            district: "",
-          };
-
-          onFilterChange(newFilters);
-        }}
-        options={[
-          { value: "", label: "Select State" },
-          ...availableStates.map((s) => ({ value: s, label: s })),
-        ]}
-      />
-
-      {filters.state && (
-        <CustomSelect
-          label="District"
-          value={filters.district || ""}
-          onChange={(e) => handleChange("district", e.target.value)}
-          options={[
-            { value: "", label: "Select District" },
-            ...districtOptions.map((d) => ({ value: d, label: d })),
-          ]}
-        />
-      )}
-    </>
+  {/* District - always visible */}
+  {filters.country === "India" || !filters.country ? (
+    <CustomSelect
+      label="District"
+      value={filters.district || ""}
+      onChange={(e) => handleChange("district", e.target.value)}
+      options={[
+        { value: "", label: filters.state ? "Select District" : "Select State First" },
+        ...(filters.state && districtsByState[filters.state]
+          ? districtsByState[filters.state].map((d) => ({ value: d, label: d }))
+          : []),
+      ]}
+    />
+  ) : (
+    <Input
+      label="City / District"
+      placeholder="Enter city"
+      value={filters.district || ""}
+      onChange={(e) => handleChange("district", e.target.value)}
+    />
   )}
-
-  {/* NON-INDIA STATE + DISTRICT */}
-  {filters.country &&
-    filters.country !== "India" &&
-    filters.country !== "Other" && (
-      <>
-        <Input
-          label="State / Province"
-          placeholder="Enter state"
-          value={filters.state || ""}
-          onChange={(e) => handleChange("state", e.target.value)}
-        />
-
-        <Input
-          label="City / District"
-          placeholder="Enter city"
-          value={filters.district || ""}
-          onChange={(e) => handleChange("district", e.target.value)}
-        />
-      </>
-    )}
-
 </FilterBox>
 
-          {/* 📜 Scrollable filter content */}
-          <div className="p-4 md:p-5">
-            <div className="space-y-5">
               {/* PERSONAL DETAILS */}
               <FilterBox title="Personal Details" bg={tBg} border={tBorder} titleColor={tColor}>
                 {/* <Select
